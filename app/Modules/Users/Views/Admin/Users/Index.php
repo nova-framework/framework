@@ -1,7 +1,7 @@
 <section class="content-header">
     <h1><?= $title; ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('users', 'Dashboard'); ?></a></li>
+        <li><a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <?= __d('users', 'Dashboard'); ?></a></li>
         <li><?= __d('users', 'Users'); ?></li>
     </ol>
 </section>
@@ -32,65 +32,49 @@
         </div>
     </div>
     <div class="box-body no-padding">
-<?php
-$deletables = 0;
-
-if (! $users->isEmpty()) {
-?>
-        <table id='left' class='table table-striped table-hover responsive'>
+        <?php $deletables = 0; ?>
+        <?php if (! $users->isEmpty()) { ?>
+        <table id="left" class="table table-striped table-hover responsive">
             <tr class="bg-navy disabled">
-                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'ID'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Username'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Roles'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Name and Surname'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'E-mail'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Created At'); ?></th>
-                <th style='text-align: right; vertical-align: middle;'><?= __d('users', 'Operations'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'ID'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Username'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Roles'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Name and Surname'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'E-mail'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Created At'); ?></th>
+                <th style="text-align: right; vertical-align: middle;"><?= __d('users', 'Operations'); ?></th>
             </tr>
-<?php
-    foreach ($users->getItems() as $user) {
-        echo "
-<tr>
-    <td style='text-align: center; vertical-align: middle;' width='5%'>" .$user->id ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='18%'>" .$user->username ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='11%'>" .implode(', ', $user->roles->lists('name')) ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='18%'>" .$user->realname ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='18%'>" .$user->email ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='15%'>" .$user->created_at->formatLocalized(__d('users', '%d %b %Y, %R')) ."</td>
-    <td style='text-align: right; vertical-align: middle;' width='15%'>
-        <div class='btn-group' role='group' aria-label='...'>";
-
-        if (Gate::allows('delete', $user)) {
-            $deletables++;
-
-            echo "
-            <a class='btn btn-sm btn-danger' href='#' data-toggle='modal' data-target='#modal-delete-dialog' data-id='" .$user->id ."'  title='" .__d('users', 'Delete this User') ."' role='button'><i class='fa fa-remove'></i></a>";
-        }
-
-        if (Gate::allows('update', $user)) {
-            echo "
-            <a class='btn btn-sm btn-success' href='" .site_url('admin/users/' .$user->id .'/edit') ."' title='" .__d('users', 'Edit this User') ."' role='button'><i class='fa fa-pencil'></i></a>";
-        }
-
-        if (Gate::allows('view', $user)) {
-            echo "
-            <a class='btn btn-sm btn-warning' href='" .site_url('admin/users/' .$user->id). "' title='". __d('users', 'Show the Details') ."' role='button'><i class='fa fa-search'></i></a>";
-        }
-
-        echo "
-        </div>
-    </td>
-</tr>";
-
-    }
-?>
+            <?php foreach ($users->getItems() as $user) { ?>
+            <tr>
+                <td style="text-align: center; vertical-align: middle;" width="5%"><?= $user->id; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="18%"><?= $user->username; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="11%"><?= implode(', ', $user->roles->lists('name')); ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="18%"><?= $user->realname; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="18%"><?= $user->email; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="15%"><?= $user->created_at->formatLocalized(__d('users', '%d %b %Y, %R')); ?></td>
+                <td style="text-align: right; vertical-align: middle;" width="15%">
+                    <div class="btn-group" role="group" aria-label="...">
+                        <?php if (Gate::allows('delete', $user)) { ?>
+                        <?php $deletables++; ?>
+                        <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $user->id; ?>" title="<?= __d('users', 'Delete this User'); ?>" role="button"><i class="fa fa-remove"></i></a>
+                        <?php } ?>
+                        <?php if (Gate::allows('update', $user)) { ?>
+                        <a class="btn btn-sm btn-success" href="<?= site_url('admin/users/' .$user->id .'/edit'); ?>" title="<?= __d('users', 'Edit this User'); ?>" role="button"><i class="fa fa-pencil"></i></a>
+                        <?php } ?>
+                        <?php if (Gate::allows('view', $user)) { ?>
+                        <a class="btn btn-sm btn-warning" href="<?= site_url('admin/users/' .$user->id); ?>" title="<?= __d('users', 'Show the Details'); ?>" role="button"><i class="fa fa-search"></i></a>
+                        <?php } ?>
+                    </div>
+                </td>
+            </tr>
+            <?php } ?>
         </table>
-<?php } else { ?>
+        <?php } else { ?>
         <div class="alert alert-warning" style="margin: 0 5px 5px;">
             <h4><i class="icon fa fa-warning"></i> <?php echo strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('users', 'No registered Users'); ?></h4>
             <?= __d('users', 'There are no registered Users.'); ?>
         </div>
-<?php } ?>
+        <?php } ?>
     </div>
 </div>
 

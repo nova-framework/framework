@@ -40,23 +40,15 @@
         </div>
     </div>
     <div class="box-body no-padding">
-<?php
-if (! $messages->isEmpty()) {
-    $count = 0;
+        <?php if (! $messages->isEmpty()) { ?>
+        <?php $count = 0; ?>
+        <?php $total = $messages->count(); ?>
 
-    $total = $messages->count();
+        <?php foreach($messages as $message) { ?>
+        <?php $unread = $message->replies->where('receiver_id', $authUser->id)->where('is_read', 0)->count(); ?>
+        <?php if (($message->sender_id !== $authUser->id) && ($message->is_read === 0)) $unread++; ?>
 
-    foreach($messages as $message) {
-        // Calculate the number of unread replies on the current message.
-        $unread = $message->replies->where('receiver_id', $authUser->id)->where('is_read', 0)->count();
-
-        // If the parent message was not read yet by the receiver, count it too.
-        if (($message->sender_id !== $authUser->id) && ($message->is_read === 0)) {
-            $unread++;
-        }
-
-        if ($count > 0) {
-?>
+        <?php if ($count > 0) { ?>
         <hr style="margin: 0;">
         <?php } ?>
         <div class="media" style="margin-top: 0; padding: 10px;">
@@ -78,17 +70,14 @@ if (! $messages->isEmpty()) {
                 </div>
             </div>
         </div>
-
-<?php
-        $count++;
-    }
-} else {
-?>
+        <?php $count++; ?>
+        <?php } ?>
+        <?php } else { ?>
         <div class="alert alert-info" style="margin: 0 5px 5px;">
             <h4><i class="icon fa fa-info"></i> <?php echo strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('messages', 'No messages'); ?></h4>
             <?= __d('messages', 'You have no messages sent or received.'); ?>
         </div>
-<?php } ?>
+        <?php } ?>
     </div>
 </div>
 

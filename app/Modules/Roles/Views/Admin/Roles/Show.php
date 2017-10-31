@@ -1,8 +1,8 @@
 <section class="content-header">
     <h1><?= __d('roles', 'Show Role'); ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('roles', 'Dashboard'); ?></a></li>
-        <li><a href='<?= site_url('admin/roles'); ?>'><?= __d('roles', 'Roles'); ?></a></li>
+        <li><a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <?= __d('roles', 'Dashboard'); ?></a></li>
+        <li><a href="<?= site_url('admin/roles'); ?>"><?= __d('roles', 'Roles'); ?></a></li>
         <li><?= __d('roles', 'Show Role'); ?></li>
     </ol>
 </section>
@@ -50,7 +50,7 @@
     </div>
 </div>
 
-<a class='btn btn-primary col-sm-2' href='<?= site_url('admin/roles'); ?>'><?= __d('roles', '<< Previous Page'); ?></a>
+<a class="btn btn-primary col-sm-2" href="<?= site_url('admin/roles'); ?>"><?= __d('roles', '<< Previous Page'); ?></a>
 
 <div class="clearfix"></div>
 <br>

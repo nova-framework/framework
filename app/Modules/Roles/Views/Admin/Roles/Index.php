@@ -1,7 +1,7 @@
 <section class="content-header">
     <h1><?= __d('roles', 'Roles'); ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('roles', 'Dashboard'); ?></a></li>
+        <li><a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <?= __d('roles', 'Dashboard'); ?></a></li>
         <li><?= __d('roles', 'Roles'); ?></li>
     </ol>
 </section>
@@ -32,63 +32,47 @@
         </div>
     </div>
     <div class="box-body no-padding">
-<?php
-$deletables = 0;
-
-if (! $roles->isEmpty()) {
-?>
+        <?php $deletables = 0; ?>
+        <?php if (! $roles->isEmpty()) { ?>
         <table id='left' class='table table-striped table-hover responsive'>
             <tr class="bg-navy disabled">
-                <th style='text-align: center; vertical-align: middle;'><?= __d('roles', 'ID'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('roles', 'Name'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('roles', 'Slug'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('roles', 'Description'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('roles', 'Users'); ?></th>
-                <th style='text-align: right; vertical-align: middle;'><?= __d('roles', 'Operations'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'ID'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'Name'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'Slug'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'Description'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'Users'); ?></th>
+                <th style="text-align: right; vertical-align: middle;"><?= __d('roles', 'Operations'); ?></th>
             </tr>
-<?php
-    foreach ($roles->getItems() as $role) {
-        echo "
-<tr>
-    <td style='text-align: center; vertical-align: middle;' width='5%'>" .$role->id ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='17%'>" .$role->name ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='17%'>" .$role->slug ."</td>
-    <td style='text-align: left; vertical-align: middle;' width='40%'>" .$role->description ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='6%'>" .$role->users->count() ."</td>
-    <td style='text-align: right; vertical-align: middle;' width='15%'>
-        <div class='btn-group' role='group' aria-label='...'>";
-
-        if (Gate::allows('delete', $role)) {
-            $deletables++;
-
-            echo "
-            <a class='btn btn-sm btn-danger' href='#' data-toggle='modal' data-target='#modal-delete-dialog' data-id='" .$role->id ."' title='" .__d('roles', 'Delete this Role') ."' role='button'><i class='fa fa-remove'></i></a>";
-        }
-
-        if (Gate::allows('update', $role)) {
-            echo "
-            <a class='btn btn-sm btn-success' href='" .site_url('admin/roles/' .$role->id .'/edit') ."' title='" .__d('roles', 'Edit this Role') ."' role='button'><i class='fa fa-pencil'></i></a>";
-        }
-
-        if (Gate::allows('view', $role)) {
-            echo "
-            <a class='btn btn-sm btn-warning' href='" .site_url('admin/roles/' .$role->id). "' title='". __d('roles', 'Show the Details') ."' role='button'><i class='fa fa-search'></i></a>";
-        }
-
-        echo "
-        </div>
-    </td>
-</tr>";
-
-    }
-?>
+            <?php foreach ($roles->getItems() as $role) { ?>
+            <tr>
+                <td style="text-align: center; vertical-align: middle;" width="5%"><?= $role->id; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="17%"><?= $role->name; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="17%"><?= $role->slug; ?></td>
+                <td style='text-align: left; vertical-align: middle;' width="40%"><?= $role->description; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="6%"><?= $role->users->count(); ?></td>
+                <td style="text-align: right; vertical-align: middle;" width="15%">
+                    <div class="btn-group" role="group" aria-label="...">
+                        <?php if (Gate::allows('delete', $role)) { ?>
+                        <?php $deletables++; ?>
+                        <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $role->id; ?>" title="<?= __d('roles', 'Delete this Role'); ?>" role="button"><i class="fa fa-remove"></i></a>
+                        <?php } ?>
+                        <?php if (Gate::allows('update', $role)) { ?>
+                        <a class="btn btn-sm btn-success" href="<?= site_url('admin/roles/' .$role->id .'/edit'); ?>" title="<?= __d('roles', 'Edit this Role'); ?>" role="button"><i class="fa fa-pencil"></i></a>
+                        <?php } ?>
+                        <?php if (Gate::allows('view', $role)) { ?>
+                        <a class="btn btn-sm btn-warning" href="<?= site_url('admin/roles/' .$role->id); ?>" title="<?= __d('roles', 'Show the Details'); ?>" role="button"><i class="fa fa-search"></i></a>
+                        <?php } ?>
+                    </div>
+                </td>
+            </tr>
+            <?php } ?>
         </table>
-<?php } else { ?>
+        <?php } else { ?>
         <div class="alert alert-warning" style="margin: 0 5px 5px;">
-            <h4><i class="icon fa fa-warning"></i> <?php echo strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('roles', 'No registered Roles'); ?></h4>
+            <h4><i class="icon fa fa-warning"></i> <?= strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('roles', 'No registered Roles'); ?></h4>
             <?= __d('roles', 'There are no registered Roles.'); ?>
         </div>
-<?php } ?>
+    <?php } ?>
     </div>
 </div>
 

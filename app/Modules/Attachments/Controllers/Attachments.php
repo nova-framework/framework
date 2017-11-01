@@ -7,6 +7,8 @@ use Nova\Http\UploadedFile;
 use Nova\Http\Request;
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Filesystem\Filesystem;
+use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Response;
 
 use App\Modules\Attachments\Controllers\BaseController;
@@ -107,6 +109,13 @@ class Attachments extends BaseController
         $ownerableId   = $request->input('owner_id');
         $ownerableType = $request->input('owner_type');
 
+        // Check the uploaded file ownnership via Auth System.
+        $guard = $this->getGuardByModel($ownerableType);
+
+        if (! Auth::guard($guard)->check()) {
+            return Response::json(array('error' => 'Invalid ownership'), 400);
+        }
+
         $attachment = Attachment::create(array(
             'name' => $file->getClientOriginalName(),
             'size' => $file->getSize(),
@@ -139,6 +148,13 @@ class Attachments extends BaseController
         return Response::json($data, 200);
     }
 
+    protected function ensureDirectoryExists($path)
+    {
+        if (! $this->files->exists($directory = dirname($path))) {
+            $this->files->makeDirectory($directory, 0755, true, true);
+        }
+    }
+
     protected function getFilePath(Request $request)
     {
         $uuid = $request->input('uuid');
@@ -146,10 +162,29 @@ class Attachments extends BaseController
         return storage_path('upload') .DS .sha1($uuid) .'.part';
     }
 
-    protected function ensureDirectoryExists($path)
+    protected function getGuardByModel($model)
     {
-        if (! $this->files->exists($directory = dirname($path))) {
-            $this->files->makeDirectory($directory, 0755, true, true);
+        if (is_null($provider = $this->getAuthProvider($model))) {
+            return null;
+        }
+
+        $guards = Config::get('auth.guards', array());
+
+        foreach ($guards as $guard => $options) {
+            if ($options['provider'] == $provider) {
+                return $guard;
+            }
+        }
+    }
+
+    protected function getAuthProvider($model)
+    {
+        $providers = Config::get('auth.providers', array());
+
+        foreach ($providers as $provider => $options) {
+            if ($options['model'] == $model) {
+                return $provider;
+            }
         }
     }
 }

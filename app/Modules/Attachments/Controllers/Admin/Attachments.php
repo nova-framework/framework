@@ -42,8 +42,8 @@ class Attachments extends BaseController
             'deletable'    => true,
 
             // Limits.
-            'maxFiles'     => 1000,
-            'maxFilessize' => 1000, // 1GB
+            'maxFiles'    => 1000,
+            'maxFilesize' => 1000, // 1GB
         );
 
         return $this->createView()

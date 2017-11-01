@@ -147,6 +147,8 @@ class Attachments extends BaseController
 
     protected function ensureDirectoryExists($path)
     {
-        return $this->files->makeDirectory(dirname($path), 0755, true, true);
+        if (! $this->files->exists($directory = dirname($path))) {
+            $this->files->makeDirectory($directory, 0755, true, true);
+        }
     }
 }

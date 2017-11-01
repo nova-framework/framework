@@ -7,8 +7,6 @@ use Nova\Http\UploadedFile;
 use Nova\Http\Request;
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Filesystem\Filesystem;
-use Nova\Support\Facades\Auth;
-use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Response;
 
 use App\Modules\Attachments\Controllers\BaseController;
@@ -43,6 +41,10 @@ class Attachments extends BaseController
 
     public function store(Request $request)
     {
+        if (! $request->hasFile('file')) {
+            return Response::json(array('error' => 'Invalid request received.'), 400);
+        }
+
         $file = $request->file('file');
 
         if (! $request->has('chunks')) {
@@ -64,6 +66,10 @@ class Attachments extends BaseController
 
     public function done(Request $request)
     {
+        if (! $request->has('uuid')) {
+            return Response::json(array('error' => 'Invalid request received.'), 400);
+        }
+
         $fileName = $request->input('name');
         $mimeType = $request->input('type');
 

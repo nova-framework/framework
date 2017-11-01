@@ -125,7 +125,7 @@ class Attachments extends BaseController
 
             // Fill the 'ownerable' morph.
             'ownerable_id'   => $ownerId,
-            'ownerable_type' => $this->getUserModelByGuard($guard),
+            'ownerable_type' => $this->getModelByGuard($guard),
 
             // Fill the 'attachable' morph with dummy values.
             'attachable_id'   => 0,
@@ -161,7 +161,7 @@ class Attachments extends BaseController
         return storage_path('upload') .DS .sha1($uuid) .'.part';
     }
 
-    protected function getUserModelbyGuard($guard)
+    protected function getModelbyGuard($guard)
     {
         if (is_null($guard)) {
             $guard = Config::get('auth.defaults.guard', 'web');

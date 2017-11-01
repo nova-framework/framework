@@ -115,6 +115,8 @@ class Attachments extends BaseController
             return Response::json(array('error' => 'Invalid ownership'), 400);
         }
 
+        $authModel = $this->getAuthModel($guard);
+
         $attachment = Attachment::create(array(
             'name' => $file->getClientOriginalName(),
             'size' => $file->getSize(),
@@ -125,7 +127,7 @@ class Attachments extends BaseController
 
             // Fill the 'ownerable' morph.
             'ownerable_id'   => $authId,
-            'ownerable_type' => $this->getModelByGuard($guard),
+            'ownerable_type' => $authModel,
 
             // Fill the 'attachable' morph with dummy values.
             'attachable_id'   => 0,
@@ -161,7 +163,7 @@ class Attachments extends BaseController
         return storage_path('upload') .DS .sha1($uuid) .'.part';
     }
 
-    protected function getModelbyGuard($guard)
+    protected function getAuthModel($guard)
     {
         if (is_null($guard)) {
             $guard = Config::get('auth.defaults.guard', 'web');

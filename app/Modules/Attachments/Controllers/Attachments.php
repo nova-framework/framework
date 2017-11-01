@@ -2,11 +2,12 @@
 
 namespace App\Modules\Attachments\Controllers;
 
+use Nova\Container\Container;
 use Nova\Http\UploadedFile;
 use Nova\Http\Request;
 use Nova\Database\ORM\ModelNotFoundException;
+use Nova\Filesystem\Filesystem;
 use Nova\Support\Facades\Auth;
-use Nova\Support\Facades\File;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Response;
 
@@ -16,6 +17,22 @@ use App\Modules\Attachments\Models\Attachment;
 
 class Attachments extends BaseController
 {
+    /**
+     * The Filesystem instance.
+     *
+     * @var \Nova\Filesystem\Filesystem
+     */
+    protected $files;
+
+
+    public function __construct(Container $container, Filesystem $files)
+    {
+        parent::__construct($container);
+
+        //
+        $this->files = $files;
+    }
+
 
     public function serve(Request $request, $method, $token, $fileName)
     {
@@ -35,13 +52,10 @@ class Attachments extends BaseController
         // Get the temporary file path.
         $filePath = $this->getFilePath($request);
 
-        // Create the temporary file's directory.
-        File::makeDirectory(dirname($filePath), 0755, true, true);
+        // Store the received chunk data in the temporary file.
+        $this->ensureDirectoryExists($filePath);
 
-        // Appends the chunk's data to the temporary file.
-        $tempPath = $file->getRealPath();
-
-        if (file_put_contents($filePath, file_get_contents($tempPath), FILE_APPEND) === false) {
+        if ($this->files->append($filePath, $this->files->get($file->getRealPath())) === false) {
             return Response::json(array('error' => 'Chunk could not be saved.'), 400);
         }
 
@@ -51,20 +65,20 @@ class Attachments extends BaseController
     public function done(Request $request)
     {
         $fileName = $request->input('name');
-        $fileSize = $request->input('size');
         $mimeType = $request->input('type');
+
+        $fileSize = (int) $request->input('size');
 
         // Get the temporary file path.
         $filePath = $this->getFilePath($request);
 
-        if (! is_readable($filePath) || ($fileSize != File::size($filePath))) {
-            return Response::json(array('error' => 'Invalid temporary file.'), 400);
+        if ($this->files->exists($filePath) && ($this->files->size($filePath) === $fileSize)) {
+            $file = new UploadedFile($filePath, $fileName, $mimeType, $fileSize, UPLOAD_ERR_OK, true);
+
+            return $this->handleUploadedFile($file, $request, $filePath);
         }
 
-        // Create an UploadedFile instance from the temporary file.
-        $file = new UploadedFile($filePath, $fileName, $mimeType, $fileSize, UPLOAD_ERR_OK, true);
-
-        return $this->handleUploadedFile($file, $request, $filePath);
+        return Response::json(array('error' => 'Invalid temporary file.'), 400);
     }
 
     public function destroy($id)
@@ -103,15 +117,16 @@ class Attachments extends BaseController
             'attachable_type' => '',
         ));
 
-        if (! is_null($filePath) && file_exists($filePath)) {
-            @unlink($filePath);
+        if (! is_null($filePath) && $this->files->exists($filePath)) {
+            $this->files->delete($filePath);
         }
 
         $data = array(
-            'id'       => $attachment->id,
-            'url'      => $attachment->url(),
+            'id'  => $attachment->id,
+            'url' => $attachment->url(),
+
+            // The download URL of this file.
             'download' => $attachment->url(true),
-            'status'   => 'success',
         );
 
         return Response::json($data, 200);
@@ -122,5 +137,10 @@ class Attachments extends BaseController
         $uuid = $request->input('uuid');
 
         return storage_path('upload') .DS .sha1($uuid) .'.part';
+    }
+
+    protected function ensureDirectoryExists($path)
+    {
+        return $this->files->makeDirectory(dirname($path), 0755, true, true);
     }
 }

@@ -57,7 +57,7 @@ class Attachments extends BaseController
         // Store the received chunk data in the temporary file.
         $this->ensureDirectoryExists($filePath);
 
-        if ($this->files->append($filePath, $this->files->get($file->getRealPath())) === false) {
+        if ($this->files->append($filePath, $this->files->get($file->path())) === false) {
             return Response::json(array('error' => 'Chunk could not be saved'), 400);
         }
 
@@ -66,22 +66,23 @@ class Attachments extends BaseController
 
     public function done(Request $request)
     {
-        if (! $request->has('uuid') || ! $request->input('name')) {
+        if (! $request->has('uuid') || ! $request->has('name')) {
             return Response::json(array('error' => 'Invalid request'), 400);
         }
 
-        $fileName = $request->input('name');
+        $originalName = $request->input('name');
+
         $mimeType = $request->input('type');
 
-        $fileSize = (int) $request->input('size');
+        $size = $request->input('size');
 
         // Get the temporary file path.
-        $filePath = $this->getFilePath($request);
+        $path = $this->getFilePath($request);
 
-        if ($this->files->exists($filePath) && ($fileSize == $this->files->size($filePath))) {
-            $file = new UploadedFile($filePath, $fileName, $mimeType, $fileSize, UPLOAD_ERR_OK, true);
+        if ($this->files->exists($path) && ($this->files->size($path) === (int) $size)) {
+            $file = new UploadedFile($path, $originalName, $mimeType, $size, UPLOAD_ERR_OK, true);
 
-            return $this->handleUploadedFile($file, $request, $filePath);
+            return $this->handleUploadedFile($file, $request, $path);
         }
 
         return Response::json(array('error' => 'Invalid temporary file'), 400);
@@ -101,7 +102,7 @@ class Attachments extends BaseController
         return Response::json(array('success' => true), 200);
     }
 
-    protected function handleUploadedFile(UploadedFile $file, Request $request, $filePath = null)
+    protected function handleUploadedFile(UploadedFile $file, Request $request, $path = null)
     {
         $ownerableId   = $request->input('owner_id');
         $ownerableType = $request->input('owner_type');
@@ -123,8 +124,8 @@ class Attachments extends BaseController
             'attachable_type' => '',
         ));
 
-        if (! is_null($filePath) && $this->files->exists($filePath)) {
-            $this->files->delete($filePath);
+        if (! is_null($path) && $this->files->exists($path)) {
+            $this->files->delete($path);
         }
 
         $data = array(

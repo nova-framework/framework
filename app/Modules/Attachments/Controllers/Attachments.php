@@ -11,7 +11,7 @@ use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Response;
 
-use App\Modules\Attachments\Controllers\FileServer as BaseController;
+use App\Modules\Attachments\Controllers\BaseController;
 use App\Modules\Attachments\Models\Attachment;
 
 

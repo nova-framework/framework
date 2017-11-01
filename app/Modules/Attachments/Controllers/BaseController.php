@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use Carbon\Carbon;
 
 
-class FileServer extends Controller
+class BaseController extends Controller
 {
     /**
      * The IoC container instance.

@@ -106,11 +106,10 @@ class Attachments extends BaseController
 
     protected function handleUploadedFile(UploadedFile $file, Request $request, $path = null)
     {
-        $ownerableId   = $request->input('owner_id');
-        $ownerableType = $request->input('owner_type');
+        $ownerId = $request->input('owner_id');
 
         // Check the uploaded file ownnership via Auth System.
-        $guard = $this->getGuardByUserModel($ownerableType);
+        $guard = $request->input('guard');
 
         if (! Auth::guard($guard)->check()) {
             return Response::json(array('error' => 'Invalid ownership'), 400);
@@ -125,8 +124,8 @@ class Attachments extends BaseController
             'file' => $file,
 
             // Fill the 'ownerable' morph.
-            'ownerable_id'   => $ownerableId,
-            'ownerable_type' => $ownerableType,
+            'ownerable_id'   => $ownerId,
+            'ownerable_type' => $this->getUserModelByGuard($guard),
 
             // Fill the 'attachable' morph with dummy values.
             'attachable_id'   => 0,
@@ -162,29 +161,14 @@ class Attachments extends BaseController
         return storage_path('upload') .DS .sha1($uuid) .'.part';
     }
 
-    protected function getGuardByUserModel($model)
+    protected function getUserModelbyGuard($guard)
     {
-        if (is_null($provider = $this->getAuthProvider($model))) {
-            return null;
+        if (is_null($guard)) {
+            $guard = Config::get('auth.defaults.guard', 'web');
         }
 
-        $guards = Config::get('auth.guards', array());
+        $provider = Config::get("auth.guards.{$guard}.provider", 'users');
 
-        foreach ($guards as $guard => $options) {
-            if ($options['provider'] == $provider) {
-                return $guard;
-            }
-        }
-    }
-
-    protected function getAuthProvider($model)
-    {
-        $providers = Config::get('auth.providers', array());
-
-        foreach ($providers as $provider => $options) {
-            if ($options['model'] == $model) {
-                return $provider;
-            }
-        }
+        return Config::get("auth.providers.{$provider}.model");
     }
 }

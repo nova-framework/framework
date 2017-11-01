@@ -152,8 +152,8 @@ $(function () {
 <script>
 
 $(function () {
-    var ownerId   = '<?= $user->id; ?>';
-    var ownerType = '<?= str_replace('\\', '\\\\', get_class($user)); ?>';
+    var authId    = '<?= $authId; ?>';
+    var authGuard = '<?= $authGuard; ?>';
 
     var setupAttachment = function(preview, name, type, id, url, download) {
         preview.attr('data-id', id);
@@ -269,8 +269,8 @@ $(function () {
                     size: file.size,
 
                     // Setup the ownership.
-                    owner_id:   ownerId,
-                    owner_type: ownerType
+                    auth_id:    authId,
+                    auth_guard: authGuard
                 },
                 dataType: 'json',
                 success: function(data, textStatus, xhr) {
@@ -309,10 +309,11 @@ $(function () {
     });
 
     dropzone.on("sending", function(file, xhr, formData) {
-        formData.append('owner_id',   ownerId);
-        formData.append('owner_type', ownerType);
+        // Setup the ownership.
+        formData.append('auth_id',    authId);
+        formData.append('auth_guard', authGuard);
 
-        //
+        // Setup the preview.
         var preview = $(file.previewElement);
 
         preview.find('.working').hide();

@@ -167,7 +167,7 @@ class Attachments extends BaseController
             $guard = Config::get('auth.defaults.guard', 'web');
         }
 
-        $provider = Config::get("auth.guards.{$guard}.provider", 'users');
+        $provider = Config::get("auth.guards.{$guard}.provider");
 
         return Config::get("auth.providers.{$provider}.model");
     }

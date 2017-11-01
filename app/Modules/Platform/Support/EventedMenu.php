@@ -20,7 +20,7 @@ class EventedMenu
      * @param  string  $name
      * @param  \Nova\Auth\UserInterface   $user
      * @param  string|null  $url
-     * @param  array  $parameters
+     * @param  array  $payload
      * @return array
      */
     public static function get($name, UserInterface $user, $url = null, array $payload = array())

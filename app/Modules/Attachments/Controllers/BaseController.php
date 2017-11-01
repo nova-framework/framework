@@ -56,6 +56,7 @@ class BaseController extends Controller
     {
         $path = $this->filePath .$token .'-' .$fileName;
 
+        // Get the Assets Distpatcher instance.
         $dispatcher = $this->container->make('assets.dispatcher');
 
         return $dispatcher->serve($path, $request, $disposition, $fileName, false);

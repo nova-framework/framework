@@ -110,7 +110,7 @@ class Attachments extends BaseController
         $ownerableType = $request->input('owner_type');
 
         // Check the uploaded file ownnership via Auth System.
-        $guard = $this->getGuardByModel($ownerableType);
+        $guard = $this->getGuardByUserModel($ownerableType);
 
         if (! Auth::guard($guard)->check()) {
             return Response::json(array('error' => 'Invalid ownership'), 400);
@@ -162,7 +162,7 @@ class Attachments extends BaseController
         return storage_path('upload') .DS .sha1($uuid) .'.part';
     }
 
-    protected function getGuardByModel($model)
+    protected function getGuardByUserModel($model)
     {
         if (is_null($provider = $this->getAuthProvider($model))) {
             return null;

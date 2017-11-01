@@ -42,7 +42,7 @@ class Attachments extends BaseController
     public function store(Request $request)
     {
         if (! $request->hasFile('file')) {
-            return Response::json(array('error' => 'Invalid request received.'), 400);
+            return Response::json(array('error' => 'Invalid request'), 400);
         }
 
         $file = $request->file('file');
@@ -58,7 +58,7 @@ class Attachments extends BaseController
         $this->ensureDirectoryExists($filePath);
 
         if ($this->files->append($filePath, $this->files->get($file->getRealPath())) === false) {
-            return Response::json(array('error' => 'Chunk could not be saved.'), 400);
+            return Response::json(array('error' => 'Chunk could not be saved'), 400);
         }
 
         return Response::json(array('success' => true), 200);
@@ -66,8 +66,8 @@ class Attachments extends BaseController
 
     public function done(Request $request)
     {
-        if (! $request->has('uuid')) {
-            return Response::json(array('error' => 'Invalid request received.'), 400);
+        if (! $request->has('uuid') || ! $request->input('name')) {
+            return Response::json(array('error' => 'Invalid request'), 400);
         }
 
         $fileName = $request->input('name');
@@ -78,13 +78,13 @@ class Attachments extends BaseController
         // Get the temporary file path.
         $filePath = $this->getFilePath($request);
 
-        if ($this->files->exists($filePath) && ($this->files->size($filePath) === $fileSize)) {
+        if ($this->files->exists($filePath) && ($fileSize == $this->files->size($filePath))) {
             $file = new UploadedFile($filePath, $fileName, $mimeType, $fileSize, UPLOAD_ERR_OK, true);
 
             return $this->handleUploadedFile($file, $request, $filePath);
         }
 
-        return Response::json(array('error' => 'Invalid temporary file.'), 400);
+        return Response::json(array('error' => 'Invalid temporary file'), 400);
     }
 
     public function destroy($id)

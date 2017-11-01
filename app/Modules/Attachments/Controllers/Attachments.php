@@ -106,16 +106,11 @@ class Attachments extends BaseController
 
     protected function handleUploadedFile(UploadedFile $file, Request $request, $path = null)
     {
-        $authId = $request->input('auth_id');
-
-        // Check the uploaded file ownnership via Auth System.
         $guard = $request->input('auth_guard');
 
-        if (! Auth::guard($guard)->check()) {
+        if (is_null($user = Auth::guard($guard)->user())) {
             return Response::json(array('error' => 'Invalid ownership'), 400);
         }
-
-        $authModel = $this->getAuthModel($guard);
 
         $attachment = Attachment::create(array(
             'name' => $file->getClientOriginalName(),
@@ -126,8 +121,8 @@ class Attachments extends BaseController
             'file' => $file,
 
             // Fill the 'ownerable' morph.
-            'ownerable_id'   => $authId,
-            'ownerable_type' => $authModel,
+            'ownerable_id'   => $user->id,
+            'ownerable_type' => $this->getAuthProviderModel($guard),
 
             // Fill the 'attachable' morph with dummy values.
             'attachable_id'   => 0,
@@ -163,9 +158,9 @@ class Attachments extends BaseController
         return storage_path('upload') .DS .sha1($uuid) .'.part';
     }
 
-    protected function getAuthModel($guard)
+    protected function getAuthProviderModel($guard)
     {
-        if (is_null($guard)) {
+        if (is_null($guard) || (! empty($guard) && ! Config::has('auth.guards.' .$guard))) {
             $guard = Config::get('auth.defaults.guard', 'web');
         }
 

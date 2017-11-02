@@ -7,7 +7,6 @@ use Nova\Support\ServiceProvider as BaseServiceProvider;
 use Shared\DomPDF\PDF;
 
 use Dompdf\Dompdf;
-//use Dompdf\Css\Stylesheet as DompdfStylesheet;
 
 use Exception;
 
@@ -56,8 +55,6 @@ class ServiceProvider extends BaseServiceProvider
             $dompdf = new Dompdf($options);
 
             $dompdf->setBasePath(realpath(base_path('webroot')));
-
-            //$dompdf->setCss(new DompdfStylesheet($dompdf));
 
             return $dompdf;
         });

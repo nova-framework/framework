@@ -148,6 +148,7 @@ return array(
         'Shared\Auth\Reminders\ReminderServiceProvider',
         'Shared\Auth\ConsoleServiceProvider',
         'Shared\Database\Backup\ConsoleServiceProvider',
+        'Shared\DomPDF\ServiceProvider',
         'Shared\Notifications\NotificationServiceProvider',
         'Shared\Routing\RoutingServiceProvider',
         'Shared\Widgets\WidgetServiceProvider',
@@ -227,6 +228,7 @@ return array(
         'Module'        => 'Nova\Support\Facades\Module',
 
         // The Shared Facades.
+        'PDF'           => 'Shared\Support\Facades\PDF',
         'Notification'  => 'Shared\Support\Facades\Notification',
         'Password'      => 'Shared\Support\Facades\Password',
         'Widget'        => 'Shared\Support\Facades\Widget',

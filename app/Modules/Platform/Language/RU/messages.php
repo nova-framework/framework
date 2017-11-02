@@ -20,6 +20,7 @@ return array (
   'Black Light' => '',
   'Blue' => '',
   'Blue Light' => '',
+  'Center Login' => '',
   'Change Password' => '',
   'Confirm Password' => '',
   'Created At' => '',

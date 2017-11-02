@@ -7,6 +7,7 @@ return array (
   'Are you sure?' => '',
   'Attached file deleted' => '',
   'Attachments' => '',
+  'Avoid changing page as this will cut your editing session.' => '',
   'Cancel' => '',
   'Cancel upload' => '',
   'Close' => '',

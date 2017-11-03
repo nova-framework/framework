@@ -412,6 +412,7 @@ $(function () {
 
     }, 10000);
 
+    // Start the show.
     $('#notifications-clear').hide();
 
     handleHeartbeat();

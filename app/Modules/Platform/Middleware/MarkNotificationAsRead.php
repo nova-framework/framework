@@ -17,22 +17,23 @@ class MarkNotificationAsRead
     public function handle(Request $request, Closure $next)
     {
         if ($request->has('read')) {
-            $uuid = $request->input('read');
-
-            $notification = Notification::where('uuid', $uuid)->first();
+            $notification = Notification::where('uuid', $request->input('read'))->first();
 
             if (! is_null($notification)) {
-                $guard = $this->getGuardByAuthModel($notification->notifiable_type);
-
-                $user = Auth::guard($guard)->user();
-
-                if (! is_null($user) && ($user->id == $notification->notifiable_id)) {
-                    $notification->markAsRead();
-                }
+                $this->handleNotification($notification);
             }
         }
 
         return $next($request);
+    }
+
+    protected function handleNotification(Notification $notification)
+    {
+        $guard = $this->getGuardByAuthModel($notification->notifiable_type);
+
+        if (! is_null($user = Auth::guard($guard)->user()) && ($user->id == $notification->notifiable_id)) {
+            $notification->markAsRead();
+        }
     }
 
     protected function getGuardByAuthModel($model)

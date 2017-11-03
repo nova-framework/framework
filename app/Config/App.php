@@ -89,7 +89,7 @@ return array(
      */
     'middlewareGroups' => array(
         'web' => array(
-            'Nova\Forensics\Middleware\HandleProfiling',
+            'Shared\Forensics\Middleware\HandleProfiling',
             'App\Middleware\EncryptCookies',
             'Nova\Cookie\Middleware\AddQueuedCookiesToResponse',
             'Nova\Session\Middleware\StartSession',

@@ -1,5 +1,25 @@
 /* Your styles here */
 
+.navbar-nav > .notifications-menu > .dropdown-menu {
+    width: 440px;
+}
+
+.navbar-nav > .notifications-menu > .dropdown-menu > li.header {
+    /*padding: 10px;*/
+}
+
+.navbar-nav > .notifications-menu > .dropdown-menu > li.header > a,
+.navbar-nav > .notifications-menu > .dropdown-menu > li.header > hover {
+    padding: 0;
+    color: #444444;
+    background: none;
+    font-size: 14px;
+}
+
+.navbar-nav > .notifications-menu > .dropdown-menu > li.footer > a {
+    /*border-top: 1px solid #eeeeee;*/
+}
+
 .alert-notify {
     color: #333;
     background: #fff;

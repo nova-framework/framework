@@ -249,7 +249,52 @@ $(function () {
 <script>
 
 $(function () {
+    var notifications = [];
+
     var lastNotificationId = 0;
+
+    $('#notifications-clear').on('click', function(event) {
+        event.preventDefault();
+
+        if (notifications.length == 0) {
+            return;
+        }
+
+        $.ajax({
+            url: "<?= site_url('notifications'); ?>",
+            type: "POST",
+            data: {
+                nid: notifications
+            },
+            dataType: 'json',
+            success: function (data) {
+                notifications = [];
+
+                lastNotificationId = 0;
+
+                // Item Label.
+                $('li.notifications-menu > a.dropdown-toggle > span.label').hide();
+
+                // Title.
+                var title = "<?= __d('system', 'You have no notifications'); ?>";
+
+                $('#notifications-header').find('.title').html(title);
+
+                // List.
+                $('#notifications-list').html('');
+
+                notify(
+                    "<?= __d('admin_lite', 'Notifications updated'); ?>",
+                    "<?= __d('admin_lite', 'The shown Notifications was marked as read.'); ?>",
+                    'success'
+                );
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                //
+            },
+            timeout : 15000 // Timeout of the ajax call.
+        });
+    });
 
     handleHeartbeat = function () {
         $.post("<?= site_url('heartbeat'); ?>",
@@ -304,7 +349,7 @@ $(function () {
         // Handle the dropdown header.
         var title = sprintf("<?= __d('system', 'You have %d notification(s)'); ?>", count);
 
-        notificationsHeader.html(title);
+        notificationsHeader.find('.title').html(title);
 
         // Handle the notifications list.
         if (data.items.length > 0) {
@@ -316,10 +361,13 @@ $(function () {
 
     parseNotificationItems = function (items) {
         return items.map(function (item) {
+            notifications.push(item.id);
+
+            //
             var icon  = item.icon  ? item.icon  : 'bell';
             var color = item.color ? item.color : 'aqua';
 
-            return sprintf('<li><a href="%s?read=%s" target="_blank"><i class="fa fa-%s text-%s"></i> %s</s><li>', item.link, item.id, icon, color, item.message);
+            return sprintf('<li><a href="%s?read=%s" target="_blank"><i class="fa fa-%s text-%s"></i> %s</s><li>', item.link, item.uuid, icon, color, item.message);
         });
     }
 

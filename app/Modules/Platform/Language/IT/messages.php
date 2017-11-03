@@ -51,6 +51,7 @@ return array (
   'Mail from Adress' => '',
   'Mail from Name' => '',
   'Mailer Settings' => '',
+  'Mark all as read' => '',
   'Mark as read' => '',
   'Message' => '',
   'Messages' => '',

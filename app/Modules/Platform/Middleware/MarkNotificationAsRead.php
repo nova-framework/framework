@@ -37,13 +37,15 @@ class MarkNotificationAsRead
 
     protected function getGuardByAuthModel($model)
     {
-        if (! is_null($provider = $this->getAuthProviderByModel($model))) {
-            $guards = Config::get('auth.guards', array());
+        if (is_null($provider = $this->getAuthProviderByModel($model))) {
+            return;
+        }
 
-            foreach ($guards as $guard => $options) {
-                if ($options['provider'] == $provider) {
-                    return $guard;
-                }
+        $guards = Config::get('auth.guards', array());
+
+        foreach ($guards as $guard => $options) {
+            if ($options['provider'] == $provider) {
+                return $guard;
             }
         }
     }

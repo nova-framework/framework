@@ -275,10 +275,12 @@ $(function () {
                 // Item Label.
                 $('li.notifications-menu > a.dropdown-toggle > span.label').hide();
 
-                // Title.
+                // Header.
                 var title = "<?= __d('system', 'You have no notifications'); ?>";
 
                 $('#notifications-header').find('.title').html(title);
+
+                $('#notifications-clear').hide();
 
                 // List.
                 $('#notifications-list').html('');
@@ -351,6 +353,8 @@ $(function () {
 
         notificationsHeader.find('.title').html(title);
 
+        $('#notifications-clear').show();
+
         // Handle the notifications list.
         if (data.items.length > 0) {
             var html = parseNotificationItems(data.items);
@@ -383,6 +387,8 @@ $(function () {
         handleHeartbeat();
 
     }, 10000);
+
+    $('#notifications-clear').hide();
 
     handleHeartbeat();
 });

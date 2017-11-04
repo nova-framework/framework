@@ -45,7 +45,7 @@
             "Shared\\" : "shared/"
         },
         "files": [
-            "shared/helpers.php"
+            "shared/Support/helpers.php"
         ]
     },
     "scripts": {

@@ -32,7 +32,7 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define the routes for the module.
      *
-     * @param  \Illuminate\Routing\Router $router
+     * @param  \Nova\Routing\Router $router
      * @return void
      */
     public function map(Router $router)

@@ -27,7 +27,7 @@ class Pages extends BaseController
     protected $layout = 'Static';
 
 
-    public function showPage($slug = null)
+    public function show($slug = null)
     {
         list ($view, $title) = $this->parseSlug($slug, 'pages');
 

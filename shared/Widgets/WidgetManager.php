@@ -111,7 +111,7 @@ class WidgetManager
         {
             if ($a['order'] == $b['order']) return 0;
 
-            return ($a['order'] > $b['order']) ? -1 : 1;
+            return ($a['order'] > $b['order']) ? 1 : -1;
         });
 
         // We render each registered Widget for this position.

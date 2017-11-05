@@ -122,7 +122,7 @@ abstract class BaseController extends Controller
             return View::createLayout($layout, $theme);
         }
 
-        $view = 'Layouts/' .$layout;
+        $view = 'Layouts/' .($layout ?: 'Default');
 
         return View::make($view);
     }

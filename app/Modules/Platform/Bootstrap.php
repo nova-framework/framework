@@ -35,3 +35,5 @@ Route::middleware('role', function (Request $request, Closure $next, $role)
  * Register the Widgets.
  */
 Widget::register('App\Modules\Platform\Widgets\UsersOnline', 'onlineUsers', 'backend.dashboard.content', 2);
+
+Widget::register('App\Modules\Platform\Widgets\UsersOnline', 'onlineUsers', 'frontend.dashboard.content', 2);

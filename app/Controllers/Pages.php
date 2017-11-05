@@ -70,7 +70,7 @@ class Pages extends BaseController
         }
 
         $title = Str::title(
-            str_replace(array('-', '_'), ' ', $page ?: ($path ?: $category))
+            str_replace(array('-', '_'), ' ', $page ?: ($path ?: $base))
         );
 
         return array($view, $title);

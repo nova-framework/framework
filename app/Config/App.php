@@ -170,20 +170,6 @@ return array(
      * The registered Class Aliases.
      */
     'aliases' => array(
-        // The Helpers.
-        'Date'          => 'Nova\Helpers\Date',
-        'Document'      => 'Nova\Helpers\Document',
-        'Ftp'           => 'Nova\Helpers\Ftp',
-        'GeoCode'       => 'Nova\Helpers\GeoCode',
-        'Inflector'     => 'Nova\Helpers\Inflector',
-        'Number'        => 'Nova\Helpers\Number',
-        'ReservedWords' => 'Nova\Helpers\ReservedWords',
-        'SimpleCurl'    => 'Nova\Helpers\SimpleCurl',
-        'Tags'          => 'Nova\Helpers\Tags',
-
-        // The Forensics Console.
-        'Console'       => 'Nova\Forensics\Console',
-
         // The Support Classes.
         'Arr'           => 'Nova\Support\Arr',
         'Assets'        => 'Nova\Support\Assets',
@@ -232,6 +218,20 @@ return array(
         'Notification'  => 'Shared\Support\Facades\Notification',
         'Password'      => 'Shared\Support\Facades\Password',
         'Widget'        => 'Shared\Support\Facades\Widget',
+
+        // The Shared Helpers.
+        'Date'          => 'Shared\Helpers\Date',
+        'Document'      => 'Shared\Helpers\Document',
+        'Ftp'           => 'Shared\Helpers\Ftp',
+        'GeoCode'       => 'Shared\Helpers\GeoCode',
+        'Inflector'     => 'Shared\Helpers\Inflector',
+        'Number'        => 'Shared\Helpers\Number',
+        'ReservedWords' => 'Shared\Helpers\ReservedWords',
+        'SimpleCurl'    => 'Shared\Helpers\SimpleCurl',
+        'Tags'          => 'Shared\Helpers\Tags',
+
+        // The Forensics Console.
+        'Console'       => 'Nova\Forensics\Console',
     ),
 
 );

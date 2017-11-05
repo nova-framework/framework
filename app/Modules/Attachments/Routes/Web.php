@@ -2,7 +2,7 @@
 
 /*
 |--------------------------------------------------------------------------
-| Module Routes
+| Module Web Routes
 |--------------------------------------------------------------------------
 |
 | Here is where you can register all of the routes for the module.
@@ -10,6 +10,7 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
+
 
 Route::group(array('prefix' => '/', 'middleware' => 'auth'), function ()
 {

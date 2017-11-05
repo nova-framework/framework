@@ -2,7 +2,7 @@
 
 /*
 |--------------------------------------------------------------------------
-| Module Routes
+| Module Web Routes
 |--------------------------------------------------------------------------
 |
 | Here is where you can register all of the routes for the module.
@@ -12,5 +12,9 @@
 */
 
 
-Route::get('chat', array('middleware' => 'auth', 'uses' => 'Chat@index'));
-
+// The Adminstration Routes.
+Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
+{
+    Route::get( 'permissions',       array('middleware' => 'auth', 'uses' => 'Permissions@index'));
+    Route::post('permissions',       array('middleware' => 'auth', 'uses' => 'Permissions@update'));
+});

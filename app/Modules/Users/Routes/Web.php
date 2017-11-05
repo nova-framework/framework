@@ -1,13 +1,16 @@
 <?php
-/**
- * Routes - all Module's specific Routes are defined here.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
+/*
+|--------------------------------------------------------------------------
+| Module Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register all of the routes for the module.
+| It's a breeze. Simply tell Nova the URIs it should respond to
+| and give it the Closure to execute when that URI is requested.
+|
+*/
 
-/** Define static routes. */
 
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()

@@ -45,7 +45,7 @@ class Pages extends BaseController
             ->nest('content', $view);
     }
 
-    protected function parseSlug($slug, $base)
+    protected function parseSlug($slug, $type)
     {
         $segments = explode('/', $slug, 2);
 
@@ -53,7 +53,7 @@ class Pages extends BaseController
         list ($page, $subpage) = array_pad($segments, 2, null);
 
         // Compute the full View name, i.e. 'about-us' -> 'Pages/AboutUs'
-        array_unshift($segments, $base);
+        array_unshift($segments, $type);
 
         $view = implode('/', array_map(function ($value)
         {
@@ -69,7 +69,7 @@ class Pages extends BaseController
         }
 
         $title = Str::title(
-            str_replace(array('-', '_'), ' ', $subpage ?: ($page ?: $base))
+            str_replace(array('-', '_'), ' ', $subpage ?: ($page ?: $type))
         );
 
         return array($view, $title);

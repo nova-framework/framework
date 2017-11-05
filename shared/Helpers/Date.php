@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Nova\Helpers;
+namespace Shared\Helpers;
 
 /**
  * A collection of methods for working with dates.

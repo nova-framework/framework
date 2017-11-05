@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Nova\Helpers;
+namespace Shared\Helpers;
 
 /**
  * Contains methods for converting number formats and getting a percentage.

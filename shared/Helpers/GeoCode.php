@@ -5,7 +5,7 @@
  * @author Mark Parrish - mark@pipcommunications.com - http://www.pipcommunications.com
  * @version 3.0
  */
-namespace Nova\Helpers;
+namespace Shared\Helpers;
 
 /**
  * A collection of methods for working with Google's GeoCoder.

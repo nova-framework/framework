@@ -2,6 +2,7 @@
 
 namespace App\Modules\Messages\Widgets;
 
+use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\View;
 
 use Shared\Widgets\Widget;
@@ -14,7 +15,9 @@ class Messages extends Widget
 
     public function render(array $parameters = array())
     {
-        $count = Message::count();
+        $authUser = Auth::user();
+
+        $count = Message::where('receiver_id', $authUser->id)->notReply()->count();
 
         $data = array(
             'color' => 'red',

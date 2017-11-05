@@ -171,7 +171,6 @@ return array(
      */
     'aliases' => array(
         // The Helpers.
-        'Assets'        => 'Nova\Helpers\Assets',
         'Date'          => 'Nova\Helpers\Date',
         'Document'      => 'Nova\Helpers\Document',
         'Ftp'           => 'Nova\Helpers\Ftp',
@@ -187,6 +186,7 @@ return array(
 
         // The Support Classes.
         'Arr'           => 'Nova\Support\Arr',
+        'Assets'        => 'Nova\Support\Assets',
         'Str'           => 'Nova\Support\Str',
 
         // The Database Seeder.

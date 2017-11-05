@@ -114,7 +114,17 @@ abstract class BaseController extends Controller
      */
     protected function createLayout($layout = null)
     {
-        return View::createLayout($layout ?: $this->layout, $this->theme);
+        if (is_null($layout)) {
+            $layout = $this->layout;
+        }
+
+        if ($this->theme === false) {
+            $view = 'Layouts/' .$layout;
+
+            return View::make($view);
+        }
+
+        return View::createLayout($layout, $this->theme);
     }
 
     /**

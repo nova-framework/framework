@@ -9,8 +9,8 @@
         vendor_url('dist/css/bootstrap.min.css', 'twbs/bootstrap'),
         vendor_url('dist/css/bootstrap-theme.min.css', 'twbs/bootstrap'),
         'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
-        theme_url('css/bootstrap-xl-mod.min.css', 'Bootstrap'),
-        theme_url('css/style.css', 'Bootstrap'),
+        resource_url('css/bootstrap-xl-mod.min.css'),
+        resource_url('css/style.css'),
     ))
 
     @assets('js', array(

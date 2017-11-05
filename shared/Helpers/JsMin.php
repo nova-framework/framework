@@ -1,5 +1,5 @@
 <?php
-namespace Nova\Helpers;
+namespace Shared\Helpers;
 /**
  * JSMin.php - modified PHP implementation of Douglas Crockford's JSMin.
  *

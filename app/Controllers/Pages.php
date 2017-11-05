@@ -27,33 +27,52 @@ class Pages extends BaseController
     protected $layout = 'Static';
 
 
-    public function display($slug = null)
+    public function showPage($slug = null)
     {
-        $path = explode('/', $slug ?: 'home');
+        list ($view, $title) = $this->parseSlug($slug, 'pages');
 
-        // Compute the used variables.
-        $page = $path[0];
+        return View::make($view)->shares('title', $title);
+    }
 
-        $subpage = isset($path[1]) ? $path[1] : null;
+    public function showTutorial($slug = null)
+    {
+        list ($view, $title) = $this->parseSlug($slug, 'tutorials');
 
-        $title = Str::title(
-            str_replace(array('-', '_'), ' ', $subpage ?: $page)
-        );
+        $contents = 'Tutorials/Contents';
+
+        return View::make('Static', compact('page', 'subpage'))
+            ->shares('title', $title)
+            ->nest('sidebar', $contents)
+            ->nest('content', $view);
+    }
+
+    protected function parseSlug($slug, $base)
+    {
+        $segments = explode('/', $slug, 2);
+
+        // Compute the page and subpage.
+        list ($path, $page) = array_pad($segments, 2, null);
 
         // Compute the full View name, i.e. 'about-us' -> 'Pages/AboutUs'
-        array_unshift($path, 'pages');
+        array_unshift($segments, $base);
 
         $view = implode('/', array_map(function ($value)
         {
             return Str::studly($value);
 
-        }, $path));
+        }, $segments));
 
         if (! View::exists($view)) {
-            throw new NotFoundHttpException($view);
+            // We will look for the Home view before to go Exception.
+            if (! View::exists($view = $view .'/Home')) {
+                throw new NotFoundHttpException($view);
+            }
         }
 
-        return View::make($view, compact('page', 'subpage'))
-            ->shares('title', $title);
+        $title = Str::title(
+            str_replace(array('-', '_'), ' ', $page ?: ($path ?: $category))
+        );
+
+        return array($view, $title);
     }
 }

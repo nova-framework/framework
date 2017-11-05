@@ -17,9 +17,10 @@ use Nova\Http\Request;
 /**
  * The static Pages.
  */
-$router->get('/', 'Pages@display');
+Route::get('/', 'Pages@showPage');
 
-$router->get('pages/{slug}', 'Pages@display')->where('slug', '(.*)');
+Route::get('pages/{slug}',      'Pages@showPage')->where('slug', '(.*)');
+Route::get('tutorials/{slug?}', 'Pages@showTutorial')->where('slug', '(.*)');
 
 
 /**

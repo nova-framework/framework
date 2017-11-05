@@ -6,12 +6,6 @@ return array (
   'Forbidden' => '',
   'Go to our home page and navigate to the content in question.' => '',
   'Hello!' => '',
-  'Hello, welcome from the welcome controller and subpage method! <br/>
-This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>' => 'Bună, bun venit la controlerul <code>Welcome</code> și metoda <code>subPage</code>! <br/>
-Acest conținut poate fi modificat în <code>/app/Views/Welcome/SubPage.php</code>',
-  'Hello, welcome from the welcome controller! <br/>
-this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => 'Bună, bun venit la controlerul <code>Welcome</code>! <br/>
-Acest conținut poate fi modificat în <code>/app/Views/Welcome/Welcome.php</code>',
   'Home' => 'Acasă',
   'If you spelled the URL manually, double check the spelling.' => '',
   'If you\'re having trouble clicking the "{0}" button, copy and paste the URL below into your web browser:' => '',
@@ -22,7 +16,6 @@ Acest conținut poate fi modificat în <code>/app/Views/Welcome/Welcome.php</cod
   'Regards,' => '',
   'Service unavailable' => '',
   'Something has gone wrong on the Web Server.' => '',
-  'Subpage' => 'Subpagina',
   'The :attribute and :other must be different.' => '',
   'The :attribute and :other must match.' => '',
   'The :attribute confirmation does not match.' => '',
@@ -73,6 +66,5 @@ Acest conținut poate fi modificat în <code>/app/Views/Welcome/Welcome.php</cod
   'Troubleshooting' => '',
   'Unauthorized' => '',
   'Validation Token has expired. Please try again!' => '',
-  'Welcome' => 'Bun venit',
   'Whoops!' => '',
 );

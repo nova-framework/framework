@@ -6,12 +6,6 @@ return array (
   'Forbidden' => '',
   'Go to our home page and navigate to the content in question.' => '',
   'Hello!' => '',
-  'Hello, welcome from the welcome controller and subpage method! <br/>
-This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>' => 'Cześć, witaj z kontrolera welcome i metody subpage! <br/>
-Tą treść możesz zmienić w pliku <code>app/Views/Welcome/SubPage.php</code>',
-  'Hello, welcome from the welcome controller! <br/>
-this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => 'Hallo, welkom van de welcome controller! <br/>
-Deze inhoud kan worden veranderd in <code>app/Views/Welcome/Welcome.php</code>',
   'Home' => 'Strona główna',
   'If you spelled the URL manually, double check the spelling.' => '',
   'If you\'re having trouble clicking the "{0}" button, copy and paste the URL below into your web browser:' => '',
@@ -22,7 +16,6 @@ Deze inhoud kan worden veranderd in <code>app/Views/Welcome/Welcome.php</code>',
   'Regards,' => '',
   'Service unavailable' => '',
   'Something has gone wrong on the Web Server.' => '',
-  'Subpage' => 'Podstrona',
   'The :attribute and :other must be different.' => '',
   'The :attribute and :other must match.' => '',
   'The :attribute confirmation does not match.' => '',
@@ -73,6 +66,5 @@ Deze inhoud kan worden veranderd in <code>app/Views/Welcome/Welcome.php</code>',
   'Troubleshooting' => '',
   'Unauthorized' => '',
   'Validation Token has expired. Please try again!' => '',
-  'Welcome' => 'Witaj',
   'Whoops!' => '',
 );

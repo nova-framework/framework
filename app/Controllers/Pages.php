@@ -39,7 +39,7 @@ class Pages extends BaseController
     {
         list ($view, $title) = $this->parseSlug($slug, 'tutorials');
 
-        return View::make('Tutorial')
+        return View::make('Static')
             ->shares('title', $title)
             ->nest('sidebar', 'Tutorials/Contents')
             ->nest('content', $view);

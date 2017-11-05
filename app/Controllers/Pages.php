@@ -31,7 +31,8 @@ class Pages extends BaseController
     {
         list ($view, $title) = $this->parseSlug($slug, 'pages');
 
-        return View::make($view)->shares('title', $title);
+        return View::make($view)
+            ->shares('title', ($title != 'Pages') ? $title : 'Home');
     }
 
     public function showTutorial($slug = null)

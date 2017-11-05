@@ -22,7 +22,7 @@ class BackupCommand extends BaseCommand
     protected $fileName;
 
 
-    public function fire()
+    public function handle()
     {
         $config = $this->input->getOption('database');
 

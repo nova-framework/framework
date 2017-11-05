@@ -22,19 +22,19 @@
     <div class="box-body <?= ! $perms->isEmpty() ? 'no-padding' : ''; ?>">
         <?php if (! $perms->isEmpty()) { ?>
         <?php $count = $roles->count(); ?>
-        <table id='left' class='table table-striped table-hover responsive'>
+        <table id="left" class="table table-striped table-hover responsive">
             <tr class="bg-navy disabled">
-                <th style='text-align: left; vertical-align: middle;' width='<?= (100 - (10 * $count)); ?>%'><?= __d('permissions', 'Permission'); ?></th>
+                <th style="text-align: left; vertical-align: middle;" width="<?= (100 - (10 * $count)); ?>%"><?= __d('permissions', 'Permission'); ?></th>
                 <?php foreach ($roles as $role) { ?>
-                <th style='text-align: center; vertical-align: middle;' width='10%'><?= $role->name; ?></th>
+                <th style="text-align: center; vertical-align: middle;" width="10%"><?= $role->name; ?></th>
                 <?php } ?>
             </tr>
             <?php foreach ($perms as $permission) { ?>
             <tr>
-                <td style='text-align: left; vertical-align: middle;'><?= $permission->name; ?></td>
+                <td style="text-align: left; vertical-align: middle;"><?= $permission->name; ?></td>
                 <?php $ids = Input::get('permission_id.' .$permission->id, $permission->roles->lists('id')); ?>
                 <?php foreach ($roles as $role) { ?>
-                <td style='text-align: center; vertical-align: middle;'>
+                <td style="text-align: center; vertical-align: middle;">
                     <input
                         type="checkbox"
                         name="permission_id[<?= $permission->id; ?>][]"
@@ -73,19 +73,19 @@
         <h3 class="box-title"><?= __d('permissions', 'Permissions registered by the <b>{0}</b> module', $module['basename']); ?></h3>
     </div>
     <div class="box-body no-padding">
-        <table id='left' class='table table-striped table-hover responsive'>
+        <table id="left" class="table table-striped table-hover responsive">
             <tr class="bg-navy disabled">
-                <th style='text-align: left; vertical-align: middle;' width='<?= (100 - (10 * $count)); ?>%'><?= __d('permissions', 'Permission'); ?></th>
+                <th style="text-align: left; vertical-align: middle;" width="<?= (100 - (10 * $count)); ?>%"><?= __d('permissions', 'Permission'); ?></th>
                 <?php foreach ($roles as $role) { ?>
-                <th style='text-align: center; vertical-align: middle;' width='10%'><?= $role->name; ?></th>
+                <th style="text-align: center; vertical-align: middle;" width="10%"><?= $role->name; ?></th>
                 <?php } ?>
             </tr>
             <?php foreach ($perms as $permission) { ?>
             <tr>
-                <td style='text-align: left; vertical-align: middle;'><?= $permission->name; ?></td>
+                <td style="text-align: left; vertical-align: middle;"><?= $permission->name; ?></td>
                 <?php $ids = Input::get('permission_id.' .$permission->id, $permission->roles->lists('id')); ?>
                 <?php foreach ($roles as $role) { ?>
-                <td style='text-align: center; vertical-align: middle;'>
+                <td style="text-align: center; vertical-align: middle;">
                     <input
                         type="checkbox"
                         name="permission_id[<?= $permission->id; ?>][]"

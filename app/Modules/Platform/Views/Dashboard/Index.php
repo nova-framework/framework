@@ -1,7 +1,7 @@
 <section class="content-header">
     <h1><?= __d('platform', 'Dashboard'); ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('platform', 'Dashboard'); ?></a></li>
+        <li><a href="<?= site_url('dashboard'); ?>"><i class="fa fa-dashboard"></i> <?= __d('platform', 'Dashboard'); ?></a></li>
     </ol>
 </section>
 
@@ -10,11 +10,22 @@
 
 <?= Session::getMessages(); ?>
 
-<div class="box box-widget">
-    <div class="box-body">
-        <h4><strong><?= __d('platform', 'Yup. This is the Dashboard.'); ?></strong></h4>
-        <p><?= __d('platform', 'Someday, we\'ll have widgets and stuff on here...'); ?></p>
-    </div>
+<?php if (! Widget::isEmptyPosition('frontend.dashboard.top')) { ?>
+<div class="row">
+<?= Widget::position('frontend.dashboard.top'); ?>
 </div>
+<?php } ?>
+
+<?php if (! Widget::isEmptyPosition('frontend.dashboard.content')) { ?>
+<div class="row">
+<?= Widget::position('frontend.dashboard.content'); ?>
+</div>
+<?php } ?>
+
+<?php if (! Widget::isEmptyPosition('frontend.dashboard.bottom')) { ?>
+<div class="row">
+<?= Widget::position('frontend.dashboard.bottom'); ?>
+</div>
+<?php } ?>
 
 </section>

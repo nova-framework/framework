@@ -32,7 +32,8 @@
         "ramsey/uuid": "~3.0",
         "studio-42/elfinder": "^2.1",
         "filp/whoops": "^2.1",
-        "google/recaptcha": "~1.1"
+        "google/recaptcha": "~1.1",
+        "dompdf/dompdf": "^0.8"
     },
     "autoload": {
         "classmap": [
@@ -44,7 +45,7 @@
             "Shared\\" : "shared/"
         },
         "files": [
-            "shared/helpers.php"
+            "shared/Support/helpers.php"
         ]
     },
     "scripts": {

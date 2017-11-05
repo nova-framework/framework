@@ -1,7 +1,7 @@
 <section class="content-header">
     <h1><?= __d('platform', 'Settings'); ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('platform', 'Dashboard'); ?></a></li>
+        <li><a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <?= __d('platform', 'Dashboard'); ?></a></li>
         <li><?= __d('platform', 'Settings'); ?></li>
     </ol>
 </section>
@@ -13,7 +13,7 @@
 
 <?php if (CONFIG_STORE == 'database') { ?>
 
-<form name='myForm' class="form-horizontal" action="<?= site_url('admin/settings'); ?>" method="POST">
+<form name="myForm" class="form-horizontal" action="<?= site_url('admin/settings'); ?>" method="POST">
 
 <div class="box box-default">
     <div class="box-header with-border">
@@ -45,7 +45,7 @@
                         <option value="green-light"  <?php if ($options['siteSkin'] == 'green-light')  { echo "selected='selected'"; } ?> ><?= __d('platform', 'Green Light'); ?></option>
                     </select>
                 </div>
-                <div class='clearfix'></div>
+                <div class="clearfix"></div>
                 <small><?= __d('platform', 'The Skin used by the Site\'s Template.'); ?></small>
             </div>
         </div>
@@ -70,7 +70,7 @@
                         <option value="sendmail" <?php if ($options['mailDriver'] == 'sendmail') { echo "selected='selected'"; }?>><?= __d('platform', 'Sendmail'); ?></option>
                     </select>
                 </div>
-                <div class='clearfix'></div>
+                <div class="clearfix"></div>
                 <small><?= __d('platform', 'Whether or not is used a external SMTP Server to send the E-mails.'); ?></small>
             </div>
         </div>
@@ -81,7 +81,7 @@
                 <div class="col-sm-6" style="padding: 0;">
                     <input name="mailFromAddress" id="mailFromAddress" type="text" class="form-control" value="<?= $options['mailFromAddress']; ?>">
                 </div>
-                <div class='clearfix'></div>
+                <div class="clearfix"></div>
                 <small><?= __d('platform', 'The outgoing E-mail address.'); ?></small>
             </div>
         </div>
@@ -91,7 +91,7 @@
                 <div class="col-sm-6" style="padding: 0;">
                     <input name="mailFromName" id="mailFromName" type="text" class="form-control" value="<?= $options['mailFromName']; ?>">
                 </div>
-                <div class='clearfix'></div>
+                <div class="clearfix"></div>
                 <small><?= __d('platform', 'The From Field of any outgoing e-mails.'); ?></small>
             </div>
         </div>
@@ -102,7 +102,7 @@
                 <div class="col-sm-6" style="padding: 0;">
                     <input name="mailHost" id="mailHost" type="text" class="form-control" value="<?= $options['mailHost']; ?>">
                 </div>
-                <div class='clearfix'></div>
+                <div class="clearfix"></div>
                 <small><?= __d('platform', 'The name of the external SMTP Server.'); ?></small>
             </div>
         </div>
@@ -112,7 +112,7 @@
                 <div class="col-sm-2" style="padding: 0;">
                     <input name="mailPort" id="mailPort" type="text" class="form-control" value="<?= $options['mailPort']; ?>">
                 </div>
-                <div class='clearfix'></div>
+                <div class="clearfix"></div>
                 <small><?= __d('platform', 'The Port used for connecting to the external SMTP Server.'); ?></small>
             </div>
         </div>
@@ -126,7 +126,7 @@
                         <option value="" <?php if ($options['mailEncryption'] == '') { echo "selected='selected'"; }?>><?= __d('platform', 'NONE'); ?></option>
                     </select>
                 </div>
-                <div class='clearfix'></div>
+                <div class="clearfix"></div>
                 <small><?= __d('platform', 'Whether or not is used the Cryptography for connecting to the external SMTP Server.'); ?></small>
             </div>
         </div>
@@ -136,7 +136,7 @@
                 <div class="col-sm-6" style="padding: 0;">
                     <input name="mailUsername" id="mailUsername" type="text" class="form-control" value="<?= $options['mailUsername']; ?>">
                 </div>
-                <div class='clearfix'></div>
+                <div class="clearfix"></div>
                 <small><?= __d('platform', 'The Username used to connect to the external SMTP Server.'); ?></small>
             </div>
         </div>
@@ -146,7 +146,7 @@
                 <div class="col-sm-6" style="padding: 0;">
                     <input name="mailPassword" id="mailPassword" type="password" class="form-control" value="<?= $options['mailPassword']; ?>">
                 </div>
-                <div class='clearfix'></div>
+                <div class="clearfix"></div>
                 <small><?= __d('platform', 'The Password used to connect to the external SMTP Server.'); ?></small>
             </div>
         </div>

@@ -17,34 +17,34 @@
         <h3 class="box-title"><?= __d('roles', 'User Role : <b>{0}</b>', $role->name); ?></h3>
     </div>
     <div class="box-body no-padding">
-        <table id='left' class='table table-hover responsive'>
+        <table id="left" class="table table-hover responsive">
             <tr class="bg-navy disabled">
-                <th style='text-align: left; vertical-align: middle;'><?= __d('roles', 'Field'); ?></th>
-                <th style='text-align: left; vertical-align: middle;'><?= __d('roles', 'Value'); ?></th>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('roles', 'Field'); ?></th>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('roles', 'Value'); ?></th>
             </tr>
             <tr>
-                <th style='text-align: left; vertical-align: middle;'><?= __d('roles', 'ID'); ?></th>
-                <td style='text-align: left; vertical-align: middle;' width='70%'><?= $role->id; ?></td>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('roles', 'ID'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $role->id; ?></td>
             <tr>
             <tr>
-                <th style='text-align: left; vertical-align: middle;'><?= __d('roles', 'Name'); ?></th>
-                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $role->name; ?></td>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('roles', 'Name'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $role->name; ?></td>
             </tr>
             <tr>
-                <th style='text-align: left; vertical-align: middle;'><?= __d('roles', 'Slug'); ?></th>
-                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $role->slug; ?></td>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('roles', 'Slug'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $role->slug; ?></td>
             </tr>
             <tr>
-                <th style='text-align: left; vertical-align: middle;'><?= __d('roles', 'Description'); ?></th>
-                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $role->description; ?></td>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('roles', 'Description'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $role->description; ?></td>
             </tr>
             <tr>
-                <th style='text-align: left; vertical-align: middle;'><?= __d('roles', 'Created At'); ?></th>
-                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $role->created_at->formatLocalized(__d('roles', '%d %b %Y, %R')); ?></td>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('roles', 'Created At'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $role->created_at->formatLocalized(__d('roles', '%d %b %Y, %R')); ?></td>
             </tr>
             <tr>
-                <th style='text-align: left; vertical-align: middle;'><?= __d('roles', 'Updated At'); ?></th>
-                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $role->updated_at->formatLocalized(__d('roles', '%d %b %Y, %R')); ?></td>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('roles', 'Updated At'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $role->updated_at->formatLocalized(__d('roles', '%d %b %Y, %R')); ?></td>
             <tr>
         </table>
     </div>

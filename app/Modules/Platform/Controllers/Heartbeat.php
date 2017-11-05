@@ -51,7 +51,7 @@ class Heartbeat extends BaseController
 
         foreach ($notifications as $notification) {
             $items[] = array_merge(
-                array('id' => $notification->uuid), $notification->data
+                array('id' => $notification->id, 'uuid' => $notification->uuid), $notification->data
             );
         }
 

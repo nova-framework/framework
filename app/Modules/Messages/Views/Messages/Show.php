@@ -1,8 +1,8 @@
 <section class="content-header">
     <h1><?= __d('messages', 'Show Message'); ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('messages', 'Dashboard'); ?></a></li>
-        <li><a href='<?= site_url('messages'); ?>'><?= __d('backend', 'Messages'); ?></a></li>
+        <li><a href="<?= site_url('dashboard'); ?>"><i class="fa fa-dashboard"></i> <?= __d('messages', 'Dashboard'); ?></a></li>
+        <li><a href="<?= site_url('messages'); ?>"><?= __d('backend', 'Messages'); ?></a></li>
         <li><?= __d('messages', 'Show Message'); ?></li>
     </ol>
 </section>
@@ -63,7 +63,7 @@ use App\Models\User;
                 <span class="help-block"><?= $errors->first(); ?></span>
                 <?php } ?>
             </div>
-            <button type="submit" class="btn btn-success col-sm-2 pull-right" style="margin-bottom: 5px;"><i class='fa fa-reply'></i> <?= __d('backend', 'Reply'); ?></button>
+            <button type="submit" class="btn btn-success col-sm-2 pull-right" style="margin-bottom: 5px;"><i class="fa fa-reply"></i> <?= __d('backend', 'Reply'); ?></button>
 
             <?= csrf_field(); ?>
 
@@ -72,7 +72,7 @@ use App\Models\User;
     </div>
 </div>
 
-<a class='btn btn-primary col-sm-2' href='<?= site_url('messages'); ?>'><?= __d('backend', '<< Previous Page'); ?></a>
+<a class="btn btn-primary col-sm-2" href="<?= site_url('messages'); ?>"><?= __d('backend', '<< Previous Page'); ?></a>
 
 <div class="clearfix"></div>
 <br>

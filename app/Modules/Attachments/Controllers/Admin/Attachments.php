@@ -32,7 +32,10 @@ class Attachments extends BaseController
 
         $attachments = array(
             'files'  => $attachments->toArray(),
-            'userId' => $authUser->id,
+
+            // The owner information.
+            'authId'    => $authUser->id,
+            'authGuard' => 'web',
 
             // The Attachable.
             'attachable' => null,
@@ -42,8 +45,8 @@ class Attachments extends BaseController
             'deletable'    => true,
 
             // Limits.
-            'maxFiles'     => 1000,
-            'maxFilessize' => 1000, // 1GB
+            'maxFiles'    => 1000,
+            'maxFilesize' => 1000, // 1GB
         );
 
         return $this->createView()

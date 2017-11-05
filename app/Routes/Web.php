@@ -15,10 +15,13 @@ use Nova\Http\Request;
 
 
 /**
- * The Default Routes.
+ * The static Pages.
  */
-Route::get('/',       'Welcome@index');
-Route::get('subpage', 'Welcome@subPage');
+Route::get('/', 'Pages@show');
+
+Route::get('pages/{slug}', 'Pages@show')->where('slug', '(.*)');
+
+Route::get('tutorials/{slug?}', 'Pages@showTutorial')->where('slug', '(.*)');
 
 
 /**

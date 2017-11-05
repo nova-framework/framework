@@ -6,23 +6,14 @@ return array (
   'Forbidden' => '',
   'Go to our home page and navigate to the content in question.' => 'به صفحه اصلی بروید و به صفحه مورد نظر خود رجوع کنید.',
   'Hello!' => '',
-  'Hello, welcome from the welcome controller and subpage method! <br/>
-This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>' => 'درود, به کنترل گر صفحه خوش آمد گویی و زیر صفحه خوش آمدید! <br/>
-این محتوا میتواند در این مسیر ویرایش شود: <code>/app/Views/Welcome/SubPage.php</code>',
-  'Hello, welcome from the welcome controller! <br/>
-this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => 'درود, به کنترل گر صفحه خوش آمد گویی خوش آمدید! <br/>
-این محتوا میتواند در این مسیر ویرایش شود: <code>/app/Views/Welcome/Welcome.php</code>',
-  'Home' => 'خانه',
   'If you spelled the URL manually, double check the spelling.' => 'اگر URL را هجی کرده اید, دوباره آن را بررسی کنید',
   'If you\'re having trouble clicking the "{0}" button, copy and paste the URL below into your web browser:' => '',
   'Internal Server Error' => 'خطای داخلی سرور',
   'Method not allowed' => '',
-  'Open subpage' => 'بازکردن زیرصفحه',
   'Referrer: {0}' => 'ارجاع: {0}',
   'Regards,' => '',
   'Service unavailable' => '',
   'Something has gone wrong on the Web Server.' => 'خطایی در سرور وب بوجود آمده است',
-  'Subpage' => 'زیر صفحه',
   'The :attribute and :other must be different.' => ':attribute و :other باید متفاوت باشد.',
   'The :attribute and :other must match.' => ':attribute و :other باید مطابقت داشته باشد.',
   'The :attribute confirmation does not match.' => 'تایید :attribute مطابقت ندارد.',
@@ -73,6 +64,5 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Troubleshooting' => 'اشکال زدایی',
   'Unauthorized' => '',
   'Validation Token has expired. Please try again!' => '',
-  'Welcome' => 'خوش امدید',
   'Whoops!' => '',
 );

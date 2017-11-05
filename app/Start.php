@@ -46,7 +46,7 @@ define('STORAGE_PATH', ROOTDIR .'storage' .DS);
 // Set The Framework Version
 //--------------------------------------------------------------------------
 
-define('VERSION', Application::VERSION);
+define('VERSION', trim(file_get_contents(ROOTDIR .'VERSION.txt')));
 
 //--------------------------------------------------------------------------
 // Load Global Configuration

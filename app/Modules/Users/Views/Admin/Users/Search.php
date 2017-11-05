@@ -13,7 +13,7 @@
 <?= Session::getMessages(); ?>
 
 <div class="box box-default">
-    <div class="box-header">
+    <div class="box-header with-border">
         <h3 class="box-title"><?= __d('users', 'Registered Users for: <b>{0}</b>', $search); ?></h3>
     </div>
     <div class="box-body no-padding">

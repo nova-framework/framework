@@ -8,6 +8,7 @@ return array (
   'Forgot Password?' => 'فراموشی رمزعبور؟',
   'Logout' => 'خروج',
   'Member since {0}' => 'عضو از {0}',
+  'Notifications updated' => '',
   'On-Time Login' => '',
   'Private Area' => '',
   'Profile' => 'پروفایل',
@@ -15,6 +16,8 @@ return array (
   'Sign In' => 'ورود',
   'Sign Up' => 'عضویت',
   'Sign out' => 'خروج',
+  'The shown Notifications was marked as read.' => '',
   'Toggle navigation' => '',
   'You have %d notification(s)' => '',
+  'You have no notifications' => '',
 );

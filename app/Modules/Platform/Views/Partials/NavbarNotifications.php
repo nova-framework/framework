@@ -1,4 +1,7 @@
-<li class="header" id="notifications-header" data-count="0" data-id="0"><?= __d('platform', 'No new notifications'); ?></li>
+<li class="header" id="notifications-header" data-count="0" data-id="0">
+    <span class="title"><?= __d('platform', 'No new notifications'); ?></span>
+    <a id="notifications-clear" href="#" class="mark-all pull-right"><?= __d('platform', 'Mark all as read') ?></a>
+</li>
 <li>
     <ul class="menu" id="notifications-list"></ul>
 </li>

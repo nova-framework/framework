@@ -89,7 +89,7 @@ return array(
      */
     'middlewareGroups' => array(
         'web' => array(
-            'Nova\Forensics\Middleware\HandleProfiling',
+            'Shared\Forensics\Middleware\HandleProfiling',
             'App\Middleware\EncryptCookies',
             'Nova\Cookie\Middleware\AddQueuedCookiesToResponse',
             'Nova\Session\Middleware\StartSession',
@@ -130,7 +130,6 @@ return array(
         'Nova\Session\SessionServiceProvider',
         'Nova\Language\LanguageServiceProvider',
         'Nova\Validation\ValidationServiceProvider',
-        'Nova\Html\HtmlServiceProvider',
         'Nova\View\ViewServiceProvider',
 
         // The Forge Providers.
@@ -148,6 +147,8 @@ return array(
         'Shared\Auth\Reminders\ReminderServiceProvider',
         'Shared\Auth\ConsoleServiceProvider',
         'Shared\Database\Backup\ConsoleServiceProvider',
+        'Shared\DomPDF\ServiceProvider',
+        'Shared\Html\HtmlServiceProvider',
         'Shared\Notifications\NotificationServiceProvider',
         'Shared\Routing\RoutingServiceProvider',
         'Shared\Widgets\WidgetServiceProvider',
@@ -169,23 +170,9 @@ return array(
      * The registered Class Aliases.
      */
     'aliases' => array(
-        // The Helpers.
-        'Assets'        => 'Nova\Helpers\Assets',
-        'Date'          => 'Nova\Helpers\Date',
-        'Document'      => 'Nova\Helpers\Document',
-        'Ftp'           => 'Nova\Helpers\Ftp',
-        'GeoCode'       => 'Nova\Helpers\GeoCode',
-        'Inflector'     => 'Nova\Helpers\Inflector',
-        'Number'        => 'Nova\Helpers\Number',
-        'ReservedWords' => 'Nova\Helpers\ReservedWords',
-        'SimpleCurl'    => 'Nova\Helpers\SimpleCurl',
-        'Tags'          => 'Nova\Helpers\Tags',
-
-        // The Forensics Console.
-        'Console'       => 'Nova\Forensics\Console',
-
         // The Support Classes.
         'Arr'           => 'Nova\Support\Arr',
+        'Assets'        => 'Nova\Support\Assets',
         'Str'           => 'Nova\Support\Str',
 
         // The Database Seeder.
@@ -219,17 +206,32 @@ return array(
         'Validator'     => 'Nova\Support\Facades\Validator',
         'Log'           => 'Nova\Support\Facades\Log',
         'URL'           => 'Nova\Support\Facades\URL',
-        'Form'          => 'Nova\Support\Facades\Form',
-        'HTML'          => 'Nova\Support\Facades\HTML',
         'Layout'        => 'Nova\Support\Facades\Layout',
         'View'          => 'Nova\Support\Facades\View',
         'Cron'          => 'Nova\Support\Facades\Cron',
         'Module'        => 'Nova\Support\Facades\Module',
 
         // The Shared Facades.
+        'Form'          => 'Shared\Support\Facades\Form',
+        'HTML'          => 'Shared\Support\Facades\HTML',
+        'PDF'           => 'Shared\Support\Facades\PDF',
         'Notification'  => 'Shared\Support\Facades\Notification',
         'Password'      => 'Shared\Support\Facades\Password',
         'Widget'        => 'Shared\Support\Facades\Widget',
+
+        // The Shared Helpers.
+        'Date'          => 'Shared\Helpers\Date',
+        'Document'      => 'Shared\Helpers\Document',
+        'Ftp'           => 'Shared\Helpers\Ftp',
+        'GeoCode'       => 'Shared\Helpers\GeoCode',
+        'Inflector'     => 'Shared\Helpers\Inflector',
+        'Number'        => 'Shared\Helpers\Number',
+        'ReservedWords' => 'Shared\Helpers\ReservedWords',
+        'SimpleCurl'    => 'Shared\Helpers\SimpleCurl',
+        'Tags'          => 'Shared\Helpers\Tags',
+
+        // The Forensics Console.
+        'Console'       => 'Nova\Forensics\Console',
     ),
 
 );

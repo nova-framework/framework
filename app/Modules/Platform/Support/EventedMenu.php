@@ -20,9 +20,10 @@ class EventedMenu
      * @param  string  $name
      * @param  \Nova\Auth\UserInterface   $user
      * @param  string|null  $url
+     * @param  array  $payload
      * @return array
      */
-    public static function get($name, UserInterface $user, $url = null)
+    public static function get($name, UserInterface $user, $url = null, array $payload = array())
     {
         if (is_null($url)) {
             $url = Request::url();
@@ -30,7 +31,7 @@ class EventedMenu
 
         $instance = new static();
 
-        return $instance->getItems($name, $user, $url);
+        return $instance->getItems($name, $user, $url, $payload);
     }
 
     /**
@@ -39,9 +40,10 @@ class EventedMenu
      * @param  string  $name
      * @param  \Nova\Auth\UserInterface  $user
      * @param  string|null  $url
+     * @param  array  $payload
      * @return array
      */
-    public function getItems($name, UserInterface $user, $url)
+    public function getItems($name, UserInterface $user, $url, array $payload = array())
     {
         $gate = Gate::forUser($user);
 
@@ -49,7 +51,7 @@ class EventedMenu
         $path = '';
 
         // Fire the Event and retrieve the results.
-        $results = Event::fire($name, array($user, $url));
+        $results = Event::fire($name, array_merge(array($user, $url), $payload));
 
         // Process the Event results.
         $items = array();

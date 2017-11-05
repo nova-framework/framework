@@ -88,7 +88,7 @@ class Handler extends ExceptionHandler
         $status = $e->getStatusCode();
 
         if (View::exists("Errors/{$status}")) {
-            $view = View::makeLayout('Default', 'Bootstrap')
+            $view = View::make('Layouts/Default')
                 ->shares('title', "Error {$status}")
                 ->nest('content', "Errors/{$status}", array('exception' => $e));
 

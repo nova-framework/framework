@@ -11,6 +11,12 @@ use Nova\Http\Request;
 
 
 /**
+ * Setup the Module Middleware.
+ */
+Route::pushMiddlewareToGroup('web', 'App\Modules\Platform\Middleware\MarkNotificationAsRead');
+
+
+/**
  * Role-based Authorization Middleware.
  */
 Route::middleware('role', function (Request $request, Closure $next, $role)
@@ -23,3 +29,11 @@ Route::middleware('role', function (Request $request, Closure $next, $role)
 
     return $next($request);
 });
+
+
+/**
+ * Register the Widgets.
+ */
+Widget::register('App\Modules\Platform\Widgets\UsersOnline', 'onlineUsers', 'backend.dashboard.content', 2);
+
+Widget::register('App\Modules\Platform\Widgets\UsersOnline', 'onlineUsers', 'frontend.dashboard.content', 2);

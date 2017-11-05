@@ -55,6 +55,7 @@ return array (
   'Mark as read' => '',
   'Message' => '',
   'Messages' => '',
+  'More info' => '',
   'NONE' => '',
   'Name and Surname' => 'For- og efternavn',
   'New Password' => '',
@@ -107,7 +108,6 @@ return array (
   'Site Name' => '',
   'Site Settings' => '',
   'Site Skin' => '',
-  'Someday, we\'ll have widgets and stuff on here...' => 'En dag vil der komme noget fedt her.',
   'Thanks for creating an Account with the {0}.' => '',
   'The :attribute field is invalid.' => '',
   'The :attribute field is not a valid name.' => '',
@@ -149,5 +149,4 @@ return array (
   'You have successfully logged out.' => 'Du er logget ud.',
   'You have successfully updated your Password.' => '',
   'Your Account has been created. Activation instructions have been sent to your email address.' => '',
-  'Yup. This is the Dashboard.' => 'Jeps. Dette er skrivebordet',
 );

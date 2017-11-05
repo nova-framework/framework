@@ -38,11 +38,9 @@ class Pages extends BaseController
     {
         list ($view, $title) = $this->parseSlug($slug, 'tutorials');
 
-        $contents = 'Tutorials/Contents';
-
-        return View::make('Static', compact('page', 'subpage'))
+        return View::make('Tutorial')
             ->shares('title', $title)
-            ->nest('sidebar', $contents)
+            ->nest('sidebar', 'Tutorials/Contents')
             ->nest('content', $view);
     }
 
@@ -51,7 +49,7 @@ class Pages extends BaseController
         $segments = explode('/', $slug, 2);
 
         // Compute the page and subpage.
-        list ($path, $page) = array_pad($segments, 2, null);
+        list ($page, $subpage) = array_pad($segments, 2, null);
 
         // Compute the full View name, i.e. 'about-us' -> 'Pages/AboutUs'
         array_unshift($segments, $base);
@@ -70,7 +68,7 @@ class Pages extends BaseController
         }
 
         $title = Str::title(
-            str_replace(array('-', '_'), ' ', $page ?: ($path ?: $base))
+            str_replace(array('-', '_'), ' ', $subpage ?: ($page ?: $base))
         );
 
         return array($view, $title);

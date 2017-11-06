@@ -57,7 +57,7 @@ $app->singleton(
 );
 
 $app->singleton(
-    'Nova\Foundation\Contracts\ExceptionHandlerInterface', 'App\Foundation\Exceptions\Handler'
+    'Nova\Foundation\Contracts\ExceptionHandlerInterface', 'App\Exceptions\Handler'
 );
 
 //--------------------------------------------------------------------------
@@ -88,6 +88,15 @@ $app->booted(function () use ($app, $env)
 //--------------------------------------------------------------------------
 
 $path = $app['path'] .DS .'Bootstrap.php';
+
+if (is_readable($path)) require $path;
+
+
+//--------------------------------------------------------------------------
+// Load The Environment Start Script
+//--------------------------------------------------------------------------
+
+$path = $app['path'] .DS .'Environment' .DS .ucfirst($env) .'.php';
 
 if (is_readable($path)) require $path;
 

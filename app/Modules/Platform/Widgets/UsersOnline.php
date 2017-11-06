@@ -15,7 +15,7 @@ use Carbon\Carbon;
 class UsersOnline extends Widget
 {
 
-    public function render(array $parameters = array())
+    public function render()
     {
         $activityLimit = Config::get('platform::activityLimit');
 
@@ -23,6 +23,6 @@ class UsersOnline extends Widget
 
         $users = User::with('roles')->activeSince($since)->paginate(25);
 
-        return View::make('Partials/DashboardUsersOnline', compact('users'), 'Platform')->render();
+        return View::make('Widgets/DashboardUsersOnline', compact('users'), 'Platform')->render();
     }
 }

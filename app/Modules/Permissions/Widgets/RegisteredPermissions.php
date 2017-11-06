@@ -12,7 +12,7 @@ use App\Modules\Permissions\Models\Permission;
 class RegisteredPermissions extends Widget
 {
 
-    public function render(array $parameters = array())
+    public function render()
     {
         $count = Permission::count();
 
@@ -24,6 +24,6 @@ class RegisteredPermissions extends Widget
             'url'     => site_url('admin/permissions')
         );
 
-        return View::make('Partials/DashboardStatBox', $data, 'Platform')->render();
+        return View::make('Widgets/DashboardStatBox', $data, 'Platform')->render();
     }
 }

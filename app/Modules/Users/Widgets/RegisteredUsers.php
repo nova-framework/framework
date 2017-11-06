@@ -12,7 +12,7 @@ use App\Modules\Users\Models\User;
 class RegisteredUsers extends Widget
 {
 
-    public function render(array $parameters = array())
+    public function render()
     {
         $count = User::where('activated', 1)->count();
 
@@ -24,6 +24,6 @@ class RegisteredUsers extends Widget
             'url'     => site_url('admin/users')
         );
 
-        return View::make('Partials/DashboardStatBox', $data, 'Platform')->render();
+        return View::make('Widgets/DashboardStatBox', $data, 'Platform')->render();
     }
 }

@@ -12,7 +12,7 @@ use App\Modules\Roles\Models\Role;
 class RegisteredRoles extends Widget
 {
 
-    public function render(array $parameters = array())
+    public function render()
     {
         $count = Role::count();
 
@@ -24,6 +24,6 @@ class RegisteredRoles extends Widget
             'url'     => site_url('admin/roles')
         );
 
-        return View::make('Partials/DashboardStatBox', $data, 'Platform')->render();
+        return View::make('Widgets/DashboardStatBox', $data, 'Platform')->render();
     }
 }

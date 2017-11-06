@@ -13,7 +13,7 @@ use App\Modules\Messages\Models\Message;
 class Messages extends Widget
 {
 
-    public function render(array $parameters = array())
+    public function render()
     {
         $authUser = Auth::user();
 
@@ -27,6 +27,6 @@ class Messages extends Widget
             'url'     => site_url('admin/messages')
         );
 
-        return View::make('Partials/DashboardStatBox', $data, 'Platform')->render();
+        return View::make('Widgets/DashboardStatBox', $data, 'Platform')->render();
     }
 }

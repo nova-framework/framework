@@ -23,7 +23,7 @@ require BASEPATH .'vendor' .DS .'autoload.php';
 // Turn On The Lights
 //--------------------------------------------------------------------------
 
-$app = require_once APPPATH .'Foundation' .DS .'App.php';
+$app = require_once APPPATH .'Start.php';
 
 //--------------------------------------------------------------------------
 // Run The Forge Application

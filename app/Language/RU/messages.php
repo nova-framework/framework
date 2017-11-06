@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'Internal Server Error' => 'Внутрення ошибка сервера',
+  'Internal Server Error' => 'Внутренняя ошибка сервера',
   'Method not allowed' => 'Метод не разрешен',
   'Service unavailable' => 'Сервис недоступен',
   'Something has gone wrong on the Web Server.' => 'Ошибка на сервере',
@@ -38,8 +38,8 @@ return array (
   'The :attribute must be an array.' => ':attribute должен быть массивом',
   'The :attribute must be an image.' => ':attribute должен быть изображением',
   'The :attribute must be an integer.' => ':attribute должен быть целым числом',
-  'The :attribute must be at least :min characters.' => ':attribute должен быть не менее символов',
-  'The :attribute must be at least :min kilobytes.' => ':attribute должен быть не менее килобайт',
+  'The :attribute must be at least :min characters.' => ':attribute должен быть не менее :min символов',
+  'The :attribute must be at least :min kilobytes.' => ':attribute должен быть не менее :min килобайт',
   'The :attribute must be at least :min.' => ':attribute должно быть не менее :min.',
   'The :attribute must be between :min and :max characters.' => ':attribute должно быть от :min до :max символами',
   'The :attribute must be between :min and :max digits.' => ':attribute должно быть от :min до :max цифр',

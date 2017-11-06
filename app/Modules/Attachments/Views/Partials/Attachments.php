@@ -115,16 +115,6 @@ $files = isset($files) ? $files : array();
 <script>
 
 $(function () {
-    $(window).bind('beforeunload', function() {
-        /*
-        var message = "<?= __d('requests', 'Avoid changing page as this will cut your editing session.'); ?>";
-
-        e.returnValue = message;
-
-        return message;
-        */
-    });
-
     $('#modal-preview-dialog').on('show.bs.modal', function (event) {
         var height = $(window).height() - 155;
 

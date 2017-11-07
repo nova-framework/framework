@@ -9,5 +9,8 @@
 */
 
 return array(
-    //
+    'uploader' => array(
+        'maxFiles'    => 10,
+        'maxFilesize' => 1000, // 1GB
+    ),
 );

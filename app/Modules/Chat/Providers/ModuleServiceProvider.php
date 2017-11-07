@@ -32,7 +32,7 @@ class ModuleServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('Chat', 'chat', $path);
+        $this->package('Modules/Chat', 'chat', $path);
 
         // Bootstrap the Package.
         $path = $path .DS .'Bootstrap.php';

@@ -5,8 +5,8 @@ $attachable   = isset($attachable) ? $attachable : '';
 $downloadable = isset($downloadable) ? $downloadable : false;
 $deletable    = isset($deletable)    ? $deletable    : false;
 
-$maxFiles    = isset($maxFiles)    ? $maxFiles    : 10;
-$maxFilesize = isset($maxFilesize) ? $maxFilesize : 1000;
+$maxFiles    = isset($maxFiles)    ? $maxFiles    : Config::get('attachments::uploader.maxFiles',    10);
+$maxFilesize = isset($maxFilesize) ? $maxFilesize : Config::get('attachments::uploader.maxFilesize', 1000);
 
 $files = isset($files) ? $files : array();
 

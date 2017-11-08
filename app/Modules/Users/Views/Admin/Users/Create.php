@@ -42,12 +42,6 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="email"><?= __d('users', 'E-mail'); ?> <font color="#CC0000">*</font></label>
-                <div class="col-sm-8">
-                    <input name="email" id="email" type="text" class="form-control" value="<?= Input::old('email'); ?>" placeholder="<?= __d('users', 'E-mail'); ?>">
-                </div>
-            </div>
-            <div class="form-group">
                 <label class="col-sm-4 control-label" for="role"><?= __d('users','Roles'); ?> <font color="#CC0000">*</font></label>
                 <div class="col-sm-8">
                     <?php $optRoles = Input::old('roles', array()); ?>
@@ -58,6 +52,12 @@
                     </select>
                 </div>
             </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="email"><?= __d('users', 'E-mail'); ?> <font color="#CC0000">*</font></label>
+                <div class="col-sm-8">
+                    <input name="email" id="email" type="text" class="form-control" value="<?= Input::old('email'); ?>" placeholder="<?= __d('users', 'E-mail'); ?>">
+                </div>
+            </div>
             <div class="clearfix"></div>
             <h4><?= __d('users', 'Profile'); ?></h4>
             <hr>
@@ -66,7 +66,7 @@
                 <label class="col-sm-4 control-label" for="image"><?= __d('users', 'Picture'); ?></label>
                 <div class="col-sm-8">
                     <div class="input-group">
-                        <input type="text" id="file_path" class="form-control" placeholder="Browse...">
+                        <input type="text" id="file_path" class="form-control" placeholder="<?= __d('users', 'Browse...'); ?>">
                         <span class="input-group-btn">
                             <button class="btn btn-primary" type="button" id="file_browser">
                             <i class="fa fa-search"></i> Browse</button>

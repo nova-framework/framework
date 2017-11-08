@@ -40,7 +40,7 @@
                 <td style="text-align: left; vertical-align: middle;" width="20%"><?= $field->validate ?: '-'; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="5%"><?= $field->order; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="5%"><?= $field->columns; ?></td>
-                <td style="text-align: center; vertical-align: middle;" width="5%"><?= $field->hidden; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="5%"><?= ($field->hidden === 1) ? __d('users', 'Yes') : __d('users', 'No'); ?></td>
                 <td style="text-align: right; vertical-align: middle;" width="15%">
                     <div class="btn-group" role="group" aria-label="...">
                         <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $field->id; ?>" title="<?= __d('users', 'Delete this Field'); ?>" role="button"><i class="fa fa-remove"></i></a>

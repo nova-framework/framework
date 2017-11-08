@@ -178,20 +178,20 @@ $(function () {
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label class="col-sm-4 control-label" for="name"><?= __d('users', 'Name'); ?> <font color="#CC0000">*</font></label>
-                    <div class="col-sm-8">
+                    <label class="col-sm-3 control-label" for="name"><?= __d('users', 'Name'); ?> <font color="#CC0000">*</font></label>
+                    <div class="col-sm-9">
                         <input name="name" id="modal-edit-name" type="text" class="form-control" value="" placeholder="<?= __d('users', 'Name'); ?>">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label" for="key"><?= __d('users', 'Key'); ?> <font color="#CC0000">*</font></label>
-                    <div class="col-sm-8">
+                    <label class="col-sm-3 control-label" for="key"><?= __d('users', 'Key'); ?> <font color="#CC0000">*</font></label>
+                    <div class="col-sm-9">
                         <input name="key" id="modal-edit-key" type="text" class="form-control" value="" placeholder="<?= __d('users', 'Key'); ?>">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label" for="type"><?= __d('users', 'Type'); ?> <font color="#CC0000">*</font></label>
-                    <div class="col-sm-8">
+                    <label class="col-sm-3 control-label" for="type"><?= __d('users', 'Type'); ?> <font color="#CC0000">*</font></label>
+                    <div class="col-sm-9">
                         <select name="type" id="modal-edit-type" class="form-control select2" placeholder="" data-placeholder="<?= __d('users', 'Select a Type'); ?>" style="width: 100%;" autocomplete="off">
                             <?php foreach ($fields as $class => $instance) { ?>
                             <option value="<?= $class ?>"><?= $class; ?></option>
@@ -200,19 +200,19 @@ $(function () {
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label" for="validate"><?= __d('users', 'Validation'); ?> <font color="#CC0000">*</font></label>
-                    <div class="col-sm-8">
+                    <label class="col-sm-3 control-label" for="validate"><?= __d('users', 'Validation'); ?> <font color="#CC0000">*</font></label>
+                    <div class="col-sm-9">
                         <input name="validate" id="modal-edit-validate" type="text" class="form-control" value="" placeholder="<?= __d('users', 'Validation'); ?>">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label" for="hidden"><?= __d('users', 'Hidden'); ?> <font color="#CC0000">*</font></label>
-                    <div class="col-sm-8">
+                    <label class="col-sm-3 control-label" for="hidden"><?= __d('users', 'Hidden'); ?> <font color="#CC0000">*</font></label>
+                    <div class="col-sm-9">
                         <input type="checkbox" name="hidden" id="modal-edit-hidden" value="1" autocomplete="off"/>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label" for="order"><?= __d('users', 'Order'); ?> <font color="#CC0000">*</font></label>
+                    <label class="col-sm-3 control-label" for="order"><?= __d('users', 'Order'); ?> <font color="#CC0000">*</font></label>
                     <div class="col-sm-3">
                         <input name="order" id="modal-edit-order" type="number" class="form-control" min="0" max="1000" value="1" autocomplete="off">
                     </div>

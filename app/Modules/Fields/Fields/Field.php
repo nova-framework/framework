@@ -26,6 +26,14 @@ abstract class Field
     protected $item;
 
     /**
+     * The partial View used for rendering.
+     *
+     * @var string
+     */
+    protected $view = 'Fields/Editor/Default';
+
+
+    /**
      * Constructor.
      *
      * @param \App\Modules\Fields\Models\MetaData|null $model
@@ -48,7 +56,7 @@ abstract class Field
 
         $value = isset($this->model) ? $this->model->value : '';
 
-        return View::make('Fields/Editor/Default', compact('request', 'item', 'value'), 'Fields')
+        return View::make($this->view, compact('request', 'item', 'value'), 'Fields')
             ->with('value', $request->old($item->key, $value))
             ->render();
     }

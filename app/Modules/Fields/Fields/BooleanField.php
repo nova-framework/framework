@@ -8,6 +8,14 @@ use App\Modules\Fields\Fields\Field;
 class BooleanField extends Field
 {
     /**
+     * The partial View used for rendering.
+     *
+     * @var string
+     */
+    protected $view = 'Fields/Editor/Boolean';
+
+
+    /**
      * Parse & return the meta item value.
      *
      * @return bool

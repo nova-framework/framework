@@ -8,6 +8,14 @@ use App\Modules\Fields\Fields\Field;
 class IntegerField extends Field
 {
     /**
+     * The partial View used for rendering.
+     *
+     * @var string
+     */
+    protected $view = 'Fields/Editor/Integer';
+
+
+    /**
      * Parse & return the meta item value.
      *
      * @return int

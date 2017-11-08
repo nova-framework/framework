@@ -28,11 +28,9 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     protected $primaryKey = 'id';
 
-    protected $fillable = array(
-        'username', 'password', 'email', 'activated', 'image', 'activation_code', 'api_token', 'profile_id'
-    );
+    protected $fillable = array('username', 'password', 'email', 'image', 'profile_id');
 
-    protected $hidden = array('password', 'activation_code', 'remember_token', 'api_token');
+    protected $hidden = array('password', 'remember_token');
 
     public $files = array(
         'image' => array(

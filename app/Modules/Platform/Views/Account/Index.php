@@ -52,6 +52,7 @@
                 <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Value'); ?></th>
             </tr>
             <?php foreach ($user->profile->fields as $field) { ?>
+            <?php if ($field->hidden === 1) continue; ?>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= $field->name; ?></th>
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->meta->itemValue($field->key); ?></td>

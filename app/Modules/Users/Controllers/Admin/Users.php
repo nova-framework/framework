@@ -154,12 +154,14 @@ class Users extends BaseController
             'password'   => $password,
             'email'      => $input['email'],
             'image'      => Input::file('image'),
-            'activated'  => 1,
             'profile_id' => $profile->id,
         ));
 
         // Update the Meta / Custom Fields.
         $user->load('meta');
+
+        // Handle the meta-data.
+        $user->meta->activated = 1;
 
         foreach ($fields as $field) {
             $user->meta->updateOrAdd($key = $field->key, Arr::get($input, $key));

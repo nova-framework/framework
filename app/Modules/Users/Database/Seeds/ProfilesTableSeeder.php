@@ -42,6 +42,7 @@ class ProfilesTableSeeder extends Seeder
             'type'     => 'App\Modules\Fields\Fields\StringField',
             'validate' => 'required|min:3|max:100|valid_name',
             'required' => 1,
+            'hidden'   => 0,
             'order'    => 1,
         ));
 
@@ -51,6 +52,7 @@ class ProfilesTableSeeder extends Seeder
             'type'     => 'App\Modules\Fields\Fields\StringField',
             'validate' => 'required|min:3|max:100|valid_name',
             'required' => 1,
+            'hidden'   => 0,
             'order'    => 2,
         ));
 
@@ -60,7 +62,41 @@ class ProfilesTableSeeder extends Seeder
             'type'     => 'App\Modules\Fields\Fields\StringField',
             'validate' => null,
             'required' => 0,
+            'hidden'   => 0,
             'order'    => 3,
+        ));
+
+        //
+        // Hidden fields.
+
+        $fields->create(array(
+            'name'     => 'Activated',
+            'key'      => 'activated',
+            'type'     => 'App\Modules\Fields\Fields\IntegerField',
+            'validate' => null,
+            'required' => 0,
+            'hidden'   => 1,
+            'order'    => 1,
+        ));
+
+        $fields->create(array(
+            'name'     => 'Activation Code',
+            'key'      => 'activation_code',
+            'type'     => 'App\Modules\Fields\Fields\StringField',
+            'validate' => null,
+            'required' => 0,
+            'hidden'   => 1,
+            'order'    => 1,
+        ));
+
+        $fields->create(array(
+            'name'     => 'API Token',
+            'key'      => 'api_token',
+            'type'     => 'App\Modules\Fields\Fields\StringField',
+            'validate' => null,
+            'required' => 0,
+            'hidden'   => 1,
+            'order'    => 1,
         ));
     }
 }

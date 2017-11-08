@@ -107,11 +107,20 @@ class Registrar extends BaseController
 
         // Create the User record.
         $user = User::create(array(
-            'username'        => $input['username'],
-            'email'           => $input['email'],
-            'password'        => $password,
-            'activation_code' => $token = $this->createNewToken(),
+            'username' => $input['username'],
+            'email'    => $input['email'],
+            'password' => $password,
         ));
+
+        // Update the Meta / Custom Fields.
+        $user->load('meta');
+
+        // Handle the meta-data.
+        $user->meta->activated = 0;
+
+        $user->meta->activation_code = $token = $this->createNewToken();
+
+        $user->save();
 
         // Retrieve the default 'user' Role.
         $role = Role::where('slug', 'user')->firstOrFail();
@@ -177,7 +186,11 @@ class Registrar extends BaseController
         $email = $input['email'];
 
         try {
-            $user = User::where('email', $email)->where('activated', '=', 0)->firstOrFail();
+            $user = User::where('email', $email)->whereHas('meta', function ($query)
+            {
+                return $query->where('key', 'activated')->where('value', 0);
+
+            })->firstOrFail();
         }
         catch (ModelNotFoundException $e) {
             return Redirect::back()
@@ -185,7 +198,7 @@ class Registrar extends BaseController
                 ->withStatus(__d('platform', 'The selected email cannot receive Account Activation links.', $email), 'danger');
         }
 
-        $user->activation_code = $token = $this->createNewToken();
+        $user->meta->activation_code = $token = $this->createNewToken();
 
         $user->save();
 
@@ -236,10 +249,18 @@ class Registrar extends BaseController
         }
 
         try {
-            $user = User::whereNotNull('activation_code')
-                ->where('activation_code', $token)
-                ->where('activated', '=', 0)
-                ->firstOrFail();
+            $user = User::whereHas('meta', function ($query) use ($token)
+            {
+                return $query->where(function ($query)
+                {
+                    return $query->where('key', 'activated')->where('value', 0);
+
+                })->where(function ($query) use ($token)
+                {
+                    return $query->where('key', 'activation_code')->where('value', $token);
+                });
+
+            })->firstOrFail();
         }
         catch (ModelNotFoundException $e) {
             $limiter->hit($throttleKey, $lockoutTime);

@@ -99,11 +99,13 @@
 
 <div  class="box box-widget">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('platform', 'Change Password'); ?></h3>
+        <h3 class="box-title"><?= __d('platform', 'Update the Account information'); ?></h3>
     </div>
 
     <div class="box-body">
         <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+            <h4><?= __d('platform', 'Account'); ?></h4>
+            <hr>
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="name"><?= __d('platform', 'Current Password'); ?> <font color="#CC0000">*</font></label>
                 <div class="col-sm-8">
@@ -111,17 +113,22 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="name"><?= __d('platform', 'New Password'); ?> <font color="#CC0000">*</font></label>
+                <label class="col-sm-4 control-label" for="name"><?= __d('platform', 'New Password'); ?></label>
                 <div class="col-sm-8">
                     <input name="password" id="password" type="password" class="form-control" value="" placeholder="<?= __d('platform', 'Insert the new Password'); ?>">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="name"><?= __d('platform', 'Confirm Password'); ?> <font color="#CC0000">*</font></label>
+                <label class="col-sm-4 control-label" for="name"><?= __d('platform', 'Confirm Password'); ?></label>
                 <div class="col-sm-8">
                     <input name="password_confirmation" id="password_confirmation" type="password" class="form-control" value="" placeholder="<?= __d('platform', 'Verify the new Password'); ?>">
                 </div>
             </div>
+            <div class="clearfix"></div>
+            <br>
+            <h4><?= __d('platform', 'Profile'); ?></h4>
+            <hr>
+            <?= $fields; ?>
             <div class="clearfix"></div>
             <br>
             <font color="#CC0000">*</font><?= __d('platform', 'Required field'); ?>

@@ -69,7 +69,7 @@ class Profiles extends BaseController
         $fields = FieldRegistry::registered();
 
         return $this->createView()
-            ->shares('title', __d('users', 'Profile / Custom Fields'))
+            ->shares('title', __d('users', 'Users Profile'))
             ->with('profile', $profile)
             ->with('fields', $fields);
     }

@@ -15,10 +15,9 @@
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('users', 'Users Management'); ?></h3>
+        <h3 class="box-title"><?= __d('users', 'Create a new User'); ?></h3>
     </div>
     <div class="box-body">
-        <a class="btn btn-primary col-sm-2 pull-left" href="<?= site_url('admin/users/profile'); ?>"><?= __d('users', 'Custom Fields'); ?></a>
         <a class="btn btn-success col-sm-2 pull-right" href="<?= site_url('admin/users/create'); ?>"><?= __d('users', 'Create a new User'); ?></a>
     </div>
 </div>

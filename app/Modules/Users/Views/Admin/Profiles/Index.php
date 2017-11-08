@@ -1,9 +1,8 @@
 <section class="content-header">
-    <h1><?= __d('users', 'Profile / Custom Fields'); ?></h1>
+    <h1><?= __d('users', 'Users Profile'); ?></h1>
     <ol class="breadcrumb">
         <li><a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <?= __d('users', 'Dashboard'); ?></a></li>
-        <li><a href="<?= site_url('admin/users'); ?>"><?= __d('users', 'Users'); ?></a></li>
-        <li><?= __d('users', 'Profile'); ?></li>
+        <li><?= __d('users', 'Users Profile'); ?></li>
     </ol>
 </section>
 
@@ -116,11 +115,6 @@
 <?= csrf_field(); ?>
 
 </form>
-
-<a class="btn btn-primary col-sm-2" href="<?= site_url('admin/users'); ?>"><?= __d('users', '<< Previous Page'); ?></a>
-
-<div class="clearfix"></div>
-<br>
 
 </section>
 

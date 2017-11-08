@@ -13,6 +13,11 @@ class FieldRegistry implements ArrayAccess
     protected $registered = array();
 
 
+    public function instance()
+    {
+        return $this;
+    }
+
     public function register($mixed)
     {
         if ($mixed instanceof Field) {

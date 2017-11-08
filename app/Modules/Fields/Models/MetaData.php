@@ -5,8 +5,8 @@ namespace App\Modules\Fields\Models;
 use Nova\Database\ORM\Model;
 use Nova\Support\Facades\App;
 
+use App\Modules\Fields\Support\Facades\FieldRegistry;
 use App\Modules\Fields\Support\MetaCollection;
-use App\Modules\Fields\Support\FieldRegistry;
 
 use DateTime;
 
@@ -31,7 +31,7 @@ class MetaData extends Model
      */
     protected function getFieldRegistry()
     {
-        return App::make(FieldRegistry::class);
+        return FieldRegistry::instance();
     }
 
     /**

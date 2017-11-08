@@ -37,7 +37,7 @@
                 <td style="text-align: center; vertical-align: middle;" width="15%"><?= $field->name; ?></td>
                 <td style="text-align: left; vertical-align: middle;" width="15%"><?= $field->key; ?></td>
                 <td style="text-align: left; vertical-align: middle;" width="25%"><?= $field->type; ?></td>
-                <td style="text-align: left; vertical-align: middle;" width="20%"><?= $field->validate; ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="20%"><?= $field->validate ?: '-'; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="5%"><?= $field->order; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="5%"><?= $field->columns; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="5%"><?= $field->hidden; ?></td>
@@ -220,7 +220,7 @@ $(function () {
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="order"><?= __d('users', 'Columns'); ?> <font color="#CC0000">*</font></label>
                     <div class="col-sm-2">
-                        <input name="order" id="modal-edit-columns" type="number" class="form-control" min="1" max="8" value="8" autocomplete="off">
+                        <input name="columns" id="modal-edit-columns" type="number" class="form-control" min="1" max="8" value="8" autocomplete="off">
                     </div>
                 </div>
                 <div class="form-group">

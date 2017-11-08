@@ -2,6 +2,7 @@
 
 namespace App\Modules\Fields\Providers;
 
+use Nova\Foundation\AliasLoader;
 use Nova\Modules\Support\Providers\ModuleServiceProvider as ServiceProvider;
 
 use App\Modules\Fields\Support\FieldRegistry;
@@ -57,6 +58,8 @@ class ModuleServiceProvider extends ServiceProvider
 
         // Register the Fields Registry.
         $this->registerFieldRegistry();
+
+        $this->registerFacades();
     }
 
     /**
@@ -93,5 +96,12 @@ class ModuleServiceProvider extends ServiceProvider
         );
 
         $registry->register($types);
+    }
+
+    protected function registerFacades()
+    {
+        $loader = AliasLoader::getInstance();
+
+        $loader->alias('FieldRegistry', 'App\Modules\Fields\Support\Facades\FieldRegistry');
     }
 }

@@ -18,6 +18,12 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
     // The Users Search.
     Route::get('users/search', array('middleware' => 'auth', 'uses' => 'Users@search'));
 
+    // The Custom Fields.
+    Route::get( 'users/profile',              array('middleware' => 'auth', 'uses' => 'Profiles@index'));
+    Route::post('users/profile',              array('middleware' => 'auth', 'uses' => 'Profiles@store'));
+    Route::post('users/profile/{id}',         array('middleware' => 'auth', 'uses' => 'Profiles@update'));
+    Route::post('users/profile/{id}/destroy', array('middleware' => 'auth', 'uses' => 'Profiles@destroy'));
+
     // The Users CRUD.
     Route::get( 'users',              array('middleware' => 'auth', 'uses' => 'Users@index'));
     Route::get( 'users/create',       array('middleware' => 'auth', 'uses' => 'Users@create'));

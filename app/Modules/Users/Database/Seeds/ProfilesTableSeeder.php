@@ -41,7 +41,6 @@ class ProfilesTableSeeder extends Seeder
             'key'      => 'first_name',
             'type'     => 'App\Modules\Fields\Fields\StringField',
             'validate' => 'required|min:3|max:100|valid_name',
-            'required' => 1,
             'hidden'   => 0,
             'order'    => 1,
         ));
@@ -51,7 +50,6 @@ class ProfilesTableSeeder extends Seeder
             'key'      => 'last_name',
             'type'     => 'App\Modules\Fields\Fields\StringField',
             'validate' => 'required|min:3|max:100|valid_name',
-            'required' => 1,
             'hidden'   => 0,
             'order'    => 2,
         ));
@@ -61,7 +59,6 @@ class ProfilesTableSeeder extends Seeder
             'key'      => 'location',
             'type'     => 'App\Modules\Fields\Fields\StringField',
             'validate' => null,
-            'required' => 0,
             'hidden'   => 0,
             'order'    => 3,
         ));
@@ -74,7 +71,6 @@ class ProfilesTableSeeder extends Seeder
             'key'      => 'activated',
             'type'     => 'App\Modules\Fields\Fields\IntegerField',
             'validate' => null,
-            'required' => 0,
             'hidden'   => 1,
             'order'    => 0,
         ));
@@ -84,7 +80,6 @@ class ProfilesTableSeeder extends Seeder
             'key'      => 'activation_code',
             'type'     => 'App\Modules\Fields\Fields\StringField',
             'validate' => null,
-            'required' => 0,
             'hidden'   => 1,
             'order'    => 0,
         ));
@@ -94,7 +89,6 @@ class ProfilesTableSeeder extends Seeder
             'key'      => 'api_token',
             'type'     => 'App\Modules\Fields\Fields\StringField',
             'validate' => null,
-            'required' => 0,
             'hidden'   => 1,
             'order'    => 0,
         ));

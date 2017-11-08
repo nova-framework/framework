@@ -1,8 +1,10 @@
 <?php
 
-namespace Nova\Support\Facades;
+namespace App\Modules\Fields\Support\Facades;
 
-use App\Modules\Fields\Support\FieldRegistry;
+use Nova\Support\Facades\Facade;
+
+use App\Modules\Fields\Support\FieldRegistry as Registry;
 
 
 /**
@@ -15,6 +17,6 @@ class FieldRegistry extends Facade
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return FieldRegistry::class; }
+    protected static function getFacadeAccessor() { return Registry::class; }
 
 }

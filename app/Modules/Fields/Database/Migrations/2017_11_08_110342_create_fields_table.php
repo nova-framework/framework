@@ -23,7 +23,6 @@ class CreateFieldsTable extends Migration
             $table->string('key');
             $table->tinyInteger('hidden')->default(0);
             $table->string('validate')->nullable();
-            $table->tinyInteger('required')->default(0);
             $table->smallInteger('order')->default(1);
             $table->timestamps();
         });

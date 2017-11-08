@@ -186,11 +186,7 @@ class Registrar extends BaseController
         $email = $input['email'];
 
         try {
-            $user = User::where('email', $email)->whereHas('meta', function ($query)
-            {
-                return $query->where('key', 'activated')->where('value', 0);
-
-            })->firstOrFail();
+            $user = User::where('email', $email)->whereMeta('activated', 0)->firstOrFail();
         }
         catch (ModelNotFoundException $e) {
             return Redirect::back()

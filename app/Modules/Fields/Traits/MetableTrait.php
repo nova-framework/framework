@@ -8,6 +8,7 @@ use Nova\Support\Facades\Schema;
 use Nova\Support\Collection as BaseCollection;
 use Nova\Support\Str;
 
+use App\Modules\Fields\Database\ORM\Builder as MetaBuilder;
 use App\Modules\Fields\Models\MetaData;
 
 
@@ -40,6 +41,15 @@ trait MetableTrait
         with($model = new MetaData())->setTable($metaTable);
 
         return new HasMany($model->newQuery(), $this, $this->getMetaKeyName(), $this->getKeyName());
+    }
+
+    /**
+     * @param \Nova\Database\Query\Builder $query
+     * @return \App\Modules\Fields\Database\ORM\Builder
+     */
+    public function newQueryBuilder($query)
+    {
+        return new MetaBuilder($query);
     }
 
     /**

@@ -58,7 +58,7 @@
     </div>
 </div>
 
-<form class="form-horizontal" action="<?= site_url('admin/users/profile'); ?>" method='POST' role="form">
+<form class="form-horizontal" action="<?= site_url('admin/profile'); ?>" method='POST' role="form">
 
 <div class="box box-widget">
     <div class="box-header">
@@ -156,7 +156,7 @@ $(function () {
         //
         $('#delete-record-id').val(id);
 
-        $('#modal-delete-form').attr('action', '<?= site_url("admin/users/profile"); ?>/' + id + '/destroy');
+        $('#modal-delete-form').attr('action', '<?= site_url("admin/profile"); ?>/' + id + '/destroy');
     });
 });
 
@@ -169,7 +169,7 @@ $(function () {
 <div class="modal modal-default" id="modal-edit-dialog" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form id="modal-edit-form" class="form-horizontal" action="<?= site_url('admin/users/profile'); ?>" method='POST' role="form">
+            <form id="modal-edit-form" class="form-horizontal" action="<?= site_url('admin/profile'); ?>" method='POST' role="form">
 
             <div class="modal-header" style="padding: 10px;">
                 <button aria-label="<?= __d('records', 'Close'); ?>" data-dismiss="modal" class="close" type="button">
@@ -283,7 +283,7 @@ $(function () {
         $('.modal-edit-title').html(title);
 
         // The form action.
-        $('#modal-edit-form').attr('action', '<?= site_url("admin/users/profile"); ?>/' + id);
+        $('#modal-edit-form').attr('action', '<?= site_url("admin/profile"); ?>/' + id);
     });
 
     $("#modal-edit-dialog").on('hidden.bs.modal', function () {

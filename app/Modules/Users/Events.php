@@ -27,7 +27,7 @@ Event::listen('backend.menu.sidebar', function ()
             'path'   => 'platform',
         ),
         array(
-            'url'    => site_url('admin/users/profile'),
+            'url'    => site_url('admin/profile'),
             'title'  => __d('roles', 'Users Profile'),
             'icon'   => 'circle-o',
             'weight' => 2,

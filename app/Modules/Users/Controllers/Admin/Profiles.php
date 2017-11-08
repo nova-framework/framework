@@ -105,7 +105,7 @@ class Profiles extends BaseController
             'hidden'   => (int) $hidden,
         ));
 
-        return Redirect::to('admin/users/profile')
+        return Redirect::to('admin/profile')
             ->withStatus(__d('users', 'The Field <b>{0}</b> was successfully created.', $input['name']), 'success');
     }
 
@@ -116,7 +116,7 @@ class Profiles extends BaseController
             $field = Field::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::to('admin/users/profile')->withStatus(__d('users', 'Field not found: #{0}', $id), 'danger');
+            return Redirect::to('admin/profile')->withStatus(__d('users', 'Field not found: #{0}', $id), 'danger');
         }
 
         $input = $request->all();
@@ -128,6 +128,9 @@ class Profiles extends BaseController
             return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
         }
 
+        $name = $field->name;
+
+        //
         $hidden = $request->has('hidden');
 
         $order = $hidden ? 0 : $input['order'];
@@ -144,8 +147,8 @@ class Profiles extends BaseController
         // Save the Field instance.
         $field->save();
 
-        return Redirect::to('admin/users/profile')
-            ->withStatus(__d('users', 'The Field <b>{0}</b> was successfully updated.', $field->name), 'success');
+        return Redirect::to('admin/profile')
+            ->withStatus(__d('users', 'The Field <b>{0}</b> was successfully updated.', $name), 'success');
     }
 
     public function destroy($id)
@@ -155,7 +158,7 @@ class Profiles extends BaseController
             $field = Field::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::to('admin/users/profile')->withStatus(__d('users', 'Field not found: #{0}', $id), 'danger');
+            return Redirect::to('admin/profile')->withStatus(__d('users', 'Field not found: #{0}', $id), 'danger');
         }
 
         // We should delete first the associated meta-data.
@@ -164,7 +167,7 @@ class Profiles extends BaseController
         // Destroy the requested Field record.
         $field->delete();
 
-        return Redirect::to('admin/users/profile')
+        return Redirect::to('admin/profile')
             ->withStatus(__d('users', 'The Field <b>{0}</b> was successfully deleted.', $field->name), 'success');
     }
 }

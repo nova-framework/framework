@@ -64,6 +64,7 @@ class MetaData extends Model
      * Parse and set the value attribute.
      *
      * @param mixed $value
+     * @param mixed $type
      */
     public function setValueAttribute($value, $type = null)
     {

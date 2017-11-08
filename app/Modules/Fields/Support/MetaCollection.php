@@ -88,6 +88,25 @@ class MetaCollection extends BaseCollection
     }
 
     /**
+     * Resolve calls to set a new item to the collection or update an existing key.
+     *
+     * @param $name
+     * @param $value
+     */
+    public function updateOrAdd($name, $value)
+    {
+        if (! is_null($key = $this->findItem($name))) {
+            $item = $this->get($key);
+
+            $item->value = $value;
+
+            return;
+        }
+
+        $this->addItem($name, $value);
+    }
+
+    /**
      * Add an item to the collection.
      *
      * @param string $name

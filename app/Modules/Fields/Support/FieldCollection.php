@@ -12,26 +12,6 @@ use App\Modules\Fields\Support\MetaCollection;
 
 class FieldCollection extends BaseCollection
 {
-    protected $relatedModel;
-
-
-    public function findItem($key)
-    {
-        $collection = $this->where('key', $name);
-
-        if ($collection->count() > 0) {
-            return $collection->first();
-        }
-    }
-
-    public function fieldKeys()
-    {
-        return array_map(function ($item)
-        {
-            return $item->key;
-
-        }, $this->items);
-    }
 
     public function validate(Validator $validator)
     {
@@ -59,7 +39,9 @@ class FieldCollection extends BaseCollection
         $fields = new BaseCollection();
 
         foreach ($this->items as $model) {
-            if (! is_null($key = $items->findItem($model->key))) {
+            if ($model->hidden === 1) {
+                continue;
+            } else if (! is_null($key = $items->findItem($model->key))) {
                 $item = $items->get($key);
 
                 $field = $item->getField();
@@ -83,6 +65,6 @@ class FieldCollection extends BaseCollection
         {
             return $field->renderForEditor($request);
 
-        })->toArray();
+        })->implode("\n");
     }
 }

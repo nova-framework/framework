@@ -109,15 +109,18 @@ class Users extends BaseController
 
         $profile = Profile::findOrFail(1);
 
+        $fields = $profile->fields;
+
         // Get all available User Roles.
         $roles = Role::all();
 
-        $fields = $profile->fields->renderForEditor($request);
+        // The Custom Fields.
+        $fieldsHtml = $fields->renderForEditor($request);
 
         return $this->createView()
             ->shares('title', __d('users', 'Create User'))
             ->with('roles', $roles)
-            ->with('fields', implode('', $fields));
+            ->with('fields', $fieldsHtml);
     }
 
     public function store(Request $request)
@@ -131,10 +134,12 @@ class Users extends BaseController
 
         $profile = Profile::findOrFail(1);
 
+        $fields = $profile->fields;
+
         // Validate the Input data.
         $validator = $this->validator($input);
 
-        $profile->fields->validate($validator);
+        $fields->validate($validator);
 
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
@@ -156,8 +161,8 @@ class Users extends BaseController
         // Update the Meta / Custom Fields.
         $user->load('meta');
 
-        foreach ($profile->fields->fieldKeys() as $key) {
-            $user->meta->{$key} = Arr::get($input, $key);
+        foreach ($fields as $field) {
+            $user->meta->updateOrAdd($key = $field->key, Arr::get($input, $key));
         }
 
         $user->save();
@@ -212,15 +217,18 @@ class Users extends BaseController
             throw new AuthorizationException();
         }
 
+        $fields = $user->profile->fields;
+
         // Get all available User Roles.
         $roles = Role::all();
 
-        $fields = $user->profile->fields->renderForEditor($request, $user->meta);
+        // The Custom Fields.
+        $fieldsHtml = $fields->renderForEditor($request, $user->meta);
 
         return $this->createView()
             ->shares('title', __d('users', 'Edit User'))
             ->with('roles', $roles)
-            ->with('fields', implode('', $fields))
+            ->with('fields', $fieldsHtml)
             ->with('user', $user);
     }
 
@@ -248,12 +256,12 @@ class Users extends BaseController
             throw new AuthorizationException();
         }
 
-        $profile = $user->profile;
+        $fields = $user->profile->fields;
 
         // Validate the Input data.
         $validator = $this->validator($input, $id);
 
-        $profile->fields->validate($validator);
+        $fields->validate($validator);
 
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
@@ -277,8 +285,8 @@ class Users extends BaseController
         }
 
         // Update the Meta / Custom Fields.
-        foreach ($profile->fields->fieldKeys() as $key) {
-            $user->meta->{$key} = Arr::get($input, $key);
+        foreach ($fields as $field) {
+            $user->meta->updateOrAdd($key = $field->key, Arr::get($input, $key));
         }
 
         // Save the User information.

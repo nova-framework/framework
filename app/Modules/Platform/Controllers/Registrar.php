@@ -37,7 +37,6 @@ class Registrar extends BaseController
     {
         // Validation rules.
         $rules = array(
-            'realname'             => 'required|min:6|valid_name',
             'email'                => 'required|email|unique:users',
             'password'             => 'required|confirmed|strong_password',
             'g-recaptcha-response' => 'required|min:1|recaptcha'
@@ -60,13 +59,6 @@ class Registrar extends BaseController
         Validator::extend('recaptcha', function($attribute, $value, $parameters) use ($remoteIp)
         {
             return ReCaptcha::check($value, $remoteIp);
-        });
-
-        Validator::extend('valid_name', function($attribute, $value, $parameters)
-        {
-            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){2,}$~u';
-
-            return (preg_match($pattern, $value) === 1);
         });
 
         Validator::extend('strong_password', function($attribute, $value, $parameters)

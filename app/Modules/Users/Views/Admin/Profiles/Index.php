@@ -25,24 +25,26 @@
                 <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Key'); ?></th>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Type'); ?></th>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Validation'); ?></th>
-                <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Hidden'); ?></th>
                 <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Order'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Columns'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Hidden'); ?></th>
                 <th style="text-align: right; vertical-align: middle;"><?= __d('users', 'Operations'); ?></th>
             </tr>
             <?php foreach ($profile->fields as $field) { ?>
             <?php $deletables++; ?>
             <?php $editables++; ?>
             <tr>
-                <td style="text-align: center; vertical-align: middle;" width="20%"><?= $field->name; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="15%"><?= $field->name; ?></td>
                 <td style="text-align: left; vertical-align: middle;" width="15%"><?= $field->key; ?></td>
                 <td style="text-align: left; vertical-align: middle;" width="25%"><?= $field->type; ?></td>
                 <td style="text-align: left; vertical-align: middle;" width="20%"><?= $field->validate; ?></td>
-                <td style="text-align: center; vertical-align: middle;" width="5%"><?= $field->hidden; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="5%"><?= $field->order; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="5%"><?= $field->columns; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="5%"><?= $field->hidden; ?></td>
                 <td style="text-align: right; vertical-align: middle;" width="15%">
                     <div class="btn-group" role="group" aria-label="...">
                         <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $field->id; ?>" title="<?= __d('users', 'Delete this Field'); ?>" role="button"><i class="fa fa-remove"></i></a>
-                        <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-edit-dialog" data-id="<?= $field->id; ?>" data-name="<?= $field->name; ?>" data-key="<?= $field->key; ?>" data-type="<?= $field->type; ?>" data-validate="<?= $field->validate; ?>" data-hidden="<?= $field->hidden; ?>" data-order="<?= $field->order; ?>" title="<?= __d('users', 'Edit this Field'); ?>" role="button"><i class="fa fa-pencil"></i></a>
+                        <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-edit-dialog" data-id="<?= $field->id; ?>" data-name="<?= $field->name; ?>" data-key="<?= $field->key; ?>" data-type="<?= $field->type; ?>" data-validate="<?= $field->validate; ?>" data-hidden="<?= $field->hidden; ?>" data-columns="<?= $field->columns; ?>" data-order="<?= $field->order; ?>" title="<?= __d('users', 'Edit this Field'); ?>" role="button"><i class="fa fa-pencil"></i></a>
                     </div>
                 </td>
             </tr>
@@ -70,11 +72,12 @@
                 <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Key'); ?></th>
                 <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Type'); ?></th>
                 <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Validation'); ?></th>
-                <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Hidden'); ?></th>
                 <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Order'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Columns'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Hidden'); ?></th>
             </tr>
             <tr>
-                <td style="text-align: center; vertical-align: middle;" width="20%">
+                <td style="text-align: center; vertical-align: middle;" width="15%">
                     <input name="name" id="name" type="text" class="form-control" value="<?= ''; ?>" placeholder="<?= __d('users', 'Name'); ?>" autocomplete="off">
                 </td>
                 <td style="text-align: center; vertical-align: middle;" width="15%">
@@ -92,12 +95,15 @@
                 <td style="text-align: center; vertical-align: middle;" width="25%">
                     <input name="validate" id="validate" type="text" class="form-control" value="<?= ''; ?>" placeholder="<?= __d('users', 'Validation'); ?>" autocomplete="off">
                 </td>
+                <td style="text-align: center; vertical-align: middle;" width="10%">
+                    <input name="order" id="order" type="number" class="form-control" min="0" max="1000" value="<?= Input::old('order', 1); ?>" autocomplete="off">
+                </td>
+                <td style="text-align: center; vertical-align: middle;" width="5%">
+                    <input name="columns" id="columns" type="number" class="form-control" min="1" max="8" value="<?= Input::old('columns', 8); ?>" autocomplete="off">
+                </td>
                 <td style="text-align: center; vertical-align: middle;" width="5%">
                     <?php $checked = (1 === (int) Input::old('hidden')); ?>
                     <input type="checkbox" name="hidden" value="1" <?= $checked ? 'checked="checked"' : ''; ?> autocomplete="off"/>
-                </td>
-                <td style="text-align: center; vertical-align: middle;" width="10%">
-                    <input name="order" id="order" type="number" class="form-control" min="0" max="1000" value="<?= Input::old('order', 1); ?>" autocomplete="off">
                 </td>
             </tr>
         </table>
@@ -206,18 +212,26 @@ $(function () {
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-3 control-label" for="order"><?= __d('users', 'Order'); ?> <font color="#CC0000">*</font></label>
+                    <div class="col-sm-2">
+                        <input name="order" id="modal-edit-order" type="number" class="form-control" min="0" max="1000" value="1" autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="order"><?= __d('users', 'Columns'); ?> <font color="#CC0000">*</font></label>
+                    <div class="col-sm-2">
+                        <input name="order" id="modal-edit-columns" type="number" class="form-control" min="1" max="8" value="8" autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-3 control-label" for="hidden"><?= __d('users', 'Hidden'); ?> <font color="#CC0000">*</font></label>
                     <div class="col-sm-9">
                         <input type="checkbox" name="hidden" id="modal-edit-hidden" value="1" autocomplete="off"/>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label" for="order"><?= __d('users', 'Order'); ?> <font color="#CC0000">*</font></label>
-                    <div class="col-sm-3">
-                        <input name="order" id="modal-edit-order" type="number" class="form-control" min="0" max="1000" value="1" autocomplete="off">
-                    </div>
-                </div>
                 <div class="clearfix"></div>
+                <br>
+                <font color="#CC0000">*</font><?= __d('users', 'Required field'); ?>
             </div>
             <div class="modal-footer">
                 <input type="hidden" name="id" id="edit-record-id" value="0" />
@@ -246,6 +260,7 @@ $(function () {
         var type     = button.data('type');
         var validate = button.data('validate');
         var hidden   = button.data('hidden');
+        var columns  = button.data('columns');
         var order    = button.data('order');
 
         $('#modal-edit-name').val(name);
@@ -265,6 +280,7 @@ $(function () {
 
         checkbox.iCheck('update');
 
+        $('#modal-edit-columns').val(columns);
         $('#modal-edit-order').val(order);
 
         // The title.

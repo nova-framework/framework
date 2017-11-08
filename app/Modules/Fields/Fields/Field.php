@@ -44,11 +44,12 @@ abstract class Field
 
     public function renderForEditor(Request $request)
     {
+        $item = $this->item;
+
         $value = isset($this->model) ? $this->model->value : '';
 
-        return View::make('Fields/Editor/Default', compact('request'), 'Fields')
-            ->with('value', $request->old($this->item->key, $value))
-            ->with('item', $this->item)
+        return View::make('Fields/Editor/Default', compact('request', 'item', 'value'), 'Fields')
+            ->with('value', $request->old($item->key, $value))
             ->render();
     }
 

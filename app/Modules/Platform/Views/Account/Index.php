@@ -18,20 +18,20 @@
     <div class="box-body no-padding">
         <table id="left" class="table table-hover responsive">
             <tr class="bg-navy disabled">
-                <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Field'); ?></th>
-                <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Value'); ?></th>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'Field'); ?></th>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'Value'); ?></th>
             </tr>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'Username'); ?></th>
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->username; ?></td>
             </tr>
             <tr>
-                <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'Roles'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= implode(', ', $user->roles->lists('name')); ?></td>
-            </tr>
-            <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'E-mail'); ?></th>
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->email; ?></td>
+            </tr>
+            <tr>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'Roles'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= implode(', ', $user->roles->lists('name')); ?></td>
             </tr>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'Created At'); ?></th>

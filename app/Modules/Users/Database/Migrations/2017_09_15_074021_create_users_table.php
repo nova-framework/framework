@@ -18,13 +18,13 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('username', 100)->unique();
             $table->string('password');
-            $table->string('realname');
             $table->string('email', 100)->unique();
             $table->string('image')->nullable();
             $table->tinyInteger('activated')->unsigned()->default(0);
             $table->string('activation_code')->nullable();
             $table->string('remember_token')->nullable();
             $table->string('api_token', 100)->unique()->nullable();
+            $table->integer('profile_id')->unsigned();
             $table->timestamps();
         });
     }

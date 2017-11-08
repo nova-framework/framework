@@ -38,7 +38,6 @@ class Registrar extends BaseController
         // Validation rules.
         $rules = array(
             'realname'             => 'required|min:6|valid_name',
-            'username'             => 'required|min:6|unique:users',
             'email'                => 'required|email|unique:users',
             'password'             => 'required|confirmed|strong_password',
             'g-recaptcha-response' => 'required|min:1|recaptcha'
@@ -52,7 +51,6 @@ class Registrar extends BaseController
 
         $attributes = array(
             'username'             => __d('platform', 'Username'),
-            'realname'             => __d('platform', 'Name and Surname'),
             'email'                => __d('platform', 'E-mail'),
             'password'             => __d('platform', 'Password'),
             'g-recaptcha-response' => __d('platform', 'ReCaptcha'),
@@ -102,7 +100,7 @@ class Registrar extends BaseController
     public function store(Request $request)
     {
         $input = $request->only(
-            'username', 'realname', 'email', 'password', 'password_confirmation', 'g-recaptcha-response'
+            'username', 'email', 'password', 'password_confirmation', 'g-recaptcha-response'
         );
 
         // Create a Validator instance.
@@ -118,7 +116,6 @@ class Registrar extends BaseController
         // Create the User record.
         $user = User::create(array(
             'username'        => $input['username'],
-            'realname'        => $input['realname'],
             'email'           => $input['email'],
             'password'        => $password,
             'activation_code' => $token = $this->createNewToken(),

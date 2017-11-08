@@ -12,11 +12,15 @@
 <?= Session::getMessages(); ?>
 
 <div class="box box-default">
-    <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('platform', 'Account Details'); ?></h3>
+    <div class="box-header">
+        <h3 class="box-title"><?= __d('platform', 'User Account'); ?></h3>
     </div>
     <div class="box-body no-padding">
         <table id="left" class="table table-hover responsive">
+            <tr class="bg-navy disabled">
+                <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Field'); ?></th>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Value'); ?></th>
+            </tr>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'Username'); ?></th>
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->username; ?></td>
@@ -26,10 +30,6 @@
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= implode(', ', $user->roles->lists('name')); ?></td>
             </tr>
             <tr>
-                <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'Name and Surname'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->realname; ?></td>
-            </tr>
-            <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'E-mail'); ?></th>
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->email; ?></td>
             </tr>
@@ -37,6 +37,26 @@
                 <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'Created At'); ?></th>
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->created_at->formatLocalized(__d('platform', '%d %b %Y, %R')); ?></td>
             </tr>
+        </table>
+    </div>
+</div>
+
+<div class="box box-widget">
+    <div class="box-header">
+        <h3 class="box-title"><?= __d('users', 'User Profile'); ?></h3>
+    </div>
+    <div class="box-body no-padding">
+        <table id="left" class="table table-hover responsive">
+            <tr class="bg-navy disabled">
+                <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Field'); ?></th>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Value'); ?></th>
+            </tr>
+            <?php foreach ($user->profile->fields as $field) { ?>
+            <tr>
+                <th style="text-align: left; vertical-align: middle;"><?= $field->name; ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->meta->itemValue($field->key); ?></td>
+            </tr>
+            <?php } ?>
         </table>
     </div>
 </div>

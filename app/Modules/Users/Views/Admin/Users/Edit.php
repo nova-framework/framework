@@ -47,12 +47,6 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="realname"><?= __d('users', 'Name and Surname'); ?> <font color="#CC0000">*</font></label>
-                <div class="col-sm-8">
-                    <input name="realname" id="realname" type="text" class="form-control" value="<?= Input::old('realname', $user->realname); ?>" placeholder="<?= __d('users', 'Name and Surname'); ?>">
-                </div>
-            </div>
-            <div class="form-group">
                 <label class="col-sm-4 control-label" for="password"><?= __d('users', 'Password'); ?> <font color="#CC0000">*</font></label>
                 <div class="col-sm-8">
                     <input name="password" id="password" type="password" class="form-control" value="" placeholder="<?= __d('users', 'Password'); ?>">
@@ -70,6 +64,7 @@
                     <input name="email" id="email" type="text" class="form-control" value="<?= Input::old('email', $user->email); ?>" placeholder="<?= __d('users', 'E-mail'); ?>">
                 </div>
             </div>
+            <?= $fields; ?>
             <div class="clearfix"></div>
             <br>
             <font color="#CC0000">*</font><?= __d('users', 'Required field'); ?>

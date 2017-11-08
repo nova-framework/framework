@@ -14,20 +14,23 @@ use Shared\Database\ORM\FileField\FileFieldTrait;
 use Shared\Notifications\NotifiableTrait;
 
 use App\Modules\Attachments\Traits\HasAttachmentsTrait;
+use App\Modules\Fields\Traits\MetableTrait;
 use App\Modules\Messages\Traits\HasMessagesTrait;
 use App\Modules\Platform\Traits\HasActivitiesTrait;
 
 
 class User extends BaseModel implements UserInterface, RemindableInterface
 {
-    use UserTrait, RemindableTrait, AuthorizableTrait, NotifiableTrait, FileFieldTrait, HasActivitiesTrait, HasMessagesTrait, HasAttachmentsTrait;
+    use UserTrait, RemindableTrait, AuthorizableTrait, MetableTrait, NotifiableTrait, FileFieldTrait, HasActivitiesTrait, HasMessagesTrait, HasAttachmentsTrait;
 
     //
     protected $table = 'users';
 
     protected $primaryKey = 'id';
 
-    protected $fillable = array('role_id', 'username', 'password', 'realname', 'email', 'activated', 'image', 'activation_code', 'api_token');
+    protected $fillable = array(
+        'username', 'password', 'email', 'activated', 'image', 'activation_code', 'api_token', 'profile_id'
+    );
 
     protected $hidden = array('password', 'activation_code', 'remember_token', 'api_token');
 
@@ -38,16 +41,36 @@ class User extends BaseModel implements UserInterface, RemindableInterface
         ),
     );
 
+    // Setup the Metadata.
+    protected $with = array('meta');
+
+    protected $metaTable = 'users_meta';
+
     // Caches for Roles and Permissions.
     protected $cachedRoles;
     protected $cachedPermissions;
 
+
+    public function profile()
+    {
+        return $this->belongsTo('App\Modules\Users\Models\Profile', 'profile_id');
+    }
+
+    public function realname()
+    {
+        return trim($this->meta->first_name .' ' .$this->meta->last_name);
+    }
 
     public function picture()
     {
         $path = 'assets/images/users/' .basename((string) $this->getAttribute('image'));
 
         return site_url($path);
+    }
+
+    public function getMetaFields()
+    {
+        return $this->profile->fields->getMetaFields($this->meta);
     }
 
     /**

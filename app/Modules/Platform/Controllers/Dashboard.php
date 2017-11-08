@@ -4,6 +4,7 @@ namespace App\Modules\Platform\Controllers;
 
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Redirect;
+use Nova\Support\Str;
 
 use App\Modules\Platform\Controllers\BaseController;
 use App\Modules\Platform\Notifications\Sample as SampleNotification;

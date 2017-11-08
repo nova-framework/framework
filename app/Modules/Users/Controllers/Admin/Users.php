@@ -8,6 +8,7 @@
 
 namespace App\Modules\Users\Controllers\Admin;
 
+use Nova\Http\Request;
 use Nova\Auth\Access\AuthorizationException;
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\Cache;
@@ -17,9 +18,11 @@ use Nova\Support\Facades\Input;
 use Nova\Support\Facades\File;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
+use Nova\Support\Arr;
 
 use App\Modules\Platform\Controllers\Admin\BaseController;
 use App\Modules\Roles\Models\Role;
+use App\Modules\Users\Models\Profile;
 use App\Modules\Users\Models\User;
 
 use Carbon\Carbon;
@@ -44,7 +47,6 @@ class Users extends BaseController
         $rules = array(
             'username'              => 'required|min:4|max:100|alpha_dash|unique:users,username' .$ignore,
             'roles'                 => 'required|array|exists:roles,id',
-            'realname'              => 'required|min:5|max:100|valid_name',
             'password'              => $required .'|confirmed|strong_password',
             'password_confirmation' => $required .'|same:password',
             'email'                 => 'required|min:5|max:100|email',
@@ -59,7 +61,6 @@ class Users extends BaseController
         $attributes = array(
             'username'              => __d('users', 'Username'),
             'role'                  => __d('users', 'Role'),
-            'realname'              => __d('users', 'Name and Surname'),
             'password'              => __d('users', 'Password'),
             'password_confirmation' => __d('users', 'Password confirmation'),
             'email'                 => __d('users', 'E-mail'),
@@ -69,7 +70,7 @@ class Users extends BaseController
         // Add the custom Validation Rule commands.
         Validator::extend('valid_name', function($attribute, $value, $parameters)
         {
-            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){2,}$~u';
+            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){1,}$~u';
 
             return (preg_match($pattern, $value) === 1);
         });
@@ -99,34 +100,41 @@ class Users extends BaseController
             ->with('users', $users);
     }
 
-    public function create()
+    public function create(Request $request)
     {
         // Authorize the current User.
         if (Gate::denies('create', User::class)) {
             throw new AuthorizationException();
         }
+
+        $profile = Profile::findOrFail(1);
 
         // Get all available User Roles.
         $roles = Role::all();
 
+        $fields = $profile->fields->renderForEditor($request);
+
         return $this->createView()
             ->shares('title', __d('users', 'Create User'))
-            ->with('roles', $roles);
+            ->with('roles', $roles)
+            ->with('fields', implode('', $fields));
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        $input = Input::only(
-            'username', 'roles', 'realname', 'password', 'password_confirmation', 'email', 'image'
-        );
+        $input = $request->all();
 
         // Authorize the current User.
         if (Gate::denies('create', User::class)) {
             throw new AuthorizationException();
         }
 
+        $profile = Profile::findOrFail(1);
+
         // Validate the Input data.
         $validator = $this->validator($input);
+
+        $profile->fields->validate($validator);
 
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
@@ -137,14 +145,24 @@ class Users extends BaseController
 
         // Create a User Model instance.
         $user = User::create(array(
-            'username'  => $input['username'],
-            'password'  => $password,
-            'realname'  => $input['realname'],
-            'email'     => $input['email'],
-            'image'     => Input::file('image'),
-            'activated' => 1,
+            'username'   => $input['username'],
+            'password'   => $password,
+            'email'      => $input['email'],
+            'image'      => Input::file('image'),
+            'activated'  => 1,
+            'profile_id' => $profile->id,
         ));
 
+        // Update the Meta / Custom Fields.
+        $user->load('meta');
+
+        foreach ($profile->fields->fieldKeys() as $key) {
+            $user->meta->{$key} = Arr::get($input, $key);
+        }
+
+        $user->save();
+
+        // Attach the Roles.
         $user->roles()->attach($input['roles']);
 
         // Prepare the flash message.
@@ -176,7 +194,7 @@ class Users extends BaseController
             ->with('user', $user);
     }
 
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         // Get the User Model instance.
         try {
@@ -197,17 +215,18 @@ class Users extends BaseController
         // Get all available User Roles.
         $roles = Role::all();
 
+        $fields = $user->profile->fields->renderForEditor($request, $user->meta);
+
         return $this->createView()
             ->shares('title', __d('users', 'Edit User'))
             ->with('roles', $roles)
+            ->with('fields', implode('', $fields))
             ->with('user', $user);
     }
 
-    public function update($id)
+    public function update(Request $request, $id)
     {
-        $input = Input::only(
-            'username', 'roles', 'realname', 'password', 'password_confirmation', 'email', 'image'
-        );
+        $input = $request->all();
 
         if(empty($input['password']) && empty($input['password_confirm'])) {
             unset($input['password'], $input['password_confirmation']);
@@ -229,8 +248,12 @@ class Users extends BaseController
             throw new AuthorizationException();
         }
 
+        $profile = $user->profile;
+
         // Validate the Input data.
         $validator = $this->validator($input, $id);
+
+        $profile->fields->validate($validator);
 
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
@@ -241,7 +264,6 @@ class Users extends BaseController
 
         //
         $user->username = $input['username'];
-        $user->realname = $input['realname'];
         $user->email    = $input['email'];
 
         // If a file has been uploaded.
@@ -252,6 +274,11 @@ class Users extends BaseController
         if(isset($input['password'])) {
             // Encrypt and add the given Password.
             $user->password = Hash::make($input['password']);
+        }
+
+        // Update the Meta / Custom Fields.
+        foreach ($profile->fields->fieldKeys() as $key) {
+            $user->meta->{$key} = Arr::get($input, $key);
         }
 
         // Save the User information.
@@ -343,7 +370,6 @@ class Users extends BaseController
         $search = $input['query'];
 
         $users = User::where('username', 'LIKE', '%' .$search .'%')
-            ->orWhere('realname', 'LIKE', '%' .$search .'%')
             ->orWhere('email', 'LIKE', '%' .$search .'%')
             ->paginate(15);
 

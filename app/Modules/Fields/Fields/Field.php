@@ -26,11 +26,11 @@ abstract class Field
     protected $item;
 
     /**
-     * The partial View used for rendering.
+     * The partial View used for editor rendering.
      *
      * @var string
      */
-    protected $view = 'Fields/Editor/Default';
+    protected $editorView = 'Fields/Editor/Default';
 
 
     /**
@@ -54,10 +54,12 @@ abstract class Field
     {
         $item = $this->item;
 
-        $value = isset($this->model) ? $this->model->value : '';
+        // Calculate the current value.
+        $default = isset($this->model) ? $this->model->value : null;
 
-        return View::make($this->view, compact('request', 'item', 'value'), 'Fields')
-            ->with('value', $request->old($item->key, $value))
+        $value = $request->old($item->key, $default);
+
+        return View::make($this->editorView, compact('request', 'item', 'value'), 'Fields')
             ->render();
     }
 

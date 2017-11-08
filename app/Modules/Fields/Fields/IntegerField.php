@@ -8,11 +8,11 @@ use App\Modules\Fields\Fields\Field;
 class IntegerField extends Field
 {
     /**
-     * The partial View used for rendering.
+     * The partial View used for editor rendering.
      *
      * @var string
      */
-    protected $view = 'Fields/Editor/Integer';
+    protected $editorView = 'Fields/Editor/Integer';
 
 
     /**

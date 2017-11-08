@@ -65,12 +65,14 @@ class MetaData extends Model
      *
      * @param mixed $value
      */
-    public function setValueAttribute($value)
+    public function setValueAttribute($value, $type = null)
     {
-        if (! isset($this->attributes['type'])) {
+        if (is_null($type) && ! isset($this->attributes['type'])) {
             $field = $this->getFieldRegistry()->findFieldFor($value);
 
             $this->attributes['type'] = $field->getClass();
+        } else if (isset($type)) {
+            $this->attributes['type'] = $type;
         }
 
         return $this->getField()->set($value);

@@ -13,7 +13,7 @@ class Field extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = array('name', 'type', 'key', 'validate', 'hidden', 'order');
+    protected $fillable = array('name', 'type', 'key', 'validate', 'order', 'columns', 'hidden');
 
 
     /**

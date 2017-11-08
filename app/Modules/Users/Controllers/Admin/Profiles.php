@@ -26,10 +26,11 @@ class Profiles extends BaseController
     {
         // Validation rules
         $rules = array(
-            'name'  => 'required|min:3|valid_name',
-            'key'   => 'required|min:3|alpha_dash',
-            'type'  => 'required|valid_type',
-            'order' => 'required|numeric|min:0|max:1000',
+            'name'    => 'required|min:3|valid_name',
+            'key'     => 'required|min:3|alpha_dash',
+            'type'    => 'required|valid_type',
+            'order'   => 'required|numeric|min:0|max:1000',
+            'columns' => 'required|numeric|min:1|max:8',
         );
 
         $messages = array(
@@ -38,10 +39,11 @@ class Profiles extends BaseController
         );
 
         $attributes = array(
-            'name'  => __d('users', 'Name'),
-            'key'   => __d('users', 'Key'),
-            'type'  => __d('users', 'Type'),
-            'order' => __d('users', 'Order'),
+            'name'    => __d('users', 'Name'),
+            'key'     => __d('users', 'Key'),
+            'type'    => __d('users', 'Type'),
+            'order'   => __d('users', 'Order'),
+            'columns' => __d('users', 'Columns'),
         );
 
         // Add the custom Validation Rule commands.
@@ -98,8 +100,9 @@ class Profiles extends BaseController
             'key'      => $input['key'],
             'type'     => $input['type'],
             'validate' => $input['validate'],
-            'hidden'   => (int) $hidden,
             'order'    => $order,
+            'columns'  => $input['columns'],
+            'hidden'   => (int) $hidden,
         ));
 
         return Redirect::to('admin/users/profile')
@@ -134,8 +137,9 @@ class Profiles extends BaseController
         $field->key      = $input['key'];
         $field->type     = $input['type'];
         $field->validate = $input['validate'];
-        $field->hidden   = (int) $hidden;
         $field->order    = $order;
+        $field->columns  = $input['columns'];
+        $field->hidden   = (int) $hidden;
 
         // Save the Field instance.
         $field->save();

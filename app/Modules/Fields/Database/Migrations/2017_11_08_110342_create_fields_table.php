@@ -21,10 +21,10 @@ class CreateFieldsTable extends Migration
             $table->string('name');
             $table->string('type');
             $table->string('key');
-            $table->tinyInteger('hidden')->default(0);
             $table->string('validate')->nullable();
-            $table->smallInteger('columns')->default(8);
             $table->smallInteger('order')->default(1);
+            $table->tinyInteger('columns')->default(8);
+            $table->tinyInteger('hidden')->default(0);
             $table->timestamps();
         });
     }

@@ -103,7 +103,7 @@
     </div>
 
     <div class="box-body">
-        <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
             <h4><?= __d('platform', 'Account'); ?></h4>
             <hr>
             <div class="form-group">

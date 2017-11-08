@@ -76,7 +76,7 @@ class ProfilesTableSeeder extends Seeder
             'validate' => null,
             'required' => 0,
             'hidden'   => 1,
-            'order'    => 1,
+            'order'    => 0,
         ));
 
         $fields->create(array(
@@ -86,7 +86,7 @@ class ProfilesTableSeeder extends Seeder
             'validate' => null,
             'required' => 0,
             'hidden'   => 1,
-            'order'    => 1,
+            'order'    => 0,
         ));
 
         $fields->create(array(
@@ -96,7 +96,7 @@ class ProfilesTableSeeder extends Seeder
             'validate' => null,
             'required' => 0,
             'hidden'   => 1,
-            'order'    => 1,
+            'order'    => 0,
         ));
     }
 }

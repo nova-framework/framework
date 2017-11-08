@@ -93,7 +93,11 @@ class Users extends BaseController
         }
 
         // Get all User records for current page.
-        $users = User::where('activated', 1)->paginate(25);
+        $users = User::whereHas('meta', function ($query)
+        {
+            return $query->where('key', 'activated')->where('value', 1);
+
+        })->paginate(25);
 
         return $this->createView()
             ->shares('title', __d('users', 'Users'))
@@ -164,7 +168,11 @@ class Users extends BaseController
         $user->meta->activated = 1;
 
         foreach ($fields as $field) {
-            $user->meta->updateOrAdd($key = $field->key, Arr::get($input, $key));
+            if (! Arr::has($input, $key = $field->key)) {
+                continue;
+            }
+
+            $user->meta->updateOrAdd($key, Arr::get($input, $key));
         }
 
         $user->save();
@@ -288,7 +296,11 @@ class Users extends BaseController
 
         // Update the Meta / Custom Fields.
         foreach ($fields as $field) {
-            $user->meta->updateOrAdd($key = $field->key, Arr::get($input, $key));
+            if (! Arr::has($input, $key = $field->key)) {
+                continue;
+            }
+
+            $user->meta->updateOrAdd($key, Arr::get($input, $key));
         }
 
         // Save the User information.

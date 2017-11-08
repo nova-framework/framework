@@ -124,7 +124,11 @@ class Account extends BaseController
 
         // Update the Meta / Custom Fields.
         foreach ($fields as $field) {
-            $user->meta->updateOrAdd($key = $field->key, Arr::get($input, $key));
+            if (! Arr::has($input, $key = $field->key)) {
+                continue;
+            }
+
+            $user->meta->updateOrAdd($key, Arr::get($input, $key));
         }
 
         // Save the User Model instance.

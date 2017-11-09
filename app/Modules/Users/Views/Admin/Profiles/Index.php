@@ -86,7 +86,7 @@
                     <?php $optType = Input::old('type'); ?>
                     <select name="type" id="type" class="form-control select2" placeholder="" data-placeholder="<?= __d('users', 'Select a Type'); ?>" style="width: 100%;" autocomplete="off">
                         <option></option>
-                        <?php foreach ($fields as $class => $instance) { ?>
+                        <?php foreach ($types as $class => $instance) { ?>
                         <option value="<?= $class ?>" <?= ($optType == $class) ? 'selected' : ''; ?>><?= $class; ?></option>
                         <?php } ?>
                     </select>
@@ -193,7 +193,7 @@ $(function () {
                     <label class="col-sm-3 control-label" for="type"><?= __d('users', 'Type'); ?> <font color="#CC0000">*</font></label>
                     <div class="col-sm-9">
                         <select name="type" id="modal-edit-type" class="form-control select2" placeholder="" data-placeholder="<?= __d('users', 'Select a Type'); ?>" style="width: 100%;" autocomplete="off">
-                            <?php foreach ($fields as $class => $instance) { ?>
+                            <?php foreach ($types as $class => $instance) { ?>
                             <option value="<?= $class ?>"><?= $class; ?></option>
                             <?php } ?>
                         </select>

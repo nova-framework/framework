@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Modules\Fields\Fields;
+namespace App\Modules\Fields\Types;
 
-use App\Modules\Fields\Fields\Field;
+use App\Modules\Fields\Types\Type as BaseType;
 
 
-class IntegerField extends Field
+class IntegerType extends BaseType
 {
     /**
      * The partial View used for editor rendering.
      *
      * @var string
      */
-    protected $editorView = 'Fields/Editor/Integer';
+    protected $view = 'Fields/Editor/Integer';
 
 
     /**
@@ -41,7 +41,7 @@ class IntegerField extends Field
      * @param  mixed  $value
      * @return bool
      */
-    public function isField($value)
+    public function isType($value)
     {
         return is_int($value);
     }

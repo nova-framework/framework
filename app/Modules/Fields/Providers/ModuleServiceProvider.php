@@ -5,7 +5,7 @@ namespace App\Modules\Fields\Providers;
 use Nova\Foundation\AliasLoader;
 use Nova\Modules\Support\Providers\ModuleServiceProvider as ServiceProvider;
 
-use App\Modules\Fields\Support\FieldRegistry;
+use App\Modules\Fields\Types\Registry as TypeRegistry;
 
 
 class ModuleServiceProvider extends ServiceProvider
@@ -56,10 +56,10 @@ class ModuleServiceProvider extends ServiceProvider
     {
         parent::register();
 
-        // Register the Fields Registry.
-        $this->registerFieldRegistry();
+        // Register the Types Registry.
+        $this->registerTypeRegistry();
 
-        $this->registerFacades();
+        //$this->registerFacades();
     }
 
     /**
@@ -67,13 +67,13 @@ class ModuleServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function registerFieldRegistry()
+    public function registerTypeRegistry()
     {
-        $this->app->singleton(FieldRegistry::class, function ($app)
+        $this->app->singleton(TypeRegistry::class, function ($app)
         {
-            $registry = new FieldRegistry();
+            $registry = new TypeRegistry();
 
-            $this->registerDefaultFields($registry);
+            $this->registerDefaultTypes($registry);
 
             return $registry;
         });
@@ -85,14 +85,14 @@ class ModuleServiceProvider extends ServiceProvider
      * @param  \App\Modules\Fields\Meta\Registry $registry
      * @return void
      */
-    public function registerDefaultFields(FieldRegistry $registry)
+    public function registerDefaultTypes(TypeRegistry $registry)
     {
         $types = array(
-            new \App\Modules\Fields\Fields\StringField,
-            new \App\Modules\Fields\Fields\IntegerField,
-            new \App\Modules\Fields\Fields\BooleanField,
-            new \App\Modules\Fields\Fields\ArrayField,
-            new \App\Modules\Fields\Fields\DoubleField,
+            new \App\Modules\Fields\Types\StringType,
+            new \App\Modules\Fields\Types\IntegerType,
+            new \App\Modules\Fields\Types\BooleanType,
+            new \App\Modules\Fields\Types\ArrayType,
+            new \App\Modules\Fields\Types\DoubleType,
         );
 
         $registry->register($types);
@@ -102,6 +102,6 @@ class ModuleServiceProvider extends ServiceProvider
     {
         $loader = AliasLoader::getInstance();
 
-        $loader->alias('FieldRegistry', 'App\Modules\Fields\Support\Facades\FieldRegistry');
+        $loader->alias('FieldTypeRegistry', 'App\Modules\Fields\Support\Facades\FieldTypeRegistry');
     }
 }

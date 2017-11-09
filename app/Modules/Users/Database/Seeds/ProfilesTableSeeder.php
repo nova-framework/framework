@@ -39,7 +39,7 @@ class ProfilesTableSeeder extends Seeder
         $fields->create(array(
             'name'     => 'First Name',
             'key'      => 'first_name',
-            'type'     => 'App\Modules\Fields\Fields\StringField',
+            'type'     => 'App\Modules\Fields\Types\StringType',
             'validate' => 'required|min:3|max:100|valid_name',
             'hidden'   => 0,
             'order'    => 1,
@@ -48,7 +48,7 @@ class ProfilesTableSeeder extends Seeder
         $fields->create(array(
             'name'     => 'Last Name',
             'key'      => 'last_name',
-            'type'     => 'App\Modules\Fields\Fields\StringField',
+            'type'     => 'App\Modules\Fields\Types\StringType',
             'validate' => 'required|min:3|max:100|valid_name',
             'hidden'   => 0,
             'order'    => 2,
@@ -57,7 +57,7 @@ class ProfilesTableSeeder extends Seeder
         $fields->create(array(
             'name'     => 'Location',
             'key'      => 'location',
-            'type'     => 'App\Modules\Fields\Fields\StringField',
+            'type'     => 'App\Modules\Fields\Types\StringType',
             'validate' => null,
             'hidden'   => 0,
             'order'    => 3,
@@ -69,7 +69,7 @@ class ProfilesTableSeeder extends Seeder
         $fields->create(array(
             'name'     => 'User Activated',
             'key'      => 'activated',
-            'type'     => 'App\Modules\Fields\Fields\IntegerField',
+            'type'     => 'App\Modules\Fields\Types\IntegerType',
             'validate' => null,
             'hidden'   => 1,
             'order'    => 0,
@@ -78,7 +78,7 @@ class ProfilesTableSeeder extends Seeder
         $fields->create(array(
             'name'     => 'Activation Code',
             'key'      => 'activation_code',
-            'type'     => 'App\Modules\Fields\Fields\StringField',
+            'type'     => 'App\Modules\Fields\Types\StringType',
             'validate' => null,
             'hidden'   => 1,
             'order'    => 0,
@@ -87,7 +87,7 @@ class ProfilesTableSeeder extends Seeder
         $fields->create(array(
             'name'     => 'API Token',
             'key'      => 'api_token',
-            'type'     => 'App\Modules\Fields\Fields\StringField',
+            'type'     => 'App\Modules\Fields\Types\StringType',
             'validate' => null,
             'hidden'   => 1,
             'order'    => 0,

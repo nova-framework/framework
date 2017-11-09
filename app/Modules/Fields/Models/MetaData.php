@@ -5,8 +5,8 @@ namespace App\Modules\Fields\Models;
 use Nova\Database\ORM\Model;
 use Nova\Support\Facades\App;
 
-use App\Modules\Fields\Support\Facades\FieldRegistry;
 use App\Modules\Fields\Support\MetaCollection;
+use App\Modules\Fields\Types\Registry as TypeRegistry;
 
 use DateTime;
 
@@ -16,7 +16,7 @@ class MetaData extends Model
     /**
      * @var App\Modules\Fields\Meta\Type
      */
-    protected $fieldInstance;
+    protected $typeInstance;
 
     /**
      * @var array
@@ -27,11 +27,11 @@ class MetaData extends Model
     /**
      * Get the value type registry.
      *
-     * @return \App\Modules\Fields\Support\FieldRegistry
+     * @return \App\Modules\Fields\Types\Registry
      */
-    protected function getFieldRegistry()
+    protected function getTypeRegistry()
     {
-        return FieldRegistry::instance();
+        return App::make(TypeRegistry::class);
     }
 
     /**
@@ -39,15 +39,15 @@ class MetaData extends Model
      *
      * @return \App\Modules\Fields\Fields\Field
      */
-    public function getField()
+    public function getTypeInstance()
     {
-        if (isset($this->fieldInstance)) {
-            return $this->fieldInstance;
+        if (isset($this->typeInstance)) {
+            return $this->typeInstance;
         }
 
-        $fieldClass = $this->getFieldRegistry()->get($this->type);
+        $fieldClass = $this->getTypeRegistry()->get($this->type);
 
-        return $this->fieldInstance = new $fieldClass($this);
+        return $this->typeInstance = new $fieldClass($this);
     }
 
     /**
@@ -57,7 +57,7 @@ class MetaData extends Model
      */
     public function getValueAttribute()
     {
-        return $this->getField()->get();
+        return $this->getTypeInstance()->get();
     }
 
     /**
@@ -69,14 +69,14 @@ class MetaData extends Model
     public function setValueAttribute($value, $type = null)
     {
         if (is_null($type) && ! isset($this->attributes['type'])) {
-            $field = $this->getFieldRegistry()->findFieldFor($value);
+            $field = $this->getTypeRegistry()->findTypeFor($value);
 
             $this->attributes['type'] = $field->getClass();
         } else if (isset($type)) {
             $this->attributes['type'] = $type;
         }
 
-        return $this->getField()->set($value);
+        return $this->getTypeInstance()->set($value);
     }
 
     /**
@@ -117,6 +117,6 @@ class MetaData extends Model
      */
     public function __toString()
     {
-        return $this->getField()->toString();
+        return $this->getTypeInstance()->toString();
     }
 }

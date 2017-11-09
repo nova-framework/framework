@@ -5,6 +5,7 @@ namespace App\Modules\Users\Controllers\Admin;
 use Nova\Auth\Access\AuthorizationException;
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Http\Request;
+use Nova\Support\Facades\App;
 use Nova\Support\Facades\DB;
 use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Input;
@@ -14,7 +15,7 @@ use Nova\Support\Facades\Validator;
 use Nova\Support\Arr;
 
 use App\Modules\Fields\Models\Field;
-use App\Modules\Fields\Support\Facades\FieldRegistry;
+use App\Modules\Fields\Types\Registry as TypeRegistry;
 use App\Modules\Platform\Controllers\Admin\BaseController;
 use App\Modules\Users\Models\Profile;
 
@@ -66,12 +67,14 @@ class Profiles extends BaseController
     {
         $profile = Profile::findOrFail(1);
 
-        $fields = FieldRegistry::registered();
+        $registry = App::make(TypeRegistry::class);
+
+        $types = $registry->registered();
 
         return $this->createView()
             ->shares('title', __d('users', 'Users Profile'))
             ->with('profile', $profile)
-            ->with('fields', $fields);
+            ->with('types', $types);
     }
 
     public function store(Request $request)

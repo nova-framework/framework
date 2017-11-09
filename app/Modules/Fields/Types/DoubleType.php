@@ -1,49 +1,41 @@
 <?php
 
-namespace App\Modules\Fields\Fields;
+namespace App\Modules\Fields\Types;
 
-use App\Modules\Fields\Fields\Field;
+use App\Modules\Fields\Types\Type as BaseType;
 
 
-class BooleanField extends Field
+class DoubleType extends BaseType
 {
-    /**
-     * The partial View used for editor rendering.
-     *
-     * @var string
-     */
-    protected $editorView = 'Fields/Editor/Boolean';
-
-
     /**
      * Parse & return the meta item value.
      *
-     * @return bool
+     * @return int
      */
     public function get()
     {
-        return intval(parent::get()) ? true : false;
+        return doubleval(parent::get());
     }
 
     /**
      * Parse & set the meta item value.
      *
-     * @param bool $value
+     * @param int $value
      */
     public function set($value)
     {
-        parent::set(intval($value));
+        parent::set(doubleval($value));
     }
 
     /**
-     * Assertain whether we can handle the Field of variable passed.
+     * Ascertain whether we can handle the Field of variable passed.
      *
      * @param  mixed  $value
      * @return bool
      */
-    public function isField($value)
+    public function isType($value)
     {
-        return is_bool($value);
+        return is_double($value);
     }
 
     /**

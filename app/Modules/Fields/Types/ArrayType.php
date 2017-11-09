@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Fields\Fields;
+namespace App\Modules\Fields\Types;
 
-use App\Modules\Fields\Fields\Field;
+use App\Modules\Fields\Types\Type as BaseType;
 
 
-class ArrayField extends Field
+class ArrayType extends BaseType
 {
     /**
      * Parse & return the meta item value.
@@ -36,7 +36,7 @@ class ArrayField extends Field
      * @param  mixed  $value
      * @return bool
      */
-    public function isField($value)
+    public function isType($value)
     {
         return is_array($value);
     }

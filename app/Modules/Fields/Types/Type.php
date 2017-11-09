@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Modules\Fields\Fields;
+namespace App\Modules\Fields\Types;
 
 use Nova\Http\Request;
 use Nova\Support\Facades\View;
 
-use App\Modules\Fields\Models\Field as FieldItem;
+use App\Modules\Fields\Models\Field;
 use App\Modules\Fields\Models\MetaData as MetaItem;
 
 
-abstract class Field
+abstract class Type
 {
     /**
      * MetaData model instance.
@@ -23,14 +23,14 @@ abstract class Field
      *
      * @var \App\Modules\Fields\Models\Field
      */
-    protected $item;
+    protected $field;
 
     /**
      * The partial View used for editor rendering.
      *
      * @var string
      */
-    protected $editorView = 'Fields/Editor/Default';
+    protected $view = 'Fields/Editor/Default';
 
 
     /**
@@ -43,24 +43,28 @@ abstract class Field
         $this->model = $model;
     }
 
-    public function setItem(FieldItem $item)
+    /**
+     * Set the Field model instance.
+     *
+     * @param \App\Modules\Fields\Models\MetaData|null $model
+     */
+    public function setField(Field $field)
     {
-        $this->item = $item;
+        $this->field = $field;
 
         return $this;
     }
 
     public function renderForEditor(Request $request)
     {
-        $item = $this->item;
+        $field = $this->field;
 
         // Calculate the current value.
         $default = isset($this->model) ? $this->model->value : null;
 
-        $value = $request->old($item->key, $default);
+        $value = $request->old($field->key, $default);
 
-        return View::make($this->editorView, compact('request', 'item', 'value'), 'Fields')
-            ->render();
+        return View::make($this->view, compact('field', 'value'), 'Fields')->render();
     }
 
     /**
@@ -103,7 +107,7 @@ abstract class Field
      * @param  mixed  $value
      * @return bool
      */
-    abstract public function isField($value);
+    abstract public function isType($value);
 
     /**
      * Get the types class name.

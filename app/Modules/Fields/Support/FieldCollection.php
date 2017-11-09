@@ -47,13 +47,13 @@ class FieldCollection extends BaseCollection
         $validator->setAttributeNames($attributes);
     }
 
-    public function getMetaFields(MetaCollection $items = null)
+    public function getMetaTypes(MetaCollection $items = null)
     {
         if (is_null($items)) {
             $items = with(new MetaItem())->newCollection();
         }
 
-        $fields = new BaseCollection();
+        $types = new BaseCollection();
 
         foreach ($this->items as $model) {
             if ($model->hidden === 1) {
@@ -64,26 +64,26 @@ class FieldCollection extends BaseCollection
             else if (! is_null($key = $items->findItem($model->key))) {
                 $item = $items->get($key);
 
-                $field = $item->getField();
+                $type = $item->getTypeInstance();
             } else {
-                $fieldClass = $model->type;
+                $className = $model->type;
 
-                $field = new $fieldClass();
+                $type = new $className();
             }
 
-            $field->setItem($model);
+            $type->setField($model);
 
-            $fields->add($field);
+            $types->add($type);
         }
 
-        return $fields;
+        return $types;
     }
 
     public function renderForEditor(Request $request, MetaCollection $items = null)
     {
-        return $this->getMetaFields($items)->map(function ($field) use ($request)
+        return $this->getMetaTypes($items)->map(function ($type) use ($request)
         {
-            return $field->renderForEditor($request);
+            return $type->renderForEditor($request);
 
         })->implode("\n");
     }

@@ -46,7 +46,7 @@ abstract class Type
     /**
      * Set the Field model instance.
      *
-     * @param \App\Modules\Fields\Models\MetaData|null $model
+     * @param \App\Modules\Fields\Models\Field  $field
      */
     public function setField(Field $field)
     {
@@ -75,6 +75,16 @@ abstract class Type
     public function getModel()
     {
         return $this->model;
+    }
+
+    /**
+     * Gets the model instance.
+     *
+     * @return \App\Modules\Fields\Models\Field|null
+     */
+    public function getField()
+    {
+        return $this->field;
     }
 
     /**

@@ -47,7 +47,7 @@ class FieldCollection extends BaseCollection
         $validator->setAttributeNames($attributes);
     }
 
-    public function getMetaTypes(MetaCollection $items = null)
+    public function getFieldTypes(MetaCollection $items = null)
     {
         if (is_null($items)) {
             $items = with(new MetaItem())->newCollection();
@@ -81,7 +81,7 @@ class FieldCollection extends BaseCollection
 
     public function renderForEditor(Request $request, MetaCollection $items = null)
     {
-        return $this->getMetaTypes($items)->map(function ($type) use ($request)
+        return $this->getFieldTypes($items)->map(function ($type) use ($request)
         {
             return $type->renderForEditor($request);
 

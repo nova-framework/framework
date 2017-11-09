@@ -8,7 +8,7 @@ use Nova\Support\Facades\Schema;
 use Nova\Support\Collection as BaseCollection;
 use Nova\Support\Str;
 
-use App\Modules\Fields\Database\ORM\Builder as MetaBuilder;
+use App\Modules\Fields\Models\Builder\MetaBuilder;
 use App\Modules\Fields\Models\MetaData;
 
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Fields\Database\ORM;
+namespace App\Modules\Fields\Models\Builder;
 
 use Nova\Database\ORM\Builder as BaseBuilder;
 
 
-class Builder extends BaseBuilder
+class MetaBuilder extends BaseBuilder
 {
 
     public function whereMeta($key, $operator, $value = null)

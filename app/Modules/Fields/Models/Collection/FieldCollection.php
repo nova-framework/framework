@@ -13,6 +13,8 @@ use App\Modules\Fields\Models\Collection\MetaCollection;
 use App\Modules\Fields\Types\BooleanType;
 use App\Modules\Fields\Types\Registry as TypeRegistry;
 
+use ErrorException;
+
 
 class FieldCollection extends BaseCollection
 {
@@ -66,22 +68,19 @@ class FieldCollection extends BaseCollection
 
         })->map(function ($field) use ($typeRegistry, $request, $items)
         {
-            $default = null;
+            $item = null;
 
             if (! is_null($items) && ! is_null($key = $items->findItem($field->key))) {
                 $item = $items->get($key);
 
-                //
-                $type = $item->getTypeInstance();
-
-                $default = $item->value;
-            } else {
-                $type = $typeRegistry->get($field->type);
+                if ($item->type !== $field->type) {
+                    throw new ErrorException("Field and MetaData types does not match");
+                }
             }
 
-            $value = $request->old($field->key, $default);
+            $value = $request->old($field->key, isset($item) ? $item->value : null);
 
-            return View::make($type->getView(), compact('field', 'value'), 'Fields')->render();
+            return $typeRegistry->get($field->type)->renderForEditor($field, $value);
 
         })->implode("\n");
     }

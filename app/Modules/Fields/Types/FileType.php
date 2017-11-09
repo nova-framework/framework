@@ -41,6 +41,7 @@ class FileType extends BaseType
     /**
      * Execute the cleanup when MetaData instance is saved or deleted.
      *
+     * @param bool $force
      * @return string
      */
     public function cleanup($force = false)
@@ -67,13 +68,14 @@ class FileType extends BaseType
     /**
      * Gets a rendered form of the value.
      *
+     * @param array $data
      * @return string
      */
-    public function render()
+    public function render(array $data = array())
     {
         $path = str_replace(ROOTDIR, '', $this->model->value);
 
-        return View::make('Fields/File', compact('path'), 'Fields')->render();
+        return View::make('Fields/File', compact('path'), 'Fields')->with($data)->render();
     }
 
     /**

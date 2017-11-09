@@ -5,6 +5,7 @@ namespace App\Modules\Fields\Types;
 use Nova\Http\Request;
 use Nova\Support\Facades\View;
 
+use App\Modules\Fields\Models\Field;
 use App\Modules\Fields\Models\MetaData as MetaItem;
 
 
@@ -45,6 +46,7 @@ abstract class Type
     /**
      * Execute the cleanup when MetaData instance is saved or deleted.
      *
+     * @param bool $force
      * @return string
      */
     public function cleanup($force = false)
@@ -55,11 +57,24 @@ abstract class Type
     /**
      * Gets a rendered form of the value.
      *
+     * @param array $data
      * @return string
      */
-    public function render()
+    public function render(array $data = array())
     {
         return $this->get();
+    }
+
+    /**
+     * Gets a rendered form of the editor.
+     *
+     * @param \App\Modules\Fields\Models\Field $field
+     * @param mixed $value
+     * @return string
+     */
+    public function renderForEditor(Field $field, $value = null)
+    {
+        return View::make($this->getView(), compact('field', 'value'), 'Fields')->render();
     }
 
     /**

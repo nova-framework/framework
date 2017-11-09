@@ -5,32 +5,17 @@ namespace App\Modules\Fields\Support;
 use Nova\Http\Request;
 use Nova\Database\ORM\Collection as BaseCollection;
 use Nova\Validation\Validator;
+use Nova\Support\Arr;
 
 use App\Modules\Fields\Models\MetaData as MetaItem;
 use App\Modules\Fields\Support\MetaCollection;
+use App\Modules\Fields\Fields\BooleanField;
 
 
 class FieldCollection extends BaseCollection
 {
 
-    public function updatables()
-    {
-        $results = array();
-
-        foreach ($this->items as $value) {
-            if ($value->hidden === 1) {
-                continue;
-            }
-
-            $key = data_get($value, 'key');
-
-            $results[$key] = $value;
-        }
-
-        return $results;
-    }
-
-    public function validate(Validator $validator)
+    public function updateValidator(Validator $validator)
     {
         $attributes = array();
 
@@ -45,6 +30,24 @@ class FieldCollection extends BaseCollection
         }
 
         $validator->setAttributeNames($attributes);
+    }
+
+    public function updateMeta(MetaCollection $items, array $input = array())
+    {
+        foreach ($this->items as $field) {
+            if (($field->hidden === 1) || ! Arr::has($input, $key = $field->key)) {
+                continue;
+            }
+
+            // We have a valid field.
+            else if ($field->type == BooleanField::class) {
+                $value = (int) Arr::has($input, $key);
+            } else {
+                $value = Arr::get($input, $key);
+            }
+
+            $items->updateOrAdd($key, $value, $field->type);
+        }
     }
 
     public function getFieldTypes(MetaCollection $items = null)
@@ -81,9 +84,9 @@ class FieldCollection extends BaseCollection
 
     public function renderForEditor(Request $request, MetaCollection $items = null)
     {
-        return $this->getFieldTypes($items)->map(function ($type) use ($request)
+        return $this->getFieldTypes($items)->map(function ($fieldType) use ($request)
         {
-            return $type->renderForEditor($request);
+            return $fieldType->renderForEditor($request);
 
         })->implode("\n");
     }

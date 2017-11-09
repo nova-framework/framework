@@ -20,7 +20,6 @@ use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Arr;
 
-use App\Modules\Fields\Fields\BooleanField;
 use App\Modules\Platform\Controllers\Admin\BaseController;
 use App\Modules\Roles\Models\Role;
 use App\Modules\Users\Models\Profile;
@@ -140,7 +139,7 @@ class Users extends BaseController
         // Validate the Input data.
         $validator = $this->validator($input);
 
-        $fields->validate($validator);
+        $fields->updateValidator($validator);
 
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
@@ -162,19 +161,9 @@ class Users extends BaseController
         $user->load('meta');
 
         // Handle the meta-data.
-        $user->meta->activated = 1;
+        $input['activated'] = 1;
 
-        foreach ($fields->updatables() as $key => $field) {
-            if (! Arr::has($input, $key)) {
-                continue;
-            } else if ($field->type == BooleanField::class) {
-                $value = (int) Arr::has($input, $key);
-            } else {
-                $value = Arr::get($input, $key);
-            }
-
-            $user->meta->updateOrAdd($key, $value, $field->type);
-        }
+        $fields->updateMeta($user->meta, $input);
 
         $user->save();
 
@@ -272,7 +261,7 @@ class Users extends BaseController
         // Validate the Input data.
         $validator = $this->validator($input, $id);
 
-        $fields->validate($validator);
+        $fields->updateValidator($validator);
 
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
@@ -296,17 +285,7 @@ class Users extends BaseController
         }
 
         // Update the Meta / Custom Fields.
-        foreach ($fields->updatables() as $key => $field) {
-            if (! Arr::has($input, $key)) {
-                continue;
-            } else if ($field->type == BooleanField::class) {
-                $value = (int) Arr::has($input, $key);
-            } else {
-                $value = Arr::get($input, $key);
-            }
-
-            $user->meta->updateOrAdd($key, $value, $field->type);
-        }
+        $fields->updateMeta($user->meta, $input);
 
         // Save the User information.
         $user->save();

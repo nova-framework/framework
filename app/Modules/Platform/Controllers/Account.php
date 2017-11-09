@@ -108,7 +108,7 @@ class Account extends BaseController
         // Create a Validator instance.
         $validator = $this->validator($input, $user);
 
-        $fields->validate($validator);
+        $fields->updateValidator($validator);
 
         // Validate the Input.
         if ($validator->fails()) {
@@ -123,13 +123,7 @@ class Account extends BaseController
         }
 
         // Update the Meta / Custom Fields.
-        foreach ($fields as $field) {
-            if (! Arr::has($input, $key = $field->key)) {
-                continue;
-            }
-
-            $user->meta->updateOrAdd($key, Arr::get($input, $key));
-        }
+        $fields->updateMeta($user->meta, $input);
 
         // Save the User Model instance.
         $user->save();

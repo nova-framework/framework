@@ -79,7 +79,7 @@ return array (
   'This Profile is associated to all registered Users.' => '',
   'Type' => '',
   'Updated At' => '',
-  'User Account : <b>{0}</b>' => '',
+  'User Account' => '',
   'User Profile' => '',
   'User not found: #{0}' => '',
   'Username' => '',

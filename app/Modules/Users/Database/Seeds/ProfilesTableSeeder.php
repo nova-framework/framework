@@ -67,7 +67,7 @@ class ProfilesTableSeeder extends Seeder
         // Hidden fields.
 
         $fields->create(array(
-            'name'     => 'Activated',
+            'name'     => 'User Activated',
             'key'      => 'activated',
             'type'     => 'App\Modules\Fields\Fields\IntegerField',
             'validate' => null,

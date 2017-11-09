@@ -35,11 +35,11 @@ class FieldCollection extends BaseCollection
         $attributes = array();
 
         foreach ($this->items as $field) {
-            if (! isset($field->validate)) {
+            if (($field->hidden === 1) || empty($field->validate)) {
                 continue;
             }
 
-            $validator->mergeRules($key = $field->getAttribute('key'), $field->validate);
+            $validator->mergeRules($key = $field->key, $field->validate);
 
             $attributes[$key] = $field->name;
         }

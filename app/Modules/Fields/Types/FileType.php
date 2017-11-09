@@ -4,6 +4,7 @@ namespace App\Modules\Fields\Types;
 
 use Nova\Http\UploadedFile;
 use Nova\Support\Facades\File;
+use Nova\Support\Facades\Log;
 use Nova\Support\Str;
 
 use App\Modules\Fields\Types\Type as BaseType;
@@ -43,18 +44,12 @@ class FileType extends BaseType
      */
     public function cleanup($force = false)
     {
-        if (is_null($model = $this->getModel())) {
+        if (empty($path = $this->model->getOriginal('value'))) {
             return;
         }
 
-        $filePath = $model->getOriginal('value');
-
-        if (empty($filePath)) {
-            return;
-        }
-
-        // The value is unchanged?
-        else if (($filePath == $model->getAttribute('value')) && ! $force) {
+        // The file path is valid.
+        else if (($path == $this->model->getAttribute('value')) && ! $force) {
             return;
         }
 
@@ -89,10 +84,16 @@ class FileType extends BaseType
 
         $fileName = sprintf('%s-%s.%s', uniqid(), $name, $extension);
 
-        $filePath = $this->path .DS .$fileName;
+        $basePath = $this->path;
+
+        if (! is_null($model = $this->getModel())) {
+            $basePath .= DS .Str::plural($model->key);
+        }
+
+        $filePath = $basePath .DS .$fileName;
 
         // Ensure that exists the folder where the file will be stored.
-        File::makeDirectory($this->path, 0755, true, true);
+        File::makeDirectory($basePath, 0755, true, true);
 
         if ($value instanceof UploadedFile) {
             File::put($filePath, fopen($value->path(), 'r+'));

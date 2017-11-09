@@ -225,7 +225,7 @@ class MetaCollection extends BaseCollection
         if (! is_null($key = $this->findItem($name))) {
             $item = $this->get($key);
 
-            return $item->getTypeInstance();
+            return $item->value;
         }
     }
 

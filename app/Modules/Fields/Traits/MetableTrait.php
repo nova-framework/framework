@@ -223,7 +223,7 @@ trait MetableTrait
         if (! is_null($key = $this->meta->findItem($name))) {
             $item = $this->meta->get($key);
 
-            return $item->getTypeInstance();
+            return $item->value;
         }
     }
 

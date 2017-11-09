@@ -5,6 +5,7 @@ namespace App\Modules\Fields\Types;
 use Nova\Http\Request;
 use Nova\Support\Facades\View;
 
+use App\Modules\Fields\Models\Field;
 use App\Modules\Fields\Models\MetaData as MetaItem;
 
 
@@ -60,6 +61,16 @@ abstract class Type
     public function render()
     {
         return $this->get();
+    }
+
+    /**
+     * Gets a rendered form of the editor.
+     *
+     * @return string
+     */
+    public function renderForEditor(Field $field, $value = null)
+    {
+        return View::make($this->getView(), compact('field', 'value'), 'Fields')->render();
     }
 
     /**

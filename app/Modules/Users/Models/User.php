@@ -17,6 +17,7 @@ use App\Modules\Attachments\Traits\HasAttachmentsTrait;
 use App\Modules\Fields\Traits\MetableTrait;
 use App\Modules\Messages\Traits\HasMessagesTrait;
 use App\Modules\Platform\Traits\HasActivitiesTrait;
+use App\Modules\Users\Models\Profile;
 
 
 class User extends BaseModel implements UserInterface, RemindableInterface
@@ -44,7 +45,8 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     protected $metaTable = 'users_meta';
 
-    // Caches for Roles and Permissions.
+    // Caches.
+    protected $cachedFields;
     protected $cachedRoles;
     protected $cachedPermissions;
 
@@ -52,6 +54,24 @@ class User extends BaseModel implements UserInterface, RemindableInterface
     public function profile()
     {
         return $this->belongsTo('App\Modules\Users\Models\Profile', 'profile_id');
+    }
+
+    public function getMetaFields()
+    {
+        if (isset($this->cachedFields)) {
+            return $this->cachedFields;
+        }
+
+        // The fields are not cached.
+        else if ($this->exists) {
+            $this->load('profile');
+
+            return $this->cachedFields = $this->profile->fields;
+        } else {
+            $profile = Profile::findOrFail(1);
+
+            return $this->cachedFields = $profile->fields;
+        }
     }
 
     public function realname()
@@ -73,11 +93,6 @@ class User extends BaseModel implements UserInterface, RemindableInterface
         }
 
         return site_url($path);
-    }
-
-    public function getMetaFields()
-    {
-        return $this->profile->fields->getMetaFields($this->meta);
     }
 
     /**

@@ -11,6 +11,8 @@ use Nova\Support\Str;
 use App\Modules\Fields\Models\Builder\MetaBuilder;
 use App\Modules\Fields\Models\MetaData;
 
+use InvalidArgumentException;
+
 
 trait MetableTrait
 {
@@ -42,6 +44,8 @@ trait MetableTrait
 
         return new HasMany($model->newQuery(), $this, $this->getMetaKeyName(), $this->getKeyName());
     }
+
+    abstract public function getMetaFields();
 
     /**
      * @param \Nova\Database\Query\Builder $query
@@ -240,12 +244,23 @@ trait MetableTrait
             return parent::__set($name, $value);
         }
 
-        if (! is_null($key = $this->meta->findItem($name))) {
+        // Does not exists in parent.
+        else if (! is_null($key = $this->meta->findItem($name))) {
             $item = $this->meta->get($key);
 
             $item->value = $value;
+
+            return;
+        }
+
+        $fields = $this->getMetaFields();
+
+        if (! is_null($key = $fields->findItem($name))) {
+            $field = $fields->get($key);
+
+            $this->meta->addItem($name, $value, $field->type);
         } else {
-            $this->meta->addItem($name, $value);
+            throw new InvalidArgumentException("Invalid property. [$name]");
         }
     }
 

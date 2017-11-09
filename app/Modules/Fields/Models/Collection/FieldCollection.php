@@ -19,6 +19,21 @@ use ErrorException;
 class FieldCollection extends BaseCollection
 {
 
+    /**
+     * Get the collection key form an item key.
+     *
+     * @param mixed $name
+     * @return mixed
+     */
+    public function findItem($name)
+    {
+        $collection = $this->where('key', $name);
+
+        if ($collection->count() > 0) {
+            return $collection->keys()->first();
+        }
+    }
+
     public function updateValidator(Validator $validator)
     {
         $attributes = array();

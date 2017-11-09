@@ -19,7 +19,7 @@ class ImageType extends BaseType
      *
      * @var string
      */
-    protected $type = 'file';
+    protected $type = 'image';
 
     /**
      * The partial View used for editor rendering.

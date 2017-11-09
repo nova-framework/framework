@@ -53,6 +53,16 @@ abstract class Type
     }
 
     /**
+     * Gets a rendered form of the value.
+     *
+     * @return string
+     */
+    public function render()
+    {
+        return $this->get();
+    }
+
+    /**
      * Gets the type handled by this Type class.
      *
      * @return string

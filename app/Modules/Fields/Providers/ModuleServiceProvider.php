@@ -94,6 +94,7 @@ class ModuleServiceProvider extends ServiceProvider
             new \App\Modules\Fields\Types\ArrayType,
             new \App\Modules\Fields\Types\DoubleType,
             new \App\Modules\Fields\Types\FileType,
+            new \App\Modules\Fields\Types\ImageType,
         );
 
         $registry->register($types);

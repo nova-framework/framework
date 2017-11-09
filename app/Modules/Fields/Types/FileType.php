@@ -5,6 +5,7 @@ namespace App\Modules\Fields\Types;
 use Nova\Http\UploadedFile;
 use Nova\Support\Facades\File;
 use Nova\Support\Facades\Log;
+use Nova\Support\Facades\View;
 use Nova\Support\Str;
 
 use App\Modules\Fields\Types\Type as BaseType;
@@ -61,6 +62,18 @@ class FileType extends BaseType
         catch (Exception $e) {
             Log::error($e->getMessage());
         }
+    }
+
+    /**
+     * Gets a rendered form of the value.
+     *
+     * @return string
+     */
+    public function render()
+    {
+        $path = str_replace(ROOTDIR, '', $this->model->value);
+
+        return View::make('Fields/File', compact('path'), 'Fields')->render();
     }
 
     /**

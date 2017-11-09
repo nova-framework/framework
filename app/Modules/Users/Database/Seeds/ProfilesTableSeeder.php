@@ -66,7 +66,7 @@ class ProfilesTableSeeder extends Seeder
         $fields->create(array(
             'name'     => 'Picture',
             'key'      => 'picture',
-            'type'     => 'App\Modules\Fields\Types\FileType',
+            'type'     => 'App\Modules\Fields\Types\ImageType',
             'validate' => 'max:1024|mimes:png,jpg,jpeg,gif',
             'hidden'   => 0,
             'order'    => 4,

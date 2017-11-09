@@ -192,21 +192,6 @@ class MetaCollection extends BaseCollection
     }
 
     /**
-     * Resolve calls to get an item with a specific key name.
-     *
-     * @param $name
-     * @return mixed
-     */
-    public function itemValue($name)
-    {
-        if (! is_null($key = $this->findItem($name))) {
-            $item = $this->get($key);
-
-            return $item->value;
-        }
-    }
-
-    /**
      * Resolve calls to check whether an item with a specific key name exists.
      *
      * @param $name
@@ -240,7 +225,7 @@ class MetaCollection extends BaseCollection
         if (! is_null($key = $this->findItem($name))) {
             $item = $this->get($key);
 
-            return $item->value;
+            return $item->getTypeInstance();
         }
     }
 

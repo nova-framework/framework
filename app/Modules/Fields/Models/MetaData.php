@@ -111,6 +111,16 @@ class MetaData extends Model
     }
 
     /**
+     * Gets a rendered form of the value.
+     *
+     * @return string
+     */
+    public function render()
+    {
+        return $this->getTypeInstance()->render();
+    }
+
+    /**
      * Get the string value of the meta item.
      *
      * @return string

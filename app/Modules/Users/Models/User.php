@@ -61,11 +61,14 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     public function picture()
     {
+        $path = 'assets/files/pictures/';
+
         $picture = $this->meta->picture;
 
-        if (! empty($picture) && is_readable(ROOTDIR .($path = 'assets/files/' .basename($picture)))) {
+        if (! empty($picture) && is_readable(ROOTDIR .($path .= basename($picture)))) {
             // Nothing to do.
         } else {
+            // Fallback to the default image.
             $path = 'assets/images/users/no-image.png';
         }
 

@@ -47,9 +47,19 @@ abstract class Type
      *
      * @return string
      */
-    public function cleanup()
+    public function cleanup($force = false)
     {
         //
+    }
+
+    /**
+     * Gets a rendered form of the value.
+     *
+     * @return string
+     */
+    public function render()
+    {
+        return $this->get();
     }
 
     /**

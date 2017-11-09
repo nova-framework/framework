@@ -57,14 +57,7 @@
             <?php $item = $user->meta->get($key); ?>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= $field->name; ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%">
-                    <?php if (($item->key == 'picture') && ! empty($item->value) && ($item->getTypeInstance()->getType() == 'file')) { ?>
-                    <?php $url = site_url('assets/files/' .basename($item->value)); ?>
-                    <img src="<?= $url; ?>" class="img-thumbnail img-responsive" alt="<?= $field->name ?>" style="margin-bottom: 0; max-height: 200px; width:auto;">
-                    <?php } else { ?>
-                    <?= $item->value; ?>
-                    <?php } ?>
-                </td>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $item->render(); ?></td>
             </tr>
             <?php } ?>
             <?php } ?>

@@ -260,7 +260,7 @@ trait MetableTrait
 
             $this->meta->addItem($name, $value, $field->type);
         } else {
-            throw new InvalidArgumentException("Invalid property. [$name]");
+            throw new InvalidArgumentException("Invalid field name. [$name]");
         }
     }
 

@@ -164,11 +164,13 @@ class Users extends BaseController
         $user->meta->activated = 1;
 
         foreach ($fields as $field) {
-            if (! Arr::has($input, $key = $field->key)) {
+            $key = $field->getAttribute('key');
+
+            if (($field->hidden === 1) || ! Arr::has($input, $key)) {
                 continue;
             }
 
-            $user->meta->updateOrAdd($key, Arr::get($input, $key));
+            $user->meta->updateOrAdd($key, Arr::get($input, $key), $field->type);
         }
 
         $user->save();
@@ -292,11 +294,13 @@ class Users extends BaseController
 
         // Update the Meta / Custom Fields.
         foreach ($fields as $field) {
-            if (! Arr::has($input, $key = $field->key)) {
+            $key = $field->getAttribute('key');
+
+            if (($field->hidden === 1) || ! Arr::has($input, $key)) {
                 continue;
             }
 
-            $user->meta->updateOrAdd($key, Arr::get($input, $key));
+            $user->meta->updateOrAdd($key, Arr::get($input, $key), $field->type);
         }
 
         // Save the User information.

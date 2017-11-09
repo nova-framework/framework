@@ -14,7 +14,7 @@
 
 <div class="box box-widget">
     <div class="box-header">
-        <h3 class="box-title"><?= __d('users', 'User Account : <b>{0}</b>', $user->username); ?></h3>
+        <h3 class="box-title"><?= __d('users', 'User Account'); ?></h3>
     </div>
     <div class="box-body no-padding">
         <table id="left" class="table table-hover responsive">
@@ -61,6 +61,7 @@
                 <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Value'); ?></th>
             </tr>
             <?php foreach ($user->profile->fields as $field) { ?>
+            <?php if ($field->hidden === 1) continue; ?>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= $field->name; ?></th>
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->meta->itemValue($field->key); ?></td>

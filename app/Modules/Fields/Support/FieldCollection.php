@@ -13,6 +13,19 @@ use App\Modules\Fields\Support\MetaCollection;
 class FieldCollection extends BaseCollection
 {
 
+    public function groupByKey()
+    {
+        $results = array();
+
+        foreach ($this->items as $value) {
+            $key = data_get($value, 'key');
+
+            $results[$key][] = $value;
+        }
+
+        return $results;
+    }
+
     public function validate(Validator $validator)
     {
         $attributes = array();

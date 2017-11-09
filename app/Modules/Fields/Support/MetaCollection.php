@@ -92,18 +92,17 @@ class MetaCollection extends BaseCollection
      *
      * @param $name
      * @param $value
+     * @param $type
      */
-    public function updateOrAdd($name, $value)
+    public function updateOrAdd($name, $value, $type = null)
     {
         if (! is_null($key = $this->findItem($name))) {
             $item = $this->get($key);
 
-            $item->value = $value;
-
-            return;
+            $item->setValueAttribute($value, $type);
+        } else {
+            $this->addItem($name, $value, $type);
         }
-
-        $this->addItem($name, $value);
     }
 
     /**
@@ -111,17 +110,19 @@ class MetaCollection extends BaseCollection
      *
      * @param string $name
      * @param mixed $value
+     * @param mixed $type
      * @return $this
      * @throws InvalidArgumentException
      */
-    public function addItem($name, $value)
+    public function addItem($name, $value, $type = null)
     {
-        $model = new MetaItem(array(
-            'key'   => $name,
-            'value' => $value,
+        $item = new MetaItem(array(
+            'key' => $name,
         ));
 
-        $this->add($model);
+        $item->setValueAttribute($value, $type);
+
+        $this->add($item);
 
         return $this;
     }

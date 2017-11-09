@@ -68,6 +68,7 @@ return array (
   'The :attribute field is not a valid name.' => ':attribute feltet er ikke et gyldigt navn.',
   'The :attribute field is not a valid query string.' => ':attribute feltet er ikke et gyldigt query string.',
   'The :attribute field is not strong enough.' => ':attribute feltet er ikke stærkt nok.',
+  'The :attribute field is not unique in the Fields list.' => '',
   'The Field <b>{0}</b> was successfully created.' => '',
   'The Field <b>{0}</b> was successfully deleted.' => '',
   'The Field <b>{0}</b> was successfully updated.' => '',

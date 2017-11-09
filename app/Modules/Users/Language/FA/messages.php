@@ -68,6 +68,7 @@ return array (
   'The :attribute field is not a valid name.' => 'فیلد :attribute یک نام معتبر نمیباشد.',
   'The :attribute field is not a valid query string.' => 'فیلد :attribute یک query string معتبر نمیباشد.',
   'The :attribute field is not strong enough.' => 'فیلد :attribute به اندازه کافی قوی نیست.',
+  'The :attribute field is not unique in the Fields list.' => '',
   'The Field <b>{0}</b> was successfully created.' => '',
   'The Field <b>{0}</b> was successfully deleted.' => '',
   'The Field <b>{0}</b> was successfully updated.' => '',

@@ -23,12 +23,12 @@ use App\Modules\Users\Models\Profile;
 class Profiles extends BaseController
 {
 
-    protected function validator(array $data)
+    protected function validator(array $data, Profile $profile, $id = null)
     {
         // Validation rules
         $rules = array(
             'name'    => 'required|min:3|valid_name',
-            'key'     => 'required|min:3|alpha_dash',
+            'key'     => 'required|min:3|alpha_dash|unique_key',
             'type'    => 'required|valid_type',
             'order'   => 'required|numeric|min:0|max:1000',
             'columns' => 'required|numeric|min:1|max:8',
@@ -37,6 +37,7 @@ class Profiles extends BaseController
         $messages = array(
             'valid_name' => __d('users', 'The :attribute field is not a valid Name.'),
             'valid_type' => __d('users', 'The :attribute field is not a valid Field type.'),
+            'unique_key' => __d('users', 'The :attribute field is not unique in the Fields list.'),
         );
 
         $attributes = array(
@@ -53,6 +54,17 @@ class Profiles extends BaseController
             $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){1,}$~u';
 
             return (preg_match($pattern, $value) === 1);
+        });
+
+        Validator::extend('unique_key', function($attribute, $value, $parameters) use ($profile, $id)
+        {
+            $query = $profile->fields()->where('key', $value);
+
+            if (! is_null($id)) {
+                $query->where('id', '!=', $id);
+            }
+
+            return ! $query->exists();
         });
 
         Validator::extend('valid_type', function($attribute, $value, $parameters)
@@ -87,7 +99,7 @@ class Profiles extends BaseController
         $input = $request->all();
 
         // Validate the Input data.
-        $validator = $this->validator($input);
+        $validator = $this->validator($input, $profile);
 
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
@@ -116,6 +128,8 @@ class Profiles extends BaseController
 
     public function update(Request $request, $id)
     {
+        $profile = Profile::findOrFail(1);
+
         // Get the Field Model instance.
         try {
             $field = Field::findOrFail($id);
@@ -127,7 +141,7 @@ class Profiles extends BaseController
         $input = $request->all();
 
         // Validate the Input data.
-        $validator = $this->validator($input);
+        $validator = $this->validator($input, $profile, $id);
 
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');

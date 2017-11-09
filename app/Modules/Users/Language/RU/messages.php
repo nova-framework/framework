@@ -68,6 +68,7 @@ return array (
   'The :attribute field is not a valid name.' => 'Поле :attribute имеет неправильное имя',
   'The :attribute field is not a valid query string.' => 'Недопустимая строка запроса для поля :attribute',
   'The :attribute field is not strong enough.' => 'Поле :attribute не является достаточно сильным.',
+  'The :attribute field is not unique in the Fields list.' => '',
   'The Field <b>{0}</b> was successfully created.' => '',
   'The Field <b>{0}</b> was successfully deleted.' => '',
   'The Field <b>{0}</b> was successfully updated.' => '',

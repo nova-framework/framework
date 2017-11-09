@@ -11,6 +11,13 @@ use App\Modules\Fields\Models\MetaData as MetaItem;
 abstract class Type
 {
     /**
+     * The type handled by this Type class.
+     *
+     * @var string
+     */
+    protected $type;
+
+    /**
      * MetaData model instance.
      *
      * @var \App\Modules\Fields\Models\MetaData
@@ -33,6 +40,16 @@ abstract class Type
     public function __construct(MetaItem $model = null)
     {
         $this->model = $model;
+    }
+
+    /**
+     * Gets the type handled by this Type class.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**

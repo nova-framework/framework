@@ -8,6 +8,13 @@ use App\Modules\Fields\Types\Type as BaseType;
 class BooleanType extends BaseType
 {
     /**
+     * The type handled by this Type class.
+     *
+     * @var string
+     */
+    protected $type = 'boolean';
+
+    /**
      * The partial View used for editor rendering.
      *
      * @var string
@@ -22,7 +29,9 @@ class BooleanType extends BaseType
      */
     public function get()
     {
-        return intval(parent::get()) ? true : false;
+        $value = parent::get();
+
+        return (1 === intval($value));
     }
 
     /**

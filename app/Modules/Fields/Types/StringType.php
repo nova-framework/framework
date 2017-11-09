@@ -8,6 +8,14 @@ use App\Modules\Fields\Types\Type as BaseType;
 class StringType extends BaseType
 {
     /**
+     * The type handled by this Type class.
+     *
+     * @var string
+     */
+    protected $type = 'string';
+
+
+    /**
      * Parse & set the meta item value.
      *
      * @param string $value

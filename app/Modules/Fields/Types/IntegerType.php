@@ -8,6 +8,13 @@ use App\Modules\Fields\Types\Type as BaseType;
 class IntegerType extends BaseType
 {
     /**
+     * The type handled by this Type class.
+     *
+     * @var string
+     */
+    protected $type = 'integer';
+
+    /**
      * The partial View used for editor rendering.
      *
      * @var string

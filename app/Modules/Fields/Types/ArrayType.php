@@ -8,6 +8,14 @@ use App\Modules\Fields\Types\Type as BaseType;
 class ArrayType extends BaseType
 {
     /**
+     * The type handled by this Type class.
+     *
+     * @var string
+     */
+    protected $type = 'array';
+
+
+    /**
      * Parse & return the meta item value.
      *
      * @return array

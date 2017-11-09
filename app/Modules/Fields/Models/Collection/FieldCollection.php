@@ -4,13 +4,14 @@ namespace App\Modules\Fields\Models\Collection;
 
 use Nova\Http\Request;
 use Nova\Database\ORM\Collection as BaseCollection;
-use Nova\Validation\Validator;
+use Nova\Support\Facades\App;
 use Nova\Support\Facades\View;
 use Nova\Support\Arr;
+use Nova\Validation\Validator;
 
-use App\Modules\Fields\Models\MetaData as MetaItem;
 use App\Modules\Fields\Models\Collection\MetaCollection;
-use App\Modules\Fields\Fields\BooleanField;
+use App\Modules\Fields\Types\BooleanType;
+use App\Modules\Fields\Types\Registry as TypeRegistry;
 
 
 class FieldCollection extends BaseCollection
@@ -53,30 +54,26 @@ class FieldCollection extends BaseCollection
 
     public function renderForEditor(Request $request, MetaCollection $items = null)
     {
-        if (is_null($items)) {
-            $items = with(new MetaItem())->newCollection();
-        }
+        $typeRegistry = App::make(TypeRegistry::class);
 
-        return $this->where('hidden', 0)->map(function ($field) use ($request, $items)
+        return $this->where('hidden', 0)->map(function ($field) use ($typeRegistry, $request, $items)
         {
-            if (! is_null($key = $items->findItem($field->key))) {
+            $default = null;
+
+            if (! is_null($items) && ! is_null($key = $items->findItem($field->key))) {
                 $item = $items->get($key);
 
-                $value = $item->value;
-
-                $type = $item->getTypeInstance();
-            } else {
-                $value = null;
-
                 //
-                $className = $field->type;
+                $type = $item->getTypeInstance();
 
-                $type = new $className();
+                $default = $item->value;
+            } else {
+                $type = $typeRegistry->get($field->type);
             }
 
-            return View::make($type->getView(), compact('field'), 'Fields')
-                ->with('value', $request->old($field->key, $value))
-                ->render();
+            $value = $request->old($field->key, $default);
+
+            return View::make($type->getView(), compact('field', 'value'), 'Fields')->render();
 
         })->implode("\n");
     }

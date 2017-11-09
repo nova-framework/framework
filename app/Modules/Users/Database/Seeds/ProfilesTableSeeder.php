@@ -63,6 +63,15 @@ class ProfilesTableSeeder extends Seeder
             'order'    => 3,
         ));
 
+        $fields->create(array(
+            'name'     => 'Picture',
+            'key'      => 'picture',
+            'type'     => 'App\Modules\Fields\Types\FileType',
+            'validate' => 'max:1024|mimes:png,jpg,jpeg,gif',
+            'hidden'   => 0,
+            'order'    => 4,
+        ));
+
         //
         // Hidden fields.
 

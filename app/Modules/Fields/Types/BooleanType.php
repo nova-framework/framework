@@ -31,7 +31,7 @@ class BooleanType extends BaseType
     {
         $value = parent::get();
 
-        return (1 === intval($value));
+        return intval($value) === 1;
     }
 
     /**

@@ -50,7 +50,6 @@ class Users extends BaseController
             'password'              => $required .'|confirmed|strong_password',
             'password_confirmation' => $required .'|same:password',
             'email'                 => 'required|min:5|max:100|email',
-            'image'                 => 'max:1024|mimes:png,jpg,jpeg,gif',
         );
 
         $messages = array(
@@ -64,7 +63,6 @@ class Users extends BaseController
             'password'              => __d('users', 'Password'),
             'password_confirmation' => __d('users', 'Password confirmation'),
             'email'                 => __d('users', 'E-mail'),
-            'image'                 => __d('users', 'Profile Picture'),
         );
 
         // Add the custom Validation Rule commands.
@@ -153,7 +151,6 @@ class Users extends BaseController
             'username'   => $input['username'],
             'password'   => $password,
             'email'      => $input['email'],
-            'image'      => Input::file('image'),
             'profile_id' => $profile->id,
         ));
 
@@ -273,11 +270,6 @@ class Users extends BaseController
         //
         $user->username = $input['username'];
         $user->email    = $input['email'];
-
-        // If a file has been uploaded.
-        if (Input::hasFile('image')) {
-            $user->image = Input::file('image');
-        }
 
         if(isset($input['password'])) {
             // Encrypt and add the given Password.

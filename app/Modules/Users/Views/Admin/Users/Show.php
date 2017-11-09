@@ -62,10 +62,20 @@
             </tr>
             <?php foreach ($user->profile->fields as $field) { ?>
             <?php if ($field->hidden === 1) continue; ?>
+            <?php if (! is_null($key = $user->meta->findItem($field->key))) { ?>
+            <?php $item = $user->meta->get($key); ?>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= $field->name; ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->meta->itemValue($field->key); ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="75%">
+                    <?php if (($item->key == 'picture') && ! empty($item->value) && ($item->getTypeInstance()->getType() == 'file')) { ?>
+                    <?php $url = site_url('assets/files/' .basename($item->value)); ?>
+                    <img src="<?= $url; ?>" class="img-thumbnail img-responsive" alt="<?= $field->name ?>" style="margin-bottom: 0; max-height: 200px; width:auto;">
+                    <?php } else { ?>
+                    <?= $item->value; ?>
+                    <?php } ?>
+                </td>
             </tr>
+            <?php } ?>
             <?php } ?>
         </table>
     </div>

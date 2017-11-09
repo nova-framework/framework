@@ -93,6 +93,7 @@ class ModuleServiceProvider extends ServiceProvider
             new \App\Modules\Fields\Types\BooleanType,
             new \App\Modules\Fields\Types\ArrayType,
             new \App\Modules\Fields\Types\DoubleType,
+            new \App\Modules\Fields\Types\FileType,
         );
 
         $registry->register($types);

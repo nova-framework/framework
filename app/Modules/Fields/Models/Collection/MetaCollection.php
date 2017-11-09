@@ -151,6 +151,8 @@ class MetaCollection extends BaseCollection
     {
         foreach ($items as $item) {
             if ($item instanceof MetaItem) {
+                $this->observeSaving($item);
+
                 $this->observeDeletion($item);
             }
         }
@@ -161,8 +163,26 @@ class MetaCollection extends BaseCollection
      *
      * @param \App\Modules\Fields\Models\MetaData $item
      */
+    protected function observeSaving(MetaItem $item)
+    {
+        $item::saving(function ($model)
+        {
+            $model->getTypeInstance()->cleanup();
+        });
+    }
+
+    /**
+     * Set a deletion listener on an item.
+     *
+     * @param \App\Modules\Fields\Models\MetaData $item
+     */
     protected function observeDeletion(MetaItem $item)
     {
+        $item::deleting(function ($model)
+        {
+            $model->getTypeInstance()->cleanup(true);
+        });
+
         $item::deleted(function ($model)
         {
             if (! is_null($key = $this->findItem($model->name))) {

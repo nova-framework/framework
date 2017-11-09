@@ -133,32 +133,4 @@ class Account extends BaseController
 
         return Redirect::back()->withStatus($status);
     }
-
-    public function picture()
-    {
-        $user = Auth::user();
-
-        // Retrieve the Input data.
-        $input = Input::only('image');
-
-        // Create a Validator instance.
-        $validator = Validator::make($input,
-            array('image' => 'required|max:1024|mimes:png,jpg,jpeg,gif'), array(), array('id' => __d('users', 'Image'))
-        );
-
-        // Validate the Input.
-        if ($validator->fails()) {
-            return Redirect::back()->withStatus($validator->errors(), 'danger');
-        }
-
-        // Update the User record.
-        $user->image = $input['image'];
-
-        $user->save();
-
-        // Prepare the flash message.
-        $status = __d('users', 'The Profile Picture was successfully updated.');
-
-        return Redirect::to('account')->withStatus($status);
-    }
 }

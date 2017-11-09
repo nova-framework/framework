@@ -56,7 +56,15 @@ class FieldCollection extends BaseCollection
     {
         $typeRegistry = App::make(TypeRegistry::class);
 
-        return $this->where('hidden', 0)->map(function ($field) use ($typeRegistry, $request, $items)
+        return $this->where('hidden', 0)->sort(function ($a, $b)
+        {
+            if ($a->order === $b->order) {
+                return strcmp($a->name, $b->name);
+            }
+
+            return ($a->order < $b->order) ? -1 : 1;
+
+        })->map(function ($field) use ($typeRegistry, $request, $items)
         {
             $default = null;
 

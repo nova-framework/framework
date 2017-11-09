@@ -13,7 +13,7 @@ abstract class Type
     /**
      * The type handled by this Type class.
      *
-     * @var string
+     * @var string|null
      */
     protected $type;
 
@@ -40,6 +40,16 @@ abstract class Type
     public function __construct(MetaItem $model = null)
     {
         $this->model = $model;
+    }
+
+    /**
+     * Execute the cleanup when MetaData instance is saved or deleted.
+     *
+     * @return string
+     */
+    public function cleanup()
+    {
+        //
     }
 
     /**

@@ -61,19 +61,6 @@
             <h4><?= __d('users', 'Profile'); ?></h4>
             <hr>
             <?= $fields; ?>
-            <div class="form-group">
-                <label class="col-sm-4 control-label" for="image"><?= __d('users', 'Picture'); ?></label>
-                <div class="col-sm-8">
-                    <div class="input-group">
-                        <input type="text" id="file_path" class="form-control" placeholder="<?= __d('users', 'Browse...'); ?>">
-                        <span class="input-group-btn">
-                            <button class="btn btn-primary" type="button" id="file_browser">
-                            <i class="fa fa-search"></i> Browse</button>
-                        </span>
-                    </div>
-                    <input type="file" class="hidden" id="image" name="image">
-                </div>
-            </div>
             <div class="clearfix"></div>
             <br>
             <font color="#CC0000">*</font><?= __d('users', 'Required field'); ?>
@@ -99,22 +86,3 @@
 <br>
 
 </section>
-
-<script>
-
-$('#file_browser').click(function(e) {
-    e.preventDefault();
-
-    $('#image').click();
-});
-
-$('#image').change(function() {
-    $('#file_path').val($(this).val());
-});
-
-$('#file_path').click(function() {
-    $('#file_browser').click();
-});
-
-</script>
-

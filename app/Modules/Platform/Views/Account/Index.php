@@ -53,49 +53,26 @@
             </tr>
             <?php foreach ($user->profile->fields as $field) { ?>
             <?php if ($field->hidden === 1) continue; ?>
+            <?php if (! is_null($key = $user->meta->findItem($field->key))) { ?>
+            <?php $item = $user->meta->get($key); ?>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= $field->name; ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->meta->itemValue($field->key); ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="75%">
+                    <?php if (($item->key == 'picture') && ! empty($item->value) && ($item->getTypeInstance()->getType() == 'file')) { ?>
+                    <?php $url = site_url('assets/files/' .basename($item->value)); ?>
+                    <img src="<?= $url; ?>" class="img-thumbnail img-responsive" alt="<?= $field->name ?>" style="margin-bottom: 0; max-height: 200px; width:auto;">
+                    <?php } else { ?>
+                    <?= $item->value; ?>
+                    <?php } ?>
+                </td>
             </tr>
+            <?php } ?>
             <?php } ?>
         </table>
     </div>
 </div>
 
-<form action="<?= site_url('account/picture'); ?>" class="form-horizontal" method='POST' enctype="multipart/form-data" role="form">
-
-<div  class="box box-widget">
-    <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('platform', 'Profile Picture'); ?></h3>
-    </div>
-    <div class="box-body">
-        <div class="col-md-4">
-            <img src="<?= $user->picture() ?>" class="img-thumbnail img-responsive" alt="Profile Image" style="margin-bottom: 0; max-height: 200px; width:auto;">
-        </div>
-        <div class="col-md-8">
-            <div class="form-group">
-                <label class="col-sm-4 control-label" for="image"><?= __d('platform', 'Profile Picture (to change)'); ?></label>
-                <div class="input-group">
-                    <input type="text" id="file_path" class="form-control" placeholder="Browse...">
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary" type="button" id="file_browser">
-                        <i class="fa fa-search"></i> Browse</button>
-                    </span>
-                </div>
-                <input type="file" class="hidden" id="image" name="image">
-            </div>
-        </div>
-    </div>
-    <div class="box-footer">
-        <input type="submit" name="submit" class="btn btn-success col-sm-2 pull-right" value="<?= __d('platform', 'Update'); ?>">
-    </div>
-</div>
-
-<?= csrf_field(); ?>
-
-</form>
-
-<form action="<?= site_url('account'); ?>" class="form-horizontal" method='POST' role="form">
+<form action="<?= site_url('account'); ?>" class="form-horizontal" method='POST' enctype="multipart/form-data" role="form">
 
 <div  class="box box-widget">
     <div class="box-header with-border">
@@ -144,21 +121,3 @@
 </form>
 
 </section>
-
-<script>
-
-$('#file_browser').click(function(e) {
-    e.preventDefault();
-
-    $('#image').click();
-});
-
-$('#image').change(function() {
-    $('#file_path').val($(this).val());
-});
-
-$('#file_path').click(function() {
-    $('#file_browser').click();
-});
-
-</script>

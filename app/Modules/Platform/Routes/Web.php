@@ -70,13 +70,12 @@ Route::get('dashboard', array('middleware' => 'auth', 'uses' => 'Dashboard@index
 Route::get('dashboard/notify', array('middleware' => 'auth', 'uses' => 'Dashboard@notify'));
 
 // The User's Account.
-Route::get( 'account',         array('middleware' => 'auth', 'uses' => 'Account@index'));
-Route::post('account',         array('middleware' => 'auth', 'uses' => 'Account@update'));
-Route::post('account/picture', array('middleware' => 'auth', 'uses' => 'Account@picture'));
+Route::get( 'account', array('middleware' => 'auth', 'uses' => 'Account@index'));
+Route::post('account', array('middleware' => 'auth', 'uses' => 'Account@update'));
 
 // The User's Notifications.
-Route::get( 'notifications',      array('middleware' => 'auth', 'uses' => 'Notifications@index'));
-Route::post('notifications',      array('middleware' => 'auth', 'uses' => 'Notifications@update'));
+Route::get( 'notifications', array('middleware' => 'auth', 'uses' => 'Notifications@index'));
+Route::post('notifications', array('middleware' => 'auth', 'uses' => 'Notifications@update'));
 
 // The Heartbeat
 Route::post('heartbeat', array('middleware' => 'auth', 'uses' => 'Heartbeat@update'));

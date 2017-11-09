@@ -128,7 +128,20 @@ class MetaCollection extends BaseCollection
     }
 
     /**
-     * Get the collection key form an item key and tag.
+     * Get an item from collection.
+     *
+     * @param mixed $name
+     * @return mixed
+     */
+    public function getItem($name)
+    {
+        if (! is_null($key = $this->findItem($name))) {
+            return $this->get($key);
+        }
+    }
+
+    /**
+     * Get the collection key form an item key.
      *
      * @param mixed $name
      * @return mixed

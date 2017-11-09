@@ -34,7 +34,7 @@ Event::listen('backend.menu.sidebar', function ()
 
             //
             'path'   => 'platform.profile',
-            //'can'    => 'lists:' .Profile::class,
+            'can'    => 'manage:' .Profile::class,
         ),
 
         // Users.

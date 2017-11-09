@@ -79,6 +79,11 @@ class Profiles extends BaseController
 
     public function index()
     {
+        // Authorize the current User.
+        if (Gate::denies('manage', Profile::class)) {
+            throw new AuthorizationException();
+        }
+
         $profile = Profile::findOrFail(1);
 
         $registry = App::make(TypeRegistry::class);
@@ -93,6 +98,11 @@ class Profiles extends BaseController
 
     public function store(Request $request)
     {
+        // Authorize the current User.
+        if (Gate::denies('manage', Profile::class)) {
+            throw new AuthorizationException();
+        }
+
         $profile = Profile::findOrFail(1);
 
         //
@@ -128,9 +138,13 @@ class Profiles extends BaseController
 
     public function update(Request $request, $id)
     {
+        // Authorize the current User.
+        if (Gate::denies('manage', Profile::class)) {
+            throw new AuthorizationException();
+        }
+
         $profile = Profile::findOrFail(1);
 
-        // Get the Field Model instance.
         try {
             $field = Field::findOrFail($id);
         }
@@ -172,7 +186,11 @@ class Profiles extends BaseController
 
     public function destroy($id)
     {
-        // Get the Field Model instance.
+        // Authorize the current User.
+        if (Gate::denies('manage', Profile::class)) {
+            throw new AuthorizationException();
+        }
+
         try {
             $field = Field::findOrFail($id);
         }

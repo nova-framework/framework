@@ -47,7 +47,7 @@ abstract class Type
      *
      * @return string
      */
-    public function cleanup()
+    public function cleanup($force = false)
     {
         //
     }

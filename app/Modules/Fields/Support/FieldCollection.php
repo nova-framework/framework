@@ -55,23 +55,23 @@ class FieldCollection extends BaseCollection
 
         $types = new BaseCollection();
 
-        foreach ($this->items as $model) {
-            if ($model->hidden === 1) {
+        foreach ($this->items as $field) {
+            if ($field->hidden === 1) {
                 continue;
             }
 
             // The field is not hidden.
-            else if (! is_null($key = $items->findItem($model->key))) {
+            else if (! is_null($key = $items->findItem($field->key))) {
                 $item = $items->get($key);
 
                 $type = $item->getTypeInstance();
             } else {
-                $className = $model->type;
+                $className = $field->type;
 
                 $type = new $className();
             }
 
-            $type->setField($model);
+            $type->setField($field);
 
             $types->add($type);
         }

@@ -39,6 +39,7 @@ class ImageType extends BaseType
     /**
      * Gets a rendered form of the value.
      *
+     * @param array $data
      * @return string
      */
     public function render(array $data = array())

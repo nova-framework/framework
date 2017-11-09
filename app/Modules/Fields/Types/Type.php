@@ -46,6 +46,7 @@ abstract class Type
     /**
      * Execute the cleanup when MetaData instance is saved or deleted.
      *
+     * @param bool $force
      * @return string
      */
     public function cleanup($force = false)
@@ -56,9 +57,10 @@ abstract class Type
     /**
      * Gets a rendered form of the value.
      *
+     * @param array $data
      * @return string
      */
-    public function render()
+    public function render(array $data = array())
     {
         return $this->get();
     }
@@ -66,6 +68,8 @@ abstract class Type
     /**
      * Gets a rendered form of the editor.
      *
+     * @param \App\Modules\Fields\Models\Field $field
+     * @param mixed $value
      * @return string
      */
     public function renderForEditor(Field $field, $value = null)

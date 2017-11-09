@@ -59,7 +59,7 @@
 var userInfo = {
     userid:   '<?= $authUser->id; ?>',
     username: '<?= $authUser->username; ?>',
-    realname: '<?= $authUser->realname; ?>',
+    realname: '<?= $authUser->realname(); ?>',
     roles:    '<?= implode(', ', $authUser->roles->lists("name")); ?>',
     picture:  '<?= $authUser->picture(); ?>'
 };

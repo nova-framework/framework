@@ -37,8 +37,6 @@ class Registrar extends BaseController
     {
         // Validation rules.
         $rules = array(
-            'realname'             => 'required|min:6|valid_name',
-            'username'             => 'required|min:6|unique:users',
             'email'                => 'required|email|unique:users',
             'password'             => 'required|confirmed|strong_password',
             'g-recaptcha-response' => 'required|min:1|recaptcha'
@@ -52,7 +50,6 @@ class Registrar extends BaseController
 
         $attributes = array(
             'username'             => __d('platform', 'Username'),
-            'realname'             => __d('platform', 'Name and Surname'),
             'email'                => __d('platform', 'E-mail'),
             'password'             => __d('platform', 'Password'),
             'g-recaptcha-response' => __d('platform', 'ReCaptcha'),
@@ -62,13 +59,6 @@ class Registrar extends BaseController
         Validator::extend('recaptcha', function($attribute, $value, $parameters) use ($remoteIp)
         {
             return ReCaptcha::check($value, $remoteIp);
-        });
-
-        Validator::extend('valid_name', function($attribute, $value, $parameters)
-        {
-            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){2,}$~u';
-
-            return (preg_match($pattern, $value) === 1);
         });
 
         Validator::extend('strong_password', function($attribute, $value, $parameters)
@@ -102,7 +92,7 @@ class Registrar extends BaseController
     public function store(Request $request)
     {
         $input = $request->only(
-            'username', 'realname', 'email', 'password', 'password_confirmation', 'g-recaptcha-response'
+            'username', 'email', 'password', 'password_confirmation', 'g-recaptcha-response'
         );
 
         // Create a Validator instance.
@@ -117,12 +107,20 @@ class Registrar extends BaseController
 
         // Create the User record.
         $user = User::create(array(
-            'username'        => $input['username'],
-            'realname'        => $input['realname'],
-            'email'           => $input['email'],
-            'password'        => $password,
-            'activation_code' => $token = $this->createNewToken(),
+            'username' => $input['username'],
+            'email'    => $input['email'],
+            'password' => $password,
         ));
+
+        // Update the Meta / Custom Fields.
+        $user->load('meta');
+
+        // Handle the meta-data.
+        $user->meta->activated = 0;
+
+        $user->meta->activation_code = $token = $this->createNewToken();
+
+        $user->save();
 
         // Retrieve the default 'user' Role.
         $role = Role::where('slug', 'user')->firstOrFail();
@@ -188,7 +186,7 @@ class Registrar extends BaseController
         $email = $input['email'];
 
         try {
-            $user = User::where('email', $email)->where('activated', '=', 0)->firstOrFail();
+            $user = User::where('email', $email)->whereMeta('activated', 0)->firstOrFail();
         }
         catch (ModelNotFoundException $e) {
             return Redirect::back()
@@ -196,7 +194,7 @@ class Registrar extends BaseController
                 ->withStatus(__d('platform', 'The selected email cannot receive Account Activation links.', $email), 'danger');
         }
 
-        $user->activation_code = $token = $this->createNewToken();
+        $user->meta->activation_code = $token = $this->createNewToken();
 
         $user->save();
 
@@ -247,10 +245,18 @@ class Registrar extends BaseController
         }
 
         try {
-            $user = User::whereNotNull('activation_code')
-                ->where('activation_code', $token)
-                ->where('activated', '=', 0)
-                ->firstOrFail();
+            $user = User::whereHas('meta', function ($query) use ($token)
+            {
+                return $query->where(function ($query)
+                {
+                    return $query->where('key', 'activated')->where('value', 0);
+
+                })->where(function ($query) use ($token)
+                {
+                    return $query->where('key', 'activation_code')->where('value', $token);
+                });
+
+            })->firstOrFail();
         }
         catch (ModelNotFoundException $e) {
             $limiter->hit($throttleKey, $lockoutTime);

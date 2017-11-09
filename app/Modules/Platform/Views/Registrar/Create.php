@@ -19,9 +19,6 @@
                 <form method='post' role="form">
 
                 <div class="form-group">
-                    <p><input type="text" name="realname" id="realname" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('platform', 'Name and Surname'); ?>"><br><br></p>
-                </div>
-                <div class="form-group">
                     <p><input type="text" name="username" id="username" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('platform', 'Username'); ?>"><br><br></p>
                 </div>
                 <div class="form-group">

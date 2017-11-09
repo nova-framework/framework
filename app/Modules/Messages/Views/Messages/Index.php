@@ -53,7 +53,7 @@
         <?php } ?>
         <div class="media" style="margin-top: 0; padding: 10px;">
             <div class="pull-left">
-                <img class="img-thumbnail media-object img-responsive" style="height: 80px; width: 80px" alt="<?= $message->sender->realname; ?>" src="<?= $message->sender->picture(); ?>">
+                <img class="img-thumbnail media-object img-responsive" style="height: 80px; width: 80px" alt="<?= $message->sender->realname(); ?>" src="<?= $message->sender->picture(); ?>">
             </div>
             <div class="media-body">
                 <div class="col-md-8">

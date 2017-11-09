@@ -37,6 +37,12 @@ return array(
             'enabled'  => true,
             'order'    => 7001,
         ),
+        'fields' => array(
+            'name'     => 'Modules/Fields',
+            'basename' => 'Fields',
+            'enabled'  => true,
+            'order'    => 7002,
+        ),
         'permissions' => array(
             'name'     => 'Modules/Permissions',
             'basename' => 'Permissions',

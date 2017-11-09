@@ -30,12 +30,23 @@ class UsersTableSeeder extends Seeder
             'id'             => 1,
             'username'       => 'admin',
             'password'       => Hash::make('admin'),
-            'realname'       => 'Site Administrator',
             'email'          => 'admin@novaframework.dev',
-            'activated'      => 1,
             'remember_token' => '',
-            'api_token'      => $this->uniqueToken(),
+            'profile_id'     => 1,
         ));
+
+        $user->load('meta');
+
+        $user->meta->first_name = 'Site';
+        $user->meta->last_name  = 'Administrator';
+        $user->meta->location   = 'Craiova, Romania';
+
+        $user->meta->activated       = 1;
+        $user->meta->activation_code = '';
+
+        $user->meta->api_token = $this->uniqueToken();
+
+        $user->save();
 
         $user->roles()->attach(array(1));
 
@@ -44,12 +55,23 @@ class UsersTableSeeder extends Seeder
             'id'             => 2,
             'username'       => 'marcus',
             'password'       => Hash::make('marcus'),
-            'realname'      => 'Marcus Spears',
             'email'          => 'marcus@novaframework.dev',
-            'activated'      => 1,
             'remember_token' => '',
-            'api_token'      => $this->uniqueToken(),
+            'profile_id'     => 1,
         ));
+
+        $user->load('meta');
+
+        $user->meta->first_name = 'Marcus';
+        $user->meta->last_name  = 'Spears';
+        $user->meta->location   = 'London, UK';
+
+        $user->meta->activated       = 1;
+        $user->meta->activation_code = '';
+
+        $user->meta->api_token = $this->uniqueToken();
+
+        $user->save();
 
         $user->roles()->attach(array(2));
 
@@ -58,12 +80,23 @@ class UsersTableSeeder extends Seeder
             'id'             => 3,
             'username'       => 'michael',
             'password'       => Hash::make('michael'),
-            'realname'       => 'Michael White',
             'email'          => 'michael@novaframework.dev',
-            'activated'      => 1,
             'remember_token' => '',
-            'api_token'      => $this->uniqueToken(),
+            'profile_id'     => 1,
         ));
+
+        $user->load('meta');
+
+        $user->meta->first_name = 'Michael';
+        $user->meta->last_name  = 'White';
+        $user->meta->location   = 'Rome, Italy';
+
+        $user->meta->activated       = 1;
+        $user->meta->activation_code = '';
+
+        $user->meta->api_token = $this->uniqueToken();
+
+        $user->save();
 
         $user->roles()->attach(array(3));
 
@@ -72,12 +105,23 @@ class UsersTableSeeder extends Seeder
             'id'             => 4,
             'username'       => 'john',
             'password'       => Hash::make('john'),
-            'realname'       => 'John Kennedy',
             'email'          => 'john@novaframework.dev',
-            'activated'      => 1,
             'remember_token' => '',
-            'api_token'      => $this->uniqueToken(),
+            'profile_id'     => 1,
         ));
+
+        $user->load('meta');
+
+        $user->meta->first_name = 'John';
+        $user->meta->last_name  = 'Kennedy';
+        $user->meta->location   = 'Moscow, Russia';
+
+        $user->meta->activated       = 1;
+        $user->meta->activation_code = '';
+
+        $user->meta->api_token = $this->uniqueToken();
+
+        $user->save();
 
         $user->roles()->attach(array(4));
 
@@ -86,12 +130,23 @@ class UsersTableSeeder extends Seeder
             'id'             => 5,
             'username'       => 'mark',
             'password'       => Hash::make('mark'),
-            'realname'       => 'Mark Black',
             'email'          => 'mark@novaframework.dev',
-            'activated'      => 1,
             'remember_token' => '',
-            'api_token'      => $this->uniqueToken(),
+            'profile_id'     => 1,
         ));
+
+        $user->load('meta');
+
+        $user->meta->first_name = 'Mark';
+        $user->meta->last_name  = 'Black';
+        $user->meta->location   = 'Paris, France';
+
+        $user->meta->activated       = 1;
+        $user->meta->activation_code = '';
+
+        $user->meta->api_token = $this->uniqueToken();
+
+        $user->save();
 
         $user->roles()->attach(array(4));
     }

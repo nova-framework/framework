@@ -25,7 +25,7 @@
 <?php } ?>
 
 <div class="box box-widget">
-    <div class="box-header with-border">
+    <div class="box-header">
         <h3 class="box-title"><?= __d('users', 'Registered Users'); ?></h3>
         <div class="box-tools">
         <?= $users->links(); ?>
@@ -49,7 +49,7 @@
                 <td style="text-align: center; vertical-align: middle;" width="5%"><?= $user->id; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="18%"><?= $user->username; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="11%"><?= implode(', ', $user->roles->lists('name')); ?></td>
-                <td style="text-align: center; vertical-align: middle;" width="18%"><?= $user->realname; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="18%"><?= $user->realname(); ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="18%"><?= $user->email; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="15%"><?= $user->created_at->formatLocalized(__d('users', '%d %b %Y, %R')); ?></td>
                 <td style="text-align: right; vertical-align: middle;" width="15%">
@@ -118,7 +118,7 @@ $(function () {
         //
         $('#delete-record-id').val(id);
 
-        $('#modal-delete-form').attr('action', '<?= site_url("admin/roles"); ?>/' + id + '/destroy');
+        $('#modal-delete-form').attr('action', '<?= site_url("admin/users"); ?>/' + id + '/destroy');
     });
 });
 

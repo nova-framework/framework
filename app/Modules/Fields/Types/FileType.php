@@ -50,16 +50,14 @@ class FileType extends BaseType
             return;
         }
 
-        // The file path is valid.
+        // We have a valid file path.
         else if (($path == $this->model->getAttribute('value')) && ! $force) {
             return;
         }
 
         try {
-            File::delete($filePath);
+            File::delete($path);
         }
-
-        // Catch all exceptions.
         catch (Exception $e) {
             Log::error($e->getMessage());
         }
@@ -86,37 +84,41 @@ class FileType extends BaseType
     public function set($value)
     {
         if ($value instanceof UploadedFile) {
-            $name = Str::slug(pathinfo($value->getClientOriginalName(), PATHINFO_FILENAME));
+            $fileName = pathinfo($value->getClientOriginalName(), PATHINFO_FILENAME);
 
             $extension = $value->getClientOriginalExtension();
-        } else if (File::exists($value)) {
-            $name = pathinfo($value, PATHINFO_FILENAME);
 
-            $extension = pathinfo($value, PATHINFO_EXTENSION);
-        } else {
-            throw new InvalidArgumentException("The value is not a file. [$value].");
+            $fileName = sprintf('%s-%s.%s', uniqid(), Str::slug($fileName), $extension);
+        } else if (empty($value)) {
+            return;
         }
 
-        $fileName = sprintf('%s-%s.%s', uniqid(), $name, $extension);
+        // An invalid value was given.
+        else {
+            throw new InvalidArgumentException("No uploaded file was given as value. [$value].");
+        }
 
-        $basePath = $this->path;
+        $path = $this->getPath();
 
         if (! is_null($model = $this->getModel())) {
-            $basePath .= DS .Str::plural($model->key);
+            $path .= DS .Str::plural($model->key);
         }
 
-        $filePath = $basePath .DS .$fileName;
+        $filePath = $path .DS .$fileName;
 
-        // Ensure that exists the folder where the file will be stored.
-        File::makeDirectory($basePath, 0755, true, true);
-
-        if ($value instanceof UploadedFile) {
-            File::put($filePath, fopen($value->path(), 'r+'));
-        } else {
-            File::copy($value, $filePath);
+        if (! File::exists($path)) {
+            File::makeDirectory($path, 0755, true, true);
         }
+
+        // Move the uploaded file to the final location.
+        $value->move($path, $fileName);
 
         parent::set($filePath);
+    }
+
+    public function getPath()
+    {
+        return $this->path;
     }
 
     /**
@@ -127,11 +129,7 @@ class FileType extends BaseType
      */
     public function isType($value)
     {
-        if ($value instanceof UploadedFile) {
-            return true;
-        }
-
-        return is_string($value) && File::exists($value);
+        return $value instanceof UploadedFile;
     }
 
     /**

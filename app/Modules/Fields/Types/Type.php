@@ -30,7 +30,7 @@ abstract class Type
      *
      * @var string
      */
-    protected $view = 'Fields/Editor/Default';
+    protected $view = 'Editor/Default';
 
 
     /**

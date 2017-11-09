@@ -12,7 +12,7 @@ class BooleanType extends BaseType
      *
      * @var string
      */
-    protected $view = 'Fields/Editor/Boolean';
+    protected $view = 'Editor/Boolean';
 
 
     /**

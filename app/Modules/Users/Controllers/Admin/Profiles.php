@@ -57,7 +57,9 @@ class Profiles extends BaseController
 
         Validator::extend('valid_type', function($attribute, $value, $parameters)
         {
-            return FieldRegistry::has($value);
+            $registry = App::make(TypeRegistry::class);
+
+            return $registry->has($value);
         });
 
         return Validator::make($data, $rules, $messages, $attributes);

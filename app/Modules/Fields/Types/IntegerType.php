@@ -12,7 +12,7 @@ class IntegerType extends BaseType
      *
      * @var string
      */
-    protected $view = 'Fields/Editor/Integer';
+    protected $view = 'Editor/Integer';
 
 
     /**

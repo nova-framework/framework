@@ -20,6 +20,7 @@ use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Arr;
 
+use App\Modules\Fields\Fields\BooleanField;
 use App\Modules\Platform\Controllers\Admin\BaseController;
 use App\Modules\Roles\Models\Role;
 use App\Modules\Users\Models\Profile;
@@ -164,11 +165,13 @@ class Users extends BaseController
         $user->meta->activated = 1;
 
         foreach ($fields->updatables() as $key => $field) {
-            if (($field->hidden === 1) || ! Arr::has($input, $key)) {
+            if (! Arr::has($input, $key)) {
                 continue;
+            } else if ($field->type == BooleanField::class) {
+                $value = (int) Arr::has($input, $key);
+            } else {
+                $value = Arr::get($input, $key);
             }
-
-            $value = Arr::get($input, $key);
 
             $user->meta->updateOrAdd($key, $value, $field->type);
         }
@@ -294,11 +297,13 @@ class Users extends BaseController
 
         // Update the Meta / Custom Fields.
         foreach ($fields->updatables() as $key => $field) {
-            if (($field->hidden === 1) || ! Arr::has($input, $key)) {
+            if (! Arr::has($input, $key)) {
                 continue;
+            } else if ($field->type == BooleanField::class) {
+                $value = (int) Arr::has($input, $key);
+            } else {
+                $value = Arr::get($input, $key);
             }
-
-            $value = Arr::get($input, $key);
 
             $user->meta->updateOrAdd($key, $value, $field->type);
         }

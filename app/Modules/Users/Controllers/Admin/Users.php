@@ -115,12 +115,12 @@ class Users extends BaseController
         $roles = Role::all();
 
         // The Custom Fields.
-        $fieldsHtml = $fields->renderForEditor($request);
+        $html = $fields->renderForEditor($request);
 
         return $this->createView()
             ->shares('title', __d('users', 'Create User'))
             ->with('roles', $roles)
-            ->with('fields', $fieldsHtml);
+            ->with('fields', $html);
     }
 
     public function store(Request $request)
@@ -223,12 +223,12 @@ class Users extends BaseController
         $roles = Role::all();
 
         // The Custom Fields.
-        $fieldsHtml = $fields->renderForEditor($request, $user->meta);
+        $html = $fields->renderForEditor($request, $user->meta);
 
         return $this->createView()
             ->shares('title', __d('users', 'Edit User'))
             ->with('roles', $roles)
-            ->with('fields', $fieldsHtml)
+            ->with('fields', $html)
             ->with('user', $user);
     }
 

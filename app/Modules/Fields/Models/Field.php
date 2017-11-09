@@ -4,7 +4,7 @@ namespace App\Modules\Fields\Models;
 
 use Nova\Database\ORM\Model;
 
-use App\Modules\Fields\Support\FieldCollection;
+use App\Modules\Fields\Models\Collection\FieldCollection;
 
 
 class Field extends Model

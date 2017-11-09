@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Fields\Support;
+namespace App\Modules\Fields\Models\Collection;
 
 use Nova\Database\ORM\Collection as BaseCollection;
 use Nova\Database\ORM\Model;

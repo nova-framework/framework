@@ -5,7 +5,7 @@ namespace App\Modules\Fields\Models;
 use Nova\Database\ORM\Model;
 use Nova\Support\Facades\App;
 
-use App\Modules\Fields\Support\MetaCollection;
+use App\Modules\Fields\Models\Collection\MetaCollection;
 use App\Modules\Fields\Types\Registry as TypeRegistry;
 
 use DateTime;

@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Modules\Fields\Support;
+namespace App\Modules\Fields\Models\Collection;
 
 use Nova\Http\Request;
 use Nova\Database\ORM\Collection as BaseCollection;
 use Nova\Validation\Validator;
+use Nova\Support\Facades\View;
 use Nova\Support\Arr;
 
 use App\Modules\Fields\Models\MetaData as MetaItem;
-use App\Modules\Fields\Support\MetaCollection;
+use App\Modules\Fields\Models\Collection\MetaCollection;
 use App\Modules\Fields\Fields\BooleanField;
 
 
@@ -50,43 +51,32 @@ class FieldCollection extends BaseCollection
         }
     }
 
-    public function getFieldTypes(MetaCollection $items = null)
+    public function renderForEditor(Request $request, MetaCollection $items = null)
     {
         if (is_null($items)) {
             $items = with(new MetaItem())->newCollection();
         }
 
-        $types = new BaseCollection();
-
-        foreach ($this->items as $field) {
-            if ($field->hidden === 1) {
-                continue;
-            }
-
-            // The field is not hidden.
-            else if (! is_null($key = $items->findItem($field->key))) {
+        return $this->where('hidden', 0)->map(function ($field) use ($request, $items)
+        {
+            if (! is_null($key = $items->findItem($field->key))) {
                 $item = $items->get($key);
+
+                $value = $item->value;
 
                 $type = $item->getTypeInstance();
             } else {
+                $value = null;
+
+                //
                 $className = $field->type;
 
                 $type = new $className();
             }
 
-            $type->setField($field);
-
-            $types->add($type);
-        }
-
-        return $types;
-    }
-
-    public function renderForEditor(Request $request, MetaCollection $items = null)
-    {
-        return $this->getFieldTypes($items)->map(function ($fieldType) use ($request)
-        {
-            return $fieldType->renderForEditor($request);
+            return View::make($type->getView(), compact('field'), 'Fields')
+                ->with('value', $request->old($field->key, $value))
+                ->render();
 
         })->implode("\n");
     }

@@ -37,14 +37,4 @@ class StringType extends BaseType
     {
         return $this->get();
     }
-
-    /**
-     * Output value to string.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->toString();
-    }
 }

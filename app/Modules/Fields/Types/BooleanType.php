@@ -55,14 +55,4 @@ class BooleanType extends BaseType
     {
         return (string) $this->get();
     }
-
-    /**
-     * Output value to string.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->toString();
-    }
 }

@@ -5,7 +5,6 @@ namespace App\Modules\Fields\Types;
 use Nova\Http\Request;
 use Nova\Support\Facades\View;
 
-use App\Modules\Fields\Models\Field;
 use App\Modules\Fields\Models\MetaData as MetaItem;
 
 
@@ -17,13 +16,6 @@ abstract class Type
      * @var \App\Modules\Fields\Models\MetaData
      */
     protected $model;
-
-    /**
-     * Field model instance.
-     *
-     * @var \App\Modules\Fields\Models\Field
-     */
-    protected $field;
 
     /**
      * The partial View used for editor rendering.
@@ -44,30 +36,6 @@ abstract class Type
     }
 
     /**
-     * Set the Field model instance.
-     *
-     * @param \App\Modules\Fields\Models\Field  $field
-     */
-    public function setField(Field $field)
-    {
-        $this->field = $field;
-
-        return $this;
-    }
-
-    public function renderForEditor(Request $request)
-    {
-        $field = $this->field;
-
-        // Calculate the current value.
-        $default = isset($this->model) ? $this->model->value : null;
-
-        $value = $request->old($field->key, $default);
-
-        return View::make($this->view, compact('field', 'value'), 'Fields')->render();
-    }
-
-    /**
      * Gets the model instance.
      *
      * @return \App\Modules\Fields\Models\MetaData|null
@@ -78,13 +46,13 @@ abstract class Type
     }
 
     /**
-     * Gets the model instance.
+     * Gets the View used for rendering the editor.
      *
-     * @return \App\Modules\Fields\Models\Field|null
+     * @return string
      */
-    public function getField()
+    public function getView()
     {
-        return $this->field;
+        return $this->view;
     }
 
     /**

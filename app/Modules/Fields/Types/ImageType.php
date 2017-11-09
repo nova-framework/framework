@@ -41,11 +41,11 @@ class ImageType extends BaseType
      *
      * @return string
      */
-    public function render()
+    public function render(array $data = array())
     {
         $path = str_replace(ROOTDIR, '', $this->get());
 
-        return View::make('Fields/Image', compact('path'), 'Fields')->render();
+        return View::make('Fields/Image', compact('path'), 'Fields')->with($data)->render();
     }
 
     /**

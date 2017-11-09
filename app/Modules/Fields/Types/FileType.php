@@ -69,11 +69,11 @@ class FileType extends BaseType
      *
      * @return string
      */
-    public function render()
+    public function render(array $data = array())
     {
         $path = str_replace(ROOTDIR, '', $this->model->value);
 
-        return View::make('Fields/File', compact('path'), 'Fields')->render();
+        return View::make('Fields/File', compact('path'), 'Fields')->with($data)->render();
     }
 
     /**

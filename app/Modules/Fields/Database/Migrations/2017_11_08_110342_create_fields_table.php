@@ -19,8 +19,8 @@ class CreateFieldsTable extends Migration
             $table->increments('id');
             $table->morphs('model');
             $table->string('name');
-            $table->string('type');
             $table->string('key');
+            $table->string('type');
             $table->string('validate')->nullable();
             $table->smallInteger('order')->default(1);
             $table->tinyInteger('columns')->default(8);

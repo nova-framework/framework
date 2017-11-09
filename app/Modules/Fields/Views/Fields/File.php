@@ -1,1 +1,1 @@
-<a href="<?= site_url($path); ?>" target="_blank"><?= basename($path); ?></a>
+<a class="btn btn-primary btn-sm" href="<?= site_url($path); ?>" title="<?= isset($name) ? $name : $name = preg_replace('#^([^\-]+)\-(.*)$#s', '$2', basename($path)); ?>" target="_blank"><i class="fa fa-download"></i> <?= $name; ?></a>

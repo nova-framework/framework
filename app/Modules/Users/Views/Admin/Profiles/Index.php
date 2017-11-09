@@ -94,10 +94,10 @@
                 <td style="text-align: center; vertical-align: middle;" width="25%">
                     <input name="validate" id="validate" type="text" class="form-control" value="<?= ''; ?>" placeholder="<?= __d('users', 'Validation'); ?>" autocomplete="off">
                 </td>
-                <td style="text-align: center; vertical-align: middle;" width="10%">
+                <td style="text-align: center; vertical-align: middle;" width="8%">
                     <input name="order" id="order" type="number" class="form-control" min="0" max="1000" value="<?= Input::old('order', 1); ?>" autocomplete="off">
                 </td>
-                <td style="text-align: center; vertical-align: middle;" width="5%">
+                <td style="text-align: center; vertical-align: middle;" width="7%">
                     <input name="columns" id="columns" type="number" class="form-control" min="1" max="8" value="<?= Input::old('columns', 8); ?>" autocomplete="off">
                 </td>
                 <td style="text-align: center; vertical-align: middle;" width="5%">

@@ -41,7 +41,10 @@ class FieldCollection extends BaseCollection
         foreach ($this->items as $model) {
             if ($model->hidden === 1) {
                 continue;
-            } else if (! is_null($key = $items->findItem($model->key))) {
+            }
+
+            // The field is not hidden.
+            else if (! is_null($key = $items->findItem($model->key))) {
                 $item = $items->get($key);
 
                 $field = $item->getField();

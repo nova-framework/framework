@@ -13,14 +13,18 @@ use App\Modules\Fields\Support\MetaCollection;
 class FieldCollection extends BaseCollection
 {
 
-    public function groupByKey()
+    public function updatables()
     {
         $results = array();
 
         foreach ($this->items as $value) {
+            if ($value->hidden === 1) {
+                continue;
+            }
+
             $key = data_get($value, 'key');
 
-            $results[$key][] = $value;
+            $results[$key] = $value;
         }
 
         return $results;

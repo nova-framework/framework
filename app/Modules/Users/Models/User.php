@@ -10,7 +10,6 @@ use Nova\Support\Facades\Cache;
 
 use Shared\Auth\Reminders\RemindableTrait;
 use Shared\Auth\Reminders\RemindableInterface;
-use Shared\Database\ORM\FileField\FileFieldTrait;
 use Shared\Notifications\NotifiableTrait;
 
 use App\Modules\Attachments\Traits\HasAttachmentsTrait;
@@ -22,7 +21,7 @@ use App\Modules\Users\Models\Profile;
 
 class User extends BaseModel implements UserInterface, RemindableInterface
 {
-    use UserTrait, RemindableTrait, AuthorizableTrait, MetableTrait, NotifiableTrait, FileFieldTrait, HasActivitiesTrait, HasMessagesTrait, HasAttachmentsTrait;
+    use UserTrait, RemindableTrait, AuthorizableTrait, MetableTrait, NotifiableTrait, HasActivitiesTrait, HasMessagesTrait, HasAttachmentsTrait;
 
     //
     protected $table = 'users';
@@ -33,17 +32,11 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     protected $hidden = array('password', 'remember_token');
 
-    public $files = array(
-        'image' => array(
-            'path'        => ROOTDIR .'assets/images/users/:unique_id-:file_name',
-            'defaultPath' => ROOTDIR .'assets/images/users/no-image.png',
-        ),
-    );
-
     // Setup the Metadata.
     protected $with = array('meta');
 
-    protected $metaTable = 'users_meta';
+    protected $metaTable   = 'users_meta';
+    protected $metaKeyName = 'user_id';
 
     // Caches.
     protected $cachedFields;
@@ -81,7 +74,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     public function picture()
     {
-        $path = 'assets/files/pictures/';
+        $path = 'assets/images/pictures/';
 
         $picture = $this->meta->picture;
 

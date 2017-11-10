@@ -9,7 +9,7 @@ use App\Modules\Fields\Support\MetaCollection;
 
 class Profile extends Model
 {
-    protected $table = 'profiles';
+    protected $table = 'user_profiles';
 
     protected $primaryKey = 'id';
 

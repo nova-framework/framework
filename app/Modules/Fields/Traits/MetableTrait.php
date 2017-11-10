@@ -209,7 +209,10 @@ trait MetableTrait
             return parent::__isset($name);
         }
 
-        return ! is_null($this->meta->findItem($name));
+        // Does not exists in parent.
+        else if (isset($this->meta)) {
+            return ! is_null($this->meta->findItem($name));
+        }
     }
 
     /**
@@ -224,7 +227,8 @@ trait MetableTrait
             return parent::__get($name);
         }
 
-        if (! is_null($key = $this->meta->findItem($name))) {
+        // Does not exists in parent.
+        else if (isset($this->meta) && ! is_null($key = $this->meta->findItem($name))) {
             $item = $this->meta->get($key);
 
             return $item->value;
@@ -260,7 +264,7 @@ trait MetableTrait
 
             $this->meta->addItem($name, $value, $field->type);
         } else {
-            throw new InvalidArgumentException("Invalid property. [$name]");
+            throw new InvalidArgumentException("Invalid field name. [$name]");
         }
     }
 
@@ -275,7 +279,7 @@ trait MetableTrait
             parent::__unset($name);
         }
 
-        // The column is not in parent table.
+        // Does not exists in parent.
         else if (! is_null($key = $this->meta->findItem($name))) {
             $this->meta->forget($key);
         }

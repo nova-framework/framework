@@ -77,6 +77,16 @@ class FileType extends BaseType
     }
 
     /**
+     * Gets the path where we store the uploaded files.
+     *
+     * @var string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
      * Parse & set the meta item value.
      *
      * @param string $value
@@ -114,11 +124,6 @@ class FileType extends BaseType
         $value->move($path, $fileName);
 
         parent::set($filePath);
-    }
-
-    public function getPath()
-    {
-        return $this->path;
     }
 
     /**

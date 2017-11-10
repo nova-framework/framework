@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
         // Call the seeders.
-        $this->call('App\Modules\Users\Database\Seeds\ProfilesTableSeeder');
+        $this->call('App\Modules\Users\Database\Seeds\UserProfilesTableSeeder');
         $this->call('App\Modules\Users\Database\Seeds\UsersTableSeeder');
         $this->call('App\Modules\Users\Database\Seeds\PermissionsTableSeeder');
 

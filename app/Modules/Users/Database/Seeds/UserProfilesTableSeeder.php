@@ -10,7 +10,7 @@ use Nova\Support\Str;
 use App\Modules\Users\Models\Profile;
 
 
-class ProfilesTableSeeder extends Seeder
+class UserProfilesTableSeeder extends Seeder
 {
 
     /**

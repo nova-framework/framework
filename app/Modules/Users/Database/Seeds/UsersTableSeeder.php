@@ -37,14 +37,14 @@ class UsersTableSeeder extends Seeder
 
         $user->load('meta');
 
-        $user->meta->first_name = 'Site';
-        $user->meta->last_name  = 'Administrator';
-        $user->meta->location   = 'Craiova, Romania';
+        $user->first_name = 'Site';
+        $user->last_name  = 'Administrator';
+        $user->location   = 'Craiova, Romania';
 
-        $user->meta->activated       = 1;
-        $user->meta->activation_code = '';
+        $user->activated       = 1;
+        $user->activation_code = '';
 
-        $user->meta->api_token = $this->uniqueToken();
+        $user->api_token = $this->uniqueToken();
 
         $user->save();
 
@@ -62,14 +62,14 @@ class UsersTableSeeder extends Seeder
 
         $user->load('meta');
 
-        $user->meta->first_name = 'Marcus';
-        $user->meta->last_name  = 'Spears';
-        $user->meta->location   = 'London, UK';
+        $user->first_name = 'Marcus';
+        $user->last_name  = 'Spears';
+        $user->location   = 'London, UK';
 
-        $user->meta->activated       = 1;
-        $user->meta->activation_code = '';
+        $user->activated       = 1;
+        $user->activation_code = '';
 
-        $user->meta->api_token = $this->uniqueToken();
+        $user->api_token = $this->uniqueToken();
 
         $user->save();
 
@@ -87,14 +87,14 @@ class UsersTableSeeder extends Seeder
 
         $user->load('meta');
 
-        $user->meta->first_name = 'Michael';
-        $user->meta->last_name  = 'White';
-        $user->meta->location   = 'Rome, Italy';
+        $user->first_name = 'Michael';
+        $user->last_name  = 'White';
+        $user->location   = 'Rome, Italy';
 
-        $user->meta->activated       = 1;
-        $user->meta->activation_code = '';
+        $user->activated       = 1;
+        $user->activation_code = '';
 
-        $user->meta->api_token = $this->uniqueToken();
+        $user->api_token = $this->uniqueToken();
 
         $user->save();
 
@@ -112,14 +112,14 @@ class UsersTableSeeder extends Seeder
 
         $user->load('meta');
 
-        $user->meta->first_name = 'John';
-        $user->meta->last_name  = 'Kennedy';
-        $user->meta->location   = 'Moscow, Russia';
+        $user->first_name = 'John';
+        $user->last_name  = 'Kennedy';
+        $user->location   = 'Moscow, Russia';
 
-        $user->meta->activated       = 1;
-        $user->meta->activation_code = '';
+        $user->activated       = 1;
+        $user->activation_code = '';
 
-        $user->meta->api_token = $this->uniqueToken();
+        $user->api_token = $this->uniqueToken();
 
         $user->save();
 
@@ -137,14 +137,14 @@ class UsersTableSeeder extends Seeder
 
         $user->load('meta');
 
-        $user->meta->first_name = 'Mark';
-        $user->meta->last_name  = 'Black';
-        $user->meta->location   = 'Paris, France';
+        $user->first_name = 'Mark';
+        $user->last_name  = 'Black';
+        $user->location   = 'Paris, France';
 
-        $user->meta->activated       = 1;
-        $user->meta->activation_code = '';
+        $user->activated       = 1;
+        $user->activation_code = '';
 
-        $user->meta->api_token = $this->uniqueToken();
+        $user->api_token = $this->uniqueToken();
 
         $user->save();
 

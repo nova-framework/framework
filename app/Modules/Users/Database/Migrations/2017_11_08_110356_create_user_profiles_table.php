@@ -4,7 +4,7 @@ use Nova\Database\Schema\Blueprint;
 use Nova\Database\Migrations\Migration;
 
 
-class CreateProfilesTable extends Migration
+class CreateUserProfilesTable extends Migration
 {
 
     /**
@@ -14,7 +14,7 @@ class CreateProfilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('profiles', function (Blueprint $table)
+        Schema::create('user_profiles', function (Blueprint $table)
         {
             $table->increments('id');
 
@@ -33,6 +33,6 @@ class CreateProfilesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('profiles');
+        Schema::dropIfExists('user_profiles');
     }
 }

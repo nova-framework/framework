@@ -21,8 +21,6 @@ class CreateUsersMetaTable extends Migration
             $table->string('type');
             $table->string('key')->index();
             $table->text('value')->nullable();
-
-            $table->timestamps();
         });
     }
 

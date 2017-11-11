@@ -23,6 +23,21 @@ class MetaData extends Model
      */
     protected $fillable = array('key', 'value');
 
+    /**
+     * @var bool
+     */
+    public $timestamps = false;
+
+
+    /**
+     * Returns either or not has a table defined.
+     *
+     * @return bool
+     */
+    public function hasTable()
+    {
+        return isset($this->table);
+    }
 
     /**
      * Get the value type registry.
@@ -115,9 +130,9 @@ class MetaData extends Model
      *
      * @return string
      */
-    public function render()
+    public function render(array $data = array())
     {
-        return $this->getTypeInstance()->render();
+        return $this->getTypeInstance()->render($data);
     }
 
     /**

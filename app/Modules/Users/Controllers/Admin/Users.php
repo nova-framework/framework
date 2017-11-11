@@ -91,7 +91,7 @@ class Users extends BaseController
         }
 
         // Get all User records for current page.
-        $users = User::whereMeta('activated', 1)->paginate(25);
+        $users = User::hasMeta('activated', 1)->paginate(25);
 
         return $this->createView()
             ->shares('title', __d('users', 'Users'))

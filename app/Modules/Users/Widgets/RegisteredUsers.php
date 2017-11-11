@@ -14,7 +14,7 @@ class RegisteredUsers extends Widget
 
     public function render()
     {
-        $count = User::whereMeta('activated', 1)->count();
+        $count = User::hasMeta('activated', 1)->count();
 
         $data = array(
             'color' => 'green',

@@ -40,6 +40,8 @@ $languages = Config::get('languages');
         vendor_url('dist/css/AdminLTE.min.css', 'almasaeed2010/adminlte'),
         // AdminLTE Skins
         vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
+        // Bootstrap WYSIHTML5
+        vendor_url('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css', 'almasaeed2010/adminlte'),
         // Custom CSS
         theme_url('css/style.css', 'AdminLite'),
     ));
@@ -217,6 +219,8 @@ Assets::js(array(
     vendor_url('plugins/iCheck/icheck.min.js', 'almasaeed2010/adminlte'),
     // AdminLTE App
     vendor_url('dist/js/adminlte.min.js', 'almasaeed2010/adminlte'),
+    // Bootstrap WYSIHTML5
+    vendor_url('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js', 'almasaeed2010/adminlte'),
 ));
 
 echo isset($js) ? $js : ''; // Place to pass data

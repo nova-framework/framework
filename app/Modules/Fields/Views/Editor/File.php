@@ -10,6 +10,7 @@
                 </span>
             </div>
             <input type="file" class="hidden" id="<?= $field->key; ?>" name="<?= $field->key; ?>">
+        </div>
      </div>
 </div>
 

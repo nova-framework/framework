@@ -34,7 +34,7 @@ return array(
             'name'  => __d('content', 'Category'),
             'title' => __d('content', 'Categories'),
         ),
-        'tags' => array(
+        'tag' => array(
             'name'  => __d('content', 'Tag'),
             'title' => __d('content', 'Tags'),
         ),

@@ -25,7 +25,7 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
 {
     Route::get( 'content/sample',  array('middleware' => 'auth', 'uses' => 'Posts@sample'));
 
-    // The Content CRUD.
+    // The Posts CRUD.
     Route::get( 'content/create/{type}', array('middleware' => 'auth', 'uses' => 'Posts@create'));
     Route::post('content',               array('middleware' => 'auth', 'uses' => 'Posts@store'));
     Route::get( 'content/{id}',          array('middleware' => 'auth', 'uses' => 'Posts@show'))->where('id', '\d+');
@@ -33,9 +33,28 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
     Route::post('content/{id}',          array('middleware' => 'auth', 'uses' => 'Posts@update'));
     Route::post('content/{id}/destroy',  array('middleware' => 'auth', 'uses' => 'Posts@destroy'));
 
+    // The Taxonomies listings.
     Route::get('content/categories',    array('middleware' => 'auth', 'uses' => 'Taxonomies@index'));
     Route::get('content/tags',          array('middleware' => 'auth', 'uses' => 'Taxonomies@tags'));
 
     Route::get('content/{type}/{slug}', array('middleware' => 'auth', 'uses' => 'Posts@taxonomy'));
+
+    // The Posts listing.
     Route::get('content/{type?}',       array('middleware' => 'auth', 'uses' => 'Posts@index'));
+
+    // The Taxonomies CRUD.
+    Route::post('taxonomies',               array('middleware' => 'auth', 'uses' => 'Taxonomies@store'));
+    Route::post('taxonomies/{id}',          array('middleware' => 'auth', 'uses' => 'Taxonomies@update'));
+    Route::post('taxonomies/{id}/destroy',  array('middleware' => 'auth', 'uses' => 'Taxonomies@destroy'));
+
+    // For AJAX.
+    Route::get('taxonomies/{id}/{parent}', array(
+        'middleware' => 'auth',
+        'uses'       => 'Taxonomies@categories',
+
+        'where' => array(
+            'id'     => '\d+',
+            'parent' => '\d+',
+        ),
+    ));
 });

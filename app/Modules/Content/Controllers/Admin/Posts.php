@@ -72,9 +72,25 @@ class Posts extends BaseController
         $name  = Config::get('content::labels.' .$type .'.name', Str::title($type));
         $mode = Config::get('content::labels.' .$type .'.title', Str::title(Str::plural($type)));
 
-        return $this->createView()
-            ->shares('title', __d('content', 'Create a new {0}', $name))
-            ->with(compact('type', 'name', 'mode'));
+        $mainCategory = Taxonomy::category()->whereHas('term', function ($query)
+        {
+            $query->where('slug', 'uncategorized');
+
+        })->first();
+
+        $status = 'draft';
+
+        // Create a new Post instance.
+        $post = new Post(array(
+            'type'           => $type,
+            'status'         => 'draft',
+            'comment_status' => ($type == 'page') ? 'closed' : 'open',
+        ));
+
+        $categories = $this->generateCategoriesSelect();
+
+        return $this->createView(compact('post', 'status', 'type', 'name', 'mode', 'categories'), 'Edit')
+            ->shares('title', __d('content', 'Create a new {0}', $name));
     }
 
     public function sample(Request $request)
@@ -117,5 +133,27 @@ class Posts extends BaseController
         dd($posts);
     }
 
+    protected function generateCategoriesSelect(array $categories = array(), $taxonomies = null, $level = 0)
+    {
+        $result = '';
 
+        if (is_null($taxonomies)) {
+            $taxonomies = Taxonomy::with('children')->where('taxonomy', 'category')->where('parent_id', 0)->get();
+        }
+
+        foreach ($taxonomies as $taxonomy) {
+            $result .= '<option value="' .$taxonomy->id .'"' .(in_array($taxonomy->id, $categories) ? ' selected="selected"' : '') .'>' .trim(str_repeat('--', $level) .' ' .$taxonomy->name) .'</option>' ."\n";
+
+            // Process the children.
+            $taxonomy->load('children');
+
+            if (! $taxonomy->children->isEmpty()) {
+                $level++;
+
+                $result .= $this->generateCategoriesSelect($categories, $taxonomy->children, $level);
+            }
+        }
+
+        return $result;
+    }
 }

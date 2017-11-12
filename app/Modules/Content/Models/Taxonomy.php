@@ -21,6 +21,11 @@ class Taxonomy extends Model
     /**
      * @var array
      */
+    protected $fillable = array('term_id', 'taxonomy', 'description', 'parent_id');
+
+    /**
+     * @var array
+     */
     protected $with = array('term', 'meta');
 
     /**
@@ -51,6 +56,14 @@ class Taxonomy extends Model
     public function parent()
     {
         return $this->belongsTo('App\Modules\Content\Models\Taxonomy', 'parent_id');
+    }
+
+    /**
+     * @return \Nova\Database\ORM\Relations\BelongsTo
+     */
+    public function children()
+    {
+        return $this->hasMany('App\Modules\Content\Models\Taxonomy', 'parent_id');
     }
 
     /**

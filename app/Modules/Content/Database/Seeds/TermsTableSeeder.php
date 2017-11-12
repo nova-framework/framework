@@ -23,31 +23,31 @@ class TermsTableSeeder extends Seeder
 
         //
         $term = Term::create(array(
-            'id'          => 1,
-            'name'        => 'Uncategorized',
-            'slug'        => 'uncategorized',
-            'term_group'  => 0,
+            'id'     => 1,
+            'name'   => 'Uncategorized',
+            'slug'   => 'uncategorized',
+            'group'  => 0,
         ));
 
         $term = Term::create(array(
-            'id'          => 2,
-            'name'        => 'Main Menu',
-            'slug'        => 'main-menu',
-            'term_group'  => 0,
+            'id'     => 2,
+            'name'   => 'Main Menu',
+            'slug'   => 'main-menu',
+            'group'  => 0,
         ));
 
         $term = Term::create(array(
-            'id'          => 3,
-            'name'        => 'Post Tag',
-            'slug'        => 'post-tag',
-            'term_group'  => 0,
+            'id'     => 3,
+            'name'   => 'Post Tag',
+            'slug'   => 'post-tag',
+            'group'  => 0,
         ));
 
         $term = Term::create(array(
-            'id'          => 4,
-            'name'        => 'Sample Tag',
-            'slug'        => 'sample-tag',
-            'term_group'  => 0,
+            'id'     => 4,
+            'name'   => 'Sample Tag',
+            'slug'   => 'sample-tag',
+            'group'  => 0,
         ));
     }
 }

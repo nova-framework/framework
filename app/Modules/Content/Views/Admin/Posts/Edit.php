@@ -12,6 +12,36 @@
 
 <?= Session::getMessages(); ?>
 
+<style>
+
+.bootstrap-wysihtml5-insert-link-modal .icheckbox_square-blue,
+.bootstrap-wysihtml5-insert-link-modal .iradio_square-blue {
+    margin-right: 10px;
+}
+
+.bootstrap-wysihtml5-insert-link-modal h3,
+.bootstrap-wysihtml5-insert-image-modal h3 {
+    margin: 0;
+}
+
+.bootstrap-wysihtml5-insert-link-modal a,
+.bootstrap-wysihtml5-insert-image-modal a {
+    width: 30%;
+}
+
+.bootstrap-wysihtml5-insert-link-modal a.close,
+.bootstrap-wysihtml5-insert-image-modal a.close {
+    width: auto;
+    margin-top: -5px;
+}
+
+.bootstrap-wysihtml5-insert-link-modal a.btn-default,
+.bootstrap-wysihtml5-insert-image-modal a.btn-default {
+    float: left;
+}
+
+</style>
+
 <div class="row">
 
 <div class="col-md-9">
@@ -40,7 +70,7 @@
 $(function () {
     // Bootstrap WYSIHTML5 - text editor
     $('#content').wysihtml5({
-        locale: "<?= Language::code(); ?>",
+        locale: '<?= Language::code(); ?>',
         toolbar: {
             "font-styles": true,  // Font styling, e.g. h1, h2, etc. Default true
             "emphasis":    true,  // Italics, bold, etc. Default true
@@ -162,7 +192,7 @@ $(function () {
                 <label class="control-label" for="slug"><?= __d('content', 'Order'); ?></label>
                 <div class="clearfix"></div>
                 <div class="col-md-4" style="padding: 0;">
-                    <input name="order" id="page-order" type="number" class="form-control" min="1" max="8" value="<?= Input::old('order', 0); ?>" autocomplete="off">
+                    <input name="order" id="page-order" type="number" class="form-control" style="padding-right: 3px;" min="1" max="8" value="<?= Input::old('order', 0); ?>" autocomplete="off">
                 </div>
             </div>
         </div>

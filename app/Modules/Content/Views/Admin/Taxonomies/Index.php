@@ -192,11 +192,10 @@ $(function () {
                     <label class="control-label" for="description"><?= __d('content', 'Description'); ?></label>
                     <textarea name="description" id="modal-edit-description" class="form-control" rows="8" style="resize: none;" placeholder="<?= __d('content', 'Description'); ?>"><?= Input::old('description'); ?></textarea>
                 </div>
-                <div class="clearfix"></div>
-                <br>
-                <font color="#CC0000">*</font><?= __d('content', 'Required field'); ?>
 
                 </div>
+
+                <div class="clearfix"></div>
             </div>
             <div class="modal-footer">
                 <input type="hidden" name="id" id="edit-record-id" value="0" />
@@ -260,7 +259,7 @@ $(function () {
         $('#modal-edit-description').val(description);
 
         // The title.
-        var title = sprintf("<?= __d('content', 'Edit the {0} <b>#%s</b>', $name); ?>", id);
+        var title = sprintf("<?= __d('content', 'Edit the {0} : <b>%s</b>', $name); ?>", name);
 
         $('.modal-edit-title').html(title);
 

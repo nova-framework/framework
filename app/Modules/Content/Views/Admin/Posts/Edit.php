@@ -16,24 +16,24 @@
 
 <div class="col-md-9">
 
-<form class="form-horizontal" action="<?= site_url('admin/users'); ?>" method='POST' enctype="multipart/form-data" role="form">
+<form action="<?= site_url('admin/users'); ?>" method='POST' enctype="multipart/form-data" role="form">
 
 <div class="box box-default">
     <div class="box-body">
-        <div class="col-md-12">
-            <div class="form-group">
-                <input name="title" id="title" type="text" style="border: 1px solid #dddddd; font-size: 18px; padding: 10px; width: 100%;" value="<?= Input::old('title'); ?>" placeholder="<?= __d('content', 'Enter title here'); ?>" autocomplete="off">
-            </div>
-            <div class="form-group" style=" margin-bottom: 0;">
-                <textarea name="content" id="content" style="border: 1px solid #dddddd; width: 100%; padding: 10px; height: 600px; resize: vertical;" autocomplete="off"><?= Input::old('content'); ?></textarea>
-            </div>
-        </div>
+        <input name="title" id="title" type="text" style="border: 1px solid #dddddd; font-size: 18px; padding: 10px; width: 100%;" value="<?= Input::old('title'); ?>" placeholder="<?= __d('content', 'Enter title here'); ?>" autocomplete="off">
+
+        <div class="clearfix"></div>
+        <br>
+
+        <textarea name="content" id="content" style="border: 1px solid #dddddd; width: 100%; padding: 10px; height: 600px; resize: vertical;" autocomplete="off"><?= Input::old('content'); ?></textarea>
     </div>
     <div class="box-footer">
          <a class="btn btn-primary btn-sm col-sm-2 pull-left" href="#" data-toggle="modal" data-target="" role="button"><?= __d('content', 'Add Media'); ?></a>
          <div id="edit-status" style="padding: 5px;" class="pull-right"></div>
     </div>
 </div>
+
+</form>
 
 <script>
 
@@ -76,6 +76,8 @@ $(function () {
 
 <?php } ?>
 
+<div class="clearfix"></div>
+
 </div>
 
 <div class="col-md-3">
@@ -117,6 +119,7 @@ $(function () {
                 </div>
              </div>
         </div>
+        <div class="clearfix"></div>
     </div>
     <div class="box-footer">
         <input type="submit" name="submit" class="btn btn-success col-sm-6 pull-right" value="<?= $post->exists ? __d('content', 'Update') : __d('content', 'Publish'); ?>">
@@ -124,6 +127,8 @@ $(function () {
 </div>
 
 <script>
+
+$(function () {
     $('#visibility').change(function(e) {
         var visibility = $(this).val();
 
@@ -133,6 +138,7 @@ $(function () {
             $('#password-group').hide();
         }
     });
+});
 
 </script>
 
@@ -144,12 +150,14 @@ $(function () {
     </div>
     <div class="box-body" style="padding-bottom: 20px;">
         <div class="md-12">
+            <?php if (! $post->exists) { ?>
             <div class="form-group">
                 <label class="control-label" for="slug"><?= __d('content', 'Parent'); ?></label>
                 <select name="parent" id="page-parent" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', 'Select a parent Page'); ?>" style="width: 100%;" autocomplete="off">
                     <option></option>
                 </select>
             </div>
+            <?php } ?>
             <div class="form-group">
                 <label class="control-label" for="slug"><?= __d('content', 'Order'); ?></label>
                 <div class="clearfix"></div>
@@ -157,8 +165,9 @@ $(function () {
                     <input name="order" id="page-order" type="number" class="form-control" min="1" max="8" value="<?= Input::old('order', 0); ?>" autocomplete="off">
                 </div>
             </div>
-            <div class="clearfix"></div>
         </div>
+
+        <div class="clearfix"></div>
     </div>
 </div>
 
@@ -187,16 +196,30 @@ $(function () {
 
         </div>
         <div class="form-group">
-            <select name="parent" id="page-parent" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', '-- Parent Category --'); ?>" style="width: 100%;" autocomplete="off">
+            <select name="parent" id="category-parent" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', '-- Parent Category --'); ?>" style="width: 100%;" autocomplete="off">
                 <option value="0"><?= __d('content', 'None'); ?></option>
                 <?= $categories; ?>
             </select>
         </div>
+
+        <div class="clearfix"></div>
     </div>
     <div class="box-footer">
         <input type="submit" name="submit" class="btn btn-success col-sm-6 pull-right" value="<?= __d('content', 'Add new Category'); ?>">
     </div>
 </div>
+
+<?php if ($post->exists) { ?>
+
+<script>
+
+$(function () {
+    $('#page-parent').val('');
+});
+
+</script>
+
+<?php } ?>
 
 <div class="box box-widget">
     <div class="box-header with-border">
@@ -207,11 +230,11 @@ $(function () {
             <div class="input-group">
                 <input type="text" name="tags" id="tags" class="form-control" autocomplete="off">
                 <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button"><?= __d('fields', 'Add'); ?></button>
+                    <button class="btn btn-primary" type="button"><?= __d('content', 'Add'); ?></button>
                 </span>
             </div>
         </div>
-        <p class="text-muted"><?= __d('fields', 'Separate tags with commas'); ?></p>
+        <p class="text-muted"><?= __d('content', 'Separate tags with commas.'); ?></p>
     </div>
 </div>
 
@@ -225,6 +248,8 @@ $(function () {
          <a href="#" data-toggle="modal" data-target="" role="button"><?= __d('content', 'Set featured image'); ?></a>
     </div>
 </div>
+
+<div class="clearfix"></div>
 
 </div>
 

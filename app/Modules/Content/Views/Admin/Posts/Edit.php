@@ -184,7 +184,7 @@ $(function () {
             <div class="form-group">
                 <label class="control-label" for="slug"><?= __d('content', 'Parent'); ?></label>
                 <select name="parent" id="page-parent" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', 'Select a parent Page'); ?>" style="width: 100%;" autocomplete="off">
-                    <option></option>
+                    <?= $menuSelect; ?>
                 </select>
             </div>
             <?php } ?>

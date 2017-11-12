@@ -7,6 +7,8 @@ use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Config;
 use Nova\Support\Str;
 
+use App\Modules\Content\Models\Menu;
+use App\Modules\Content\Models\MenuItem;
 use App\Modules\Content\Models\Post;
 use App\Modules\Content\Models\Taxonomy;
 use App\Modules\Platform\Controllers\Admin\BaseController;
@@ -89,7 +91,9 @@ class Posts extends BaseController
 
         $categories = $this->generateCategoriesSelect();
 
-        return $this->createView(compact('post', 'status', 'type', 'name', 'mode', 'categories'), 'Edit')
+        $menuSelect = $this->generateMenuSelect();
+
+        return $this->createView(compact('post', 'status', 'type', 'name', 'mode', 'categories', 'menuSelect'), 'Edit')
             ->shares('title', __d('content', 'Create a new {0}', $name));
     }
 
@@ -151,6 +155,37 @@ class Posts extends BaseController
                 $level++;
 
                 $result .= $this->generateCategoriesSelect($categories, $taxonomy->children, $level);
+            }
+        }
+
+        return $result;
+    }
+
+    protected function generateMenuSelect($menu = 'nav_menu', $parentId = 0, $items = null, $level = 0)
+    {
+        $result = '';
+
+        if (is_null($items)) {
+            $menu = Menu::firstOrFail();
+
+            $items = $menu->items->where('parent_id', 0);
+
+            //
+            $result = '<option value="0"' .(($parentId == 0) ? ' selected="selected"' : '') .'>' .__d('content', '(no parent)') .'</option>';
+        }
+
+        foreach ($items as $item) {
+            $instance = $item->instance();
+
+            $result .= '<option value="' .$item->id .'"' .(($item->id == $parentId) ? ' selected="selected"' : '') .'>' .trim(str_repeat('--', $level) .' ' .$instance->title) .'</option>' ."\n";
+
+            // Process the children.
+            $item->load('children');
+
+            if (! $item->children->isEmpty()) {
+                $level++;
+
+                $result .= $this->generateMenuSelect($menu, $parentId, $item->children, $level);
             }
         }
 

@@ -30,7 +30,7 @@ class MenuItem extends Post
     public function parent()
     {
         if (! is_null($className = $this->getClassName())) {
-            return with(new $className)->newQuery()->find($this->meta->_menu_item_menu_item_parent);
+            return with(new $className)->newQuery()->find($this->meta->menu_item_menu_item_parent);
         }
     }
 
@@ -40,7 +40,7 @@ class MenuItem extends Post
     public function instance()
     {
         if (! is_null($className = $this->getClassName())) {
-            return with(new $className)->newQuery()->find($this->meta->_menu_item_object_id);
+            return with(new $className)->newQuery()->find($this->meta->menu_item_object_id);
         }
     }
 
@@ -49,6 +49,6 @@ class MenuItem extends Post
      */
     private function getClassName()
     {
-        return Arr::get($this->instanceRelations, $this->meta->_menu_item_object);
+        return Arr::get($this->instanceRelations, $this->meta->menu_item_object);
     }
 }

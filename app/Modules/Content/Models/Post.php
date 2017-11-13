@@ -390,7 +390,7 @@ class Post extends Model
 
         // Compute an unique slug.
         if (! is_null($id)) {
-            static::where('id', '!=', (int) $id)->lists('name');
+            $slugs = static::where('id', '!=', (int) $id)->lists('name');
         } else {
             $slugs = static::lists('name');
         }

@@ -376,7 +376,7 @@ class Post extends Model
         $this->save();
     }
 
-    public static function uniqueName($name)
+    public static function uniqueName($name, $id = null)
     {
         $count = 0;
 
@@ -389,7 +389,11 @@ class Post extends Model
         $name = implode('-', $segments);
 
         // Compute an unique slug.
-        $slugs = static::lists('name');
+        if (! is_null($id)) {
+            static::where('id', '!=', (int) $id)->lists('name');
+        } else {
+            $slugs = static::lists('name');
+        }
 
         do {
             $slug = $name;

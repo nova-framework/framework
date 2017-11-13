@@ -120,6 +120,7 @@ class Posts extends BaseController
         return $this->createView(compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'categorySelect', 'menuSelect'), 'Edit')
             ->shares('title', __d('content', 'Create a new {0}', $name))
             ->with('tags', $tags)
+            ->with('menuOrder', 1)
             ->with('creating', true);
     }
 
@@ -175,11 +176,31 @@ class Posts extends BaseController
         // No menu selection on edit mode.
         $menuSelect = '';
 
+        if ($type == 'page') {
+            $item = MenuItem::whereHas('meta', function ($query) use ($post)
+            {
+                $query->where(function ($query) use ($post)
+                {
+                    $query->where('key', 'menu_item_object')->where('value', $post->type);
+
+                })->where(function ($query) use ($post)
+                {
+                    $query->where('key', 'menu_item_object_id')->where('value', $post->id);
+                });
+
+            })->first();
+
+            $menuOrder = ! is_null($item) ? $item->menu_order : 1;
+        } else {
+            $menuOrder = 1;
+        }
+
         $title = $post->title ?: __d('content', 'Untitled');
 
         return $this->createView(compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'categorySelect', 'menuSelect'), 'Edit')
             ->shares('title', __d('content', 'Edit the {0} : {1}', $name, $title))
             ->with('tags', $tags)
+            ->with('menuOrder', $menuOrder)
             ->with('creating', false);
     }
 
@@ -199,7 +220,7 @@ class Posts extends BaseController
 
         $type = $post->type;
 
-        $slug = Arr::get($input, 'slug') ?: Post::uniqueName($input['title']);
+        $slug = Arr::get($input, 'slug') ?: Post::uniqueName($input['title'], $post->id);
 
         $creating = (bool) Arr::get($input, 'creating', 0);
 
@@ -281,7 +302,14 @@ class Posts extends BaseController
             else {
                 $item = MenuItem::whereHas('meta', function ($query) use ($post)
                 {
-                    $query->where('meta->menu_item_object', $post->type)->where('menu_item_object_id', $post->id);
+                    $query->where(function ($query) use ($post)
+                    {
+                        $query->where('key', 'menu_item_object')->where('value', $post->type);
+
+                    })->where(function ($query) use ($post)
+                    {
+                        $query->where('key', 'menu_item_object_id')->where('value', $post->id);
+                    });
 
                 })->first();
 

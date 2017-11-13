@@ -223,7 +223,7 @@ $(function () {
                 <label class="control-label" for="slug"><?= __d('content', 'Order'); ?></label>
                 <div class="clearfix"></div>
                 <div class="col-md-4" style="padding: 0;">
-                    <input name="order" id="page-order" type="number" class="form-control" style="padding-right: 3px;" min="0" max="1000" value="<?= Input::old('order', 0); ?>" autocomplete="off">
+                    <input name="order" id="page-order" type="number" class="form-control" style="padding-right: 3px;" min="0" max="1000" value="<?= Input::old('order', $menuOrder); ?>" autocomplete="off">
                 </div>
             </div>
         </div>

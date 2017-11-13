@@ -428,7 +428,7 @@ class Posts extends BaseController
         }
 
         foreach ($taxonomies as $taxonomy) {
-            $result .= '<div class="checkbox"><label><input class="category-checkbox" name="category[]" value="' .$taxonomy->id .'" type="checkbox" ' .(in_array($taxonomy->id, $categories) ? ' checked="checked"' : '') .'> ' .trim(str_repeat('--', $level) .' ' .$taxonomy->name) .'</label></div>';
+            $result .= '<div class="checkbox" style="padding-left: ' .(($level > 0) ? ($level * 25) .'px' : '') .'"><label><input class="category-checkbox" name="category[]" value="' .$taxonomy->id .'" type="checkbox" ' .(in_array($taxonomy->id, $categories) ? ' checked="checked"' : '') .'> ' .$taxonomy->name .'</label></div>';
 
             // Process the children.
             $taxonomy->load('children');
@@ -485,7 +485,7 @@ class Posts extends BaseController
             $result .= '<option value="' .$item->id .'"' .(($item->id == $parentId) ? ' selected="selected"' : '') .'>' .trim(str_repeat('--', $level) .' ' .$item->title) .'</option>' ."\n";
 
             // Process the children.
-            $children = $post->children()
+            $children = $item->children()
                 ->where('type', 'page')
                 ->whereIn('status', array('publish', 'password'))
                 ->get();

@@ -17,68 +17,67 @@
 
 <div class="col-md-4">
 
-<form id="page-form" action="<?= site_url('admin/menus/' .$menu->id); ?>" method='POST' role="form">
+<form id="page-form" action="<?= site_url('admin/menus/' .$menu->id .'/post'); ?>" method='POST' role="form">
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('content', 'Add a Page to Menu'); ?></h3>
+        <h3 class="box-title"><?= __d('content', 'Pages'); ?></h3>
     </div>
-    <div class="box-body" style="height: 270px;">
+    <div class="box-body" style="min-height: 150px; max-height: 270px; padding-bottom: 20px;">
     <?= $pages; ?>
     </div>
     <div class="box-footer">
-        <a class="btn btn-primary col-sm-6 pull-right" href="<?= site_url('admin/menus/' .$menu->id .'/page'); ?>"><?= __d('users', 'Add to Menu'); ?></a>
+        <input type="submit" name="submit" class="btn btn-primary col-sm-5 pull-right" value="<?= __d('users', 'Add to Menu'); ?>" />
     </div>
 </div>
 
-<input type="hidden" name="menuId" value="<?= $menu->id; ?>" />
+<input type="hidden" name="_token"   value="<?= csrf_token(); ?>" />
 <input type="hidden" name="type" value="page" />
 
 </form>
 
-<form id="page-form" action="<?= site_url('admin/content/' .$menu->id); ?>" method='POST' role="form">
+<form id="page-form" action="<?= site_url('admin/menus/' .$menu->id .'/post'); ?>" method='POST' role="form">
 
-<div class="box box-default">
+<div class="box box-widget">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('content', 'Add a Post to Menu'); ?></h3>
+        <h3 class="box-title"><?= __d('content', 'Posts'); ?></h3>
     </div>
-    <div class="box-body" style="height: 270px;">
+    <div class="box-body" style="min-height: 150px; max-height: 270px; padding-bottom: 20px;">
     <?= $posts; ?>
     </div>
     <div class="box-footer">
-        <a class="btn btn-primary col-sm-6 pull-right" href="<?= site_url('admin/menus/' .$menu->id .'/post'); ?>"><?= __d('users', 'Add to Menu'); ?></a>
+        <input type="submit" name="submit" class="btn btn-primary col-sm-5 pull-right" value="<?= __d('users', 'Add to Menu'); ?>" />
     </div>
 </div>
 
-<input type="hidden" name="menuId" value="<?= $menu->id; ?>" />
+<input type="hidden" name="_token"   value="<?= csrf_token(); ?>" />
 <input type="hidden" name="type" value="post" />
 
 </form>
 
-<form id="page-form" action="<?= site_url('admin/content/' .$menu->id); ?>" method='POST' role="form">
-
-<div class="box box-default">
-    <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('content', 'Add a Category to Menu'); ?></h3>
-    </div>
-    <div class="box-body" style="height: 270px;">
-    <?= $categories; ?>
-    </div>
-    <div class="box-footer">
-        <a class="btn btn-primary col-sm-6 pull-right" href="<?= site_url('admin/menus/' .$menu->id .'/post'); ?>"><?= __d('users', 'Add to Menu'); ?></a>
-    </div>
-</div>
-
-<input type="hidden" name="menuId" value="<?= $menu->id; ?>" />
-<input type="hidden" name="type" value="category" />
-
-</form>
-
-<form id="page-form" action="<?= site_url('admin/content/' .$menu->id); ?>" method='POST' role="form">
+<form id="page-form" action="<?= site_url('admin/menus/' .$menu->id .'/category'); ?>" method='POST' role="form">
 
 <div class="box box-widget">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('content', 'Add a Custom Link to Menu'); ?></h3>
+        <h3 class="box-title"><?= __d('content', 'Categories'); ?></h3>
+    </div>
+    <div class="box-body" style="min-height: 150px; max-height: 270px; padding-bottom: 20px;">
+    <?= $categories; ?>
+    </div>
+    <div class="box-footer">
+        <input type="submit" name="submit" class="btn btn-primary col-sm-5 pull-right" value="<?= __d('users', 'Add to Menu'); ?>" />
+    </div>
+</div>
+
+<input type="hidden" name="_token"   value="<?= csrf_token(); ?>" />
+
+</form>
+
+<form id="page-form" action="<?= site_url('admin/menus/' .$menu->id .'/custom'); ?>" method='POST' role="form">
+
+<div class="box box-widget">
+    <div class="box-header with-border">
+        <h3 class="box-title"><?= __d('content', 'Custom Links'); ?></h3>
     </div>
     <div class="box-body">
         <div class="form-group">
@@ -91,12 +90,11 @@
         </div>
     </div>
     <div class="box-footer">
-        <a class="btn btn-primary col-sm-6 pull-right" href="<?= site_url('admin/menus/' .$menu->id .'/customLink'); ?>"><?= __d('users', 'Add to Menu'); ?></a>
+        <input type="submit" name="submit" class="btn btn-primary col-sm-5 pull-right" value="<?= __d('users', 'Add to Menu'); ?>" />
     </div>
 </div>
 
-<input type="hidden" name="menuId" value="<?= $menu->id; ?>" />
-<input type="hidden" name="type" value="custom" />
+<input type="hidden" name="_token"   value="<?= csrf_token(); ?>" />
 
 </form>
 
@@ -106,11 +104,12 @@
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('content', 'Menu Items'); ?></h3>
+        <h3 class="box-title"><?= __d('content', 'Menu Items in the {0}', $menu->name); ?></h3>
     </div>
     <div class="box-body" style="min-height: 550px;">
         <div class="dd">
-            <?= View::fetch('Partials/MenuItemsNestable', array('menu' => $menu, 'items' => $menu->items), 'Content'); ?>
+            <?php $items = $menu->items->where('parent_id', 0); ?>
+            <?= View::fetch('Partials/MenuItemsNestable', array('menu' => $menu, 'items' => $items), 'Content'); ?>
         </div>
     </div>
 </div>
@@ -176,7 +175,7 @@ $(function() {
     });
 
     $('.dd').on('change', function() {
-        var url = '<?= site_url("admin/menus/" .$menu->id ."/items/order") ?>';
+        var url = '<?= site_url("admin/menus/" .$menu->id ."/order") ?>';
 
        var json = JSON.stringify($(this).nestable('serialize'));
 

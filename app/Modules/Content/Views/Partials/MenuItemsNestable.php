@@ -15,6 +15,7 @@
         </div>
 
         <?php $children = $item->children()->get(); ?>
+
         <?php if (! $children->isEmpty()) { ?>
         <?= View::fetch('Partials/MenuItemsNestable', array('menu' => $menu, 'items' => $children), 'Content'); ?>
         <?php } ?>

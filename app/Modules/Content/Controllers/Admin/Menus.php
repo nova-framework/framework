@@ -66,10 +66,126 @@ class Menus extends BaseController
             ->with('categories', $categories);
     }
 
+    public function addPost(Request $request, $id)
+    {
+        $authUser = Auth::user();
+
+        try {
+            $taxonomy = Menu::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
+        }
+
+        $type = $request->input('type', 'post');
+
+        $posts = $request->input('post', array());
+
+        foreach ($posts as $id) {
+            $instance = Post::findOrFail($id);
+
+            $post = Post::create(array(
+                'author_id'      => $authUser->id,
+                'status'         => 'publish',
+                'menu_order'     => $instance->menu_order,
+                'type'           => 'nav_menu_item',
+                'comment_status' => 'closed',
+            ));
+
+            // We need to update this information.
+            $post->name = $post->id;
+            $post->name = site_url('content/' .$post->id);
+
+            // Setup the Metadata.
+            $post->meta->menu_item_type             = $type;
+            $post->meta->menu_item_menu_item_parent = $instance->parent_id;
+            $post->meta->menu_item_object           = $type;
+            $post->meta->menu_item_object_id        = $instance->id;
+            $post->meta->menu_item_target           = null;
+            $post->meta->menu_item_url              = null;
+
+            $post->save();
+
+            $post->taxonomies()->attach($taxonomy);
+
+            $post->taxonomies->each(function ($taxonomy)
+            {
+                $taxonomy->updateCount();
+            });
+        }
+
+        return Redirect::back()
+            ->withStatus(__d('content', 'The Menu Item(s) was successfully created.'), 'success');
+    }
+
+    public function addCategory(Request $request, $id)
+    {
+        $authUser = Auth::user();
+
+        try {
+            $taxonomy = Menu::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
+        }
+
+        $categories = $request->input('category', array());
+
+        foreach ($categories as $id) {
+            $instance = Taxonomy::findOrFail($id);
+
+            $post = Post::create(array(
+                'author_id'      => $authUser->id,
+                'status'         => 'publish',
+                'menu_order'     => 0,
+                'type'           => 'nav_menu_item',
+                'comment_status' => 'closed',
+            ));
+
+            // We need to update this information.
+            $post->name = $post->id;
+            $post->name = site_url('content/' .$post->id);
+
+            // Setup the Metadata.
+            $post->meta->menu_item_type             = 'category';
+            $post->meta->menu_item_menu_item_parent = $instance->parent_id;
+            $post->meta->menu_item_object           = 'category';
+            $post->meta->menu_item_object_id        = $instance->id;
+            $post->meta->menu_item_target           = null;
+            $post->meta->menu_item_url              = null;
+
+            $post->save();
+
+            $post->taxonomies()->attach($taxonomy);
+
+            $post->taxonomies->each(function ($taxonomy)
+            {
+                $taxonomy->updateCount();
+            });
+        }
+
+        return Redirect::back()
+            ->withStatus(__d('content', 'The Menu Item(s) was successfully created.'), 'success');
+    }
+
+    public function addCustom(Request $request, $id)
+    {
+        $authUser = Auth::user();
+
+        try {
+            $taxonomy = Menu::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Response::json(array('error' => 'Not Found'), 400);
+        }
+
+
+    }
+
     public function order(Request $request, $id)
     {
         try {
-            $vocabulary = Menu::findOrFail($id);
+            $taxonomy = Menu::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
             return Response::json(array('error' => 'Not Found'), 400);
@@ -91,7 +207,7 @@ class Menus extends BaseController
     protected function updateMenuItemsOrder(array $items, $parentId = 0)
     {
         foreach ($items as $order => $item) {
-            if (is_null($menuItem = MenuItem::find($item->id))) {
+            if (is_null($menuItem = MenuItem::with('children')->find($item->id))) {
                 continue;
             }
 
@@ -102,7 +218,7 @@ class Menus extends BaseController
             $menuItem->save();
 
             if (! empty($item->children)) {
-                $this->updateMenuItemsOrder($item->children, $term->id);
+                $this->updateMenuItemsOrder($item->children, $menuItem->id);
             }
         }
     }
@@ -123,7 +239,7 @@ class Menus extends BaseController
                 continue;
             }
 
-            $result .= '<div class="checkbox" style="padding-left: ' .(($level > 0) ? ($level * 25) .'px' : '') .'"><label><input class="category-checkbox" name="category[]" value="' .$post->id .'" type="checkbox">&nbsp;&nbsp;' .$post->title .'</label></div>';
+            $result .= '<div class="checkbox" style="padding-left: ' .(($level > 0) ? ($level * 25) .'px' : '') .'"><label><input class="' .$type .'-checkbox" name="post[]" value="' .$post->id .'" type="checkbox">&nbsp;&nbsp;' .$post->title .'</label></div>';
 
             // Process the children.
             $children = $post->children()

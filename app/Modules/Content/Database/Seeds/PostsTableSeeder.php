@@ -103,5 +103,10 @@ As a new Nova user, you should go to <a href="' .site_url('admin') . '">your das
         $post->save();
 
         $post->taxonomies()->attach(2);
+
+        $post->taxonomies->each(function ($taxonomy)
+        {
+            $taxonomy->updateCount();
+        });
     }
 }

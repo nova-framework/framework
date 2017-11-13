@@ -31,12 +31,14 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
     Route::post('menus/{id}/destroy',  array('middleware' => 'auth', 'uses' => 'Menus@destroy'));
 
     Route::get( 'menus/{id}',                        array('middleware' => 'auth', 'uses' => 'Menus@items'));
-    Route::post('menus/{id}/items',                  array('middleware' => 'auth', 'uses' => 'Menus@insertItem'));
+    Route::post('menus/{id}/post',                   array('middleware' => 'auth', 'uses' => 'Menus@addPost'));
+    Route::post('menus/{id}/category',               array('middleware' => 'auth', 'uses' => 'Menus@addCategory'));
+    Route::post('menus/{id}/custom',                 array('middleware' => 'auth', 'uses' => 'Menus@addCustom'));
     Route::post('menus/{id}/items/{itemId}',         array('middleware' => 'auth', 'uses' => 'Menus@updateItem'));
     Route::post('menus/{id}/items/{itemId}/destroy', array('middleware' => 'auth', 'uses' => 'Menus@deleteItem'));
 
     // Order the Menu Items via AJAX.
-    Route::post('menus/{id}/items/order', array('middleware' => 'auth', 'uses' => 'Menus@order'));
+    Route::post('menus/{id}/order', array('middleware' => 'auth', 'uses' => 'Menus@order'));
 
     // The Posts CRUD.
     Route::get( 'content/create/{type}', array('middleware' => 'auth', 'uses' => 'Posts@create'));

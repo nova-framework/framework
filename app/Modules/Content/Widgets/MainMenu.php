@@ -27,7 +27,9 @@ class MainMenu extends Widget
         static::sortItems($items);
 
         //
-        $data = compact('menu', 'items', 'siteUrl');
+        $caret = true;
+
+        $data = compact('menu', 'items', 'siteUrl', 'caret');
 
         return View::make('Widgets/MainMenuItems', $data, 'Content')->render();
     }

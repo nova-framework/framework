@@ -244,11 +244,11 @@ class Menus extends BaseController
             return Response::json(array('error' => 'Not Found'), 400);
         }
 
-        $items = json_decode(
-            $request->get('json')
-        );
+        $json = $request->get('json');
 
-        $this->updateMenuItemsOrder($items);
+        $this->updateMenuItemsOrder(
+            json_decode($json)
+        );
 
         return Response::json(array('success' => true), 200);
     }
@@ -260,15 +260,17 @@ class Menus extends BaseController
     protected function updateMenuItemsOrder(array $items, $parentId = 0)
     {
         foreach ($items as $order => $item) {
-            if (is_null($menuItem = MenuItem::with('children')->find($item->id))) {
+            if (is_null($menuItem = MenuItem::find($item->id))) {
                 continue;
             }
 
-            $menuItem->parent_id = $parentId;
+            if (($menuItem->parent_id != $parentId) || ($menuItem->menu_order != $order)) {
+                $menuItem->parent_id = $parentId;
 
-            $menuItem->menu_order = $order;
+                $menuItem->menu_order = $order;
 
-            $menuItem->save();
+                $menuItem->save();
+            }
 
             if (! empty($item->children)) {
                 $this->updateMenuItemsOrder($item->children, $menuItem->id);

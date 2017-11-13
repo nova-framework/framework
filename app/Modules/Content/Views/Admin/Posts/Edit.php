@@ -167,7 +167,7 @@ $(function () {
 </div>
 
 <input type="hidden" name="creating" value="<?= (int) $creating; ?>" />
-<input type="hidden" name="taxonomy" value="<?= ($type == 'tag') ? 'post_tag' : $type; ?>" />
+<input type="hidden" name="taxonomy" value="<?= ($type == 'post') ? 'post_tag' : $type; ?>" />
 <input type="hidden" name="_token"   value="<?= csrf_token(); ?>" />
 
 </form>
@@ -259,13 +259,15 @@ $(function () {
         <h3 class="box-title"><?= __d('content', 'Categories'); ?></h3>
     </div>
     <div class="box-body" style="margin-bottom: 0;">
-        <div style="max-width: 200px;">
+        <div id="categories-list" style="max-height: 200px;">
             <?= $categories; ?>
         </div>
         <div class="clearfix"></div>
         <hr>
         <h4><?= __d('content', 'Create a new Category'); ?></h4>
         <br>
+        <form id="create-category-form" action="<?= site_url('admin/taxonomies'); ?>" method='POST' role="form">
+
         <div class="form-group">
             <input name="name" id="category-name" type="text" class="form-control" value="<?= Input::old('slug'); ?>" placeholder="<?= __d('content', 'Name'); ?>">
         </div>
@@ -276,24 +278,64 @@ $(function () {
             </select>
         </div>
 
+        <input type="hidden" name="description" value="" />
+        <input type="hidden" name="taxonomy" value="category" />
+
+        </form>
+
         <div class="clearfix"></div>
     </div>
     <div class="box-footer">
-        <input type="submit" name="submit" class="btn btn-primary col-sm-6 pull-right" value="<?= __d('content', 'Add new Category'); ?>">
+        <a href="#" class="submit-create-category btn btn-primary col-sm-6 pull-right" role="button"><?= __d('content', 'Add new Category'); ?></a>
     </div>
 </div>
-
-<?php if (! $creating) { ?>
 
 <script>
 
 $(function () {
-    $('#category-parent').val('');
+    $('.submit-create-category').on('click', function (event) {
+        event.preventDefault();
+
+        if ($('#category-name').val() == '') {
+            return;
+        }
+
+        var createCategoryForm = $('#create-category-form');
+
+        var data = $('#create-category-form, .category-checkbox:checked').serialize();
+
+        $.ajax({
+            type: createCategoryForm.attr('method'),
+            url:  createCategoryForm.attr('action'),
+            data: $('#create-category-form, .category-checkbox:checked').serialize(),
+
+            dataType: 'json',
+
+            //
+            success: function (data) {
+                $('#category-name').val('');
+                $('#category-parent').val('');
+
+                $('#categories-list').html(data.categories);
+
+                // Update the iCheck.
+                $('input.category-checkbox').iCheck({
+                    checkboxClass: 'icheckbox_square-blue',
+                    radioClass: 'iradio_square-blue',
+                    increaseArea: '20%' // optional
+                });
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+
+                console.log(data);
+            },
+        });
+    });
+
 });
 
 </script>
-
-<?php } ?>
 
 <div class="box box-widget">
     <div class="box-header with-border">

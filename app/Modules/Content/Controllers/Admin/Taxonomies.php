@@ -116,9 +116,14 @@ class Taxonomies extends BaseController
 
         if ($request->ajax() || $request->wantsJson()) {
             // The request was made by the Post Editor via AJAX, so we will return a fresh categories select.
+            $categories = $request->input('category', array());
+
+            // Add also the fresh category ID.
+            $categories[] = $taxonomy->id;
+
             return Response::json(array(
                 'categoryId' => $taxonomy->id,
-                'categories' => $this->generateCategoriesSelect()
+                'categories' => $this->generateCategories($categories)
 
             ), 200);
         }
@@ -212,6 +217,30 @@ class Taxonomies extends BaseController
         $result = $this->generateCategoriesSelect($category->id, $parent);
 
         return Response::make($result, 200);
+    }
+
+    protected function generateCategories(array $categories = array(), $taxonomies = null, $level = 0)
+    {
+        $result = '';
+
+        if (is_null($taxonomies)) {
+            $taxonomies = Taxonomy::with('children')->where('taxonomy', 'category')->where('parent_id', 0)->get();
+        }
+
+        foreach ($taxonomies as $taxonomy) {
+            $result .= '<div class="checkbox"><label><input class="category-checkbox" name="category[]" value="' .$taxonomy->id .'" type="checkbox" ' .(in_array($taxonomy->id, $categories) ? ' checked="checked"' : '') .'> ' .trim(str_repeat('--', $level) .' ' .$taxonomy->name) .'</label></div>';
+
+            // Process the children.
+            $taxonomy->load('children');
+
+            if (! $taxonomy->children->isEmpty()) {
+                $level++;
+
+                $result .= $this->generateCategories($categories, $taxonomy->children, $level);
+            }
+        }
+
+        return $result;
     }
 
     protected function generateCategoriesSelect($categoryId = 0, $parentId = 0, $categories = null, $level = 0)

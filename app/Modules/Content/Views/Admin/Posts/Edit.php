@@ -59,7 +59,7 @@
     </div>
     <div class="box-footer">
          <div id="edit-status" style="padding: 5px;" class="pull-left"></div>
-         <a class="btn btn-success btn-sm col-sm-2 pull-right" href="#" data-toggle="modal" data-target="" role="button"><?= __d('content', 'Add Media'); ?></a>
+         <a class="btn btn-warning btn-sm col-sm-2 pull-right" href="#" data-toggle="modal" data-target="" role="button"><?= __d('content', 'Add Media'); ?></a>
          <div class="clearfix"></div>
     </div>
 </div>

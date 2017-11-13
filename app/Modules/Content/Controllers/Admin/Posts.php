@@ -118,6 +118,60 @@ class Posts extends BaseController
 
     public function edit(Request $request, $id)
     {
+        $authUser = Auth::user();
+
+        try {
+            $post = Post::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
+        }
+
+        $type = $post->type;
+
+        //
+        $name  = Config::get('content::labels.' .$type .'.name', Str::title($type));
+        $mode = Config::get('content::labels.' .$type .'.title', Str::title(Str::plural($type)));
+
+        $mainCategory = Taxonomy::category()->whereHas('term', function ($query)
+        {
+            $query->where('slug', 'uncategorized');
+
+        })->first();
+
+        $status = $post->status;
+
+        if (Str::contains($status, '-')) {
+            // The status could be: private-draft and private-review
+            list ($visibility, $status) = explode('-', $status, 2);
+        } else if ($status == 'password') {
+            $status     = 'published';
+            $visibility = 'password';
+        } else if ($status == 'private') {
+            $status     = 'published';
+            $visibility = 'private';
+        } else {
+            $visibility = 'public';
+        }
+
+        //
+        $categories = $this->generateCategoriesSelect(
+            $post->taxonomies()->where('taxonomy', 'category')->lists('id')
+        );
+
+        $tags = implode(', ',
+            $post->taxonomies()->where('taxonomy', 'post_tag')->lists('id')
+        );
+
+        // No menu selection on edit mode.
+        $menuSelect = '';
+
+        $title = $post->title ?: __d('content', 'Untitled');
+
+        return $this->createView(compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'menuSelect'), 'Edit')
+            ->shares('title', __d('content', 'Edit the {0} : {1}', $name, $title))
+            ->with('tags', $tags)
+            ->with('creating', false);
     }
 
     public function update(Request $request, $id)
@@ -146,12 +200,13 @@ class Posts extends BaseController
         $post->name    = $slug;
 
         // The Status.
-        $status     = Arr::get($input, 'status', 'draft');
-        $visibility = Arr::get($input, 'visibility', 'public');
+        $status = Arr::get($input, 'status', 'draft');
 
         if ($creating && ($status === 'draft')) {
             $status = 'publish';
         }
+
+        $visibility = Arr::get($input, 'visibility', 'public');
 
         $password = null;
 
@@ -174,6 +229,7 @@ class Posts extends BaseController
         $post->status   = $status;
         $post->password = $password;
 
+        // Save the Post instance before to process the Menu Item or Categories and Tags.
         $post->save();
 
         if ($type == 'page') {
@@ -204,7 +260,7 @@ class Posts extends BaseController
 
                 $item->save();
 
-                //
+                // Update the Menu information.
                 $menu = Menu::firstOrFail();
 
                 $menu->items()->attach($item);
@@ -229,16 +285,16 @@ class Posts extends BaseController
         }
 
         // This is a Post type.
-        else {
+        else if ($type == 'post') {
             // Update the Post categories.
             $categories = Arr::has($input, 'category') ? explode(',', Arr::get($input, 'category')) : array();
 
             $post->taxonomies()->sync($categories);
 
             // Update the Post tags.
-            $ids = array();
-
             $tags = Arr::has($input, 'tags') ? explode(',', Arr::get($input, 'tags')) : array();
+
+            $ids = array();
 
             foreach ($tags as $name) {
                 $name = trim($name);

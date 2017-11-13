@@ -47,7 +47,7 @@
             <?php $deletables++; ?>
             <tr>
                 <td style="text-align: center; vertical-align: middle;" width="5%"><?= $post->id; ?></td>
-                <td style="text-align: left; vertical-align: middle;" width="41%" title="<?= $post->slug; ?>"><?= ! empty($post->title) ? $post->title : __d('content', 'Unnamed'); ?> <?= ($post->status === 'draft') ? __d('content', 'Draft') : ''; ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="41%" title="<?= $post->slug; ?>"><?= ! empty($post->title) ? $post->title : __d('content', 'Untitled'); ?> <?= ($post->status === 'draft') ? __d('content', 'Draft') : ''; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="15%"><?= $post->author->username; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="12%"><?= Arr::get($statuses, $post->status, __d('content', 'Unknown ({0})', $post->status)); ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="12%"><?= $post->updated_at->formatLocalized(__d('content', '%d %b %Y, %R')); ?></td>

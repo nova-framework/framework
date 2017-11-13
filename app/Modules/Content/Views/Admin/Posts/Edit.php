@@ -50,12 +50,12 @@
 
 <div class="box box-default">
     <div class="box-body">
-        <input name="title" id="title" type="text" style="border: 1px solid #dddddd; font-size: 18px; padding: 10px; width: 100%;" value="<?= Input::old('title'); ?>" placeholder="<?= __d('content', 'Enter title here'); ?>" autocomplete="off">
+        <input name="title" id="title" type="text" style="border: 1px solid #dddddd; font-size: 18px; padding: 10px; width: 100%;" value="<?= Input::old('title', $post->title); ?>" placeholder="<?= __d('content', 'Enter title here'); ?>" autocomplete="off">
 
         <div class="clearfix"></div>
         <br>
 
-        <textarea name="content" id="content" style="border: 1px solid #dddddd; width: 100%; padding: 10px; height: 600px; resize: vertical;" autocomplete="off"><?= Input::old('content'); ?></textarea>
+        <textarea name="content" id="content" style="border: 1px solid #dddddd; width: 100%; padding: 10px; height: 600px; resize: vertical;" autocomplete="off"><?= Input::old('content', $post->content); ?></textarea>
     </div>
     <div class="box-footer">
          <a class="btn btn-primary btn-sm col-sm-2 pull-left" href="#" data-toggle="modal" data-target="" role="button"><?= __d('content', 'Add Media'); ?></a>
@@ -98,7 +98,7 @@ $(function () {
     <div class="box-body">
         <div class="col-md-12">
             <div class="form-group" style="margin-bottom: 0;">
-            <input name="slug" id="page-slug" type="text" class="form-control" value="<?= Input::old('slug'); ?>" placeholder="<?= __d('content', 'Enter slug here'); ?>" autocomplete="off">
+            <input name="slug" id="page-slug" type="text" class="form-control" value="<?= Input::old('slug', $post->name); ?>" placeholder="<?= __d('content', 'Enter slug here'); ?>" autocomplete="off">
             </div>
         </div>
     </div>
@@ -124,7 +124,7 @@ $(function () {
                 <label class="col-sm-4 control-label" for="visibility" style="padding: 0; text-align: right; margin-top: 7px;"><?= __d('content', 'Status'); ?></label>
                 <div class="col-sm-8" style="padding-right: 0;">
                     <select name="status" id="status" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', 'Select the Status'); ?>" style="width: 100%;" autocomplete="off">
-                        <?php if ($creating) { ?>
+                        <?php if (! $creating) { ?>
                         <option value="publish" <?= $status == 'publish' ? 'select="selected"' : ''; ?>><?= __d('content', 'Publish'); ?></option>
                         <?php } ?>
                         <option value="draft" <?= $status == 'draft' ? 'selected="selected"' : ''; ?>><?= __d('content', 'Draft'); ?></option>
@@ -294,7 +294,7 @@ $(function () {
 <script>
 
 $(function () {
-    $('#category').val('');
+    $('#category-parent').val('');
 });
 
 </script>
@@ -308,7 +308,7 @@ $(function () {
     <div class="box-body">
         <div class="form-group">
             <div class="input-group">
-                <input type="text" name="tags" id="tags" class="form-control" autocomplete="off">
+                <input type="text" name="tags" id="tags" class="form-control" value="<?= Input::old('tags', isset($tags) ? $tags : ''); ?>" autocomplete="off">
                 <span class="input-group-btn">
                     <button class="btn btn-primary" type="button"><?= __d('content', 'Add'); ?></button>
                 </span>

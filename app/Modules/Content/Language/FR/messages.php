@@ -7,6 +7,7 @@ return array (
   '<< Previous Page' => '',
   'Add' => '',
   'Add Media' => '',
+  'Add a Category to Menu' => '',
   'Add a Custom Link to Menu' => '',
   'Add a Page to Menu' => '',
   'Add a Post to Menu' => '',

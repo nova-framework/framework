@@ -98,7 +98,7 @@ class Posts extends BaseController
             'type'           => $type,
             'status'         => 'draft',
             'author_id'      => $userId = $authUser->id,
-
+            'menu_order'     => 0,
             'comment_status' => ($type == 'page') ? 'closed' : 'open',
         ));
 
@@ -115,7 +115,7 @@ class Posts extends BaseController
         $post->name = '';
 
         //
-        $menuSelect = $this->generateMenuSelect();
+        $menuSelect = $this->generateParentSelect();
 
         $categories = $this->generateCategories(
             $ids = $post->taxonomies()->where('taxonomy', 'category')->lists('id')
@@ -419,46 +419,6 @@ class Posts extends BaseController
         return Response::json(array('success' => true), 200);
     }
 
-    public function sample(Request $request)
-    {
-        $authUser = Auth::user();
-
-        //
-        $faker = FakerFactory::create();
-
-        $title = rtrim($faker->sentence(5), '.');
-
-        $text = '';
-
-        for ($i = 0; $i < 15; $i++) {
-            $text .= '<p style="text-align: justify;">' .$faker->realText($faker->numberBetween(100, 1000)) .'</p>';
-        }
-
-        $name = Post::uniqueName($title);
-
-        //
-        $post = Post::create(array(
-            'content'    => $text,
-            'title'      => $title,
-            'status'     => 'publish',
-            'type'       => 'post',
-            'name'       => $name,
-            'author_id'  => $authUser->id,
-        ));
-
-        //
-        $post->taxonomies()->sync(array(1, 2));
-
-        $post->taxonomies->each(function ($taxonomy)
-        {
-            $taxonomy->updateCount();
-        });
-
-        $posts = Post::all();
-
-        dd($posts);
-    }
-
     protected function generateCategories(array $categories = array(), $taxonomies = null, $level = 0)
     {
         $result = '';
@@ -507,31 +467,33 @@ class Posts extends BaseController
         return $result;
     }
 
-    protected function generateMenuSelect($menu = 'nav_menu', $parentId = 0, $items = null, $level = 0)
+    protected function generateParentSelect($menu = 'nav_menu', $parentId = 0, $items = null, $level = 0)
     {
         $result = '';
 
         if (is_null($items)) {
-            $menu = Menu::firstOrFail();
-
-            $items = $menu->items->where('parent_id', 0);
+            $items = Post::where('type', 'page')
+                ->whereIn('status', array('publish', 'password'))
+                ->where('parent_id', 0)
+                ->get();
 
             //
             $result = '<option value="0"' .(($parentId == 0) ? ' selected="selected"' : '') .'>' .__d('content', '(no parent)') .'</option>';
         }
 
         foreach ($items as $item) {
-            $instance = $item->instance();
-
-            $result .= '<option value="' .$item->id .'"' .(($item->id == $parentId) ? ' selected="selected"' : '') .'>' .trim(str_repeat('--', $level) .' ' .$instance->title) .'</option>' ."\n";
+            $result .= '<option value="' .$item->id .'"' .(($item->id == $parentId) ? ' selected="selected"' : '') .'>' .trim(str_repeat('--', $level) .' ' .$item->title) .'</option>' ."\n";
 
             // Process the children.
-            $item->load('children');
+            $children = $post->children()
+                ->where('type', 'page')
+                ->whereIn('status', array('publish', 'password'))
+                ->get();
 
-            if (! $item->children->isEmpty()) {
+            if (! $children->isEmpty()) {
                 $level++;
 
-                $result .= $this->generateMenuSelect($menu, $parentId, $item->children, $level);
+                $result .= $this->generateParentSelect($menu, $parentId, $children, $level);
             }
         }
 

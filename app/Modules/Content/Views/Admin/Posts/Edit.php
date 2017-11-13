@@ -255,7 +255,7 @@ $(function () {
         <h3 class="box-title"><?= __d('content', 'Categories'); ?></h3>
     </div>
     <div class="box-body" style="margin-bottom: 0;">
-        <div id="categories-list" style="max-height: 200px;">
+        <div id="categories-list" style="max-height: 270px;">
             <?= $categories; ?>
         </div>
         <div class="clearfix"></div>

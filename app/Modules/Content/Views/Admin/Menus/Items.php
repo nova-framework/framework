@@ -17,27 +17,64 @@
 
 <div class="col-md-4">
 
+<form id="page-form" action="<?= site_url('admin/menus/' .$menu->id); ?>" method='POST' role="form">
+
 <div class="box box-default">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('content', 'Add a Page to Menu'); ?></h3>
     </div>
     <div class="box-body" style="height: 270px;">
+    <?= $pages; ?>
     </div>
     <div class="box-footer">
         <a class="btn btn-primary col-sm-6 pull-right" href="<?= site_url('admin/menus/' .$menu->id .'/page'); ?>"><?= __d('users', 'Add to Menu'); ?></a>
     </div>
 </div>
 
+<input type="hidden" name="menuId" value="<?= $menu->id; ?>" />
+<input type="hidden" name="type" value="page" />
+
+</form>
+
+<form id="page-form" action="<?= site_url('admin/content/' .$menu->id); ?>" method='POST' role="form">
+
 <div class="box box-default">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('content', 'Add a Post to Menu'); ?></h3>
     </div>
     <div class="box-body" style="height: 270px;">
+    <?= $posts; ?>
     </div>
     <div class="box-footer">
         <a class="btn btn-primary col-sm-6 pull-right" href="<?= site_url('admin/menus/' .$menu->id .'/post'); ?>"><?= __d('users', 'Add to Menu'); ?></a>
     </div>
 </div>
+
+<input type="hidden" name="menuId" value="<?= $menu->id; ?>" />
+<input type="hidden" name="type" value="post" />
+
+</form>
+
+<form id="page-form" action="<?= site_url('admin/content/' .$menu->id); ?>" method='POST' role="form">
+
+<div class="box box-default">
+    <div class="box-header with-border">
+        <h3 class="box-title"><?= __d('content', 'Add a Category to Menu'); ?></h3>
+    </div>
+    <div class="box-body" style="height: 270px;">
+    <?= $categories; ?>
+    </div>
+    <div class="box-footer">
+        <a class="btn btn-primary col-sm-6 pull-right" href="<?= site_url('admin/menus/' .$menu->id .'/post'); ?>"><?= __d('users', 'Add to Menu'); ?></a>
+    </div>
+</div>
+
+<input type="hidden" name="menuId" value="<?= $menu->id; ?>" />
+<input type="hidden" name="type" value="category" />
+
+</form>
+
+<form id="page-form" action="<?= site_url('admin/content/' .$menu->id); ?>" method='POST' role="form">
 
 <div class="box box-widget">
     <div class="box-header with-border">
@@ -59,6 +96,9 @@
 </div>
 
 <input type="hidden" name="menuId" value="<?= $menu->id; ?>" />
+<input type="hidden" name="type" value="custom" />
+
+</form>
 
 </div>
 

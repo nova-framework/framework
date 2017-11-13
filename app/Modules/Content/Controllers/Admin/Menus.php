@@ -11,6 +11,8 @@ use Nova\Support\Facades\Response;
 
 use App\Modules\Content\Models\Menu;
 use App\Modules\Content\Models\MenuItem;
+use App\Modules\Content\Models\Post;
+use App\Modules\Content\Models\Taxonomy;
 use App\Modules\Platform\Controllers\Admin\BaseController;
 
 
@@ -51,9 +53,17 @@ class Menus extends BaseController
             return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
         }
 
+        $pages = $this->generatePostsListing('page');
+        $posts = $this->generatePostsListing('post');
+
+        $categories = $this->generateCategoriesListing();
+
         return $this->createView()
             ->shares('title', __d('content', 'Manage a Menu'))
-            ->with('menu', $menu);
+            ->with('menu', $menu)
+            ->with('pages', $pages)
+            ->with('posts', $posts)
+            ->with('categories', $categories);
     }
 
     public function order(Request $request, $id)
@@ -95,5 +105,71 @@ class Menus extends BaseController
                 $this->updateMenuItemsOrder($item->children, $term->id);
             }
         }
+    }
+
+    protected function generatePostsListing($type, $posts = null, $level = 0)
+    {
+        $result = '';
+
+        if (is_null($posts)) {
+            $posts = Post::where('type', $type)
+                ->where('parent_id', 0)
+                ->whereIn('status', array('publish', 'password'))
+                ->get();
+        }
+
+        foreach ($posts as $post) {
+            if ($post->type !== $type) {
+                continue;
+            }
+
+            $result .= '<div class="checkbox" style="padding-left: ' .(($level > 0) ? ($level * 25) .'px' : '') .'"><label><input class="category-checkbox" name="category[]" value="' .$post->id .'" type="checkbox">&nbsp;&nbsp;' .$post->title .'</label></div>';
+
+            // Process the children.
+            $children = $post->children()
+                ->where('type', $type)
+                ->whereIn('status', array('publish', 'password'))
+                ->get();
+
+            if (! $children->isEmpty()) {
+                $level++;
+
+                $result .= $this->generatePostsListing($type, $children, $level);
+            }
+        }
+
+        return $result;
+    }
+
+    protected function generateCategoriesListing($categories = null, $level = 0)
+    {
+        $result = '';
+
+        if (is_null($categories)) {
+            $categories = Taxonomy::where('taxonomy', 'category')
+                ->where('parent_id', 0)
+                ->get();
+        }
+
+        foreach ($categories as $category) {
+            if ($category->taxonomy !== 'category') {
+                continue;
+            }
+
+            $result .= '<div class="checkbox" style="padding-left: ' .(($level > 0) ? ($level * 25) .'px' : '') .'"><label><input class="category-checkbox" name="category[]" value="' .$category->id .'" type="checkbox">&nbsp;&nbsp;' .$category->name .'</label></div>';
+
+            // Process the children.
+            $children = $category->children()
+                ->where('taxonomy', 'category')
+                ->get();
+
+            if (! $children->isEmpty()) {
+                $level++;
+
+                $result .= $this->generateCategoriesListing($children, $level);
+            }
+        }
+
+        return $result;
     }
 }

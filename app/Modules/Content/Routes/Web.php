@@ -31,15 +31,12 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
     Route::post('menus/{id}/destroy',  array('middleware' => 'auth', 'uses' => 'Menus@destroy'));
 
     Route::get( 'menus/{id}',                        array('middleware' => 'auth', 'uses' => 'Menus@items'));
-    Route::get( 'menus/{id}/items/{itemId}',         array('middleware' => 'auth', 'uses' => 'Menus@viewItem'));
+    Route::post('menus/{id}/items',                  array('middleware' => 'auth', 'uses' => 'Menus@insertItem'));
     Route::post('menus/{id}/items/{itemId}',         array('middleware' => 'auth', 'uses' => 'Menus@updateItem'));
     Route::post('menus/{id}/items/{itemId}/destroy', array('middleware' => 'auth', 'uses' => 'Menus@deleteItem'));
 
     // Order the Menu Items via AJAX.
     Route::post('menus/{id}/items/order', array('middleware' => 'auth', 'uses' => 'Menus@order'));
-
-    //
-    Route::get( 'content/sample',  array('middleware' => 'auth', 'uses' => 'Posts@sample'));
 
     // The Posts CRUD.
     Route::get( 'content/create/{type}', array('middleware' => 'auth', 'uses' => 'Posts@create'));

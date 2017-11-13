@@ -35,6 +35,14 @@ class MenuItem extends Post
     }
 
     /**
+     * @return \Nova\Database\ORM\Relations\HasMany
+     */
+    public function children()
+    {
+        return $this->hasMany('App\Modules\Content\Models\MenuItem', 'parent_id');
+    }
+
+    /**
      * @return Post|Page|CustomLink|Taxonomy
      */
     public function instance()

@@ -38,6 +38,12 @@ return array(
             'name'  => __d('content', 'Tag'),
             'title' => __d('content', 'Tags'),
         ),
+
+        // Custom Link
+        'custom' => array(
+            'name'  => __d('content', 'Custom Link'),
+            'title' => __d('content', 'Custom Links'),
+        ),
     ),
 
     'statuses' => array(

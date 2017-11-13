@@ -13,6 +13,7 @@ use App\Modules\Content\Models\Menu;
 use App\Modules\Content\Models\MenuItem;
 use App\Modules\Content\Models\Post;
 use App\Modules\Content\Models\Taxonomy;
+use App\Modules\Content\Models\Term;
 use App\Modules\Platform\Controllers\Admin\BaseController;
 
 
@@ -28,18 +29,81 @@ class Menus extends BaseController
             ->with('menus', $menus);
     }
 
-    public function edit()
+    public function store(Request $request)
     {
-        return $this->createView()
-            ->shares('title', __d('content', 'Edit Menu'));
+        $taxonomy = Taxonomy::create(array(
+            'taxonomy'    => 'nav_menu',
+            'description' => $request->input('description'),
+            'parent_id'   => 0,
+            'count'       => 0,
+        ));
+
+        $term = Term::create(array(
+            'id'     => 2,
+            'name'   => $name = $request->input('name'),
+            'slug'   => Term::uniqueSlug($name, 'nav_menu'),
+            'group'  => 0,
+        ));
+
+        $taxonomy->term_id = $term->id;
+
+        $taxonomy->save();
+
+        return Redirect::back()
+            ->withStatus(__d('content', 'The Menu <b>{0}</b> was successfully updated.', $name), 'success');
     }
 
     public function update(Request $request, $id)
     {
+        try {
+            $menu = Menu::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
+        }
+
+        $name = $menu->name;
+
+        // Update the Term.
+        $term = $menu->term;
+
+        $term->name = $request->input('name');
+
+        $term->save();
+
+        // Update the Taxonomy.
+        $menu->description = $request->input('description');
+
+        $menu->save();
+
+        return Redirect::back()
+            ->withStatus(__d('content', 'The Menu <b>{0}</b> was successfully updated.', $name), 'success');
     }
 
     public function destroy($id)
     {
+        try {
+            $menu = Menu::with('items')->findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
+        }
+
+        $name = $menu->name;
+
+        $menu->items->each(function ($item) use ($menu)
+        {
+            $item->taxonomies()->detach($menu);
+
+            $item->delete();
+        });
+
+        $menu->term->delete();
+
+        $menu->delete();
+
+        return Redirect::back()
+            ->withStatus(__d('content', 'The Menu {0} was successfully deleted.', $name), 'success');
     }
 
     public function items($id)
@@ -205,6 +269,32 @@ class Menus extends BaseController
 
         return Redirect::back()
             ->withStatus(__d('content', 'The Menu Item(s) was successfully created.'), 'success');
+    }
+
+    public function updateItem(Request $request, $id, $itemId)
+    {
+        $authUser = Auth::user();
+
+        try {
+            $taxonomy = Menu::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
+        }
+
+        try {
+            $item = MenuItem::findOrFail($itemId);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Menu Item not found: #{0}', $itemId), 'danger');
+        }
+
+        $item->title = $request->input('name');
+
+        $item->save();
+
+        return Redirect::back()
+            ->withStatus(__d('content', 'The Menu Item was successfully updated.'), 'success');
     }
 
     public function deleteItem(Request $request, $id, $itemId)

@@ -114,53 +114,6 @@
     </div>
 </div>
 
-</div>
-
-</div>
-
-</section>
-
-<div id="modal-edit-dialog" class="modal modal-default fade" tabindex="-1" role="dialog" aria-labelledby="...">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button aria-label="Close" data-dismiss="modal" class="close" type="button">
-                <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title"><?= __d('content', 'Edit a Menu Item'); ?></h4>
-            </div>
-            <div class="modal-body">
-            </div>
-            <div class="modal-footer">
-                <button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-primary col-md-3"><?= __d('content', 'Cancel'); ?></button>
-                <button type="button" class="update-item-button btn btn-success col-md-3 pull-right"><?= __d('content', 'Save'); ?></button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="modal-delete-dialog" class="modal modal-default fade" tabindex="-1" role="dialog" aria-labelledby="...">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button aria-label="Close" data-dismiss="modal" class="close" type="button">
-                <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title"><?= __d('content', 'Delete this Item?'); ?></h4>
-            </div>
-            <div class="modal-body">
-                <p><?= __d('content', 'Are you sure you want to remove this Item, the operation being irreversible?'); ?></p>
-                <p><?= __d('content', 'Please click the button <b>Delete</b> to proceed, or <b>Cancel</b> to abandon the operation.'); ?></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-primary col-md-3"><?= __d('content', 'Cancel'); ?></button>
-                <form id="modal-delete-form" action="" method="POST">
-                    <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
-                    <button type="submit" name="button" class="btn btn-danger col-md-3 pull-right"><?= __d('content', 'Delete'); ?></button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script type="text/javascript" src="<?= resource_url('js/jquery.nestable.js', 'Content'); ?>"></script>
 
 <script>
@@ -194,7 +147,99 @@ $(function() {
     $('.dd-handle input').on('mousedown', function(e) {
         e.stopPropagation();
     });
+});
 
+</script>
+
+</div>
+
+</div>
+
+</section>
+
+<div id="modal-edit-dialog" class="modal modal-default fade" tabindex="-1" role="dialog" aria-labelledby="...">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="modal-edit-form" class="form-horizontal" action="" method='POST' role="form">
+
+            <div class="modal-header">
+                <button aria-label="Close" data-dismiss="modal" class="close" type="button">
+                <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title"><?= __d('content', 'Edit a Menu Item'); ?></h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+
+                <div class="form-group">
+                    <label class="control-label" for="name"><?= __d('content', 'Name'); ?></label>
+                    <input name="name" id="modal-edit-name" type="text" class="form-control" value="" placeholder="<?= __d('content', 'Name'); ?>">
+                </div>
+
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-primary col-md-3"><?= __d('content', 'Cancel'); ?></button>
+                <input type="submit" name="button" class="update-item-button btn btn-success col-md-3 pull-right" value="<?= __d('content', 'Save'); ?>" />
+            </div>
+
+            <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+$(function () {
+    $('#modal-edit-dialog').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+
+        var id          = button.data('id');
+        var name        = button.data('name');
+
+        $('#modal-edit-name').val(name);
+
+        // The title.
+        var title = sprintf("<?= __d('content', 'Edit the Menu Item : <b>%s</b>'); ?>", name);
+
+        $('.modal-edit-title').html(title);
+
+        // The form action.
+        $('#modal-edit-form').attr('action', '<?= site_url("admin/menus/" .$menu->id ."/items"); ?>/' + id);
+    });
+});
+
+</script>
+
+<div id="modal-delete-dialog" class="modal modal-default fade" tabindex="-1" role="dialog" aria-labelledby="...">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-label="Close" data-dismiss="modal" class="close" type="button">
+                <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title"><?= __d('content', 'Delete this Item?'); ?></h4>
+            </div>
+            <div class="modal-body">
+                <p><?= __d('content', 'Are you sure you want to remove this Item, the operation being irreversible?'); ?></p>
+                <p><?= __d('content', 'Please click the button <b>Delete</b> to proceed, or <b>Cancel</b> to abandon the operation.'); ?></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-primary col-md-3"><?= __d('content', 'Cancel'); ?></button>
+                <form id="modal-delete-form" action="" method="POST">
+                    <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
+                    <button type="submit" name="button" class="btn btn-danger col-md-3 pull-right"><?= __d('content', 'Delete'); ?></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+$(function() {
     // The Modal Delete dialog.
     $('#modal-delete-dialog').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal

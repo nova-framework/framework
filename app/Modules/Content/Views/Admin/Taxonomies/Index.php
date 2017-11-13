@@ -266,10 +266,6 @@ $(function () {
         // The form action.
         $('#modal-edit-form').attr('action', '<?= site_url("admin/taxonomies"); ?>/' + id);
     });
-
-    $("#modal-edit-dialog").on('hidden.bs.modal', function () {
-        $('.modal-edit-iframe').attr('src', '');
-    });
 });
 
 </script>

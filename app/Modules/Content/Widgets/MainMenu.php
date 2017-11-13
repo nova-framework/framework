@@ -22,7 +22,7 @@ class MainMenu extends Widget
         //
         $menu = Menu::findOrFail(2); // This is the Main Menu.
 
-        $items = $menu->items()->where('parent_id', 0)->get();
+        $items = $menu->items->where('parent_id', 0);
 
         static::sortItems($items);
 
@@ -50,7 +50,10 @@ class MainMenu extends Widget
                 $title = $instance->title;
 
                 $url = site_url('content/' .$instance->name);
-            } else if ($type == 'taxonomy') {
+            }
+
+            // Taxonomy.
+            else if ($type == 'taxonomy') {
                 $title = $instance->name;
 
                 $url = site_url('content/category/' .$instance->slug);

@@ -239,9 +239,12 @@ class Menus extends BaseController
             return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
         }
 
+        $name = $request->input('name');
+        $url  = $request->input('link');
+
         $post = Post::create(array(
             'author_id'      => $authUser->id,
-            'title'          => $request->input('name'),
+            'title'          => $name,
             'status'         => 'publish',
             'menu_order'     => 0,
             'type'           => 'nav_menu_item',
@@ -258,8 +261,8 @@ class Menus extends BaseController
         $post->meta->menu_item_menu_item_parent = 0;
         $post->meta->menu_item_object           = 'custom';
         $post->meta->menu_item_object_id        = $postId;
-        $post->meta->menu_item_target           = '_blank';
-        $post->meta->menu_item_url              = $request->input('link');
+        $post->meta->menu_item_target           = null;
+        $post->meta->menu_item_url              = $url;
 
         $post->save();
 

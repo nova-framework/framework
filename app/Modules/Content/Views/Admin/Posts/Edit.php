@@ -98,7 +98,7 @@ $(function () {
     <div class="box-body">
         <div class="col-md-12">
             <div class="form-group" style="margin-bottom: 0;">
-            <input name="slug" id="slug" type="text" class="form-control" value="<?= Input::old('slug'); ?>" placeholder="<?= __d('content', 'Enter slug here'); ?>" autocomplete="off">
+            <input name="slug" id="page-slug" type="text" class="form-control" value="<?= Input::old('slug'); ?>" placeholder="<?= __d('content', 'Enter slug here'); ?>" autocomplete="off">
             </div>
         </div>
     </div>
@@ -112,6 +112,8 @@ $(function () {
 
 <div class="col-md-3">
 
+<form id="publish-form" action="<?= site_url('admin/content/' .$post->id); ?>" method='POST' role="form">
+
 <div class="box box-default">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('content', 'Publish'); ?></h3>
@@ -122,11 +124,11 @@ $(function () {
                 <label class="col-sm-4 control-label" for="visibility" style="padding: 0; text-align: right; margin-top: 7px;"><?= __d('content', 'Status'); ?></label>
                 <div class="col-sm-8" style="padding-right: 0;">
                     <select name="status" id="status" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', 'Select the Status'); ?>" style="width: 100%;" autocomplete="off">
-                        <?php if ($post->exists) { ?>
+                        <?php if ($creating) { ?>
                         <option value="publish" <?= $status == 'publish' ? 'select="selected"' : ''; ?>><?= __d('content', 'Publish'); ?></option>
                         <?php } ?>
-                        <option value="review" <?= $status == 'pending-review' ? 'selected="selected"' : ''; ?>><?= __d('content', 'Pending Review'); ?></option>
                         <option value="draft" <?= $status == 'draft' ? 'selected="selected"' : ''; ?>><?= __d('content', 'Draft'); ?></option>
+                        <option value="review" <?= $status == 'review' ? 'selected="selected"' : ''; ?>><?= __d('content', 'Pending Review'); ?></option>
                     </select>
                 </div>
                 <div class="clearfix"></div>
@@ -135,9 +137,9 @@ $(function () {
                 <label class="col-sm-4 control-label" for="visibility" style="padding: 0; text-align: right; margin-top: 7px;"><?= __d('content', 'Visibility'); ?></label>
                 <div class="col-sm-8" style="padding-right: 0;">
                     <select name="visibility" id="visibility" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', 'Select the Visibility'); ?>" style="width: 100%;" autocomplete="off">
-                        <option value="public"><?= __d('content', 'Public'); ?></option>
-                        <option value="password"><?= __d('content', 'Password Protected'); ?></option>
-                        <option value="private"><?= __d('content', 'Private'); ?></option>
+                        <option value="public"   <?= $visibility == 'public'   ? 'selected="selected"' : ''; ?>><?= __d('content', 'Public'); ?></option>
+                        <option value="password" <?= $visibility == 'password' ? 'selected="selected"' : ''; ?>><?= __d('content', 'Password Protected'); ?></option>
+                        <option value="private"  <?= $visibility == 'private'  ? 'selected="selected"' : ''; ?>><?= __d('content', 'Private'); ?></option>
                     </select>
                 </div>
                 <div class="clearfix"></div>
@@ -152,13 +154,48 @@ $(function () {
         <div class="clearfix"></div>
     </div>
     <div class="box-footer">
-        <input type="submit" name="submit" class="btn btn-success col-sm-6 pull-right" value="<?= $post->exists ? __d('content', 'Update') : __d('content', 'Publish'); ?>">
+        <input type="submit" name="submit" class="btn btn-success col-sm-6 pull-right" value="<?= ($creating) ? __d('content', 'Publish') : __d('content', 'Update'); ?>">
     </div>
 </div>
+
+<input type="hidden" name="creating" value="<?= (int) $creating; ?>" />
+<input type="hidden" name="taxonomy" value="<?= ($type == 'tag') ? 'post_tag' : $type; ?>" />
+<input type="hidden" name="_token"   value="<?= csrf_token(); ?>" />
+
+</form>
 
 <script>
 
 $(function () {
+    var type = '<?= $type; ?>';
+
+    $('#publish-form').submit(function(event) {
+        $(this).find('.publish-form-value').remove();
+
+        $(this).append('<input class="publish-form-value" type="hidden" name="title" value="' + $('#title').val() + '" /> ');
+        $(this).append('<input class="publish-form-value" type="hidden" name="content" value="' + $('#content').val() + '" /> ');
+
+        if (type === 'page') {
+            $(this).append('<input class="publish-form-value" type="hidden" name="slug" value="' + $('#page-slug').val() + '" /> ');
+            $(this).append('<input class="publish-form-value" type="hidden" name="parent" value="' + $('#page-parent').val() + '" /> ');
+            $(this).append('<input class="publish-form-value" type="hidden" name="order" value="' + $('#page-order').val() + '" /> ');
+        } else {
+            $(this).append('<input class="publish-form-value" type="hidden" name="categories" value="' + $('#category').val().join(',') + '" /> ');
+
+            /*
+            var categories = $('#category').val();
+
+            for (var i = 0; i < categories.length; i++) {
+                $(this).append('<input class="publish-form-value" type="hidden" name="category[]" value="' + categories[i] + '" /> ');
+            }
+            */
+
+            $(this).append('<input class="publish-form-value" type="hidden" name="tags" value="' + $('#tags').val() + '" /> ');
+        }
+
+        //event.preventDefault();
+    });
+
     $('#visibility').change(function(e) {
         var visibility = $(this).val();
 
@@ -180,19 +217,21 @@ $(function () {
     </div>
     <div class="box-body" style="padding-bottom: 20px;">
         <div class="md-12">
-            <?php if (! $post->exists) { ?>
+            <?php if ($creating) { ?>
             <div class="form-group">
                 <label class="control-label" for="slug"><?= __d('content', 'Parent'); ?></label>
                 <select name="parent" id="page-parent" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', 'Select a parent Page'); ?>" style="width: 100%;" autocomplete="off">
                     <?= $menuSelect; ?>
                 </select>
             </div>
+            <?php } else { ?>
+            <input type="hidden" name="parent"   value="0" />
             <?php } ?>
             <div class="form-group">
                 <label class="control-label" for="slug"><?= __d('content', 'Order'); ?></label>
                 <div class="clearfix"></div>
                 <div class="col-md-4" style="padding: 0;">
-                    <input name="order" id="page-order" type="number" class="form-control" style="padding-right: 3px;" min="1" max="8" value="<?= Input::old('order', 0); ?>" autocomplete="off">
+                    <input name="order" id="page-order" type="number" class="form-control" style="padding-right: 3px;" min="0" max="1000" value="<?= Input::old('order', 0); ?>" autocomplete="off">
                 </div>
             </div>
         </div>
@@ -200,6 +239,18 @@ $(function () {
         <div class="clearfix"></div>
     </div>
 </div>
+
+<?php if (! $creating) { ?>
+
+<script>
+
+$(function () {
+    $('#page-parent').val('');
+});
+
+</script>
+
+<?php } ?>
 
 <?php } ?>
 
@@ -212,7 +263,7 @@ $(function () {
     <div class="box-body" style="margin-bottom: 0;">
         <div class="md-12">
             <div class="form-group">
-                <select name="parent" id="page-parent" class="form-control select2" multiple="multiple" placeholder="" data-placeholder="<?= __d('content', 'Select a Category'); ?>" style="width: 100%;" autocomplete="off">
+                <select name="category" id="category" class="form-control select2" multiple="multiple" placeholder="" data-placeholder="<?= __d('content', 'Select a Category'); ?>" style="width: 100%;" autocomplete="off">
                     <?= $categories; ?>
                 </select>
             </div>
@@ -222,8 +273,7 @@ $(function () {
         <h4><?= __d('content', 'Create a new Category'); ?></h4>
         <br>
         <div class="form-group">
-        <input name="slug" id="slug" type="slug" class="form-control" value="<?= Input::old('slug'); ?>" placeholder="<?= __d('content', 'Name'); ?>">
-
+            <input name="name" id="category-name" type="text" class="form-control" value="<?= Input::old('slug'); ?>" placeholder="<?= __d('content', 'Name'); ?>">
         </div>
         <div class="form-group">
             <select name="parent" id="category-parent" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', '-- Parent Category --'); ?>" style="width: 100%;" autocomplete="off">
@@ -239,12 +289,12 @@ $(function () {
     </div>
 </div>
 
-<?php if ($post->exists) { ?>
+<?php if (! $creating) { ?>
 
 <script>
 
 $(function () {
-    $('#page-parent').val('');
+    $('#category').val('');
 });
 
 </script>

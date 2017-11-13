@@ -27,7 +27,7 @@ class TaxonomiesTableSeeder extends Seeder
             'id'          => 1,
             'term_id'     => 1,
             'taxonomy'    => 'category',
-            'description' => null,
+            'description' => '',
             'parent_id'   => 0,
             'count'       => 0,
         ));
@@ -36,7 +36,7 @@ class TaxonomiesTableSeeder extends Seeder
             'id'          => 2,
             'term_id'     => 2,
             'taxonomy'    => 'nav_menu',
-            'description' => null,
+            'description' => '',
             'parent_id'   => 0,
             'count'       => 0,
         ));
@@ -45,7 +45,7 @@ class TaxonomiesTableSeeder extends Seeder
             'id'          => 3,
             'term_id'     => 3,
             'taxonomy'    => 'post_tag',
-            'description' => null,
+            'description' => '',
             'parent_id'   => 0,
             'count'       => 0,
         ));
@@ -55,7 +55,7 @@ class TaxonomiesTableSeeder extends Seeder
             'id'          => 4,
             'term_id'     => 4,
             'taxonomy'    => 'tag',
-            'description' => null,
+            'description' => '',
             'parent_id'   => 0,
             'count'       => 0,
         ));

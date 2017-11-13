@@ -41,9 +41,11 @@ return array(
     ),
 
     'statuses' => array(
+        'draft'    => __d('content', 'Draft'),
         'publish'  => __d('content', 'Published'),
         'password' => __d('content', 'Password protected'),
         'private'  => __d('content', 'Private'),
+        'review'   => __d('content', 'Pending Review'),
     ),
 
     /*

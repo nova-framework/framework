@@ -27,11 +27,10 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
 
     // The Posts CRUD.
     Route::get( 'content/create/{type}', array('middleware' => 'auth', 'uses' => 'Posts@create'));
-    Route::post('content',               array('middleware' => 'auth', 'uses' => 'Posts@store'));
-    Route::get( 'content/{id}',          array('middleware' => 'auth', 'uses' => 'Posts@show'))->where('id', '\d+');
     Route::get( 'content/{id}/edit',     array('middleware' => 'auth', 'uses' => 'Posts@edit'));
-    Route::post('content/{id}',          array('middleware' => 'auth', 'uses' => 'Posts@update'));
-    Route::post('content/{id}/destroy',  array('middleware' => 'auth', 'uses' => 'Posts@destroy'));
+    Route::post('content/{id}',          array('middleware' => 'auth', 'uses' => 'Posts@update'))->where('id', '\d+');
+    Route::post('content/{id}/destroy',  array('middleware' => 'auth', 'uses' => 'Posts@destroy'))->where('id', '\d+');
+    Route::post('content/{id}/tags',     array('middleware' => 'auth', 'uses' => 'Posts@tags'))->where('id', '\d+');
 
     // The Taxonomies listings.
     Route::get('content/categories',    array('middleware' => 'auth', 'uses' => 'Taxonomies@index'));

@@ -44,9 +44,10 @@
                 <th style="text-align: right; vertical-align: middle;"><?= __d('content', 'Operations'); ?></th>
             </tr>
             <?php foreach ($posts as $post) { ?>
+            <?php $deletables++; ?>
             <tr>
                 <td style="text-align: center; vertical-align: middle;" width="5%"><?= $post->id; ?></td>
-                <td style="text-align: left; vertical-align: middle;" width="41%" title="<?= $post->slug; ?>"><?= $post->title; ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="41%" title="<?= $post->slug; ?>"><?= ! empty($post->title) ? $post->title : __d('content', 'Unnamed'); ?> <?= ($post->status === 'draft') ? __d('content', 'Draft') : ''; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="15%"><?= $post->author->username; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="12%"><?= Arr::get($statuses, $post->status, __d('content', 'Unknown ({0})', $post->status)); ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="12%"><?= $post->updated_at->formatLocalized(__d('content', '%d %b %Y, %R')); ?></td>
@@ -70,3 +71,49 @@
 </div>
 
 </section>
+
+<?php if ($deletables > 0) { ?>
+
+<div class="modal modal-default" id="modal-delete-dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-label="<?= __d('content', 'Close'); ?>" data-dismiss="modal" class="close" type="button">
+                <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title"><?= __d('content', 'Delete this {0}?', $name); ?></h4>
+            </div>
+            <div class="modal-body">
+                <p><?= __d('content', 'Are you sure you want to remove this {0}, the operation being irreversible?', $name); ?></p>
+                <p><?= __d('content', 'Please click the button <b>Delete</b> to proceed, or <b>Cancel</b> to abandon the operation.'); ?></p>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('content', 'Cancel'); ?></button>
+                <form id="modal-delete-form" action="" method="POST">
+                    <input type="hidden" name="id" id="delete-record-id" value="0" />
+                    <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
+                    <input type="submit" name="button" class="btn btn btn-danger pull-right col-md-3" value="<?= __d('content', 'Delete'); ?>">
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+
+<script>
+
+$(function () {
+    $('#modal-delete-dialog').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+
+        var id = button.data('id');
+
+        //
+        $('#delete-record-id').val(id);
+
+        $('#modal-delete-form').attr('action', '<?= site_url("admin/content"); ?>/' + id + '/destroy');
+    });
+});
+
+</script>
+
+<?php } ?>

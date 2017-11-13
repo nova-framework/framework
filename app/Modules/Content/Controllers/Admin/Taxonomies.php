@@ -88,6 +88,11 @@ class Taxonomies extends BaseController
         $validator = $this->validator($input);
 
         if ($validator->fails()) {
+            if ($request->ajax() || $request->wantsJson()) {
+                // The request was made by the Post Editor via AJAX.
+                return Response::json(array('error' => $validator->errors()), 400);
+            }
+
             return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
         }
 
@@ -109,7 +114,11 @@ class Taxonomies extends BaseController
             'parent_id'   => $parentId,
         ));
 
-        //
+        if ($request->ajax() || $request->wantsJson()) {
+            // The request was made by the Post Editor via AJAX, so we will return a fresh categories select.
+            return Response::json(array('categories' => $this->generateCategoriesSelect()), 400);
+        }
+
         $type = $taxonomy->taxonomy == 'post_tag' ? 'tag' : $taxonomy->taxonomy;
 
         $name = Config::get("content::labels.{$type}.name", Str::title($type));

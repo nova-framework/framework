@@ -152,7 +152,10 @@ class Posts extends BaseController
         if (Str::contains($status, '-')) {
             // The status could be: private-draft and private-review
             list ($visibility, $status) = explode('-', $status, 2);
-        } else if ($status == 'password') {
+        }
+
+        // We should compute every field.
+        else if ($status == 'password') {
             $status     = 'published';
             $visibility = 'password';
         } else if ($status == 'private') {
@@ -176,23 +179,11 @@ class Posts extends BaseController
         // No menu selection on edit mode.
         $menuSelect = '';
 
-        if ($type == 'page') {
-            $item = MenuItem::whereHas('meta', function ($query) use ($post)
-            {
-                $query->where(function ($query) use ($post)
-                {
-                    $query->where('key', 'menu_item_object')->where('value', $post->type);
+        // The Menu Order.
+        $menuOrder = 1;
 
-                })->where(function ($query) use ($post)
-                {
-                    $query->where('key', 'menu_item_object_id')->where('value', $post->id);
-                });
-
-            })->first();
-
-            $menuOrder = ! is_null($item) ? $item->menu_order : 1;
-        } else {
-            $menuOrder = 1;
+        if (($type == 'page') && ! is_null($item = MenuItem::findByPost($post))) {
+            $menuOrder = $item->menu_order;
         }
 
         $title = $post->title ?: __d('content', 'Untitled');
@@ -242,11 +233,7 @@ class Posts extends BaseController
 
         if ($visibility == 'private') {
             // The status could be: private, private-draft and private-review
-            if ($status == 'publish') {
-                $status = 'private';
-            } else {
-                $status = 'private-' .$status;
-            }
+            $status = ($status == 'publish') ? 'private' : 'private-' .$status;
         }
 
         // Only the published posts can have a password.
@@ -298,30 +285,15 @@ class Posts extends BaseController
                 $menu->updateCount();
             }
 
-            // We update an existent Post.
-            else {
-                $item = MenuItem::whereHas('meta', function ($query) use ($post)
-                {
-                    $query->where(function ($query) use ($post)
-                    {
-                        $query->where('key', 'menu_item_object')->where('value', $post->type);
+            // We update an published Post.
+            else if (! is_null($item = MenuItem::findByPost($post))) {
+                $item->menu_order = $order;
 
-                    })->where(function ($query) use ($post)
-                    {
-                        $query->where('key', 'menu_item_object_id')->where('value', $post->id);
-                    });
-
-                })->first();
-
-                if (! is_null($item)) {
-                    $item->menu_order = $order;
-
-                    $item->save();
-                }
+                $item->save();
             }
         }
 
-        // This is a Post type.
+        // If the Post instance has post type.
         else if ($type == 'post') {
             // Update the Post categories.
             $result = Arr::get($input, 'categories');

@@ -153,7 +153,6 @@
             <div class="modal-footer">
                 <button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-primary col-md-3"><?= __d('content', 'Cancel'); ?></button>
                 <form id="modal-delete-form" action="" method="POST">
-                    <input type="hidden" name="formId" id="delete-item-form-id" value=""/>
                     <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
                     <button type="submit" name="button" class="btn btn-danger col-md-3 pull-right"><?= __d('content', 'Delete'); ?></button>
                 </form>
@@ -201,9 +200,6 @@ $(function() {
         var button = $(event.relatedTarget); // Button that triggered the modal
 
         var id = button.data('id');
-
-        //
-        $('#delete-record-id').val(id);
 
         $('#modal-delete-form').attr('action', '<?= site_url("admin/menus/" .$menu->id ."/items"); ?>/' + id + '/destroy');
     });

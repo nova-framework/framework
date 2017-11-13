@@ -26,9 +26,9 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
     // The Menus CRUD.
     Route::get( 'menus',               array('middleware' => 'auth', 'uses' => 'Menus@index'));
     Route::get( 'menus/create',        array('middleware' => 'auth', 'uses' => 'Menus@create'));
-    Route::get( 'menus/{id}/edit',     array('middleware' => 'auth', 'uses' => 'Menus@edit'));
-    Route::post('menus/{id}',          array('middleware' => 'auth', 'uses' => 'Menus@update'));
-    Route::post('menus/{id}/destroy',  array('middleware' => 'auth', 'uses' => 'Menus@destroy'));
+    Route::get( 'menus/{id}/edit',     array('middleware' => 'auth', 'uses' => 'Menus@edit'))->where('id', '\d+');
+    Route::post('menus/{id}',          array('middleware' => 'auth', 'uses' => 'Menus@update'))->where('id', '\d+');
+    Route::post('menus/{id}/destroy',  array('middleware' => 'auth', 'uses' => 'Menus@destroy'))->where('id', '\d+');
 
     Route::get( 'menus/{id}',                        array('middleware' => 'auth', 'uses' => 'Menus@items'));
     Route::post('menus/{id}/post',                   array('middleware' => 'auth', 'uses' => 'Menus@addPost'));

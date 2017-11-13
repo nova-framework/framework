@@ -93,8 +93,9 @@ class Menus extends BaseController
             ));
 
             // We need to update this information.
-            $post->name = $post->id;
-            $post->name = site_url('content/' .$post->id);
+            $post->name = $postId = $post->id;
+
+            $post->name = site_url('content/' .$postId);
 
             // Setup the Metadata.
             $post->meta->menu_item_type             = $type;
@@ -108,10 +109,7 @@ class Menus extends BaseController
 
             $post->taxonomies()->attach($taxonomy);
 
-            $post->taxonomies->each(function ($taxonomy)
-            {
-                $taxonomy->updateCount();
-            });
+            $taxonomy->updateCount();
         }
 
         return Redirect::back()
@@ -143,8 +141,9 @@ class Menus extends BaseController
             ));
 
             // We need to update this information.
-            $post->name = $post->id;
-            $post->name = site_url('content/' .$post->id);
+            $post->name = $postId = $post->id;
+
+            $post->name = site_url('content/' .$postId);
 
             // Setup the Metadata.
             $post->meta->menu_item_type             = 'category';
@@ -158,10 +157,7 @@ class Menus extends BaseController
 
             $post->taxonomies()->attach($taxonomy);
 
-            $post->taxonomies->each(function ($taxonomy)
-            {
-                $taxonomy->updateCount();
-            });
+            $taxonomy->updateCount();
         }
 
         return Redirect::back()
@@ -176,10 +172,67 @@ class Menus extends BaseController
             $taxonomy = Menu::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Response::json(array('error' => 'Not Found'), 400);
+            return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
         }
 
+        $post = Post::create(array(
+            'author_id'      => $authUser->id,
+            'title'          => $request->input('name'),
+            'status'         => 'publish',
+            'menu_order'     => 0,
+            'type'           => 'nav_menu_item',
+            'comment_status' => 'closed',
+        ));
 
+        // We need to update this information.
+        $post->name = $postId = $post->id;
+
+        $post->name = site_url('content/' .$postId);
+
+        // Setup the Metadata.
+        $post->meta->menu_item_type             = 'custom';
+        $post->meta->menu_item_menu_item_parent = 0;
+        $post->meta->menu_item_object           = 'custom';
+        $post->meta->menu_item_object_id        = $postId;
+        $post->meta->menu_item_target           = '_blank';
+        $post->meta->menu_item_url              = $request->input('url');
+
+        $post->save();
+
+        $post->taxonomies()->attach($taxonomy);
+
+        $taxonomy->updateCount();
+
+        return Redirect::back()
+            ->withStatus(__d('content', 'The Menu Item(s) was successfully created.'), 'success');
+    }
+
+    public function deleteItem(Request $request, $id, $itemId)
+    {
+        $authUser = Auth::user();
+
+        try {
+            $taxonomy = Menu::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
+        }
+
+        try {
+            $item = MenuItem::findOrFail($itemId);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Menu Item not found: #{0}', $itemId), 'danger');
+        }
+
+        $item->taxonomies()->detach($taxonomy);
+
+        $item->delete();
+
+        $taxonomy->updateCount();
+
+        return Redirect::back()
+            ->withStatus(__d('content', 'The Menu Item was successfully deleted.'), 'success');
     }
 
     public function order(Request $request, $id)

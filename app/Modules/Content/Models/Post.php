@@ -378,33 +378,39 @@ class Post extends Model
 
     public static function uniqueName($name, $id = null)
     {
+        $slug = Str::slug($name);
+
+        if (! is_null($id)) {
+            $names = static::where('id', '!=', (int) $id)->lists('name');
+        } else {
+            $names = static::lists('name');
+        }
+
+        if (! in_array($slug, $names)) {
+            // The slug is unique, then no further processing is required.
+            return $slug;
+        }
+
         $count = 0;
 
-        $segments = explode('-', Str::slug($name));
+        $segments = explode('-', $slug);
 
         if ((count($segments) > 1) && is_integer(end($segments))) {
             $count = (int) array_pop($segments);
-        }
 
-        $name = implode('-', $segments);
-
-        // Compute an unique slug.
-        if (! is_null($id)) {
-            $slugs = static::where('id', '!=', (int) $id)->lists('name');
-        } else {
-            $slugs = static::lists('name');
+            $slug = implode('-', $segments);
         }
 
         do {
-            $slug = $name;
+            $name = $slug;
 
-            if ($count > 0) $slug .= '-' .$count;
+            if ($count > 0) $name .= '-' .$count;
 
             $count++;
         }
-        while (in_array($slug, $slugs));
+        while (in_array($name, $names));
 
-        return $slug;
+        return $name;
     }
 
     /**

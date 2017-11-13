@@ -23,6 +23,22 @@ Route::get('content/{slug}', array(
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
 {
+    // The Menus CRUD.
+    Route::get( 'menus',               array('middleware' => 'auth', 'uses' => 'Menus@index'));
+    Route::get( 'menus/create',        array('middleware' => 'auth', 'uses' => 'Menus@create'));
+    Route::get( 'menus/{id}/edit',     array('middleware' => 'auth', 'uses' => 'Menus@edit'));
+    Route::post('menus/{id}',          array('middleware' => 'auth', 'uses' => 'Menus@update'));
+    Route::post('menus/{id}/destroy',  array('middleware' => 'auth', 'uses' => 'Menus@destroy'));
+
+    Route::get( 'menus/{id}',                        array('middleware' => 'auth', 'uses' => 'Menus@items'));
+    Route::get( 'menus/{id}/items/{itemId}',         array('middleware' => 'auth', 'uses' => 'Menus@viewItem'));
+    Route::post('menus/{id}/items/{itemId}',         array('middleware' => 'auth', 'uses' => 'Menus@updateItem'));
+    Route::post('menus/{id}/items/{itemId}/destroy', array('middleware' => 'auth', 'uses' => 'Menus@deleteItem'));
+
+    // Order the Menu Items via AJAX.
+    Route::post('menus/{id}/items/order', array('middleware' => 'auth', 'uses' => 'Menus@order'));
+
+    //
     Route::get( 'content/sample',  array('middleware' => 'auth', 'uses' => 'Posts@sample'));
 
     // The Posts CRUD.

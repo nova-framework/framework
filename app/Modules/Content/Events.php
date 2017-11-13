@@ -8,7 +8,7 @@
 | Here is where you can register all of the Events for the module.
 */
 
-
+use App\Modules\Content\Models\Menu;
 use App\Modules\Content\Models\Post;
 
 
@@ -17,6 +17,27 @@ use App\Modules\Content\Models\Post;
 Event::listen('backend.menu.sidebar', function ()
 {
     return array(
+
+        // Menus.
+        array(
+            'url'    => '#',
+            'title'  => __d('content', 'Appearance'),
+            'icon'   => 'paint-brush',
+            'weight' => 1,
+
+            //
+            'path'   => 'appearance',
+        ),
+        array(
+            'url'    => site_url('admin/menus'),
+            'title'  => __d('content', 'Menus'),
+            'icon'   => 'circle-o',
+            'weight' => 0,
+
+            //
+            'path'   => 'appearance.menus',
+            //'can'    => 'lists:' .Menu::class,
+        ),
 
         // Posts.
         array(

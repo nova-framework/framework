@@ -199,10 +199,8 @@ class Posts extends BaseController
         // No menu selection on edit mode.
         $menuSelect = '';
 
-        $title = $post->title ?: __d('content', 'Untitled');
-
         return $this->createView(compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'categorySelect', 'menuSelect'), 'Edit')
-            ->shares('title', __d('content', 'Edit the {0} : {1}', $name, $title))
+            ->shares('title', __d('content', 'Edit a {0}', $name))
             ->with('tags', $tags)
             ->with('creating', false);
     }

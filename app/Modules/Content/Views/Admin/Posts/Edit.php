@@ -64,7 +64,7 @@
         <div class="clearfix"></div>
         <br>
 
-        <textarea name="content" id="content" style="border: 1px solid #dddddd; width: 100%; padding: 10px; height: 600px; resize: vertical;" autocomplete="off"><?= Input::old('content', $post->content); ?></textarea>
+        <textarea name="content" id="content" style="border: 1px solid #dddddd; width: 100%; padding: 10px; height: 550px; resize: vertical;" autocomplete="off"><?= Input::old('content', $post->content); ?></textarea>
     </div>
     <div class="box-footer">
          <div id="edit-status" style="padding: 5px;" class="pull-left"></div>
@@ -99,8 +99,6 @@ $(function () {
 
 </script>
 
-<?php if ($type == 'page') { ?>
-
 <div class="box box-widget">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('content', 'Slug'); ?></h3>
@@ -111,8 +109,6 @@ $(function () {
         </div>
     </div>
 </div>
-
-<?php } ?>
 
 <div class="clearfix"></div>
 

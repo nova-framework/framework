@@ -1,6 +1,5 @@
 <?php
 
-use App\Modules\Content\Models\Post;
 use App\Modules\Content\Widgets\MainMenu;
 
 foreach ($items as $item) {

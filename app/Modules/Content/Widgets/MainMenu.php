@@ -32,6 +32,40 @@ class MainMenu extends Widget
         return View::make('Widgets/MainMenuItems', $data, 'Content')->render();
     }
 
+    public static function handleItem(MenuItem $item)
+    {
+        $type = $item->menu_item_type;
+
+        if ($type == 'custom') {
+            $title = $item->title;
+
+            $url = $item->menu_item_url;
+        }
+
+        // The item is not a Custom Link.
+        else {
+            $instance = $item->instance();
+
+            if (($type == 'post') || ($type == 'page')) {
+                $title = $instance->title;
+
+                $url = site_url('content/' .$instance->name);
+            } else if ($type == 'taxonomy') {
+                $title = $instance->name;
+
+                $url = site_url('content/category/' .$instance->slug);
+            }
+        }
+
+        $item->load('children');
+
+        $children = $item->children;
+
+        static::sortItems($children);
+
+        return array($title, $url, $children);
+    }
+
     public static function sortItems(Collection $items)
     {
         return $items->sort(function ($a, $b)

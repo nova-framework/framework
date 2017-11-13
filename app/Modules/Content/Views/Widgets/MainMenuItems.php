@@ -3,37 +3,10 @@
 use App\Modules\Content\Widgets\MainMenu;
 
 foreach ($items as $item) {
-    $type = $item->menu_item_type;
+    list ($title, $url, $children) = MainMenu::handleItem($item);
 
-    if ($type == 'custom') {
-        $title = $item->title;
-
-        $url = $item->menu_item_url;
-    }
-
-    // The item is not a Custom Link.
-    else {
-        $instance = $item->instance();
-
-        if (($type == 'post') || ($type == 'page')) {
-            $title = $instance->title;
-
-            $url = site_url('content/' .$instance->name);
-
-        } else if ($type == 'taxonomy') {
-            $title = $instance->name;
-
-            $url = site_url('content/category/' .$instance->slug);
-        }
-    }
-
-    $item->load('children');
-
-    $children = $item->children;
-
-    MainMenu::sortItems($children);
-
-    if ($children->isEmpty()) { ?>
+    if ($children->isEmpty()) {
+?>
 <li <?= ($siteUrl == $url) ? 'class="active"' : ''; ?>>
     <a href="<?= $url; ?>"><?= $title; ?></a>
 </li>

@@ -107,12 +107,19 @@ class Posts extends BaseController
         $post->name = '';
 
         //
-        $categories = $this->generateCategoriesSelect();
-
         $menuSelect = $this->generateMenuSelect();
 
-        return $this->createView(compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'menuSelect'), 'Edit')
+        $categories = $this->generateCategories(
+            $ids = $post->taxonomies()->where('taxonomy', 'category')->lists('id')
+        );
+
+        $categorySelect = $this->generateCategorySelect();
+
+        $tags = '';
+
+        return $this->createView(compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'categorySelect', 'menuSelect'), 'Edit')
             ->shares('title', __d('content', 'Create a new {0}', $name))
+            ->with('tags', $tags)
             ->with('creating', true);
     }
 
@@ -155,9 +162,11 @@ class Posts extends BaseController
         }
 
         //
-        $categories = $this->generateCategoriesSelect(
-            $post->taxonomies()->where('taxonomy', 'category')->lists('id')
+        $categories = $this->generateCategories(
+            $ids = $post->taxonomies()->where('taxonomy', 'category')->lists('id')
         );
+
+        $categorySelect = $this->generateCategorySelect($ids);
 
         $tags = implode(', ',
             $post->taxonomies()->where('taxonomy', 'post_tag')->lists('id')
@@ -168,7 +177,7 @@ class Posts extends BaseController
 
         $title = $post->title ?: __d('content', 'Untitled');
 
-        return $this->createView(compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'menuSelect'), 'Edit')
+        return $this->createView(compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'categorySelect', 'menuSelect'), 'Edit')
             ->shares('title', __d('content', 'Edit the {0} : {1}', $name, $title))
             ->with('tags', $tags)
             ->with('creating', false);
@@ -287,7 +296,19 @@ class Posts extends BaseController
         // This is a Post type.
         else if ($type == 'post') {
             // Update the Post categories.
-            $categories = Arr::has($input, 'category') ? explode(',', Arr::get($input, 'category')) : array();
+            $result = Arr::get($input, 'categories');
+
+            $categories = array();
+
+            if (! empty($result)) {
+                $items = explode('&', $result);
+
+                foreach ($items as $item) {
+                    list (, $value) = explode('=', $item);
+
+                    $categories[] = (int) $value;
+                }
+            }
 
             $post->taxonomies()->sync($categories);
 
@@ -321,7 +342,9 @@ class Posts extends BaseController
                 $ids[] = $tag->id;
             }
 
-            $post->taxonomies()->attach($ids);
+            if (! empty($ids)) {
+                $post->taxonomies()->attach($ids);
+            }
 
             // Update the count in the associated taxonomies.
             $post->taxonomies->each(function ($taxonomy)
@@ -408,14 +431,36 @@ class Posts extends BaseController
         dd($posts);
     }
 
-    protected function generateCategoriesSelect(array $categories = array(), $taxonomies = null, $level = 0)
+    protected function generateCategories(array $categories = array(), $taxonomies = null, $level = 0)
     {
         $result = '';
 
         if (is_null($taxonomies)) {
             $taxonomies = Taxonomy::with('children')->where('taxonomy', 'category')->where('parent_id', 0)->get();
+        }
 
-            //$result = '<option value="0">' .__d('content', 'None') .'</option>';
+        foreach ($taxonomies as $taxonomy) {
+            $result .= '<div class="checkbox"><label><input class="category-checkbox" name="category[]" value="' .$taxonomy->id .'" type="checkbox" ' .(in_array($taxonomy->id, $categories) ? ' checked="checked"' : '') .'> ' .trim(str_repeat('--', $level) .' ' .$taxonomy->name) .'</label></div>';
+
+            // Process the children.
+            $taxonomy->load('children');
+
+            if (! $taxonomy->children->isEmpty()) {
+                $level++;
+
+                $result .= $this->generateCategories($categories, $taxonomy->children, $level);
+            }
+        }
+
+        return $result;
+    }
+
+    protected function generateCategorySelect(array $categories = array(), $taxonomies = null, $level = 0)
+    {
+        $result = '';
+
+        if (is_null($taxonomies)) {
+            $taxonomies = Taxonomy::with('children')->where('taxonomy', 'category')->where('parent_id', 0)->get();
         }
 
         foreach ($taxonomies as $taxonomy) {
@@ -427,7 +472,7 @@ class Posts extends BaseController
             if (! $taxonomy->children->isEmpty()) {
                 $level++;
 
-                $result .= $this->generateCategoriesSelect($categories, $taxonomy->children, $level);
+                $result .= $this->generateCategorySelect($categories, $taxonomy->children, $level);
             }
         }
 

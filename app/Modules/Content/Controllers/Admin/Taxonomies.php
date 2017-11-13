@@ -116,7 +116,11 @@ class Taxonomies extends BaseController
 
         if ($request->ajax() || $request->wantsJson()) {
             // The request was made by the Post Editor via AJAX, so we will return a fresh categories select.
-            return Response::json(array('categories' => $this->generateCategoriesSelect()), 400);
+            return Response::json(array(
+                'categoryId' => $taxonomy->id,
+                'categories' => $this->generateCategoriesSelect()
+
+            ), 200);
         }
 
         $type = $taxonomy->taxonomy == 'post_tag' ? 'tag' : $taxonomy->taxonomy;

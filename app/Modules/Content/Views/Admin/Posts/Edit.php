@@ -180,15 +180,7 @@ $(function () {
             $(this).append('<input class="publish-form-value" type="hidden" name="parent" value="' + $('#page-parent').val() + '" /> ');
             $(this).append('<input class="publish-form-value" type="hidden" name="order" value="' + $('#page-order').val() + '" /> ');
         } else {
-            $(this).append('<input class="publish-form-value" type="hidden" name="categories" value="' + $('#category').val().join(',') + '" /> ');
-
-            /*
-            var categories = $('#category').val();
-
-            for (var i = 0; i < categories.length; i++) {
-                $(this).append('<input class="publish-form-value" type="hidden" name="category[]" value="' + categories[i] + '" /> ');
-            }
-            */
+            $(this).append('<input class="publish-form-value" type="hidden" name="categories" value="' + $('.category-checkbox:checked').serialize() + '" /> ');
 
             $(this).append('<input class="publish-form-value" type="hidden" name="tags" value="' + $('#tags').val() + '" /> ');
         }
@@ -261,12 +253,8 @@ $(function () {
         <h3 class="box-title"><?= __d('content', 'Categories'); ?></h3>
     </div>
     <div class="box-body" style="margin-bottom: 0;">
-        <div class="md-12">
-            <div class="form-group">
-                <select name="category" id="category" class="form-control select2" multiple="multiple" placeholder="" data-placeholder="<?= __d('content', 'Select a Category'); ?>" style="width: 100%;" autocomplete="off">
-                    <?= $categories; ?>
-                </select>
-            </div>
+        <div style="max-width: 200px;">
+            <?= $categories; ?>
         </div>
         <div class="clearfix"></div>
         <hr>
@@ -278,7 +266,7 @@ $(function () {
         <div class="form-group">
             <select name="parent" id="category-parent" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', '-- Parent Category --'); ?>" style="width: 100%;" autocomplete="off">
                 <option value="0"><?= __d('content', 'None'); ?></option>
-                <?= $categories; ?>
+                <?= $categorySelect; ?>
             </select>
         </div>
 

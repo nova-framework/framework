@@ -40,6 +40,15 @@
     float: left;
 }
 
+.tag-item {
+    padding: 5px;
+    display: inline-block;
+}
+
+.tag-item a:hover {
+    color: #dd4b39;
+}
+
 </style>
 
 <div class="row">
@@ -180,8 +189,6 @@ $(function () {
             $(this).append('<input class="publish-form-value" type="hidden" name="order" value="' + $('#page-order').val() + '" /> ');
         } else {
             $(this).append('<input class="publish-form-value" type="hidden" name="categories" value="' + $('.category-checkbox:checked').serialize() + '" /> ');
-
-            $(this).append('<input class="publish-form-value" type="hidden" name="tags" value="' + $('#tags').val() + '" /> ');
         }
 
         //event.preventDefault();
@@ -222,7 +229,7 @@ $(function () {
                 <label class="control-label" for="slug"><?= __d('content', 'Order'); ?></label>
                 <div class="clearfix"></div>
                 <div class="col-md-4" style="padding: 0;">
-                    <input name="order" id="page-order" type="number" class="form-control" style="padding-right: 3px;" min="0" max="1000" value="<?= Input::old('order', $menuOrder); ?>" autocomplete="off">
+                    <input name="order" id="page-order" type="number" class="form-control" style="padding-right: 3px;" min="0" max="1000" value="<?= Input::old('order', $post->menu_order); ?>" autocomplete="off">
                 </div>
             </div>
         </div>
@@ -292,18 +299,101 @@ $(function () {
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('content', 'Tags'); ?></h3>
     </div>
-    <div class="box-body">
+    <div class="box-body" style="padding-bottom: 20px;">
+        <form id="create-tags-form" action="<?= site_url('admin/content/' .$post->id .'/tags'); ?>" method='POST' role="form">
+
         <div class="form-group">
             <div class="input-group">
-                <input type="text" name="tags" id="tags" class="form-control" value="<?= Input::old('tags', isset($tags) ? $tags : ''); ?>" autocomplete="off">
+                <input type="text" name="tags" id="tags-input" class="form-control" value="" autocomplete="off">
                 <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button"><?= __d('content', 'Add'); ?></button>
+                    <input type="submit" name="submit" id="create-tags-button" class="btn btn-primary" value="<?= __d('content', 'Add'); ?>" type="button">
                 </span>
             </div>
         </div>
+
+        </form>
         <p class="text-muted"><?= __d('content', 'Separate tags with commas.'); ?></p>
+        <div id="tags-list"><?= $tags; ?></div>
     </div>
 </div>
+
+<script>
+
+$(function () {
+    var createTagsForm = $('#create-tags-form');
+
+    createTagsForm.on('submit', function (event) {
+        event.preventDefault();
+
+        $.ajax({
+            type: createTagsForm.attr('method'),
+            url:  createTagsForm.attr('action'),
+            data: createTagsForm.serialize(),
+
+            dataType: 'json',
+
+            //
+            success: function (data) {
+                $('#tags-input').val('');
+
+                var tagsList = $('#tags-list');
+
+                for (var i = 0; i < data.length; i++) {
+                    var item = data[i];
+
+                    var html = '<div class="tag-item"><a class="delete-tag-link" href="#" data-id="' + item.id  + '"><i class="fa fa-times-circle"></i></a> ' + item.name + '</div>';
+
+                    tagsList.append(html);
+                }
+
+                updateRemoveTagLinks();
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+
+                console.log(data);
+            },
+        });
+    });
+
+    var updateRemoveTagLinks = function() {
+        $('a.delete-tag-link').on('click', function (event) {
+            event.preventDefault();
+
+            var link = $(this);
+
+            var id = link.data('id');
+
+            var url = '<?= site_url("admin/content/" .$post->id ."/tags/"); ?>/' + id + '/detach';
+
+            $.ajax({
+                type: 'POST',
+                url:  url,
+                data: {
+                    postId: '<?= $post->id; ?>',
+                    tagId:  id
+                },
+
+                dataType: 'json',
+
+                //
+                success: function (data) {
+                    link.closest('.tag-item').remove();
+                },
+                error: function (data) {
+                    console.log('An error occurred.');
+
+                    console.log(data);
+                },
+            });
+        });
+    }
+
+    updateRemoveTagLinks();
+});
+
+</script>
+
 
 <?php } ?>
 

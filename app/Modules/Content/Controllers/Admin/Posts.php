@@ -5,6 +5,7 @@ namespace App\Modules\Content\Controllers\Admin;
 use Nova\Http\Request;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Config;
+use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
@@ -96,12 +97,19 @@ class Posts extends BaseController
         $post = Post::create(array(
             'type'           => $type,
             'status'         => 'draft',
-            'author_id'      => $authUser->id,
+            'author_id'      => $userId = $authUser->id,
+
             'comment_status' => ($type == 'page') ? 'closed' : 'open',
         ));
 
         $post->name = $post->id;
 
+        // Metadata.
+        $post->meta->edit_last = $userId;
+
+        $post->meta->edit_lock = sprintf('%d:%d', time(), $userId);
+
+        // Save the Post again, to update its name and metadata.
         $post->save();
 
         $post->name = '';
@@ -120,7 +128,6 @@ class Posts extends BaseController
         return $this->createView(compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'categorySelect', 'menuSelect'), 'Edit')
             ->shares('title', __d('content', 'Create a new {0}', $name))
             ->with('tags', $tags)
-            ->with('menuOrder', 1)
             ->with('creating', true);
     }
 
@@ -136,6 +143,14 @@ class Posts extends BaseController
         }
 
         $type = $post->type;
+
+        // Metadata.
+        $post->meta->edit_last = $userId = $authUser->id;
+
+        $post->meta->edit_lock = sprintf('%d:%d', time(), $userId);
+
+        // Save the Post, to update its metadata.
+        $post->save();
 
         //
         $name  = Config::get('content::labels.' .$type .'.name', Str::title($type));
@@ -172,26 +187,23 @@ class Posts extends BaseController
 
         $categorySelect = $this->generateCategorySelect($ids);
 
-        $tags = implode(', ',
-            $post->taxonomies()->where('taxonomy', 'post_tag')->lists('id')
-        );
+        // The Tags.
+        $tags = $post->taxonomies()->where('taxonomy', 'post_tag')->get();
+
+        $tags = $tags->map(function ($tag)
+        {
+            return '<div class="tag-item"><a class="delete-tag-link" href="#" data-name="' .$tag->name  .'" data-id="' .$tag->id  .'"><i class="fa fa-times-circle"></i></a> ' .$tag->name .'</div>';
+
+        })->implode("\n");
 
         // No menu selection on edit mode.
         $menuSelect = '';
-
-        // The Menu Order.
-        $menuOrder = 1;
-
-        if (($type == 'page') && ! is_null($item = MenuItem::findByPost($post))) {
-            $menuOrder = $item->menu_order;
-        }
 
         $title = $post->title ?: __d('content', 'Untitled');
 
         return $this->createView(compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'categorySelect', 'menuSelect'), 'Edit')
             ->shares('title', __d('content', 'Edit the {0} : {1}', $name, $title))
             ->with('tags', $tags)
-            ->with('menuOrder', $menuOrder)
             ->with('creating', false);
     }
 
@@ -246,112 +258,41 @@ class Posts extends BaseController
         $post->status   = $status;
         $post->password = $password;
 
-        // Save the Post instance before to process the Menu Item or Categories and Tags.
-        $post->save();
-
         if ($type == 'page') {
-            $parentId = Arr::get($input, 'parent', 0);
+            $post->parent_id = (int) Arr::get($input, 'parent', 0);
 
-            $order = Arr::get($input, 'order', 0);
-
-            if ($creating) {
-                $item = MenuItem::create(array(
-                    'author_id'      => $authUser->id,
-                    'status'         => 'publish',
-                    'menu_order'     => $order,
-                    'type'           => 'nav_menu_item',
-                    'comment_status' => 'closed',
-                ));
-
-                $item->name = $item->id;
-
-                $item->guid = url('content', $item->id);
-
-                // Setup the Metadata.
-                $item->meta->menu_item_type             = 'page';
-                $item->meta->menu_item_menu_item_parent = $parentId;
-                $item->meta->menu_item_object           = 'page';
-                $item->meta->menu_item_object_id        = $post->id;
-                $item->meta->menu_item_target           = null;
-                $item->meta->menu_item_url              = null;
-
-                $item->save();
-
-                // Update the Menu information.
-                $menu = Menu::firstOrFail();
-
-                $menu->items()->attach($item);
-
-                $menu->updateCount();
-            }
-
-            // We update an published Post.
-            else if (! is_null($item = MenuItem::findByPost($post))) {
-                $item->menu_order = $order;
-
-                $item->save();
-            }
+            $post->menu_order = (int) Arr::get($input, 'order', 0);
         }
 
-        // If the Post instance has post type.
-        else if ($type == 'post') {
-            // Update the Post categories.
-            $result = Arr::get($input, 'categories');
+        // Save the Post instance before to process the Categories and Tags.
+        $post->save();
 
+        if ($type == 'post') {
             $categories = array();
 
-            if (! empty($result)) {
-                $items = explode('&', $result);
+            if (! empty($result = Arr::get($input, 'categories'))) {
+                // The value is something like: 'category[]=1&category[]=3&category[]=4'
 
-                foreach ($items as $item) {
+                $categories = array_map(function ($item)
+                {
                     list (, $value) = explode('=', $item);
 
-                    $categories[] = (int) $value;
-                }
+                    return (int) $value;
+
+                }, explode('&', urldecode($result)));
             }
 
             $post->taxonomies()->sync($categories);
 
-            // Update the Post tags.
-            $tags = Arr::has($input, 'tags') ? explode(',', Arr::get($input, 'tags')) : array();
-
-            $ids = array();
-
-            foreach ($tags as $name) {
-                $name = trim($name);
-
-                $tag = Taxonomy::where('taxonomy', 'post_tag')->whereHas('term', function ($query) use ($name)
-                {
-                    $query->where('name', $name);
-
-                })->first();
-
-                if (is_null($tag)) {
-                    $term = Term::create(array(
-                        'name'   => $name,
-                        'slug'   => Term::uniqueSlug($name, 'post_tag'),
-                    ));
-
-                    $tag = Taxonomy::create(array(
-                        'term_id'     => $term->id,
-                        'taxonomy'    => 'tag',
-                        'description' => '',
-                    ));
-                }
-
-                $ids[] = $tag->id;
-            }
-
-            if (! empty($ids)) {
-                $post->taxonomies()->attach($ids);
-            }
-
-            // Update the count in the associated taxonomies.
+            // Update the count field in the associated taxonomies.
             $post->taxonomies->each(function ($taxonomy)
             {
                 $taxonomy->updateCount();
             });
         }
+
+        // Fire the associated event.
+        Event::fire('content.post.updated', array($post, $creating));
 
         //
         $name = Config::get("content::labels.{$type}.name", Str::title($type));
@@ -387,8 +328,97 @@ class Posts extends BaseController
             ->withStatus(__d('content', 'The record <b>#{0}</b> was successfully deleted.', $post->id), 'success');
     }
 
-    public function tags(Request $request, $id)
+    public function addTags(Request $request, $id)
     {
+        try {
+            $post = Post::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Response::json(array('error' => 'Not Found'), 400);
+        }
+
+        // Get the actual Tag instances associated to this Post.
+        $items = $post->taxonomies()->where('taxonomy', 'post_tag')->get();
+
+        $items = $items->map(function ($item)
+        {
+            return array('name' => $item->name, 'item' => $item);
+        });
+
+        //
+        $tags = array();
+
+        if ($request->has('tags') && ! empty($result = $request->input('tags'))) {
+            // The tags value is something like: 'Sample Tag, Another Tag, Testings'
+
+            $tags = array_map('trim', explode(',', $result));
+        }
+
+        $result = array();
+
+        foreach ($tags as $name) {
+            $item = $items->where('name', $name)->first();
+
+            if (! is_null($item)) {
+                // The Tag already exists and it is attached to this Post.
+                continue;
+            }
+
+            $tag = Taxonomy::where('taxonomy', 'post_tag')->whereHas('term', function ($query) use ($name)
+            {
+                $query->where('name', $name);
+
+            })->first();
+
+            if (is_null($tag)) {
+                $term = Term::create(array(
+                    'name'   => $name,
+                    'slug'   => Term::uniqueSlug($name, 'post_tag'),
+                ));
+
+                $tag = Taxonomy::create(array(
+                    'term_id'     => $term->id,
+                    'taxonomy'    => 'post_tag',
+                    'description' => '',
+                ));
+            }
+
+            $result[] = array('id' => $tag->id, 'name' => $name);
+        }
+
+        if (! empty($result)) {
+            $ids = Arr::pluck($result, 'id');
+
+            $post->taxonomies()->attach($ids);
+
+            // Update the count field in the associated taxonomies.
+            $post->taxonomies->each(function ($taxonomy)
+            {
+                $taxonomy->updateCount();
+            });
+        }
+
+        return Response::json($result, 200);
+    }
+
+    public function detachTag(Request $request, $id, $tagId)
+    {
+        try {
+            $post = Post::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Response::json(array('error' => 'Not Found'), 400);
+        }
+
+        $post->taxonomies()->detach($tagId);
+
+        // Update the count field in the associated taxonomies.
+        $post->taxonomies->each(function ($taxonomy)
+        {
+            $taxonomy->updateCount();
+        });
+
+        return Response::json(array('success' => true), 200);
     }
 
     public function sample(Request $request)

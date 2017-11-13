@@ -289,7 +289,7 @@ class Post extends Model
         })->map(function ($group) {
             return $group->mapWithKeys(function ($item)
             {
-                return [$item->term->slug => $item->term->name];
+                return array($item->term->slug => $item->term->name);
             });
 
         })->toArray();

@@ -51,23 +51,4 @@ class MenuItem extends Post
     {
         return Arr::get($this->instanceRelations, $this->meta->menu_item_object);
     }
-
-    /**
-     * @return MenuItem
-     */
-    public static function findByPost(Post $post)
-    {
-        return static::whereHas('meta', function ($query) use ($post)
-        {
-            $query->where(function ($query) use ($post)
-            {
-                $query->where('key', 'menu_item_object')->where('value', $post->type);
-
-            })->where(function ($query) use ($post)
-            {
-                $query->where('key', 'menu_item_object_id')->where('value', $post->id);
-            });
-
-        })->first();
-    }
 }

@@ -30,7 +30,19 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
     Route::get( 'content/{id}/edit',     array('middleware' => 'auth', 'uses' => 'Posts@edit'));
     Route::post('content/{id}',          array('middleware' => 'auth', 'uses' => 'Posts@update'))->where('id', '\d+');
     Route::post('content/{id}/destroy',  array('middleware' => 'auth', 'uses' => 'Posts@destroy'))->where('id', '\d+');
-    Route::post('content/{id}/tags',     array('middleware' => 'auth', 'uses' => 'Posts@tags'))->where('id', '\d+');
+
+    Route::post('content/{id}/tags', array('middleware' => 'auth', 'uses' => 'Posts@addTags'))->where('id', '\d+');
+
+    Route::post('content/{postId}/tags/{tagId}/detach', array(
+        'middleware' => 'auth',
+        'uses' => 'Posts@detachTag',
+
+        // The route patterns.
+        'where' => array(
+            'id'    => '\d+',
+            'tagId' => '\d+',
+        ),
+    ));
 
     // The Taxonomies listings.
     Route::get('content/categories',    array('middleware' => 'auth', 'uses' => 'Taxonomies@index'));

@@ -210,7 +210,7 @@ class Menus extends BaseController
             $post->name = site_url('content/' .$postId);
 
             // Setup the Metadata.
-            $post->meta->menu_item_type             = 'category';
+            $post->meta->menu_item_type             = 'taxonomy';
             $post->meta->menu_item_menu_item_parent = $instance->parent_id;
             $post->meta->menu_item_object           = 'category';
             $post->meta->menu_item_object_id        = $instance->id;
@@ -259,7 +259,7 @@ class Menus extends BaseController
         $post->meta->menu_item_object           = 'custom';
         $post->meta->menu_item_object_id        = $postId;
         $post->meta->menu_item_target           = '_blank';
-        $post->meta->menu_item_url              = $request->input('url');
+        $post->meta->menu_item_url              = $request->input('link');
 
         $post->save();
 

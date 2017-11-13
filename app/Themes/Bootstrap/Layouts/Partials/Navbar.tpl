@@ -10,6 +10,9 @@
             <a class="navbar-brand" href="<?= site_url(); ?>"><strong>{{ Config::get('app.name') }}</strong></a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <?= Widget::mainMenu(); ?>
+            </ul>
             <ul class="nav navbar-nav navbar-right" style="margin-right: 0;">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">

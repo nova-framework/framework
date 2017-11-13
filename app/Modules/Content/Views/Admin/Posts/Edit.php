@@ -58,8 +58,9 @@
         <textarea name="content" id="content" style="border: 1px solid #dddddd; width: 100%; padding: 10px; height: 600px; resize: vertical;" autocomplete="off"><?= Input::old('content', $post->content); ?></textarea>
     </div>
     <div class="box-footer">
-         <a class="btn btn-primary btn-sm col-sm-2 pull-left" href="#" data-toggle="modal" data-target="" role="button"><?= __d('content', 'Add Media'); ?></a>
-         <div id="edit-status" style="padding: 5px;" class="pull-right"></div>
+         <div id="edit-status" style="padding: 5px;" class="pull-left"></div>
+         <a class="btn btn-success btn-sm col-sm-2 pull-right" href="#" data-toggle="modal" data-target="" role="button"><?= __d('content', 'Add Media'); ?></a>
+         <div class="clearfix"></div>
     </div>
 </div>
 
@@ -96,10 +97,8 @@ $(function () {
         <h3 class="box-title"><?= __d('content', 'Slug'); ?></h3>
     </div>
     <div class="box-body">
-        <div class="col-md-12">
-            <div class="form-group" style="margin-bottom: 0;">
+        <div class="form-group" style="margin-bottom: 0;">
             <input name="slug" id="page-slug" type="text" class="form-control" value="<?= Input::old('slug', $post->name); ?>" placeholder="<?= __d('content', 'Enter slug here'); ?>" autocomplete="off">
-            </div>
         </div>
     </div>
 </div>
@@ -324,6 +323,10 @@ $(function () {
 </div>
 
 <div class="clearfix"></div>
+
 <br>
+<a class="btn btn-primary col-sm-2" href="<?= site_url('admin/content/' .Str::plural($type)); ?>"><?= __d('content', '<< Previous Page'); ?></a>
+
+<div class="clearfix"></div>
 
 </section>

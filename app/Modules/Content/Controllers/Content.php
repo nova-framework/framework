@@ -36,7 +36,7 @@ class Content extends BaseController
             return $this->frontpage();
         }
 
-        $query = Post::whereIn('status', array('publish', 'password'));
+        $query = Post::with('author', 'taxonomies')->whereIn('status', array('publish', 'password'));
 
         if (is_numeric($name)) {
             $query->where('id', (int) $name);
@@ -55,7 +55,8 @@ class Content extends BaseController
 
     public function frontpage()
     {
-        $posts = Post::where('type', 'post')
+        $posts = Post::with('author', 'taxonomies')
+            ->where('type', 'post')
             ->whereIn('status', array('publish', 'password'))
             ->orderBy('created_at', 'DESC')
             ->paginate(5);
@@ -73,6 +74,7 @@ class Content extends BaseController
         })->where('taxonomy', ($type == 'tag') ? 'post_tag' : $type)->firstOrFail();
 
         $posts = $taxonomy->posts()
+            ->with('author', 'taxonomies')
             ->where('type', 'post')
             ->whereIn('status', array('publish', 'password'))
             ->orderBy('created_at', 'DESC')
@@ -86,7 +88,8 @@ class Content extends BaseController
 
     public function archive($year, $month)
     {
-        $posts = Post::where('type', 'post')
+        $posts = Post::with('author', 'taxonomies')
+            ->where('type', 'post')
             ->whereIn('status', array('publish', 'password'))
             ->whereYear('created_at', '=', $year)
             ->whereMonth('created_at', '=', $month)
@@ -111,12 +114,14 @@ class Content extends BaseController
             return Redirect::back()->withStatus(__d('content', 'Invalid query string'), 'danger');
         }
 
-        $posts = Post::where('type', 'post')->whereIn('status', array('publish', 'password'))->where(function ($query) use ($search)
-        {
-            $query->where('title', 'LIKE', '%' .$search .'%')
-                ->orWhere('content', 'LIKE', '%' .$search .'%');
+        $posts = Post::with('author', 'taxonomies')
+            ->where('type', 'post')
+            ->whereIn('status', array('publish', 'password'))
+            ->where(function ($query) use ($search)
+            {
+                $query->where('title', 'LIKE', '%' .$search .'%')->orWhere('content', 'LIKE', '%' .$search .'%');
 
-        })->orderBy('created_at', 'DESC')->paginate(5);
+            })->orderBy('created_at', 'DESC')->paginate(5);
 
         return $this->createView(compact('posts'), 'Index')
             ->shares('title', __d('content', 'Search results : {0}', htmlentities($search)));

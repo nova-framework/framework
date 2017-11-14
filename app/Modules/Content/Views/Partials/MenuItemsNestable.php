@@ -2,6 +2,7 @@
 
 use App\Modules\Content\Models\Post;
 
+// We will sort the items collection with the same algorithm as in the real widget.
 $items->sort(function ($a, $b)
 {
     if ($a->menu_order === $b->menu_order) {

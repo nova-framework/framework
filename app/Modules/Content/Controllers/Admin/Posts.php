@@ -281,10 +281,24 @@ class Posts extends BaseController
                 }, explode('&', urldecode($result)));
             }
 
-            $post->taxonomies()->sync($categories);
+            $taxonomies = $post->taxonomies()
+                ->where('taxonomy', 'category')
+                ->lists('id');
 
-            // Update the count field in the associated taxonomies.
-            $post->taxonomies->each(function ($taxonomy)
+            if (! empty($ids = array_diff($taxonomies, $categories))) {
+                $post->taxonomies()->detach($ids);
+            }
+
+            if (! empty($ids = array_diff($categories, $taxonomies))) {
+                $post->taxonomies()->attach($ids);
+            }
+
+            // Update the count field in the affected taxonomies.
+            $ids = array_unique(array_merge($taxonomies, $categories));
+
+            $taxonomies = Taxonomy::whereIn('id', $ids)->get();
+
+            $taxonomies->each(function ($taxonomy)
             {
                 $taxonomy->updateCount();
             });
@@ -325,7 +339,7 @@ class Posts extends BaseController
         });
 
         $post->delete();
-        
+
         // Invalidate the content caches.
         $this->clearContentCache();
 
@@ -382,9 +396,11 @@ class Posts extends BaseController
                 continue;
             }
 
+            $slug = Term::uniqueSlug($name, 'post_tag');
+
             $term = Term::create(array(
                 'name'   => $name,
-                'slug'   => Term::uniqueSlug($name, 'post_tag'),
+                'slug'   => $slug,
             ));
 
             $tag = Taxonomy::create(array(
@@ -399,7 +415,7 @@ class Posts extends BaseController
         $result = array();
 
         foreach ($taxonomies as $taxonomy) {
-            $taxonomy->posts()->attach($post);
+            $post->taxonomies()->attach($taxonomy);
 
             $taxonomy->updateCount();
 

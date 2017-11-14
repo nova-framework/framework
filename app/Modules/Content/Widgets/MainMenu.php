@@ -22,7 +22,7 @@ class MainMenu extends Widget
 
         $items = Cache::remember('content.menus.main_menu', 1440, function ()
         {
-            $menu = Menu::findOrFail(2); // This is the Main Menu.
+            $menu = Menu::slug('main-menu')->first();
 
             $items = $menu->items->where('parent_id', 0);
 

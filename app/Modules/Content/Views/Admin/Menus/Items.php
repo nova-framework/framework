@@ -102,6 +102,8 @@
 
 <div class="col-md-8">
 
+<form id="menu-items-form" action="<?= site_url('admin/menus/' .$menu->id .'/items'); ?>" method='POST' role="form">
+
 <div class="box box-default">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('content', 'Menu Items in the {0}', $menu->name); ?></h3>
@@ -112,7 +114,14 @@
             <?= View::fetch('Partials/MenuItemsNestable', array('menu' => $menu, 'items' => $items), 'Content'); ?>
         </div>
     </div>
+    <div class="box-footer">
+        <input type="submit" name="submit" class="btn btn-success col-sm-3 pull-right" value="<?= __d('users', 'Save'); ?>" />
+    </div>
 </div>
+
+<input type="hidden" name="_token"   value="<?= csrf_token(); ?>" />
+
+</form>
 
 <script type="text/javascript" src="<?= resource_url('js/jquery.nestable.js', 'Content'); ?>"></script>
 
@@ -123,29 +132,17 @@ $(function() {
         listNodeName: 'ol',
         expandBtnHTML: '',
         collapseBtnHTML: '',
+
+        //
         maxDepth: 7,
     });
 
-    $('.dd').on('change', function() {
-        var url = '<?= site_url("admin/menus/" .$menu->id ."/order") ?>';
+    $('#menu-items-form').submit(function(event) {
+        $(this).find('.items-form-value').remove();
 
-       var json = JSON.stringify($(this).nestable('serialize'));
+        var data = JSON.stringify($('.dd').nestable('serialize'));
 
-       $.ajax({
-            url: url,
-            type: 'POST',
-            data: {
-                json
-            },
-            headers: {
-                'X-CSRF-Token': '<?= csrf_token(); ?>',
-            },
-            dataType: 'json'
-        });
-    });
-
-    $('.dd-handle input').on('mousedown', function(e) {
-        e.stopPropagation();
+        $(this).append('<input class="items-form-value" type="hidden" name="items" value=\'' + data + '\'>');
     });
 });
 

@@ -353,16 +353,16 @@ class Menus extends BaseController
             ->withStatus(__d('content', 'The Menu Item was successfully deleted.'), 'success');
     }
 
-    public function order(Request $request, $id)
+    public function itemsOrder(Request $request, $id)
     {
         try {
             $taxonomy = Menu::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Response::json(array('error' => 'Not Found'), 400);
+            return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
         }
 
-        $json = $request->get('json');
+        $json = $request->get('items');
 
         $this->updateMenuItemsOrder(
             json_decode($json)
@@ -370,8 +370,9 @@ class Menus extends BaseController
 
         // Invalidate the cached menu data.
         Cache::forget('content.menus.main_menu');
-        
-        return Response::json(array('success' => true), 200);
+
+        return Redirect::back()
+            ->withStatus(__d('content', 'The Menu Items order was successfully updated.'), 'success');
     }
 
     /**

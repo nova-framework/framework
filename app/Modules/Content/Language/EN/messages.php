@@ -92,7 +92,7 @@ return array (
   'Published' => '',
   'Record not found: #{0}' => '',
   'Save' => '',
-  'Save the Items order' => '',
+  'Save the Items' => '',
   'Select a Category' => '',
   'Select a parent Page' => '',
   'Select the Status' => '',

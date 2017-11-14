@@ -115,7 +115,7 @@
         </div>
     </div>
     <div class="box-footer">
-        <input type="submit" name="submit" class="btn btn-success col-sm-3 pull-right" value="<?= __d('users', 'Save the Items order'); ?>" />
+        <input type="submit" name="submit" class="btn btn-success col-sm-3 pull-right" value="<?= __d('users', 'Save the Items'); ?>" />
     </div>
 </div>
 

@@ -29,7 +29,6 @@ class MainMenu extends Widget
             return $this->handleItems($items);
         });
 
-        //
         $caret = true;
 
         $data = compact('items', 'siteUrl', 'caret');

@@ -2,6 +2,8 @@
 
 namespace App\Modules\Content\Traits;
 
+use Nova\Support\Facades\Config;
+
 use Thunder\Shortcode\ShortcodeFacade;
 
 

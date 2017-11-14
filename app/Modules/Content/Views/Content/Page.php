@@ -7,10 +7,10 @@
 
 <?= Session::getMessages(); ?>
 
-<?= $post->content; ?>
+<?= $post->getContent(); ?>
 
 <?php if (Auth::user()->hasRole('administrator')) { ?>
-<hr>
+<hr style="margin-bottom: 10px;">
 <a class="btn btn-sm btn-success pull-right" href="<?= site_url('admin/content/' .$post->id .'/edit'); ?>" title="<?= __d('content', 'Edit this Post'); ?>" role="button"><i class="fa fa-pencil"></i> <?= __d('content', 'Edit'); ?></a>
 <?php } ?>
 

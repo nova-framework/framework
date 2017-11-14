@@ -26,8 +26,12 @@ class Content extends BaseController
     protected $layout = 'Content';
 
 
-    public function index($name)
+    public function index($name = null)
     {
+        if (is_null($name)) {
+            return $this->frontpage();
+        }
+
         $query = Post::whereIn('status', array('publish', 'password'));
 
         if (is_numeric($name)) {
@@ -43,5 +47,16 @@ class Content extends BaseController
 
         return $this->createView(compact('post'), $view)
             ->shares('title', $post->title);
+    }
+
+    public function frontpage()
+    {
+        $posts = Post::where('type', 'post')
+            ->whereIn('status', array('publish', 'password'))
+            ->orderBy('created_at', 'DESC')
+            ->paginate(5);
+
+        return $this->createView(compact('posts'), 'Index')
+            ->shares('title', __d('content', 'Frontpage'));
     }
 }

@@ -12,12 +12,14 @@
 */
 
 
-Route::get('content/{slug}', array(
+Route::get('content/{slug?}', array(
     'uses'  => 'Content@index',
     'where' => array(
         'slug' => '(.*)',
     ),
 ));
+
+Route::get('content/{type}/{slug}', array('middleware' => 'auth', 'uses' => 'Posts@taxonomy'));
 
 
 // The Adminstration Routes.

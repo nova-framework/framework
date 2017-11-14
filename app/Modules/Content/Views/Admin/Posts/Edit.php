@@ -75,6 +75,8 @@
 
 </form>
 
+<script type="text/javascript" src="<?= resource_url('js/wysihtml/parser_rules/advanced_and_extended.js', 'Content'); ?>"></script>
+
 <script>
 
 $(function () {
@@ -93,7 +95,10 @@ $(function () {
 
              // Use the FontAwesome icons.
             "fa":          true
-        }
+        },
+
+        // The Parser Rules.
+        parserRules: wysihtmlParserRules
     });
 });
 

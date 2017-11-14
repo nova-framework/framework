@@ -1,5 +1,5 @@
 <section class="page-header" style="margin-bottom: 10px;">
-    <h1><?= __d('nodes', $title); ?></h1>
+    <h1><?= __d('content', $title); ?></h1>
 </section>
 
 <!-- Main content -->
@@ -13,6 +13,10 @@
 
 <div class="col-md-<?= $hasSidebar ? 9 : 12; ?>">
 
+<?php foreach ($posts as $post) { ?>
+
+<h3><strong><?= $post->title; ?></strong></h3>
+<hr style="margin-bottom: 10px;">
 <?php $format = __d('content', '%d %b %Y'); ?>
 <div class="pull-left"><?= __d('content', '{0}, by <b>{1}</b>', $post->updated_at->formatLocalized($format), $post->author->realname()); ?></div>
 
@@ -32,7 +36,7 @@
 <div class="clearfix"></div>
 <hr style="margin-top: 10px;">
 
-<?= $post->getContent(); ?>
+<?= preg_replace("/^(.*)<!--more-->(.*)$/sm", "$1", $post->getContent()); ?>
 
 <hr style="margin-bottom: 10px;">
 
@@ -49,26 +53,29 @@
 </div>
 <?php } ?>
 
-<?php if (Auth::user()->hasRole('administrator')) { ?>
-<a class="btn btn-sm btn-success pull-right" href="<?= site_url('admin/content/' .$post->id .'/edit'); ?>" title="<?= __d('content', 'Edit this Post'); ?>" role="button"><i class="fa fa-pencil"></i> <?= __d('content', 'Edit'); ?></a>
-<?php } ?>
+<a class="btn btn-xs btn-success col-md-2 pull-right" href="<?= site_url('admin/content/' .$post->name); ?>" title="<?= __d('content', 'View this Post'); ?>" role="button"><i class="fa fa-paper-plane-o"></i> <?= __d('content', 'Read more ...'); ?></a>
 
 <div class="clearfix"></div>
+<br>
+
+<?php } ?>
+
+<?php if (! empty($paginator = $posts->links())) { ?>
+<hr style="margin-bottom: 0;">
+<?= $paginator; ?>
+<?php } ?>
+
+<br>
 
 </div>
 
 <?php if ($hasSidebar) { ?>
-
 <div class="col-md-3">
-
 <?= Widget::position('content.posts.sidebar'); ?>
-
 </div>
-
 <?php } ?>
 
 <div class="clearfix"></div>
-
 </div>
 
 </div>

@@ -42,7 +42,7 @@
 <div class="pull-left" style="font-size: 16px; font-weight: bold;">#
 <?php ob_start(); ?>
 <?php foreach ($tags as $tag) { ?>
-<?= ($count > 0) ? ', ' : ''; ?><a href="<?= site_url('content/category/' .$tag->slug); ?>"><?= $tag->name; ?></a>
+<?= ($count > 0) ? ', ' : ''; ?><a href="<?= site_url('content/tag/' .$tag->slug); ?>"><?= $tag->name; ?></a>
 <?php $count++; ?>
 <?php } ?>
 <?= preg_replace('~>\s,\s<~m', '>, <', ob_get_clean()); ?>

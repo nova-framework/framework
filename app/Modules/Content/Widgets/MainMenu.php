@@ -80,7 +80,7 @@ class MainMenu extends Widget
             $item->load('children');
 
             if (! $item->children->isEmpty()) {
-                $items = $this->handleItems($item->children, $result);
+                $items = $this->handleItems($item->children);
             } else {
                 $items = array();
             }

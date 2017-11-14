@@ -76,6 +76,7 @@ class MainMenu extends Widget
                 }
 
                 if (! is_null($item->title)) {
+                    // The user edited the title of this menu item.
                     $title = $item->title;
                 }
             }

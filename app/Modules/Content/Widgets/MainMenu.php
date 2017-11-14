@@ -37,7 +37,7 @@ class MainMenu extends Widget
         return View::make('Widgets/MainMenuItems', $data, 'Content')->render();
     }
 
-    public function handleItems($items)
+    protected function handleItems($items)
     {
         $result = array();
 

@@ -75,6 +75,10 @@ class MainMenu extends Widget
 
                     $url = site_url('content/category/' .$instance->slug);
                 }
+
+                if (! is_null($item->title)) {
+                    $title = $item->title;
+                }
             }
 
             $item->load('children');

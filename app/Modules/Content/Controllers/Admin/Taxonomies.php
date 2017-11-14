@@ -128,6 +128,10 @@ class Taxonomies extends BaseController
             ), 200);
         }
 
+        // Invalidate the content caches.
+        $this->clearContentCache();
+
+        //
         $type = $taxonomy->taxonomy == 'post_tag' ? 'tag' : $taxonomy->taxonomy;
 
         $name = Config::get("content::labels.{$type}.name", Str::title($type));
@@ -172,6 +176,9 @@ class Taxonomies extends BaseController
 
         $term->save();
 
+        // Invalidate the content caches.
+        $this->clearContentCache();
+
         //
         $type = $taxonomy->taxonomy == 'post_tag' ? 'tag' : $taxonomy->taxonomy;
 
@@ -200,6 +207,9 @@ class Taxonomies extends BaseController
         $taxonomy->term->delete();
 
         $taxonomy->delete();
+
+        // Invalidate the content caches.
+        $this->clearContentCache();
 
         //
         $type = $taxonomy->taxonomy == 'post_tag' ? 'tag' : $taxonomy->taxonomy;
@@ -271,5 +281,10 @@ class Taxonomies extends BaseController
         }
 
         return $result;
+    }
+
+    protected function clearContentCache()
+    {
+        Cache::forget('content.categories');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Modules\Content\Controllers\Admin;
 
 use Nova\Http\Request;
 use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Hash;
@@ -292,6 +293,9 @@ class Posts extends BaseController
         // Fire the associated event.
         Event::fire('content.post.updated', array($post, $creating));
 
+        // Invalidate the content caches.
+        $this->clearContentCache();
+
         //
         $name = Config::get("content::labels.{$type}.name", Str::title($type));
 
@@ -321,6 +325,9 @@ class Posts extends BaseController
         });
 
         $post->delete();
+        
+        // Invalidate the content caches.
+        $this->clearContentCache();
 
         return Redirect::back()
             ->withStatus(__d('content', 'The record <b>#{0}</b> was successfully deleted.', $post->id), 'success');
@@ -504,5 +511,11 @@ class Posts extends BaseController
         }
 
         return $result;
+    }
+
+    protected function clearContentCache()
+    {
+        Cache::forget('content.categories');
+        Cache::forget('content.archives');
     }
 }

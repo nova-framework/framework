@@ -21,7 +21,12 @@ class Archives extends Widget
     {
         $items = Cache::remember('content.archives', 1440, function ()
         {
-            return Post::where('type', 'post')->select('id', 'created_at')->get()->groupBy(function ($value)
+            $posts = Post::where('type', 'post')
+                ->whereIn('status', array('publish', 'password'))
+                ->select('id', 'created_at')
+                ->get();
+
+            return $posts->groupBy(function ($value)
             {
                 return Carbon::parse($value->created_at)->format('Y/m');
 

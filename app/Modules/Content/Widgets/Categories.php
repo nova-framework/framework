@@ -16,9 +16,10 @@ class Categories extends Widget
 
     public function render()
     {
-        $categories = Taxonomy::where('taxonomy', 'category')
-            ->where('count', '>', 0)
-            ->get();
+        $categories = Cache::remember('content.categories', 1440, function ()
+        {
+            return Taxonomy::where('taxonomy', 'category')->where('count', '>', 0)->get();
+        });
 
         return View::make('Widgets/Categories', compact('categories'), 'Content')->render();
     }

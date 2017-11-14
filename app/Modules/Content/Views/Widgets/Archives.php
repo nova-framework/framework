@@ -1,4 +1,4 @@
-<div style="margin-top: 40px;">
+<div style="margin-bottom: 40px;">
     <h4><strong><?= __d('content', 'Archives'); ?></strong></h3>
     <hr style="margin-bottom: 0;">
     <?php $format = __d('content', '%B %Y'); ?>

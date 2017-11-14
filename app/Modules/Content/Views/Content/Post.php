@@ -39,7 +39,7 @@
 <?php $tags = $post->taxonomies->where('taxonomy', 'post_tag'); ?>
 <?php if (! $tags->isEmpty()) { ?>
 <?php $count = 0; $html = ''; ?>
-<div class="pull-left" style="font-size: 16px; font-weight: bold;">#
+<div class="pull-left" style="font-weight: bold;">#
 <?php ob_start(); ?>
 <?php foreach ($tags as $tag) { ?>
 <?= ($count > 0) ? ', ' : ''; ?><a href="<?= site_url('content/tag/' .$tag->slug); ?>"><?= $tag->name; ?></a>

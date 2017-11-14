@@ -1,4 +1,17 @@
-<?php use App\Modules\Content\Models\Post; ?>
+<?php
+
+use App\Modules\Content\Models\Post;
+
+$items->sort(function ($a, $b)
+{
+    if ($a->menu_order === $b->menu_order) {
+        return strcmp($a->title, $b->title);
+    }
+
+    return ($a->menu_order < $b->menu_order) ? -1 : 1;
+});
+
+?>
 
 <ol class="dd-list">
     <?php foreach ($items as $item) { ?>

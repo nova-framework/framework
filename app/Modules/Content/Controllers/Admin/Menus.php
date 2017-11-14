@@ -386,15 +386,13 @@ class Menus extends BaseController
                 continue;
             }
 
-            if (($menuItem->parent_id != $parentId) || ($menuItem->menu_order != $order)) {
-                $menuItem->parent_id = $parentId;
+            $menuItem->parent_id = $parentId;
 
-                $menuItem->menu_order = $order;
+            $menuItem->menu_order = $order;
 
-                $menuItem->save();
-            }
+            $menuItem->save();
 
-            if (! empty($item->children)) {
+            if (isset($item->children) && ! empty($item->children)) {
                 $this->updateMenuItemsOrder($item->children, $menuItem->id);
             }
         }

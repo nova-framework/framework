@@ -43,7 +43,7 @@ class MainMenu extends Widget
 
         $items->sort(function ($a, $b)
         {
-            if ($a->menu_order < $b->menu_order) {
+            if ($a->menu_order === $b->menu_order) {
                 return strcmp($a->title, $b->title);
             }
 

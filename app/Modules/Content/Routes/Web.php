@@ -11,6 +11,20 @@
 |
 */
 
+Route::get('content/archive/{year}/{month}', array(
+    'uses'  => 'Content@archive',
+    'where' => array(
+        'year'  => '\d+',
+        'month' => '\d+',
+    ),
+));
+
+Route::get('content/{type}/{slug}', array(
+    'uses'  => 'Content@taxonomy',
+    'where' => array(
+        'type' => '(category|tag)',
+    ),
+));
 
 Route::get('content/{slug?}', array(
     'uses'  => 'Content@index',
@@ -18,9 +32,6 @@ Route::get('content/{slug?}', array(
         'slug' => '(.*)',
     ),
 ));
-
-Route::get('content/{type}/{slug}', array('middleware' => 'auth', 'uses' => 'Posts@taxonomy'));
-
 
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()

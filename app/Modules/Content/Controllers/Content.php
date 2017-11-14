@@ -2,11 +2,14 @@
 
 namespace App\Modules\Content\Controllers;
 
+use Nova\Support\Facades\Config;
 use Nova\Support\Str;
 
+use App\Modules\Content\Models\Post;
+use App\Modules\Content\Models\Taxonomy;
 use App\Modules\Platform\Controllers\BaseController;
 
-use App\Modules\Content\Models\Post;
+use Carbon\Carbon;
 
 
 class Content extends BaseController
@@ -58,5 +61,42 @@ class Content extends BaseController
 
         return $this->createView(compact('posts'), 'Index')
             ->shares('title', __d('content', 'Frontpage'));
+    }
+
+    public function taxonomy($type, $slug)
+    {
+        $taxonomy = Taxonomy::whereHas('term', function ($query) use ($slug)
+        {
+            $query->where('slug', $slug);
+
+        })->where('taxonomy', ($type == 'tag') ? 'post_tag' : $type)->firstOrFail();
+
+        $posts = $taxonomy->posts()
+            ->where('type', 'post')
+            ->whereIn('status', array('publish', 'password'))
+            ->orderBy('created_at', 'DESC')
+            ->paginate(5);
+
+        $name = Config::get("content::labels.{$type}.name", Str::title($type));
+
+        return $this->createView(compact('posts'), 'Index')
+            ->shares('title', $name .' : ' .$taxonomy->name);
+    }
+
+    public function archive($year, $month)
+    {
+        $posts = Post::where('type', 'post')
+            ->whereIn('status', array('publish', 'password'))
+            ->whereYear('created_at', '=', $year)
+            ->whereMonth('created_at', '=', $month)
+            ->orderBy('created_at', 'DESC')
+            ->paginate(5);
+
+        $format = __d('content', '%B %Y');
+
+        $date = Carbon::parse($year .'/' .$month .'/1')->formatLocalized($format);
+
+        return $this->createView(compact('posts'), 'Index')
+            ->shares('title', __d('content', 'Archive of {0}', $date));
     }
 }

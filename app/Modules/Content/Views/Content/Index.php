@@ -43,7 +43,7 @@
 <?php $tags = $post->taxonomies->where('taxonomy', 'post_tag'); ?>
 <?php if (! $tags->isEmpty()) { ?>
 <?php $count = 0; $html = ''; ?>
-<div class="pull-left" style="font-weight: bold;">#
+<div class="pull-left" style="font-weight: bold;"><i class="fa fa-tags"></i>
 <?php ob_start(); ?>
 <?php foreach ($tags as $tag) { ?>
 <?= ($count > 0) ? ', ' : ''; ?><a href="<?= site_url('content/tag/' .$tag->slug); ?>"><?= $tag->name; ?></a>
@@ -53,7 +53,7 @@
 </div>
 <?php } ?>
 
-<a class="btn btn-xs btn-success col-md-2 pull-right" href="<?= site_url('admin/content/' .$post->name); ?>" title="<?= __d('content', 'View this Post'); ?>" role="button"><i class="fa fa-paper-plane-o"></i> <?= __d('content', 'Read more ...'); ?></a>
+<a class="btn btn-xs btn-success col-md-2 pull-right" href="<?= site_url('content/' .$post->name); ?>" title="<?= __d('content', 'View this Post'); ?>" role="button"><i class="fa fa-paper-plane-o"></i> <?= __d('content', 'Read more ...'); ?></a>
 
 <div class="clearfix"></div>
 <br>

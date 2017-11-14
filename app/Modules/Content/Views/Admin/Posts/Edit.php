@@ -342,7 +342,7 @@ $(function () {
 
         <div class="form-group">
             <div class="input-group">
-                <input type="text" name="tags" id="tags-input" class="form-control" value="" autocomplete="off">
+                <input type="text" name="tags" id="tags-input" class="form-control" value="">
                 <span class="input-group-btn">
                     <input type="submit" name="submit" id="create-tags-button" class="btn btn-primary" value="<?= __d('content', 'Add'); ?>" type="button">
                 </span>
@@ -426,6 +426,8 @@ $(function () {
             });
         });
     }
+
+    $('#tags-input').val('');
 
     updateRemoveTagLinks();
 });

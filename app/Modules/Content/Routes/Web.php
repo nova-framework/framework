@@ -13,7 +13,7 @@
 
 
 Route::get('content/{slug}', array(
-    'uses'  => 'Posts@index',
+    'uses'  => 'Content@index',
     'where' => array(
         'slug' => '(.*)',
     ),

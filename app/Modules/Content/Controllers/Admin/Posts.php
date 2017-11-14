@@ -338,27 +338,28 @@ class Posts extends BaseController
         // Get the actual Tag instances associated to this Post.
         $items = $post->taxonomies()->where('taxonomy', 'post_tag')->get();
 
-        $items = $items->map(function ($item)
+        // Get the names of the already associated tags.
+        $existentTags = $items->map(function ($item)
         {
-            return array('name' => $item->name, 'item' => $item);
-        });
+            return $item->name;
+
+        })->toArray();
 
         //
-        $tags = array();
+        $requestTags = array();
 
-        if ($request->has('tags') && ! empty($result = $request->input('tags'))) {
+        if (! empty($tags = $request->input('tags'))) {
             // The tags value is something like: 'Sample Tag, Another Tag, Testings'
 
-            $tags = array_map('trim', explode(',', $result));
+            $requestTags = array_map('trim', explode(',', $tags));
+        } else {
+            return Response::json(array('error' => 'The Tags value is required'), 400);
         }
 
-        $result = array();
+        $taxonomies = array();
 
-        foreach ($tags as $name) {
-            $item = $items->where('name', $name)->first();
-
-            if (! is_null($item)) {
-                // The Tag already exists and it is attached to this Post.
+        foreach ($requestTags as $name) {
+            if (in_array($name, $existentTags)) {
                 continue;
             }
 
@@ -368,32 +369,37 @@ class Posts extends BaseController
 
             })->first();
 
-            if (is_null($tag)) {
-                $term = Term::create(array(
-                    'name'   => $name,
-                    'slug'   => Term::uniqueSlug($name, 'post_tag'),
-                ));
+            if (! is_null($tag)) {
+                array_push($taxonomies, $tag);
 
-                $tag = Taxonomy::create(array(
-                    'term_id'     => $term->id,
-                    'taxonomy'    => 'post_tag',
-                    'description' => '',
-                ));
+                continue;
             }
 
-            $result[] = array('id' => $tag->id, 'name' => $name);
+            $term = Term::create(array(
+                'name'   => $name,
+                'slug'   => Term::uniqueSlug($name, 'post_tag'),
+            ));
+
+            $tag = Taxonomy::create(array(
+                'term_id'     => $term->id,
+                'taxonomy'    => 'post_tag',
+                'description' => '',
+            ));
+
+            array_push($taxonomies, $tag);
         }
 
-        if (! empty($result)) {
-            $ids = Arr::pluck($result, 'id');
+        $result = array();
 
-            $post->taxonomies()->attach($ids);
+        foreach ($taxonomies as $taxonomy) {
+            $taxonomy->posts()->attach($post);
 
-            // Update the count field in the associated taxonomies.
-            $post->taxonomies->each(function ($taxonomy)
-            {
-                $taxonomy->updateCount();
-            });
+            $taxonomy->updateCount();
+
+            array_push($result, array(
+                'id'   => $taxonomy->id,
+                'name' => $taxonomy->name
+            ));
         }
 
         return Response::json($result, 200);

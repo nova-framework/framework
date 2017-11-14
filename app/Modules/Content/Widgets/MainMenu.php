@@ -6,6 +6,7 @@ use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Request;
 use Nova\Support\Facades\View;
 use Nova\Support\Collection;
+use Nova\Support\Str;
 
 use Shared\Widgets\Widget;
 
@@ -26,7 +27,7 @@ class MainMenu extends Widget
 
             $items = $menu->items->where('parent_id', 0);
 
-            return $this->handleItems($items);
+            return $this->handleMenuItems($items);
         });
 
         $caret = true;
@@ -36,7 +37,7 @@ class MainMenu extends Widget
         return View::make('Widgets/MainMenuItems', $data, 'Content')->render();
     }
 
-    protected function handleItems($items)
+    protected function handleMenuItems($items)
     {
         $result = array();
 
@@ -52,39 +53,42 @@ class MainMenu extends Widget
         foreach ($items as $item) {
             $type = $item->menu_item_type;
 
-            if ($type == 'custom') {
-                $title = $item->title;
-
-                $url = $item->menu_item_url;
-            }
-
-            // The item is not a Custom Link.
-            else {
+            if ($type !== 'custom') {
                 $instance = $item->instance();
 
-                if (($type == 'post') || ($type == 'page')) {
+                if ($type == 'taxonomy') {
+                    $title = $instance->name;
+
+                    $taxonomy = ($instance->taxonomy == 'post_tag') ? 'tag' : $instance->taxonomy;
+
+                    $url = url('content', array($taxonomy, $instance->slug));
+                }
+
+                // Everthing else is based on Posts or extended from them.
+                else {
                     $title = $instance->title;
 
                     $url = site_url('content/' .$instance->name);
                 }
 
-                // Taxonomy.
-                else if ($type == 'taxonomy') {
-                    $title = $instance->name;
+                // If the user edited the title of the menu item, it will have its own title.
 
-                    $url = site_url('content/category/' .$instance->slug);
-                }
-
-                if (! is_null($item->title)) {
-                    // The user edited the title of this menu item.
+                if (! empty($item->title)) {
                     $title = $item->title;
                 }
+            }
+
+            // Custom Link.
+            else {
+                $title = $item->title;
+
+                $url = $item->menu_item_url;
             }
 
             $item->load('children');
 
             if (! $item->children->isEmpty()) {
-                $items = $this->handleItems($item->children);
+                $items = $this->handleMenuItems($item->children);
             } else {
                 $items = array();
             }

@@ -1,13 +1,8 @@
 <?php
 
-use App\Modules\Content\Widgets\MainMenu;
-
 foreach ($items as $item) {
-    list ($title, $url, $children) = MainMenu::handleItem($item);
-
-    if (! $children->isEmpty()) {
+    if (! empty($children = $item['children'])) {
         $data = array(
-            'menu'    => $menu,
             'items'   => $children,
             'siteUrl' => $siteUrl,
             'liClass' => 'dropdown-submenu',
@@ -15,14 +10,14 @@ foreach ($items as $item) {
         );
 ?>
 <li<?= isset($liClass) ? sprintf(' class="%s"', $liClass) : ''; ?>>
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?= $title; ?><?= $caret ? ' <span class="caret"></span>' : ''; ?></a>
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?= $item['title']; ?> <?= $caret ? '<span class="caret"></span>' : ''; ?></a>
     <ul class="dropdown-menu">
         <?= View::fetch('Widgets/MainMenuItems', $data, 'Content'); ?>
     </ul>
 </li>
 <?php } else { ?>
-<li<?= ($siteUrl == $url) ? ' class="active"' : ''; ?>>
-    <a href="<?= $url; ?>"><?= $title; ?></a>
+<li<?= ($siteUrl == $item['url']) ? ' class="active"' : ''; ?>>
+    <a href="<?= $item['url']; ?>"><?= $item['title']; ?></a>
 </li>
 <?php } ?>
 <?php } ?>

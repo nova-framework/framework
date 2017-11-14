@@ -4,6 +4,7 @@ namespace App\Modules\Content\Controllers\Admin;
 
 use Nova\Http\Request;
 use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Redirect;
@@ -49,6 +50,9 @@ class Menus extends BaseController
 
         $taxonomy->save();
 
+        // Invalidate the cached menu data.
+        Cache::forget('content.menus.main_menu');
+
         return Redirect::back()
             ->withStatus(__d('content', 'The Menu <b>{0}</b> was successfully updated.', $name), 'success');
     }
@@ -76,6 +80,9 @@ class Menus extends BaseController
 
         $menu->save();
 
+        // Invalidate the cached menu data.
+        Cache::forget('content.menus.main_menu');
+
         return Redirect::back()
             ->withStatus(__d('content', 'The Menu <b>{0}</b> was successfully updated.', $name), 'success');
     }
@@ -101,6 +108,9 @@ class Menus extends BaseController
         $menu->term->delete();
 
         $menu->delete();
+
+        // Invalidate the cached menu data.
+        Cache::forget('content.menus.main_menu');
 
         return Redirect::back()
             ->withStatus(__d('content', 'The Menu {0} was successfully deleted.', $name), 'success');
@@ -176,6 +186,9 @@ class Menus extends BaseController
             $taxonomy->updateCount();
         }
 
+        // Invalidate the cached menu data.
+        Cache::forget('content.menus.main_menu');
+
         return Redirect::back()
             ->withStatus(__d('content', 'The Menu Item(s) was successfully created.'), 'success');
     }
@@ -224,6 +237,9 @@ class Menus extends BaseController
             $taxonomy->updateCount();
         }
 
+        // Invalidate the cached menu data.
+        Cache::forget('content.menus.main_menu');
+
         return Redirect::back()
             ->withStatus(__d('content', 'The Menu Item(s) was successfully created.'), 'success');
     }
@@ -270,6 +286,9 @@ class Menus extends BaseController
 
         $taxonomy->updateCount();
 
+        // Invalidate the cached menu data.
+        Cache::forget('content.menus.main_menu');
+
         return Redirect::back()
             ->withStatus(__d('content', 'The Menu Item(s) was successfully created.'), 'success');
     }
@@ -295,6 +314,9 @@ class Menus extends BaseController
         $item->title = $request->input('name');
 
         $item->save();
+
+        // Invalidate the cached menu data.
+        Cache::forget('content.menus.main_menu');
 
         return Redirect::back()
             ->withStatus(__d('content', 'The Menu Item was successfully updated.'), 'success');
@@ -324,6 +346,9 @@ class Menus extends BaseController
 
         $taxonomy->updateCount();
 
+        // Invalidate the cached menu data.
+        Cache::forget('content.menus.main_menu');
+
         return Redirect::back()
             ->withStatus(__d('content', 'The Menu Item was successfully deleted.'), 'success');
     }
@@ -343,6 +368,9 @@ class Menus extends BaseController
             json_decode($json)
         );
 
+        // Invalidate the cached menu data.
+        Cache::forget('content.menus.main_menu');
+        
         return Response::json(array('success' => true), 200);
     }
 

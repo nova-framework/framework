@@ -2,6 +2,7 @@
 
 namespace App\Modules\Content\Controllers;
 
+use Nova\Http\Request;
 use Nova\Support\Facades\Config;
 use Nova\Support\Str;
 
@@ -98,5 +99,26 @@ class Content extends BaseController
 
         return $this->createView(compact('posts'), 'Index')
             ->shares('title', __d('content', 'Archive of {0}', $date));
+    }
+
+    public function search(Request $request)
+    {
+        $search = strip_tags(trim(
+            $request->input('query')
+        ));
+
+        if (strlen($search) < 5) {
+            return Redirect::back()->withStatus(__d('content', 'Invalid query string'), 'danger');
+        }
+
+        $posts = Post::where('type', 'post')->whereIn('status', array('publish', 'password'))->where(function ($query) use ($search)
+        {
+            $query->where('title', 'LIKE', '%' .$search .'%')
+                ->orWhere('content', 'LIKE', '%' .$search .'%');
+
+        })->orderBy('created_at', 'DESC')->paginate(5);
+
+        return $this->createView(compact('posts'), 'Index')
+            ->shares('title', __d('content', 'Search results : {0}', htmlentities($search)));
     }
 }

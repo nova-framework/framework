@@ -19,6 +19,8 @@ Route::get('content/archive/{year}/{month}', array(
     ),
 ));
 
+Route::get('content/search', 'Content@search');
+
 Route::get('content/{type}/{slug}', array(
     'uses'  => 'Content@taxonomy',
     'where' => array(

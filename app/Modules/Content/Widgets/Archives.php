@@ -3,9 +3,7 @@
 namespace App\Modules\Content\Widgets;
 
 use Nova\Support\Facades\Cache;
-use Nova\Support\Facades\Language;
 use Nova\Support\Facades\View;
-use Nova\Support\Str;
 
 use Shared\Widgets\Widget;
 

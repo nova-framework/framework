@@ -13,6 +13,7 @@
 
 <div class="col-md-<?= $hasSidebar ? 9 : 12; ?>">
 
+<?php if (! $posts->isEmpty()) { ?>
 <?php foreach ($posts as $post) { ?>
 
 <h3><strong><?= $post->title; ?></strong></h3>
@@ -53,7 +54,7 @@
 </div>
 <?php } ?>
 
-<a class="btn btn-xs btn-success col-md-2 pull-right" href="<?= site_url('content/' .$post->name); ?>" title="<?= __d('content', 'View this Post'); ?>" role="button"><i class="fa fa-paper-plane-o"></i> <?= __d('content', 'Read more ...'); ?></a>
+<a class="btn btn-xs btn-default col-md-2 pull-right" href="<?= site_url('content/' .$post->name); ?>" title="<?= __d('content', 'View this Post'); ?>" role="button"><i class="fa fa-paper-plane-o"></i> <?= __d('content', 'Read more ...'); ?></a>
 
 <div class="clearfix"></div>
 <br>
@@ -63,6 +64,10 @@
 <?php if (! empty($paginator = $posts->links())) { ?>
 <hr style="margin-bottom: 0;">
 <?= $paginator; ?>
+<?php } ?>
+
+<?php } else { ?>
+<p><?= __d('content', 'No posts found.'); ?></p>
 <?php } ?>
 
 <br>

@@ -15,7 +15,7 @@
 
 <?php if (! $posts->isEmpty()) { ?>
 <?php foreach ($posts as $post) { ?>
-<?php $thumbnail = isset($post->thumbnail) && isset($post->thumbnail->attachment) ? site_url('content/media/serve/' .$post->thumbnail->attachment->name) .'?s=200' : ''; ?>
+<?php $thumbnail = isset($post->thumbnail) && isset($post->thumbnail->attachment) ? site_url('content/media/serve/' .$post->thumbnail->attachment->name) .'?s=220' : ''; ?>
 
 <h3><strong><?= $post->title; ?></strong></h3>
 <hr style="margin-bottom: 10px;">
@@ -60,7 +60,7 @@
 </div>
 <?php } ?>
 
-<a class="btn btn-xs btn-default col-md-2 pull-right" href="<?= site_url('content/' .$post->name); ?>" title="<?= __d('content', 'View this Post'); ?>" role="button"><i class="fa fa-paper-plane-o"></i> <?= __d('content', 'Read more ...'); ?></a>
+<a class="btn btn-xs btn-default col-md-2 pull-right" href="<?= site_url('content/' .$post->name); ?>" title="<?= __d('content', 'View this Post'); ?>" role="button"><?= __d('content', 'Read more ...'); ?></a>
 
 <div class="clearfix"></div>
 <br>

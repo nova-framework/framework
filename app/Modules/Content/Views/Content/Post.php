@@ -13,6 +13,8 @@
 
 <div class="col-md-<?= $hasSidebar ? 9 : 12; ?>">
 
+<?php $thumbnail = isset($post->thumbnail) && isset($post->thumbnail->attachment) ? site_url('content/media/serve/' .$post->thumbnail->attachment->name) .'?s=360' : ''; ?>
+
 <?php $format = __d('content', '%d %b %Y'); ?>
 <div class="pull-left"><?= __d('content', '{0}, by <b>{1}</b>', $post->updated_at->formatLocalized($format), $post->author->realname()); ?></div>
 
@@ -32,7 +34,13 @@
 <div class="clearfix"></div>
 <hr style="margin-top: 10px;">
 
+<?php if (! empty($thumbnail)) { ?>
+<div class="clearfix pull-left" style="margin: 0 20px 20px 0;"><img class="img-responsive img-thumbnail" src="<?= $thumbnail; ?>"></div>
+<?php } ?>
+
 <?= $post->getContent(); ?>
+
+<div class="clearfix"></div>
 
 <hr style="margin-bottom: 10px;">
 
@@ -54,6 +62,7 @@
 <?php } ?>
 
 <div class="clearfix"></div>
+<br>
 
 </div>
 

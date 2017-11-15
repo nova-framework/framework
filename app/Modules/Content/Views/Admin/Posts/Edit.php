@@ -81,7 +81,7 @@
 
 $(function () {
     // Bootstrap WYSIHTML5 - text editor
-    $('#content').wysihtml5({
+    var wysihtml = $('#content').wysihtml5({
         locale: '<?= Language::code(); ?>',
         toolbar: {
             "font-styles": true,  // Font styling, e.g. h1, h2, etc. Default true

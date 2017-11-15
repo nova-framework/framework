@@ -96,15 +96,15 @@ class Attachment extends Post
             $path = Config::get('content::attachments.path', base_path('assets/files'));
         }
 
+        $fileName = pathinfo($name, PATHINFO_FILENAME);
+
+        $extension = pathinfo($name, PATHINFO_EXTENSION);
+
         try {
             // Delete the uploaded file.
             File::delete($path .DS .$name);
 
             // Delete also the generated thumbnails, if any exists.
-            $fileName = pathinfo($name, PATHINFO_FILENAME);
-
-            $extension = pathinfo($name, PATHINFO_EXTENSION);
-
             $thumbnails = File::glob($path .DS .'thumbnails' .DS .$fileName .'-*.' .$extension);
 
             File::delete($thumbnails);

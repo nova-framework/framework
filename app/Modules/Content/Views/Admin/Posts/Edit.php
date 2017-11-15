@@ -192,6 +192,8 @@ $(function () {
             $(this).append('<input class="publish-form-value" type="hidden" name="categories" value="' + $('.category-checkbox:checked').serialize() + '" /> ');
         }
 
+        $(this).append('<input class="publish-form-value" type="hidden" name="thumbnail" value="' + $('#thumbnail').val() + '" /> ');
+
         //event.preventDefault();
     });
 
@@ -447,10 +449,12 @@ $(function () {
         <h3 class="box-title"><?= __d('content', 'Featured Image'); ?></h3>
     </div>
     <div class="box-body">
-        <input class="uploaded_image_selecter" type="hidden" name="featured" value="0">
-        <a class="btn btn-primary btn-sm col-sm-6 pull-right btn_upload_image" file_type="image" selecter="featured"><?= __d('content', 'Set featured image'); ?></a>
-        <div class='clearfix uploaded_image hide'><img class="img-responsive img-thumbnail" src=''></div>
-        <a class="btn btn-danger btn-sm col-sm-8 btn_remove_image hide" style="margin-top: 15px;" file_type="image" selecter="attachment"><i class="fa fa-remove"></i> <?= __d('content', 'Remove featured image'); ?></a>
+        <?php $thumbId = (int) $post->thumbnail_id ?: 0; ?>
+        <?php $thumbUrl = isset($post->thumbnail) && isset($post->thumbnail->attachment) ? site_url('content/media/serve/' .$post->thumbnail->attachment->name) : ''; ?>
+        <input name="thumbnail" id="thumbnail" type="hidden" class="uploaded_image_selecter" value="<?= $thumbId; ?>">
+        <a class="btn btn-primary btn-sm col-sm-6 pull-right btn_upload_image <?= ($thumbId > 0) ? 'hide' : ''; ?>" file_type="image" selecter="thumbnail"><?= __d('content', 'Set featured image'); ?></a>
+        <div class='clearfix uploaded_image <?= ($thumbId == 0) ? 'hide' : ''; ?>'><img class="img-responsive img-thumbnail" src="<?= $thumbUrl; ?>"></div>
+        <a class="btn btn-danger btn-sm col-sm-8 btn_remove_image <?= ($thumbId == 0) ? 'hide' : ''; ?>" style="margin-top: 15px;" file_type="image" selecter="attachment"><i class="fa fa-remove"></i> <?= __d('content', 'Remove featured image'); ?></a>
     </div>
 </div>
 

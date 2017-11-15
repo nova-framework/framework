@@ -138,7 +138,7 @@ class Posts extends BaseController
         $authUser = Auth::user();
 
         try {
-            $post = Post::findOrFail($id);
+            $post = Post::with('thumbnail')->findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
             return Redirect::back()->withStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
@@ -197,6 +197,8 @@ class Posts extends BaseController
             return '<div class="tag-item"><a class="delete-tag-link" href="#" data-name="' .$tag->name  .'" data-id="' .$tag->id  .'"><i class="fa fa-times-circle"></i></a> ' .$tag->name .'</div>';
 
         })->implode("\n");
+
+        // Featured Image / Thumbnail.
 
         // No menu selection on edit mode.
         $menuSelect = '';
@@ -263,6 +265,9 @@ class Posts extends BaseController
 
             $post->menu_order = (int) Arr::get($input, 'order', 0);
         }
+
+        // Featured Image / Thumbnail.
+        $post->meta->thumbnail_id = (int) $request->input('thumbnail');
 
         // Save the Post instance before to process the Categories and Tags.
         $post->save();

@@ -36,7 +36,7 @@ class Content extends BaseController
             return $this->frontpage();
         }
 
-        $query = Post::with('author', 'taxonomies')->whereIn('status', array('publish', 'password'));
+        $query = Post::with('author', 'thumbnail', 'taxonomies')->whereIn('status', array('publish', 'password'));
 
         if (is_numeric($name)) {
             $query->where('id', (int) $name);
@@ -55,7 +55,7 @@ class Content extends BaseController
 
     public function frontpage()
     {
-        $posts = Post::with('author', 'taxonomies')
+        $posts = Post::with('author', 'thumbnail', 'taxonomies')
             ->where('type', 'post')
             ->whereIn('status', array('publish', 'password'))
             ->orderBy('created_at', 'DESC')
@@ -74,7 +74,7 @@ class Content extends BaseController
         })->where('taxonomy', ($type == 'tag') ? 'post_tag' : $type)->firstOrFail();
 
         $posts = $taxonomy->posts()
-            ->with('author', 'taxonomies')
+            ->with('author', 'thumbnail', 'taxonomies')
             ->where('type', 'post')
             ->whereIn('status', array('publish', 'password'))
             ->orderBy('created_at', 'DESC')
@@ -88,7 +88,7 @@ class Content extends BaseController
 
     public function archive($year, $month)
     {
-        $posts = Post::with('author', 'taxonomies')
+        $posts = Post::with('author', 'thumbnail', 'taxonomies')
             ->where('type', 'post')
             ->whereIn('status', array('publish', 'password'))
             ->whereYear('created_at', '=', $year)
@@ -114,7 +114,7 @@ class Content extends BaseController
             return Redirect::back()->withStatus(__d('content', 'Invalid query string'), 'danger');
         }
 
-        $posts = Post::with('author', 'taxonomies')
+        $posts = Post::with('author', 'thumbnail', 'taxonomies')
             ->where('type', 'post')
             ->whereIn('status', array('publish', 'password'))
             ->where(function ($query) use ($search)

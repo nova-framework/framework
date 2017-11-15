@@ -15,6 +15,7 @@
 
 <?php if (! $posts->isEmpty()) { ?>
 <?php foreach ($posts as $post) { ?>
+<?php $thumbnail = isset($post->thumbnail) && isset($post->thumbnail->attachment) ? site_url('content/media/serve/' .$post->thumbnail->attachment->name) .'?s=200' : ''; ?>
 
 <h3><strong><?= $post->title; ?></strong></h3>
 <hr style="margin-bottom: 10px;">
@@ -36,8 +37,11 @@
 
 <div class="clearfix"></div>
 <hr style="margin-top: 10px;">
-
+<?php if (! empty($thumbnail)) { ?>
+<div class="clearfix pull-left" style="margin: 0 20px 20px 0;"><img class="img-responsive img-thumbnail" src="<?= $thumbnail; ?>"></div>
+<?php } ?>
 <?= preg_replace("/^(.*)<!--more-->(.*)$/sm", "$1", $post->getContent()); ?>
+<div class="clearfix"></div>
 
 <hr style="margin-bottom: 10px;">
 

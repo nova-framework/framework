@@ -110,6 +110,9 @@ class Attachments extends BaseController
         $upload->meta->attachment_image_size      = $fileSize;
         $upload->meta->attachment_image_alt       = '';
 
+        // For the Post thumbnail() relationship.
+        $upload->meta->attachment_metadata = null;
+
         $upload->save();
 
         return Response::json(array(

@@ -18,6 +18,17 @@ Event::listen('backend.menu.sidebar', function ()
 {
     return array(
 
+        // Media.
+        array(
+            'url'    => site_url('admin/media'),
+            'title'  => __d('content', 'Media'),
+            'icon'   => 'picture-o',
+            'weight' => 1,
+
+            //
+            'path'   => 'media',
+        ),
+
         // Menus.
         array(
             'url'    => '#',

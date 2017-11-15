@@ -40,7 +40,9 @@
 <?php if (! empty($thumbnail)) { ?>
 <div class="clearfix pull-left" style="margin: 0 20px 20px 0;"><img class="img-responsive img-thumbnail" src="<?= $thumbnail; ?>"></div>
 <?php } ?>
+<div style="text-align: justify;">
 <?= preg_replace("/^(.*)<!--more-->(.*)$/sm", "$1", $post->getContent()); ?>
+</div>
 <div class="clearfix"></div>
 
 <hr style="margin-bottom: 10px;">

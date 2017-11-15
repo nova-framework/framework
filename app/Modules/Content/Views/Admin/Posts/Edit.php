@@ -454,7 +454,7 @@ $(function () {
         <input name="thumbnail" id="thumbnail" type="hidden" class="uploaded_image_selecter" value="<?= $thumbId; ?>">
         <a class="btn btn-primary btn-sm col-sm-6 pull-right btn_upload_image <?= ($thumbId > 0) ? 'hide' : ''; ?>" file_type="image" selecter="thumbnail"><?= __d('content', 'Set featured image'); ?></a>
         <div class='clearfix uploaded_image <?= ($thumbId == 0) ? 'hide' : ''; ?>'><img class="img-responsive img-thumbnail" src="<?= $thumbUrl; ?>"></div>
-        <a class="btn btn-danger btn-sm col-sm-8 btn_remove_image <?= ($thumbId == 0) ? 'hide' : ''; ?>" style="margin-top: 15px;" file_type="image" selecter="attachment"><i class="fa fa-remove"></i> <?= __d('content', 'Remove featured image'); ?></a>
+        <a class="btn btn-danger btn-sm col-sm-8 btn_remove_image <?= ($thumbId == 0) ? 'hide' : ''; ?>" style="margin-top: 15px;" file_type="image" selecter="attachment"></i> <?= __d('content', 'Remove featured image'); ?></a>
     </div>
 </div>
 

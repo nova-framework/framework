@@ -24,55 +24,39 @@ class Attachments extends BaseController
             ->shares('title', __d('content', 'Attachments'));
     }
 
-    public function store(Request $request)
-    {
-    }
-
     public function update(Request $request, $id)
     {
+        $input = $request->all();
+
+        try {
+            $upload = Attachment::where('id', $id)->firstOrFail();
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Attachment not found: #{0}', $id), 'danger');
+        }
+
+        $upload->content = $input['description'];
+        $upload->excerpt = $input['caption'];
+
+        $upload->save();
+
+        return Redirect::back()
+            ->withStatus(__d('content', 'The Menu <b>{0}</b> was successfully updated.', $upload->title), 'success');
     }
 
     public function destroy($id)
     {
-    }
-
-    public function serve(Request $request, $slug)
-    {
-        $upload = Attachment::where("name", $slug)->firstOrFail();
-
-        $path = ROOTDIR .'assets' .DS .'files' .DS .$upload->name;
-
-        if (! File::exists($path)) {
-            abort(404);
+        try {
+            $upload = Attachment::where('id', $id)->firstOrFail();
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Attachment not found: #{0}', $id), 'danger');
         }
 
-        // Check if Thumbnail
-        $size = $request->input('s');
+        $upload->delete();
 
-        if (isset($size)) {
-            if(! is_numeric($size)) {
-                $size = 150;
-            }
-
-            $thumbPath = storage_path("files/" .$size ."x" .$size .'_' .$upload->name);
-
-            if (! File::exists($thumbPath)) {
-                $image = Image::make($path);
-
-                $image->fit($size, $size, function ($constraint)
-                {
-                    $constraint->aspectRatio();
-                });
-
-                $image->save($thumbPath);
-            }
-
-            $path = $thumbPath;
-        }
-
-        $fileDispatcher = App::make('assets.dispatcher');
-
-        return $fileDispatcher->serve($path, $request);
+        return Redirect::back()
+            ->withStatus(__d('content', 'The Menu <b>{0}</b> was successfully deleted.', $upload->title), 'success');
     }
 
     public function upload(Request $request)
@@ -148,5 +132,44 @@ class Attachments extends BaseController
         }
 
         return Response::json(array('uploads' => $result), 200);
+    }
+
+    public function serve(Request $request, $slug)
+    {
+        $upload = Attachment::where("name", $slug)->firstOrFail();
+
+        $path = ROOTDIR .'assets' .DS .'files' .DS .$upload->name;
+
+        if (! File::exists($path)) {
+            abort(404);
+        }
+
+        // Check if Thumbnail
+        $size = $request->input('s');
+
+        if (isset($size)) {
+            if(! is_numeric($size)) {
+                $size = 150;
+            }
+
+            $thumbPath = storage_path("files/" .$size ."x" .$size .'_' .$upload->name);
+
+            if (! File::exists($thumbPath)) {
+                $image = Image::make($path);
+
+                $image->fit($size, $size, function ($constraint)
+                {
+                    $constraint->aspectRatio();
+                });
+
+                $image->save($thumbPath);
+            }
+
+            $path = $thumbPath;
+        }
+
+        $fileDispatcher = App::make('assets.dispatcher');
+
+        return $fileDispatcher->serve($path, $request);
     }
 }

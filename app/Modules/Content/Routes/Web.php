@@ -45,6 +45,8 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
     Route::post('media/upload',        array('middleware' => 'auth', 'uses' => 'Attachments@upload'));
     Route::get( 'media/uploaded',      array('middleware' => 'auth', 'uses' => 'Attachments@uploaded'));
 
+    Route::get( 'media/{id}',          array('middleware' => 'auth', 'uses' => 'Attachments@update'));
+
     // The Menus CRUD.
     Route::get( 'menus',               array('middleware' => 'auth', 'uses' => 'Menus@index'));
     Route::post('menus',               array('middleware' => 'auth', 'uses' => 'Menus@store'));

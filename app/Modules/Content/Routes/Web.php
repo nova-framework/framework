@@ -11,6 +11,10 @@
 |
 */
 
+// The Media Files serving.
+Route::get('content/media/serve/{name}', 'Attachments@serve');
+
+// The Content dispatching.
 Route::get('content/archive/{year}/{month}', array(
     'uses'  => 'Content@archive',
     'where' => array(
@@ -34,8 +38,6 @@ Route::get('content/{slug?}', array(
         'slug' => '(.*)',
     ),
 ));
-
-Route::get( 'media/serve/{name}', 'Attachments@serve');
 
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()

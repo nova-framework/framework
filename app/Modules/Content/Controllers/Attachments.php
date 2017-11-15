@@ -12,6 +12,8 @@ use Nova\Support\Str;
 
 use App\Modules\Content\Models\Attachment;
 
+use Intervention\Image\ImageManagerStatic as Image;
+
 
 class Attachments extends BaseController
 {

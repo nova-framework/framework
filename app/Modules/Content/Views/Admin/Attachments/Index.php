@@ -85,8 +85,8 @@
 
 <script>
 
-var publicUrl = "<?= site_url('assets/files'); ?>";
-var mediaServeUrl = "<?= site_url('media/serve'); ?>";
+var publicUrl     = "<?= site_url('assets/files'); ?>";
+var mediaServeUrl = "<?= site_url('content/media/serve'); ?>";
 
 var fm_dropzone_main = null;
 

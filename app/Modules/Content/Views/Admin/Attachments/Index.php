@@ -49,7 +49,7 @@
                             </div>
                         </div>
                         <div class="col-xs-4 col-sm-4 col-md-4" style="padding-top: 15px;">
-                        <div class="panel panel-primary">
+                        <div class="panel panel-default">
                             <div class="panel-heading"><?= __d('content', 'Edit the File information'); ?></div>
                             <div class="panel-body">
                             <form class="file-info-form" enctype="multipart/form-data" method="POST">
@@ -152,7 +152,7 @@ $(function () {
             switch (upload.extension) {
                 case "pdf":
                     // TODO: Object PDF
-                    $("#edit-file-modal .fileObject").append('<object width="100%" height="550" style="padding-top: 15px;" data="' + filesUrl + '/' + upload.name + '"></object>');
+                    $("#edit-file-modal .fileObject").append('<object width="100%" height="600" style="margin-top: 15px; border: 1px solid #dddddd;" data="' + filesUrl + '/' + upload.name + '"></object>');
                     $("#edit-file-modal .fileObject").css("padding", "0px");
 
                     break;

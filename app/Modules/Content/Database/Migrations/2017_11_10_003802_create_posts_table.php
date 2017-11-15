@@ -31,7 +31,7 @@ class CreatePostsTable extends Migration
             $table->string('guid')->nullable();
             $table->integer('menu_order')->unsigned()->default(0);
             $table->string('type', 20)->nullable();
-            $table->string('mine_type', 100)->nullable();
+            $table->string('mime_type', 100)->nullable();
 
             $table->string('comment_status', 20)->nullable();
             $table->integer('comment_count')->unsigned()->default(0);

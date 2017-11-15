@@ -38,6 +38,13 @@ Route::get('content/{slug?}', array(
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
 {
+    // The Media CRUD.
+    Route::get( 'media',               array('middleware' => 'auth', 'uses' => 'Attachments@index'));
+
+    Route::get( 'media/serve/{slug}',  array('middleware' => 'auth', 'uses' => 'Attachments@serve'));
+    Route::post('media/upload',        array('middleware' => 'auth', 'uses' => 'Attachments@upload'));
+    Route::get( 'media/uploaded',      array('middleware' => 'auth', 'uses' => 'Attachments@uploaded'));
+
     // The Menus CRUD.
     Route::get( 'menus',               array('middleware' => 'auth', 'uses' => 'Menus@index'));
     Route::post('menus',               array('middleware' => 'auth', 'uses' => 'Menus@store'));

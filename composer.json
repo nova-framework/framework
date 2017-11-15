@@ -34,7 +34,8 @@
         "filp/whoops": "^2.1",
         "google/recaptcha": "~1.1",
         "dompdf/dompdf": "^0.8",
-        "thunderer/shortcode": "^0.6"
+        "thunderer/shortcode": "^0.6",
+        "intervention/image": "^2.4"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.6"

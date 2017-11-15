@@ -41,7 +41,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i></button>
                 <h4 class="modal-title" id="myModalLabel">File: </h4>
             </div>
-            <div class="modal-body" style="min-height: 550px; padding-top: 0;">
+            <div class="modal-body" style="padding-top: 0;">
                     <div class="row">
                         <div class="col-xs-8 col-sm-8 col-md-8">
                             <div class="fileObject">
@@ -49,20 +49,17 @@
                             </div>
                         </div>
                         <div class="col-xs-4 col-sm-4 col-md-4" style="padding-top: 15px;">
-                        <div class="panel panel-default" style="margin-bottom: 0;">
-                            <div class="panel-heading"><?= __d('content', 'The File information'); ?></div>
-                            <div class="panel-body">
                             <form class="file-info-form" enctype="multipart/form-data" method="POST">
                                 <input type="hidden" name="file_id" value="0">
+                                <input type="hidden" name="filename" value="" />
                                 <div class="form-group">
                                     <label for="filename"><?= __d('content', 'File Name'); ?></label>
-                                    <div class="upload-filename"></div>
+                                    <div class="upload-filename" style="padding: 6px 12px;; border: 1px solid #ccc;"></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="url"><?= __d('content', 'URL'); ?></label>
-                                    <div class="upload-url"></div>
+                                    <div class="upload-url" style="padding: 6px 12px; border: 1px solid #ccc;"></div>
                                 </div>
-                                <hr>
                                 <div class="form-group">
                                     <label for="caption"><?= __d('content', 'Caption'); ?></label>
                                     <input class="form-control" placeholder="<?= __d('content', 'Caption'); ?>" name="caption" type="text" value="">
@@ -71,16 +68,14 @@
                                     <label for="caption"><?= __d('content', 'Description'); ?></label>
                                     <textarea class="form-control" placeholder="<?= __d('content', 'Description'); ?>" rows="10" name="description" style="resize: none;"></textarea>
                                 </div>
-                                <button type="button" class="btn btn-success col-sm-4 pull-right">Save</button>
                             </form>
-                            </div>
-                        </div>
                         </div>
                     </div><!--.row-->
             </div>
             <div class="modal-footer" style="padding: 10px;">
-                <button type="button" class="btn btn-danger col-sm-1" id="delFileBtn">Delete</button>
-                <button type="button" class="btn btn-primary col-sm-1 pull-right" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger col-sm-1" id="deleteFileBtn"><i class="fa fa-trash"></i> <?= __d('content', 'Delete'); ?></button>
+                <button type="button" class="btn btn-primary col-sm-1 pull-right" data-dismiss="modal"><i class="fa fa-close"></i> <?= __d('content', 'Close'); ?></button>
+                <a class="btn btn-success col-sm-1 pull-right" id="downloadFileBtn" href=""><i class="fa fa-download"></i> <?= __d('content', 'Download'); ?></a>
             </div>
         </div>
     </div>
@@ -91,7 +86,7 @@
 <script>
 
 var publicUrl = "<?= site_url('assets/files'); ?>";
-var filesUrl = "<?= site_url('admin/media/serve'); ?>";
+var mediaServeUrl = "<?= site_url('media/serve'); ?>";
 
 var fm_dropzone_main = null;
 
@@ -99,7 +94,7 @@ var cntFiles = null;
 
 $(function () {
     fm_dropzone_main = new Dropzone("#fm_dropzone_main", {
-        maxFilesize: 2,
+        maxFilesize: 200,
         acceptedFiles: "image/*,application/pdf",
 
         // The framework's CSRF Token.
@@ -140,21 +135,23 @@ $(function () {
         $(".file-info-form").find(".upload-filename").html(upload.title);
         $(".file-info-form").find(".upload-url").html(publicUrl + '/' + upload.name);
 
+        $(".file-info-form input[name=filename]").val(upload.title);
         $(".file-info-form input[name=file_id]").val(upload.id);
         $(".file-info-form input[name=caption]").val(upload.caption);
         $(".file-info-form input[name=description]").val(upload.description);
 
+        $("#edit-file-modal #downloadFileBtn").attr("href", mediaServeUrl + '/' + upload.name + "?download");
+
         $("#edit-file-modal .fileObject").empty();
 
         if ($.inArray(upload.extension, ["jpg", "jpeg", "png", "gif", "bmp"]) > -1) {
-            $("#edit-file-modal .fileObject").append('<img class="img-responsive" style="width: auto; height: 100%; max-height: 600px;" src="' + filesUrl + '/' + upload.name+'">');
+            $("#edit-file-modal .fileObject").append('<img class="img-thumbnail img-responsive" style="width: auto; height: 100%; max-height: 600px;" src="' + mediaServeUrl + '/' + upload.name+'">');
 
             $("#edit-file-modal .fileObject").css("padding", "15px 0px");
         } else {
             switch (upload.extension) {
                 case "pdf":
-                    // TODO: Object PDF
-                    $("#edit-file-modal .fileObject").append('<object width="100%" height="600" style="margin-top: 15px; border: 1px solid #dddddd;" data="' + filesUrl + '/' + upload.name + '"></object>');
+                    $("#edit-file-modal .fileObject").append('<object width="100%" height="600" style="margin-top: 15px; border: 1px solid #dddddd;" data="' + mediaServeUrl + '/' + upload.name + '"></object>');
                     $("#edit-file-modal .fileObject").css("padding", "0px");
 
                     break;
@@ -173,11 +170,54 @@ $(function () {
         $("#edit-file-modal").modal('show');
     });
 
+    $(".file-info-form input[name=caption]").on("blur", function() {
+        $.ajax({
+            url: "<?= site_url('admin/media/update/caption'); ?>",
+            method: 'POST',
+            data: $("form.file-info-form").serialize(),
+            success: function( data ) {
+                console.log(data);
+
+                loadUploadedFiles();
+            }
+        });
+    });
+
+    $(".file-info-form input[name=caption]").on("blur", function() {
+        $.ajax({
+            url: "<?= site_url('admin/media/update/description'); ?>",
+            method: 'POST',
+            data: $("form.file-info-form").serialize(),
+            success: function( data ) {
+                console.log(data);
+                loadUploadedFiles();
+            }
+        });
+    });
+
+    $("#edit-file-modal #deleteFileBtn").on("click", function() {
+        var question = sprintf("<?= __d('content', 'Delete file %s ?'); ?>", $(".file-info-form input[name=filename]").val());
+
+        if (confirm(question)) {
+            $.ajax({
+                url: "<?= site_url('admin/media/delete'); ?>",
+                method: 'POST',
+                data: $("form.file-info-form").serialize(),
+                success: function( data ) {
+                    console.log(data);
+                    loadUploadedFiles();
+
+                    $("#edit-file-modal").modal('hide');
+                }
+            });
+        }
+    });
+
     loadUploadedFiles();
 });
 
 function loadUploadedFiles() {
-    // load folder files
+    // Load folder files
     $.ajax({
         dataType: 'json',
         url: "<?= site_url('admin/media/uploaded'); ?>",
@@ -197,7 +237,7 @@ function loadUploadedFiles() {
                     $("ul.files_container").append(li);
                 }
             } else {
-                $("ul.files_container").html("<div class='text-center text-danger' style='margin-top:40px;'>No Files</div>");
+                $("ul.files_container").html("<div class='text-center text-danger' style='margin-top: 40px;'><?= __d('content', 'No Files'); ?></div>");
             }
         }
     });
@@ -207,7 +247,7 @@ function formatFile(upload) {
     var image = '';
 
     if ($.inArray(upload.extension, ["jpg", "jpeg", "png", "gif", "bmp"]) > -1) {
-        image = '<img src="' + filesUrl + '/' + upload.name + '?s=130">';
+        image = '<img src="' + mediaServeUrl + '/' + upload.name + '?s=130">';
     } else {
         switch (upload.extension) {
             case "pdf":

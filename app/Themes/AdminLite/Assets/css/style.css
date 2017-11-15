@@ -318,29 +318,24 @@ ul.files_container li:hover {
   border-color: #48B0F7;
 }
 /* =================== Upload in Form =================== */
+
 a.btn_upload_file,
-a.btn_upload_image {
-  margin-top: 10px;
-  border-radius: 3px;
-  border: solid 1px #ccc;
-  background: #FFF;
+a.btn_upload_image,
+a.btn_remove_file,
+a.btn_remove_image {
+    cursor: pointer;
 }
-a.btn_upload_file i.fa,
-a.btn_upload_image i.fa {
-  margin-left: 3px;
-}
-a.btn_upload_file:hover,
-a.btn_upload_image:hover {
-  background: #EEE;
-}
+
 div.uploaded_image {
   display: inline-block;
   position: relative;
   margin-top: 7px;
 }
 div.uploaded_image img {
+  /*
   max-width: 120px;
   border-radius: 3px;
+  */
 }
 div.uploaded_image i.fa {
   background: rgba(0, 0, 0, 0.65);

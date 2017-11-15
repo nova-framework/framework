@@ -2,9 +2,11 @@
 
 namespace App\Modules\Content\Controllers\Admin;
 
+use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Http\Request;
 use Nova\Support\Facades\App;
 use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Config;
 use Nova\Support\Facades\File;
 use Nova\Support\Facades\Response;
 use Nova\Support\Str;
@@ -21,42 +23,43 @@ class Attachments extends BaseController
     public function index()
     {
         return $this->createView()
-            ->shares('title', __d('content', 'Attachments'));
+            ->shares('title', __d('content', 'Media'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $field)
     {
-        $input = $request->all();
-
         try {
-            $upload = Attachment::where('id', $id)->firstOrFail();
+            $upload = Attachment::where('id', (int) $request->input('file_id'))->firstOrFail();
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Attachment not found: #{0}', $id), 'danger');
+            return Response::json(array('status' => 'failure', 'message' => 'Upload not found'), 400);
         }
 
-        $upload->content = $input['description'];
-        $upload->excerpt = $input['caption'];
+        if ($field === 'caption') {
+            $upload->excerpt = $request->input('caption');
+        } else if ($field === 'description') {
+            $upload->content = $request->input('description');
+        } else {
+            return Response::json(array('status' => 'failure', 'message' => 'Invalid field specified'), 400);
+        }
 
         $upload->save();
 
-        return Redirect::back()
-            ->withStatus(__d('content', 'The Menu <b>{0}</b> was successfully updated.', $upload->title), 'success');
+        return Response::json(array('status' => 'success'), 200);
     }
 
-    public function destroy($id)
+    public function destroy(Request $request)
     {
         try {
-            $upload = Attachment::where('id', $id)->firstOrFail();
+            $upload = Attachment::where('id', (int) $request->input('file_id'))->firstOrFail();
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Attachment not found: #{0}', $id), 'danger');
+            return Response::json(array('status' => 'failure', 'message' => 'Upload not found'), 400);
         }
 
         $upload->delete();
 
-        return Redirect::back()
-            ->withStatus(__d('content', 'The Menu <b>{0}</b> was successfully deleted.', $upload->title), 'success');
+        return Response::json(array('status' => 'success'), 200);
     }
 
     public function upload(Request $request)
@@ -70,32 +73,42 @@ class Attachments extends BaseController
         $file = $request->file('file');
 
         //
-        $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $path = Config::get('content::attachments.path', base_path('assets/files'));
+
+        if (! File::exists($path)) {
+            File::makeDirectory($path, 0755, true, true);
+        }
+
+        $originalName = $file->getClientOriginalName();
+
+        $name = pathinfo($originalName, PATHINFO_FILENAME);
 
         $fileName = sprintf('%s-%s.%s',
-            uniqid(), Str::slug($fileName), $file->getClientOriginalExtension()
+            uniqid(), Str::slug($name), $extension = $file->clientExtension()
         );
 
-        //
-        $folder = base_path('assets/files');
+        $filePath = $path .DS .$fileName;
 
-        if (! $file->move($folder, $fileName)) {
+        $fileSize = $file->getSize();
+
+        if (! $file->move($path, $fileName)) {
             return Response::json(array('status' => 'error'), 400);
         }
 
         $upload = Attachment::create(array(
             'author_id' => $authUser->id,
             'type'      => 'attachment',
-            'title'     => $file->getClientOriginalName(),
+            'title'     => $originalName,
             'name'      => $fileName,
             'guid'      => site_url('assets/files/' .$fileName),
             'mime_type' => $file->getClientMimeType(),
         ));
 
         // Handle the MetaData.
-        $upload->meta->attachment_image_path = $folder .DS .$fileName;
-        $upload->meta->attachment_image_size = $file->getSize();
-        $upload->meta->attachment_image_alt  = '';
+        $upload->meta->attachment_image_extension = $extension;
+        $upload->meta->attachment_image_path      = $filePath;
+        $upload->meta->attachment_image_size      = $fileSize;
+        $upload->meta->attachment_image_alt       = '';
 
         $upload->save();
 
@@ -134,11 +147,14 @@ class Attachments extends BaseController
         return Response::json(array('uploads' => $result), 200);
     }
 
-    public function serve(Request $request, $slug)
+    public function serve(Request $request, $name)
     {
-        $upload = Attachment::where("name", $slug)->firstOrFail();
+        $upload = Attachment::where("name", $name)->firstOrFail();
 
-        $path = ROOTDIR .'assets' .DS .'files' .DS .$upload->name;
+        //
+        $basePath = Config::get('content::attachments.path', base_path('assets/files'));
+
+        $path = $basePath .DS .$name;
 
         if (! File::exists($path)) {
             abort(404);
@@ -147,14 +163,23 @@ class Attachments extends BaseController
         // Check if Thumbnail
         $size = $request->input('s');
 
-        if (isset($size)) {
-            if(! is_numeric($size)) {
+        if (isset($size) && Str::is('image/*', $upload->mime_type)) {
+            $thumbPath = Config::get('content::attachments.thumbPath', base_path('assets/files/thumbnails'));
+
+            if (! File::exists($thumbPath)) {
+                File::makeDirectory($thumbPath, 0755, true, true);
+            }
+            if (! is_numeric($size)) {
                 $size = 150;
             }
 
-            $thumbPath = storage_path("files/" .$size ."x" .$size .'_' .$upload->name);
+            $name = pathinfo($upload->name, PATHINFO_FILENAME);
 
-            if (! File::exists($thumbPath)) {
+            $extension = pathinfo($upload->name, PATHINFO_EXTENSION);
+
+            $filePath = $thumbPath .DS .$name .'-' .$size ."x" .$size .'.' .$extension;
+
+            if (! File::exists($filePath)) {
                 $image = Image::make($path);
 
                 $image->fit($size, $size, function ($constraint)
@@ -162,14 +187,19 @@ class Attachments extends BaseController
                     $constraint->aspectRatio();
                 });
 
-                $image->save($thumbPath);
+                $image->save($filePath);
             }
 
-            $path = $thumbPath;
+            $path = $filePath;
         }
 
-        $fileDispatcher = App::make('assets.dispatcher');
+        $download = $request->input('download');
 
-        return $fileDispatcher->serve($path, $request);
+        $disposition = isset($download) ? 'attachment' : 'inline';
+
+        // Create a Assets Dispatcher instance.
+        $dispatcher = App::make('assets.dispatcher');
+
+        return $dispatcher->serve($path, $request, $disposition, $upload->title);
     }
 }

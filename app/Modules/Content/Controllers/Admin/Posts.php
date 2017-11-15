@@ -2,6 +2,7 @@
 
 namespace App\Modules\Content\Controllers\Admin;
 
+use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Http\Request;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Cache;

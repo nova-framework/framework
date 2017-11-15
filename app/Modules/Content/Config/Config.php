@@ -12,6 +12,43 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
+    | The Attachments Configuration
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'attachments' => array(
+        // Where the uploaded files are stored.
+        'path'      => base_path('assets/files'),
+
+        // Where the (generated) thumbnails are stored.
+        'thumbPath' => base_path('assets/files/thumbnails'),
+    ),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Registered Custom Post Types
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'postTypes' => arraY(
+//        'video' => App\Models\Video::class,
+    ),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Registered Shortcodes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'shortcodes' => array(
+//        'foo' => App\Shortcodes\FooShortcode::class,
+    ),
+
+    /*
+    |--------------------------------------------------------------------------
     | The Translated Names of the Post Types and Statuses
     |--------------------------------------------------------------------------
     |
@@ -54,28 +91,6 @@ return array(
         'private-draft'   => __d('content', 'Draft'),
         'private-review'  => __d('content', 'Pending Review'),
         'review'          => __d('content', 'Pending Review'),
-    ),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Registered Custom Post Types
-    |--------------------------------------------------------------------------
-    |
-    */
-
-    'postTypes' => arraY(
-//        'video' => App\Models\Video::class,
-    ),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Registered Shortcodes
-    |--------------------------------------------------------------------------
-    |
-    */
-
-    'shortcodes' => array(
-//        'foo' => App\Shortcodes\FooShortcode::class,
     ),
 
 );

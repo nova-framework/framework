@@ -50,7 +50,7 @@
                         </div>
                         <div class="col-xs-4 col-sm-4 col-md-4" style="padding-top: 15px;">
                         <div class="panel panel-default" style="margin-bottom: 0;">
-                            <div class="panel-heading"><?= __d('content', 'Edit the File information'); ?></div>
+                            <div class="panel-heading"><?= __d('content', 'The File information'); ?></div>
                             <div class="panel-body">
                             <form class="file-info-form" enctype="multipart/form-data" method="POST">
                                 <input type="hidden" name="file_id" value="0">

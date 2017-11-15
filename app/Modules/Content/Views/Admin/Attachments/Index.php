@@ -62,6 +62,7 @@
                                     <label for="url">URL</label>
                                     <div class="upload-url"></div>
                                 </div>
+                                <hr>
                                 <div class="form-group">
                                     <label for="caption">Caption</label>
                                     <input class="form-control" placeholder="Caption" name="caption" type="text" value="">

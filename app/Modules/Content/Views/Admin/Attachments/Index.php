@@ -56,11 +56,11 @@
                                 <input type="hidden" name="file_id" value="0">
                                 <div class="form-group">
                                     <label for="filename">File Name</label>
-                                    <input class="form-control" placeholder="File Name" name="filename" type="text" readonly value="">
+                                    <div class="upload-filename"></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="url">URL</label>
-                                    <input class="form-control" placeholder="URL" name="url" type="text" readonly value="">
+                                    <div class="upload-url"></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="caption">Caption</label>
@@ -136,9 +136,10 @@ $(function () {
         upload = JSON.parse(upload);
 
         $("#edit-file-modal .modal-title").html("File: " + upload.title);
+        $(".file-info-form").find(".upload-filename").html(upload.title);
+        $(".file-info-form").find(".upload-url").html(publicUrl + '/' + upload.name);
+
         $(".file-info-form input[name=file_id]").val(upload.id);
-        $(".file-info-form input[name=filename]").val(upload.title);
-        $(".file-info-form input[name=url]").val(publicUrl + '/' + upload.name);
         $(".file-info-form input[name=caption]").val(upload.caption);
         $(".file-info-form input[name=description]").val(upload.description);
 

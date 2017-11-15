@@ -109,7 +109,8 @@ class Attachments extends BaseController
         ));
 
         // Handle the MetaData.
-        $upload->meta->attachment_image_alt = '';
+        $upload->meta->attachment_image_size = $file->getSize();
+        $upload->meta->attachment_image_alt  = '';
 
         $upload->save();
 

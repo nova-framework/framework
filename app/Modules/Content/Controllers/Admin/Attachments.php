@@ -23,7 +23,7 @@ class Attachments extends BaseController
     public function index()
     {
         return $this->createView()
-            ->shares('title', __d('content', 'Media'));
+            ->shares('title', __d('content', 'Media Library'));
     }
 
     public function update(Request $request, $field)

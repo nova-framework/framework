@@ -49,27 +49,27 @@
                             </div>
                         </div>
                         <div class="col-xs-4 col-sm-4 col-md-4" style="padding-top: 15px;">
-                        <div class="panel panel-default">
+                        <div class="panel panel-default" style="margin-bottom: 0;">
                             <div class="panel-heading"><?= __d('content', 'Edit the File information'); ?></div>
                             <div class="panel-body">
                             <form class="file-info-form" enctype="multipart/form-data" method="POST">
                                 <input type="hidden" name="file_id" value="0">
                                 <div class="form-group">
-                                    <label for="filename">File Name</label>
+                                    <label for="filename"><?= __d('content', 'File Name'); ?></label>
                                     <div class="upload-filename"></div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="url">URL</label>
+                                    <label for="url"><?= __d('content', 'URL'); ?></label>
                                     <div class="upload-url"></div>
                                 </div>
                                 <hr>
                                 <div class="form-group">
-                                    <label for="caption">Caption</label>
-                                    <input class="form-control" placeholder="Caption" name="caption" type="text" value="">
+                                    <label for="caption"><?= __d('content', 'Caption'); ?></label>
+                                    <input class="form-control" placeholder="<?= __d('content', 'Caption'); ?>" name="caption" type="text" value="">
                                 </div>
                                 <div class="form-group">
-                                    <label for="caption">Description</label>
-                                    <textarea class="form-control" placeholder="Description" rows="10" name="description" style="resize: none;"></textarea>
+                                    <label for="caption"><?= __d('content', 'Description'); ?></label>
+                                    <textarea class="form-control" placeholder="<?= __d('content', 'Description'); ?>" rows="10" name="description" style="resize: none;"></textarea>
                                 </div>
                                 <button type="button" class="btn btn-success col-sm-4 pull-right">Save</button>
                             </form>
@@ -136,7 +136,7 @@ $(function () {
 
         upload = JSON.parse(upload);
 
-        $("#edit-file-modal .modal-title").html("File: " + upload.title);
+        $("#edit-file-modal .modal-title").html(sprintf("<?= __d('content', 'File: %s'); ?>", upload.title));
         $(".file-info-form").find(".upload-filename").html(upload.title);
         $(".file-info-form").find(".upload-url").html(publicUrl + '/' + upload.name);
 
@@ -168,7 +168,7 @@ $(function () {
 
         var height = $(window).height() - 180;
 
-        $("#edit-file-modal").find(".modal-body").css("height", height);
+        $("#edit-file-modal").find(".modal-body").css("max-height", height);
 
         $("#edit-file-modal").modal('show');
     });

@@ -23,6 +23,7 @@ use App\Modules\Content\Models\Tag;
 use App\Modules\Content\Models\Term;
 use App\Modules\Content\Models\Taxonomy;
 use App\Modules\Platform\Controllers\Admin\BaseController;
+use App\Modules\Users\Models\User;
 
 use Faker\Factory as FakerFactory;
 
@@ -109,8 +110,6 @@ class Posts extends BaseController
         $post->name = $post->id;
 
         // Metadata.
-        $post->meta->edit_last = $userId;
-
         $post->meta->edit_lock = sprintf('%d:%d', time(), $userId);
 
         // Save the Post again, to update its name and metadata.
@@ -132,8 +131,11 @@ class Posts extends BaseController
         // Revisions.
         $revisions = $post->newCollection();
 
+        // The last editor.
+        $lastEditor = $authUser;
+
         //
-        $data = compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'revisions', 'categorySelect', 'menuSelect');
+        $data = compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'revisions', 'categorySelect', 'menuSelect', 'lastEditor');
 
         return $this->createView($data, 'Edit')
             ->shares('title', __d('content', 'Create a new {0}', $name))
@@ -155,9 +157,7 @@ class Posts extends BaseController
         $type = $post->type;
 
         // Metadata.
-        $post->meta->edit_last = $userId = $authUser->id;
-
-        $post->meta->edit_lock = sprintf('%d:%d', time(), $userId);
+        $post->meta->edit_lock = sprintf('%d:%d', time(), $authUser->id);
 
         // Save the Post, to update its metadata.
         $post->save();
@@ -215,8 +215,13 @@ class Posts extends BaseController
             ->limit(10)
             ->get();
 
+        // The last editor.
+        $lastEditor = isset($post->meta->edit_last)
+            ? User::findOrFail($post->meta->edit_last)
+            : $authUser;
+
         //
-        $data = compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'revisions', 'categorySelect', 'menuSelect');
+        $data = compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'revisions', 'categorySelect', 'menuSelect', 'lastEditor');
 
         return $this->createView($data, 'Edit')
             ->shares('title', __d('content', 'Edit a {0}', $name))
@@ -284,8 +289,10 @@ class Posts extends BaseController
             $post->menu_order = (int) Arr::get($input, 'order',  0);
         }
 
-        // Featured Image / Thumbnail.
+        // Handle the MetaData.
         $post->meta->thumbnail_id = (int) $request->input('thumbnail');
+
+        $post->meta->edit_last = $authUser->id;
 
         // Save the Post instance before to process the Categories and Tags.
         $post->save();

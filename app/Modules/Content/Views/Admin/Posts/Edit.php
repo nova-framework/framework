@@ -67,9 +67,10 @@
         <textarea name="content" id="content" style="border: 1px solid #dddddd; width: 100%; padding: 10px; height: 550px; resize: vertical;" autocomplete="off"><?= Input::old('content', $post->content); ?></textarea>
     </div>
     <div class="box-footer">
-         <div id="edit-status" style="padding: 5px;" class="pull-left"></div>
-         <a class="btn btn-primary btn-sm col-sm-2 btn_upload_image pull-right" href="#" file_type="image" selecter="contentEditorInsertMedia" role="button"><?= __d('content', 'Add Media'); ?></a>
-         <div class="clearfix"></div>
+        <?php $format = __d('content', '%B %d, %Y at %l:%M %p'); ?>
+        <div id="edit-status" style="padding: 5px;" class="pull-left text-muted"><?= __d('content', 'Last edited by <b>{0}</b> on {1}', $lastEditor->username, $post->updated_at->formatLocalized($format)); ?></div>
+        <a class="btn btn-primary btn-sm col-sm-2 btn_upload_image pull-right" href="#" file_type="image" selecter="contentEditorInsertMedia" role="button"><?= __d('content', 'Add Media'); ?></a>
+        <div class="clearfix"></div>
     </div>
 </div>
 
@@ -130,6 +131,7 @@ $(function () {
 
 <?php $deletables = $restorables = 0; ?>
 <?php if (! $revisions->isEmpty()) { ?>
+<?php $format = __d('content', '%d %b %Y, %R'); ?>
 
 <div class="box box-widget">
     <div class="box-header">
@@ -155,7 +157,7 @@ $(function () {
                 <td style="text-align: center; vertical-align: middle;" width="10%"><?= $version = $matches[1]; ?></td>
                 <td style="text-align: left; vertical-align: middle;" width="40%"><?= $revision->title ?: __d('content', 'Untitled'); ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="20%"><?= $revision->author->username; ?></td>
-                <td style="text-align: center; vertical-align: middle;" width="15%"><?= $revision->created_at->formatLocalized(__d('content', '%d %b %Y, %R')); ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="15%"><?= $revision->created_at->formatLocalized($format); ?></td>
                 <td style="text-align: right; vertical-align: middle;" width="15%">
                     <div class="btn-group" role="group" aria-label="...">
                         <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-revision-dialog" data-id="<?= $revision->id; ?>" title="<?= __d('content', 'Delete this revision'); ?>" role="button"><i class="fa fa-remove"></i></a>

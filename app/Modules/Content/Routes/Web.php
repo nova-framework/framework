@@ -66,11 +66,13 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
     Route::post('menus/{id}/items/{itemId}/destroy', array('middleware' => 'auth', 'uses' => 'Menus@deleteItem'));
 
     // The Posts CRUD.
-    Route::get( 'content/create/{type}', array('middleware' => 'auth', 'uses' => 'Posts@create'));
-    Route::get( 'content/{id}/edit',     array('middleware' => 'auth', 'uses' => 'Posts@edit'));
-    Route::post('content/{id}',          array('middleware' => 'auth', 'uses' => 'Posts@update'))->where('id', '\d+');
-    Route::post('content/{id}/restore',  array('middleware' => 'auth', 'uses' => 'Posts@restore'))->where('id', '\d+');
-    Route::post('content/{id}/destroy',  array('middleware' => 'auth', 'uses' => 'Posts@destroy'))->where('id', '\d+');
+    Route::get( 'content/create/{type}',  array('middleware' => 'auth', 'uses' => 'Posts@create'));
+    Route::get( 'content/{id}/edit',      array('middleware' => 'auth', 'uses' => 'Posts@edit'));
+    Route::post('content/{id}',           array('middleware' => 'auth', 'uses' => 'Posts@update'))->where('id', '\d+');
+    Route::post('content/{id}/restore',   array('middleware' => 'auth', 'uses' => 'Posts@restore'))->where('id', '\d+');
+    Route::post('content/{id}/destroy',   array('middleware' => 'auth', 'uses' => 'Posts@destroy'))->where('id', '\d+');
+
+    Route::get('content/{id}/revisions', array('middleware' => 'auth', 'uses' => 'Posts@revisions'))->where('id', '\d+');
 
     Route::post('content/{id}/tags', array('middleware' => 'auth', 'uses' => 'Posts@addTags'))->where('id', '\d+');
 

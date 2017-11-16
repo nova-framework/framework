@@ -129,11 +129,14 @@ $(function () {
 </div>
 
 <?php $deletables = $restorables = 0; ?>
-<?php if (! $post->revision->isEmpty()) { ?>
+<?php if (! $revisions->isEmpty()) { ?>
 
 <div class="box box-widget">
     <div class="box-header">
-        <h3 class="box-title"><?= __d('content', 'Revisions'); ?></h3>
+        <h3 class="box-title"><?= __d('content', 'Revisions : {0}', $post->revision->count()); ?></h3>
+        <div class="box-tools">
+            <a href="<?= site_url('admin/content/' .$post->id .'/revisions'); ?>" class="btn btn-primary btn-sm pull-right" role="button"><i class="fa fa-list"></i> <?= __d('content', 'View all revisions'); ?></a>
+        </div>
     </div>
     <div class="box-body no-padding">
        <table id="left" class="table table-striped table-hover responsive">
@@ -144,7 +147,7 @@ $(function () {
                 <th style="text-align: center; vertical-align: middle;"><?= __d('content', 'Created At'); ?></th>
                 <th style="text-align: right; vertical-align: middle;"><?= __d('content', 'Operations'); ?></th>
             </tr>
-            <?php foreach ($post->revision as $revision) { ?>
+            <?php foreach ($revisions as $revision) { ?>
             <?php $deletables++; ?>
             <?php $restorables++; ?>
             <?php preg_match('#^(?:\d+)-revision-v(\d+)$#', $revision->name, $matches); ?>

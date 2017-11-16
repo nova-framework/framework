@@ -129,7 +129,13 @@ class Posts extends BaseController
 
         $tags = '';
 
-        return $this->createView(compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'categorySelect', 'menuSelect'), 'Edit')
+        // Revisions.
+        $revisions = $post->newCollection();
+
+        //
+        $data = compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'revisions', 'categorySelect', 'menuSelect');
+
+        return $this->createView($data, 'Edit')
             ->shares('title', __d('content', 'Create a new {0}', $name))
             ->with('tags', $tags)
             ->with('creating', true);
@@ -203,7 +209,16 @@ class Posts extends BaseController
         // No menu selection on edit mode.
         $menuSelect = '';
 
-        return $this->createView(compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'categorySelect', 'menuSelect'), 'Edit')
+        // Revisions.
+        $revisions = $post->revision()
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+
+        //
+        $data = compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'revisions', 'categorySelect', 'menuSelect');
+
+        return $this->createView($data, 'Edit')
             ->shares('title', __d('content', 'Edit a {0}', $name))
             ->with('tags', $tags)
             ->with('creating', false);
@@ -361,6 +376,38 @@ class Posts extends BaseController
         ), 200);
     }
 
+    public function destroy($id)
+    {
+        try {
+            $post = Post::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
+        }
+
+        $taxonomies = $post->taxonomies;
+
+        $post->taxonomies()->detach();
+
+        $taxonomies->each(function ($taxonomy)
+        {
+            $taxonomy->updateCount();
+        });
+
+        $post->delete();
+
+        // Invalidate the content caches.
+        $this->clearContentCache();
+
+        //
+        $type = $post->type;
+
+        $name = Config::get("content::labels.{$type}.name", Str::title($type));
+
+        return Redirect::back()
+            ->withStatus(__d('content', 'The {0} <b>#{1}</b> was successfully deleted.', $name, $post->id), 'success');
+    }
+
     public function restore($id)
     {
         try {
@@ -399,7 +446,7 @@ class Posts extends BaseController
         return Redirect::back()->withStatus($status, 'success');
     }
 
-    public function destroy($id)
+    public function revisions($id)
     {
         try {
             $post = Post::findOrFail($id);
@@ -408,27 +455,17 @@ class Posts extends BaseController
             return Redirect::back()->withStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
         }
 
-        $taxonomies = $post->taxonomies;
-
-        $post->taxonomies()->detach();
-
-        $taxonomies->each(function ($taxonomy)
-        {
-            $taxonomy->updateCount();
-        });
-
-        $post->delete();
-
-        // Invalidate the content caches.
-        $this->clearContentCache();
+        $revisions = $post->revision()
+            ->orderBy('created_at', 'desc')
+            ->paginate(25);
 
         //
         $type = $post->type;
 
         $name = Config::get("content::labels.{$type}.name", Str::title($type));
 
-        return Redirect::back()
-            ->withStatus(__d('content', 'The {0} <b>#{1}</b> was successfully deleted.', $name, $post->id), 'success');
+        return $this->createView(compact('type', 'name', 'post', 'revisions'))
+            ->shares('title', __d('content', 'Revisions of the {0} : {1}', $name, $post->title));
     }
 
     public function addTags(Request $request, $id)

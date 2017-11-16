@@ -134,12 +134,16 @@ class Posts extends BaseController
         // The last editor.
         $lastEditor = $authUser;
 
+        // Compute the stylesheets needed to be loaded in editor.
+        $stylesheets = $this->getDefaultThemeStylesheets();
+
         //
         $data = compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'revisions', 'categorySelect', 'menuSelect', 'lastEditor');
 
         return $this->createView($data, 'Edit')
             ->shares('title', __d('content', 'Create a new {0}', $name))
             ->with('tags', $tags)
+            ->with('stylesheets', $stylesheets)
             ->with('creating', true);
     }
 
@@ -220,12 +224,17 @@ class Posts extends BaseController
             ? User::findOrFail($post->meta->edit_last)
             : $authUser;
 
+
+        // Compute the stylesheets needed to be loaded in editor.
+        $stylesheets = $this->getDefaultThemeStylesheets();
+
         //
         $data = compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'revisions', 'categorySelect', 'menuSelect', 'lastEditor');
 
         return $this->createView($data, 'Edit')
             ->shares('title', __d('content', 'Edit a {0}', $name))
             ->with('tags', $tags)
+            ->with('stylesheets', $stylesheets)
             ->with('creating', false);
     }
 
@@ -661,5 +670,22 @@ class Posts extends BaseController
     {
         Cache::forget('content.categories');
         Cache::forget('content.archives');
+    }
+
+    protected function getDefaultThemeStylesheets()
+    {
+        $stylesheets = array();
+
+        $theme = Config::get('app.theme');
+
+        $results = Event::fire('content.editor.stylesheets.' .Str::snake($theme), array($theme));
+
+        foreach ($results as $result) {
+            if (is_array($result) && ! empty($result)) {
+                $stylesheets = array_merge($stylesheets, $result);
+            }
+        }
+
+        return $stylesheets;
     }
 }

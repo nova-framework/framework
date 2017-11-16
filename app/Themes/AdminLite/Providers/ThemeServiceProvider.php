@@ -19,6 +19,9 @@ class ThemeServiceProvider extends ServiceProvider
 
         // Configure the Package.
         $this->package('Themes/AdminLite', 'admin_lite', $path);
+
+        // Bootstrap the Theme.
+        require $path .DS .'Bootstrap.php';
     }
 
     /**

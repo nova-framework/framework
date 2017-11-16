@@ -105,6 +105,7 @@ $(function () {
              // Use the FontAwesome icons.
             "fa":          true
         },
+        "stylesheets": <?= json_encode($stylesheets) ?>,
 
         // The Parser Rules.
         //parserRules: '<?= resource_url("vendor/bootstrap-wysihtml5/parser_rules/advanced_and_extended.json"); ?>'

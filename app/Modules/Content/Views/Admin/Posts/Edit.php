@@ -259,7 +259,7 @@ $(function () {
         <div class="clearfix"></div>
     </div>
     <div class="box-footer">
-        <input type="submit" name="submit" class="btn btn-success col-sm-6 pull-right" value="<?= ($creating) ? __d('content', 'Publish') : __d('content', 'Update'); ?>">
+        <input name="submit" id="post-submit" type="submit" class="btn btn-success col-sm-6 pull-right" value="<?= ($creating) ? __d('content', 'Publish') : __d('content', 'Update'); ?>">
     </div>
 </div>
 
@@ -273,6 +273,8 @@ $(function () {
 
 $(function () {
     $('#publish-form').submit(function(event) {
+        $('#post-submit').prop('disabled', true);
+
         event.preventDefault();
 
         var type = '<?= $type; ?>';

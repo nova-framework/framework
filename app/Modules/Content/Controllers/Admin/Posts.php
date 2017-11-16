@@ -212,7 +212,7 @@ class Posts extends BaseController
         // Revisions.
         $revisions = $post->revision()
             ->orderBy('created_at', 'desc')
-            ->limit(10)
+            ->limit(5)
             ->get();
 
         // The last editor.

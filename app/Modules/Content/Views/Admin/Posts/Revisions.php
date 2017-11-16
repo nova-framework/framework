@@ -49,6 +49,11 @@
             </tr>
             <?php } ?>
         </table>
+        <?php } else { ?>
+        <div class="alert alert-warning" style="margin: 0 5px 5px;">
+            <h4><i class="icon fa fa-warning"></i> <?= strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('content', 'No revisions'); ?></h4>
+            <?= __d('content', 'The {0} <b>{1}</b> has no revisions.', $name, $post->title); ?>
+        </div>
         <?php } ?>
     </div>
 </div>

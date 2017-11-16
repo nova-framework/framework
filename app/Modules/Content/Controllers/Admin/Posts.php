@@ -394,8 +394,9 @@ class Posts extends BaseController
 
         $name = Config::get("content::labels.{$type}.name", Str::title($type));
 
-        return Redirect::back()
-            ->withStatus(__d('content', 'The {0} <b>#{1}</b> was successfully restored to the revision: <b>{2}</b>', $name, $post->id, $version), 'success');
+        $status = __d('content', 'The {0} <b>#{1}</b> was successfully restored to the revision: <b>{2}</b>', $name, $post->id, $version);
+
+        return Redirect::back()->withStatus($status, 'success');
     }
 
     public function destroy($id)

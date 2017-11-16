@@ -225,42 +225,9 @@ class Posts extends BaseController
             return Response::json(array('redirectTo' => 'refresh'), 400);
         }
 
-        $creating = (bool) Arr::get($input, 'creating', 0);
-
-        // Before to save the information, we will create a new revision for older Post instances.
-        if (! $creating) {
-            $count = 0;
-
-            $names = $post->revision()->lists('name');
-
-            foreach ($names as $name) {
-                if (preg_match('#^(?:\d+)-revision-v(\d+)$#', $name, $matches)) {
-                    $count = max($count, $matches[1]);
-                }
-            }
-
-            $count++;
-
-            $slug = $post->id .'-revision-v' .$count;
-
-            $revision = Post::create(array(
-                'content'        => $post->content,
-                'title'          => $post->title,
-                'excerpt'        => $post->excerpt,
-                'status'         => 'inherit',
-                'password'       => $post->password,
-                'name'           => $slug,
-                'parent_id'      => $post->id,
-                'guid'           => site_url('content/' .$slug),
-                'menu_order'     => $post->menu_order,
-                'type'           => 'revision',
-                'mime_type'      => $post->mime_type,
-                'author_id'      => $authUser->id,
-                'comment_status' => 'closed',
-            ));
-        }
-
         $type = $post->type;
+
+        $creating = (bool) Arr::get($input, 'creating', 0);
 
         $slug = Arr::get($input, 'slug') ?: Post::uniqueName($input['title'], $post->id);
 
@@ -345,6 +312,35 @@ class Posts extends BaseController
                 $taxonomy->updateCount();
             });
         }
+
+        // Create a new revision from the current Post instance.
+        $count = 1;
+
+        $names = $post->revision()->lists('name');
+
+        foreach ($names as $name) {
+            if (preg_match('#^(?:\d+)-revision-v(\d+)$#', $name, $matches) === 1) {
+                $count = max($count, 1 + (int) $matches[1]);
+            }
+        }
+
+        $slug = $post->id .'-revision-v' .$count;
+
+        $revision = Post::create(array(
+            'content'        => $post->content,
+            'title'          => $post->title,
+            'excerpt'        => $post->excerpt,
+            'status'         => 'inherit',
+            'password'       => $post->password,
+            'name'           => $slug,
+            'parent_id'      => $post->id,
+            'guid'           => site_url('content/' .$slug),
+            'menu_order'     => $post->menu_order,
+            'type'           => 'revision',
+            'mime_type'      => $post->mime_type,
+            'author_id'      => $authUser->id,
+            'comment_status' => 'closed',
+        ));
 
         // Fire the associated event.
         Event::fire('content.post.updated', array($post, $creating));

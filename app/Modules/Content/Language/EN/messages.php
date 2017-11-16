@@ -22,6 +22,7 @@ return array (
   'Are you sure you want to remove this Menu, the operation being irreversible?' => '',
   'Are you sure you want to remove this {0} revision, the operation being irreversible?' => '',
   'Are you sure you want to remove this {0}, the operation being irreversible?' => '',
+  'Are you sure you want to restore the {0} to the revision <b>#%s</b> ?' => '',
   'Are you sure you want to restore this {0} revision?' => '',
   'Author' => '',
   'Cancel' => '',

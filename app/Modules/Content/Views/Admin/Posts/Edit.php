@@ -149,14 +149,14 @@ $(function () {
             <?php $restorables++; ?>
             <?php preg_match('#^(?:\d+)-revision-v(\d+)$#', $revision->name, $matches); ?>
             <tr>
-                <td style="text-align: center; vertical-align: middle;" width="10%"><?= $matches[1]; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="10%"><?= $version = $matches[1]; ?></td>
                 <td style="text-align: left; vertical-align: middle;" width="40%"><?= $revision->title ?: __d('content', 'Untitled'); ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="20%"><?= $revision->author->username; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="15%"><?= $revision->created_at->formatLocalized(__d('content', '%d %b %Y, %R')); ?></td>
                 <td style="text-align: right; vertical-align: middle;" width="15%">
                     <div class="btn-group" role="group" aria-label="...">
                         <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-revision-dialog" data-id="<?= $revision->id; ?>" title="<?= __d('content', 'Delete this revision'); ?>" role="button"><i class="fa fa-remove"></i></a>
-                        <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-restore-revision-dialog" data-id="<?= $revision->id; ?>" title="<?= __d('content', 'Restore this revision'); ?>" role="button"><i class="fa fa-repeat"></i></a>
+                        <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-restore-revision-dialog" data-id="<?= $revision->id; ?>" data-version="<?= $version; ?>" title="<?= __d('content', 'Restore this revision'); ?>" role="button"><i class="fa fa-repeat"></i></a>
                         <a class="btn btn-sm btn-warning" href="<?= site_url('content/' .$revision->slug); ?>" title="<?= __d('content', 'View this revision'); ?>" target="_blank" role="button"><i class="fa fa-search"></i></a>
                     </div>
                 </td>
@@ -219,7 +219,7 @@ $(function () {
                 <h4 class="modal-title"><?= __d('content', 'Restore this {0} revision?', $name); ?></h4>
             </div>
             <div class="modal-body">
-                <p><?= __d('content', 'Are you sure you want to restore this {0} revision?', $name); ?></p>
+                <p class="question"><?= __d('content', 'Are you sure you want to restore this {0} revision?', $name); ?></p>
                 <p><?= __d('content', 'Please click the button <b>Restore</b> to proceed, or <b>Cancel</b> to abandon the operation.'); ?></p>
             </div>
             <div class="modal-footer">
@@ -237,8 +237,12 @@ $(function () {
 <script>
 
 $(function () {
-    $('#modal-delete-revision-dialog').on('show.bs.modal', function (event) {
+    $('#modal-restore-revision-dialog').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal
+
+        var question = sprintf("<?= __d('content', 'Are you sure you want to restore the {0} to the revision <b>#%s</b> ?', $name); ?>", button.data('version'));
+
+        $('#modal-restore-revision-dialog').find('.question').html(question);
 
         $('#modal-restore-revision-form').attr('action', '<?= site_url("admin/content"); ?>/' + button.data('id') + '/restore');
     });

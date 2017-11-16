@@ -108,7 +108,7 @@ $(function () {
         // The Parser Rules.
         //parserRules: '<?= resource_url("vendor/bootstrap-wysihtml5/parser_rules/advanced_and_extended.json"); ?>'
 
-        // Disable the Parser at all.
+        // Disable the HTML Parser at all.
         parser: function (html) {
             return html;
         }

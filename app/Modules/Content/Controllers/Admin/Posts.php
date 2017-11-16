@@ -220,20 +220,41 @@ class Posts extends BaseController
             $post = Post::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            //return Redirect::back()->withStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
-
             Session::pushStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
 
             return Response::json(array('redirectTo' => 'refresh'), 400);
+        }
+
+        $creating = (bool) Arr::get($input, 'creating', 0);
+
+        // Before to save the information, when the Post is not new, we will create a new revision for it.
+        if (! $creating) {
+            $revisions = $post->revision()->count();
+
+            $slug = $post->id .'-revision-v' .($revisions + 1);
+
+            $revision = Post::create(array(
+                'content'        => $post->content,
+                'title'          => $post->title,
+                'excerpt'        => $post->excerpt,
+                'status'         => 'inherit',
+                'password'       => $post->password,
+                'name'           => $slug,
+                'parent_id'      => $post->id,
+                'guid'           => site_url('content/' .$slug),
+                'menu_order'     => $post->menu_order,
+                'type'           => 'revision',
+                'mime_type'      => $post->mime_type,
+                'author_id'      => $authUser->id,
+                'comment_status' => 'closed',
+            ));
         }
 
         $type = $post->type;
 
         $slug = Arr::get($input, 'slug') ?: Post::uniqueName($input['title'], $post->id);
 
-        $creating = (bool) Arr::get($input, 'creating', 0);
-
-        // Update the Post instance.s
+        // Update the Post instance.
         $post->title   = $input['title'];
         $post->content = $input['content'];
         $post->name    = $slug;
@@ -318,27 +339,6 @@ class Posts extends BaseController
         // Fire the associated event.
         Event::fire('content.post.updated', array($post, $creating));
 
-        // Create a new Post revision.
-        $revisions = $post->revision()->count();
-
-        $slug = $post->id .'-revision-v' .($revisions + 1);
-
-        $revision = Post::create(array(
-            'content'        => $post->content,
-            'title'          => $post->title,
-            'excerpt'        => $post->excerpt,
-            'status'         => 'inherit',
-            'password'       => $post->password,
-            'name'           => $slug,
-            'parent_id'      => $post->id,
-            'guid'           => site_url('content/' .$slug),
-            'menu_order'     => $post->menu_order,
-            'type'           => 'revision',
-            'mime_type'      => $post->mime_type,
-            'author_id'      => $authUser->id,
-            'comment_status' => 'closed',
-        ));
-
         // Invalidate the content caches.
         $this->clearContentCache();
 
@@ -348,8 +348,6 @@ class Posts extends BaseController
         $status = $creating
             ? __d('content', 'The {0} <b>#{1}</b> was successfully created.', $name, $post->id)
             : __d('content', 'The {0} <b>#{1}</b> was successfully updated.', $name, $post->id);
-
-        //return Redirect::to('admin/content/' .Str::plural($type))->withStatus($status, 'success');
 
         Session::pushStatus($status, 'success');
 

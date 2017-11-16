@@ -227,7 +227,7 @@ class Posts extends BaseController
 
         $creating = (bool) Arr::get($input, 'creating', 0);
 
-        // Before to save the information, when the Post is not new, we will create a new revision for it.
+        // Before to save the information, we will create a new revision for older Post instances.
         if (! $creating) {
             $revisions = $post->revision()->count();
 

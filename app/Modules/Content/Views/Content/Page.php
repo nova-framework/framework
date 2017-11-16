@@ -7,7 +7,7 @@
 
 <?= Session::getMessages(); ?>
 
-<?php $thumbnail = isset($post->thumbnail) && isset($post->thumbnail->attachment) ? site_url('content/media/serve/' .$post->thumbnail->attachment->name) .'?s=360' : ''; ?>
+<?php $thumbnail = isset($post->thumbnail) && isset($post->thumbnail->attachment) ? site_url('content/media/serve/' .$post->thumbnail->attachment->name) .'?s=270' : ''; ?>
 <?php if (! empty($thumbnail)) { ?>
 <div class="clearfix pull-left" style="margin: 0 20px 20px 0;"><img class="img-responsive img-thumbnail" src="<?= $thumbnail; ?>"></div>
 <?php } ?>

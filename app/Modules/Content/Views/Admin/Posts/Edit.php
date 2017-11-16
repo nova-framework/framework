@@ -138,6 +138,7 @@ $(function () {
     <div class="box-body no-padding">
        <table id="left" class="table table-striped table-hover responsive">
             <tr class="bg-navy disabled">
+                <th style="text-align: center; vertical-align: middle;"><?= __d('content', 'Revision'); ?></th>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('content', 'Title'); ?></th>
                 <th style="text-align: center; vertical-align: middle;"><?= __d('content', 'Created By'); ?></th>
                 <th style="text-align: center; vertical-align: middle;"><?= __d('content', 'Created At'); ?></th>
@@ -146,8 +147,10 @@ $(function () {
             <?php foreach ($post->revision as $revision) { ?>
             <?php $deletables++; ?>
             <?php $restorables++; ?>
+            <?php preg_match('#^(?:\d+)-revision-v(\d+)$#', $revision->name, $matches); ?>
             <tr>
-                <td style="text-align: left; vertical-align: middle;" width="50%"><?= $revision->title ?: __d('content', 'Untitled'); ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="10%"><?= $matches[1]; ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="40%"><?= $revision->title ?: __d('content', 'Untitled'); ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="20%"><?= $revision->author->username; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="15%"><?= $revision->created_at->formatLocalized(__d('content', '%d %b %Y, %R')); ?></td>
                 <td style="text-align: right; vertical-align: middle;" width="15%">

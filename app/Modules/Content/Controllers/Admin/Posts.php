@@ -229,9 +229,19 @@ class Posts extends BaseController
 
         // Before to save the information, we will create a new revision for older Post instances.
         if (! $creating) {
-            $revisions = $post->revision()->count();
+            $count = 0;
 
-            $slug = $post->id .'-revision-v' .($revisions + 1);
+            $names = $post->revision()->lists('name');
+
+            foreach ($names as $name) {
+                if (preg_match('#^(?:\d+)-revision-v(\d+)$#', $name, $matches)) {
+                    $count = max($count, $matches[1]);
+                }
+            }
+
+            $count++;
+
+            $slug = $post->id .'-revision-v' .$count;
 
             $revision = Post::create(array(
                 'content'        => $post->content,

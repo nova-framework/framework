@@ -16,7 +16,7 @@
 <?= $post->getContent(); ?>
 </div>
 
-<?php if (Auth::user()->hasRole('administrator')) { ?>
+<?php if (($post->type !== 'revision') && Auth::user()->hasRole('administrator')) { ?>
 <hr style="margin-bottom: 10px;">
 <a class="btn btn-sm btn-success pull-right" href="<?= site_url('admin/content/' .$post->id .'/edit'); ?>" title="<?= __d('content', 'Edit this Post'); ?>" role="button"><i class="fa fa-pencil"></i> <?= __d('content', 'Edit'); ?></a>
 <div class="clearfix"></div>

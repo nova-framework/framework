@@ -128,6 +128,40 @@ $(function () {
     </div>
 </div>
 
+<?php if (! $post->revision->isEmpty()) { ?>
+
+<div class="box box-widget">
+    <div class="box-header">
+        <h3 class="box-title"><?= __d('content', 'Revisions'); ?></h3>
+    </div>
+    <div class="box-body no-padding">
+       <table id="left" class="table table-striped table-hover responsive">
+            <tr class="bg-navy disabled">
+                <th style="text-align: left; vertical-align: middle;"><?= __d('content', 'Title'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('content', 'Created By'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('content', 'Created At'); ?></th>
+                <th style="text-align: right; vertical-align: middle;"><?= __d('content', 'Operations'); ?></th>
+            </tr>
+            <?php foreach ($post->revision as $revision) { ?>
+            <tr>
+                <td style="text-align: left; vertical-align: middle;" width="50%"><?= $revision->title ?: __d('content', 'Untitled'); ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="20%"><?= $revision->author->username; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="15%"><?= $revision->created_at->formatLocalized(__d('content', '%d %b %Y, %R')); ?></td>
+                <td style="text-align: right; vertical-align: middle;" width="15%">
+                    <div class="btn-group" role="group" aria-label="...">
+                        <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-revision-dialog" data-id="<?= $revision->id; ?>" title="<?= __d('content', 'Delete this Post'); ?>" role="button"><i class="fa fa-remove"></i></a>
+                        <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-reload-revision-dialog" data-id="<?= $revision->id; ?>" title="<?= __d('content', 'Reload this Revision'); ?>" role="button"><i class="fa fa-repeat"></i></a>
+                        <a class="btn btn-sm btn-warning" href="<?= site_url('content/' .$revision->slug); ?>" title="<?= __d('content', 'View this Post Revision'); ?>" target="_blank" role="button"><i class="fa fa-search"></i></a>
+                    </div>
+                </td>
+            </tr>
+            <?php } ?>
+        </table>
+    </div>
+</div>
+
+<?php } ?>
+
 <div class="clearfix"></div>
 
 </div>
@@ -189,25 +223,48 @@ $(function () {
 <script>
 
 $(function () {
-    var type = '<?= $type; ?>';
-
     $('#publish-form').submit(function(event) {
-        $(this).find('.publish-form-value').remove();
+        event.preventDefault();
 
-        $(this).append('<input class="publish-form-value" type="hidden" name="title" value="' + $('#title').val() + '" /> ');
-        $(this).append('<input class="publish-form-value" type="hidden" name="content" value="' + $('#content').val() + '" /> ');
+        var type = '<?= $type; ?>';
+
+        var data = new FormData();
+
+        data.append('status',     $('#status').val());
+        data.append('visibility', $('#visibility').val());
+        data.append('password',   $('#password').val());
+
+        data.append('title',      $('#title').val());
+        data.append('content',    $('#content').val());
+        data.append('creating',   "<?= (int) $creating; ?>");
+        data.append('taxonomy',   "<?= ($type == 'post') ? 'post_tag' : $type; ?>");
+
+        data.append('slug',       $('#page-slug').val());
 
         if (type === 'page') {
-            $(this).append('<input class="publish-form-value" type="hidden" name="slug" value="' + $('#page-slug').val() + '" /> ');
-            $(this).append('<input class="publish-form-value" type="hidden" name="parent" value="' + $('#page-parent').val() + '" /> ');
-            $(this).append('<input class="publish-form-value" type="hidden" name="order" value="' + $('#page-order').val() + '" /> ');
+            data.append('parent',     $('#page-parent').val());
+            data.append('order',      $('#page-order').val());
         } else {
-            $(this).append('<input class="publish-form-value" type="hidden" name="categories" value="' + $('.category-checkbox:checked').serialize() + '" /> ');
+            data.append('categories', $('.category-checkbox:checked').serialize());
         }
 
-        $(this).append('<input class="publish-form-value" type="hidden" name="thumbnail" value="' + $('#thumbnail').val() + '" /> ');
+        data.append('thumbnail',  $('#thumbnail').val());
 
-        //event.preventDefault();
+        $.ajax({
+            url: "<?= site_url('admin/content/' .$post->id); ?>",
+            data: data,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function(data) {
+                if (data.redirectTo === 'refresh') {
+                    window.location.reload(true);
+                } else {
+                    window.location.href = data.redirectTo;
+                }
+            }
+        });
+
     });
 
     $('#visibility').change(function(e) {

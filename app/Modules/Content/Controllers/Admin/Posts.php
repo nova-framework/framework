@@ -11,6 +11,8 @@ use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
+use Nova\Support\Facades\URL;
+use Nova\Support\Facades\Session;
 use Nova\Support\Arr;
 use Nova\Support\Str;
 
@@ -138,7 +140,7 @@ class Posts extends BaseController
         $authUser = Auth::user();
 
         try {
-            $post = Post::with('thumbnail')->findOrFail($id);
+            $post = Post::with('thumbnail', 'revision')->findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
             return Redirect::back()->withStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
@@ -198,8 +200,6 @@ class Posts extends BaseController
 
         })->implode("\n");
 
-        // Featured Image / Thumbnail.
-
         // No menu selection on edit mode.
         $menuSelect = '';
 
@@ -220,7 +220,11 @@ class Posts extends BaseController
             $post = Post::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
+            //return Redirect::back()->withStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
+
+            Session::pushStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
+
+            return Response::json(array('redirectTo' => 'refresh'), 400);
         }
 
         $type = $post->type;
@@ -233,6 +237,8 @@ class Posts extends BaseController
         $post->title   = $input['title'];
         $post->content = $input['content'];
         $post->name    = $slug;
+
+        $post->guid = site_url('content/' .$slug);
 
         // The Status.
         $status = Arr::get($input, 'status', 'draft');
@@ -261,9 +267,8 @@ class Posts extends BaseController
         $post->password = $password;
 
         if ($type == 'page') {
-            $post->parent_id = (int) Arr::get($input, 'parent', 0);
-
-            $post->menu_order = (int) Arr::get($input, 'order', 0);
+            $post->parent_id  = (int) Arr::get($input, 'parent', 0);
+            $post->menu_order = (int) Arr::get($input, 'order',  0);
         }
 
         // Featured Image / Thumbnail.
@@ -313,6 +318,27 @@ class Posts extends BaseController
         // Fire the associated event.
         Event::fire('content.post.updated', array($post, $creating));
 
+        // Create a new Post revision.
+        $revisions = $post->revision()->count();
+
+        $slug = $post->id .'-revision-v' .($revisions + 1);
+
+        $revision = Post::create(array(
+            'content'        => $post->content,
+            'title'          => $post->title,
+            'excerpt'        => $post->excerpt,
+            'status'         => 'inherit',
+            'password'       => $post->password,
+            'name'           => $slug,
+            'parent_id'      => $post->id,
+            'guid'           => site_url('content/' .$slug),
+            'menu_order'     => $post->menu_order,
+            'type'           => 'revision',
+            'mime_type'      => $post->mime_type,
+            'author_id'      => $authUser->id,
+            'comment_status' => 'closed',
+        ));
+
         // Invalidate the content caches.
         $this->clearContentCache();
 
@@ -323,7 +349,14 @@ class Posts extends BaseController
             ? __d('content', 'The {0} <b>#{1}</b> was successfully created.', $name, $post->id)
             : __d('content', 'The {0} <b>#{1}</b> was successfully updated.', $name, $post->id);
 
-        return Redirect::to('admin/content/' .Str::plural($type))->withStatus($status, 'success');
+        //return Redirect::to('admin/content/' .Str::plural($type))->withStatus($status, 'success');
+
+        Session::pushStatus($status, 'success');
+
+        return Response::json(array(
+            'redirectTo' => site_url('admin/content/' .Str::plural($type))
+
+        ), 200);
     }
 
     public function destroy($id)

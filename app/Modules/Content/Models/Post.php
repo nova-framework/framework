@@ -150,7 +150,9 @@ class Post extends Model
      */
     public function revision()
     {
-        return $this->hasMany('App\Modules\Content\Models\Post', 'parent_id')->where('type', 'revision');
+        return $this->hasMany('App\Modules\Content\Models\Post', 'parent_id')
+            ->where('type', 'revision')
+            ->orderBy('created_at', 'desc');
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Modules\Content\Controllers;
 
 use Nova\Http\Request;
+use Nova\Support\Facades\App;
 use Nova\Support\Facades\Config;
 use Nova\Support\Str;
 
@@ -36,7 +37,7 @@ class Content extends BaseController
             return $this->frontpage();
         }
 
-        $query = Post::with('author', 'thumbnail', 'taxonomies')->whereIn('status', array('publish', 'password'));
+        $query = Post::with('author', 'thumbnail', 'taxonomies')->whereIn('status', array('publish', 'password', 'inherit'));
 
         if (is_numeric($name)) {
             $query->where('id', (int) $name);
@@ -45,6 +46,14 @@ class Content extends BaseController
         }
 
         $post = $query->firstOrFail();
+
+        if ($post->status === 'inherit') {
+            $post->load('parent');
+
+            if (! in_array($post->parent->status, array('publish', 'password'))) {
+                App::abort(404);
+            }
+        }
 
         // Calculate the View used for rendering this Post instance.
         $view = ($post->type == 'page') ? 'Page' : 'Post';

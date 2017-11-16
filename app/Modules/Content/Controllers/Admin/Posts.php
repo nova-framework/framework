@@ -345,9 +345,7 @@ class Posts extends BaseController
         //
         $name = Config::get("content::labels.{$type}.name", Str::title($type));
 
-        $status = $creating
-            ? __d('content', 'The {0} <b>#{1}</b> was successfully created.', $name, $post->id)
-            : __d('content', 'The {0} <b>#{1}</b> was successfully updated.', $name, $post->id);
+        $status = __d('content', 'The {0} <b>#{1}</b> was successfully saved.', $name, $post->id);
 
         Session::pushStatus($status, 'success');
 

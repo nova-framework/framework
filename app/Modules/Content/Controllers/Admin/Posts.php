@@ -212,7 +212,7 @@ class Posts extends BaseController
         // Revisions.
         $revisions = $post->revision()
             ->orderBy('created_at', 'desc')
-            ->limit(5)
+            ->limit(10)
             ->get();
 
         //

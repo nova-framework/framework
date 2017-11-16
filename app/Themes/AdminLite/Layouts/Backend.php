@@ -219,8 +219,10 @@ Assets::js(array(
     vendor_url('plugins/iCheck/icheck.min.js', 'almasaeed2010/adminlte'),
     // AdminLTE App
     vendor_url('dist/js/adminlte.min.js', 'almasaeed2010/adminlte'),
+
     // Bootstrap WYSIHTML5
-    vendor_url('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js', 'almasaeed2010/adminlte'),
+    //vendor_url('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.js', 'almasaeed2010/adminlte'),
+    resource_url('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.js'),
 ));
 
 echo isset($js) ? $js : ''; // Place to pass data

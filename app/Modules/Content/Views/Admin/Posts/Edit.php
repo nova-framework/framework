@@ -68,20 +68,28 @@
     </div>
     <div class="box-footer">
          <div id="edit-status" style="padding: 5px;" class="pull-left"></div>
-         <a class="btn btn-primary btn-sm col-sm-2 pull-right" href="#" data-toggle="modal" data-target="" role="button"><?= __d('content', 'Add Media'); ?></a>
+         <a class="btn btn-primary btn-sm col-sm-2 btn_upload_image pull-right" href="#" file_type="image" selecter="contentEditorInsertImage" role="button"><?= __d('content', 'Add Media'); ?></a>
          <div class="clearfix"></div>
     </div>
 </div>
 
 </form>
 
-<script type="text/javascript" src="<?= resource_url('js/wysihtml/parser_rules/advanced_and_extended.js', 'Content'); ?>"></script>
-
 <script>
+
+function contentEditorInsertImage(url, type, upload) {
+    var wysihtml5Editor = $('#content').data("wysihtml5").editor;
+
+    if (type === 'image') {
+        wysihtml5Editor.composer.commands.exec("insertImage", { src: url, alt: "Image" });
+    } else if (type === 'file') {
+        wysihtml5Editor.composer.commands.exec("createLink", { href: url, target: "_blank" });
+    }
+}
 
 $(function () {
     // Bootstrap WYSIHTML5 - text editor
-    var wysihtml = $('#content').wysihtml5({
+    $('#content').wysihtml5({
         locale: '<?= Language::code(); ?>',
         toolbar: {
             "font-styles": true,  // Font styling, e.g. h1, h2, etc. Default true
@@ -98,7 +106,10 @@ $(function () {
         },
 
         // The Parser Rules.
-        parserRules: wysihtmlParserRules
+        //parserRules: '<?= resource_url("vendor/bootstrap-wysihtml5/parser_rules/advanced_and_extended.json"); ?>'
+        parser: function (html) {
+            return html;
+        }
     });
 });
 

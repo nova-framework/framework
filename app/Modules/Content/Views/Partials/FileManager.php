@@ -3,7 +3,7 @@
 <div class="modal fade" id="fm" role="dialog" aria-labelledby="fileManagerLabel">
     <input type="hidden" id="image_selecter_origin" value="">
     <input type="hidden" id="image_selecter_origin_type" value="">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -48,6 +48,7 @@ var baseUrl = "<?= site_url(); ?>";
 var mediaUploadUrl   = "<?= site_url('admin/media/upload'); ?>";
 var mediaUploadedUrl = "<?= site_url('admin/media/uploaded'); ?>";
 var mediaServeUrl    = "<?= site_url('content/media/serve'); ?>";
+var mediaPublicUrl   = "<?= site_url('assets/files'); ?>";
 
 var cntFiles    = null;
 var fm_dropzone = null;
@@ -62,7 +63,7 @@ $(document).ready(function() {
         loadFileManagerFiles();
     }
 
-    function getLI(upload) {
+    function getItemLI(upload) {
         var image = '';
 
         if ($.inArray(upload.extension, ["jpg", "jpeg", "png", "gif", "bmp"]) > -1) {
@@ -98,7 +99,7 @@ $(document).ready(function() {
                     for (var index = 0; index < cntFiles.length; index++) {
                         var element = cntFiles[index];
 
-                        var li = getLI(element);
+                        var li = getItemLI(element);
 
                         $(".fm_file_selector ul").append(li);
                     }
@@ -115,14 +116,16 @@ $(document).ready(function() {
 
         console.log(sstring);
 
-        if(sstring != "") {
+        if (sstring != "") {
             $(".fm_file_selector ul").empty();
 
             for (var index = 0; index < cntFiles.length; index++) {
                 var upload = cntFiles[index];
 
                 if (upload.name.toUpperCase().includes(sstring.toUpperCase())) {
-                    $(".fm_file_selector ul").append(getLI(upload));
+                    var li = getItemLI(upload);
+
+                    $(".fm_file_selector ul").append(li);
                 }
             }
         } else {
@@ -185,94 +188,48 @@ $(document).ready(function() {
         e.preventDefault();
     });
 
-    $(".uploaded_file2 i.fa.fa-times").on("click", function(e) {
-        var upload_id = $(this).parent().attr("upload_id");
-        var $hiddenFIDs = $(this).parent().parent().prev();
-
-        var hiddenFIDs = JSON.parse($hiddenFIDs.val());
-        var hiddenFIDs2 = [];
-
-        for (var key in hiddenFIDs) {
-            if (hiddenFIDs.hasOwnProperty(key)) {
-                var element = hiddenFIDs[key];
-
-                if (element != upload_id) {
-                    hiddenFIDs2.push(element);
-                }
-            }
-        }
-
-        $hiddenFIDs.val(JSON.stringify(hiddenFIDs2));
-
-        $(this).parent().remove();
-
-        e.preventDefault();
-    });
-
     $("body").on("click", ".fm_file_sel", function() {
-        type = $("#image_selecter_origin_type").val();
+        var type = $("#image_selecter_origin_type").val();
 
-        upload = JSON.parse($(this).attr("upload"));
+        var upload = JSON.parse($(this).attr("upload"));
 
         console.log("upload sel: " + upload + " type: " + type);
 
-        if (type == "image") {
-            $hinput = $("input[name=" + $("#image_selecter_origin").val() + "]");
+        //
+        var url = mediaPublicUrl + '/' + upload.name;
 
-            $hinput.val(upload.id);
+        var origin = $("#image_selecter_origin").val();
 
-            $hinput.next("a").addClass("hide");
+        if ($.isFunction(window[origin])) {
+            window[origin](url, type, upload);
 
-            $hinput.next("a").next(".uploaded_image").removeClass("hide");
-            $hinput.next("a").next(".uploaded_image").children("img").attr("src", mediaServeUrl + '/' + upload.name);
+        } else if (type == "image") {
+            var origin = $("#image_selecter_origin").val();
 
-            $hinput.parent().find(".btn_remove_image").removeClass("hide");
+            var input = $("input[name=" + origin + "]");
+
+            input.val(upload.id);
+
+            input.next("a").addClass("hide");
+
+            input.next("a").next(".uploaded_image").removeClass("hide");
+            input.next("a").next(".uploaded_image").children("img").attr("src", mediaServeUrl + '/' + upload.name);
+
+            input.parent().find(".btn_remove_image").removeClass("hide");
         }
         else if (type == "file") {
-            $hinput = $("input[name="+$("#image_selecter_origin").val()+"]");
+            var origin = $("#image_selecter_origin").val();
 
-            $hinput.val(upload.id);
+            var input = $("input[name=" + origin + "]");
 
-            $hinput.next("a").addClass("hide");
+            input.val(upload.id);
 
-            $hinput.next("a").next(".uploaded_file").removeClass("hide");
-            $hinput.next("a").next(".uploaded_file").attr("href", mediaServeUrl + '/' + upload.name);
+            input.next("a").addClass("hide");
 
-            $hinput.parent().find(".btn_remove_file").removeClass("hide");
-        }
-        else if (type == "files") {
-            $hinput = $("input[name=" + $("#image_selecter_origin").val() + "]");
+            input.next("a").next(".uploaded_file").removeClass("hide");
+            input.next("a").next(".uploaded_file").attr("href", mediaServeUrl + '/' + upload.name);
 
-            var hiddenFIDs = JSON.parse($hinput.val());
-
-            // Check if upload_id exists in array
-            var upload_id_exists = false;
-
-            for (var key in hiddenFIDs) {
-                if (hiddenFIDs.hasOwnProperty(key)) {
-                    var element = hiddenFIDs[key];
-
-                    if(element == upload.id) {
-                        upload_id_exists = true;
-                    }
-                }
-            }
-
-            if (! upload_id_exists) {
-                hiddenFIDs.push(upload.id);
-            }
-
-            $hinput.val(JSON.stringify(hiddenFIDs));
-
-            var fileImage = "";
-
-            if (upload.extension == "jpg" || upload.extension == "png" || upload.extension == "gif" || upload.extension == "jpeg") {
-                fileImage = "<img src='" + baseUrl + "/admin/media/serve/" + upload.name + "?s=90'>";
-            } else {
-                fileImage = "<i class='fa fa-file-o'></i>";
-            }
-
-            $hinput.next("div.uploaded_files").append("<a class='uploaded_file2' upload_id='" + upload.id + "' target='_blank' href='" + mediaServeUrl + upload.name +"'>" + fileImage + "<i title='<?= __d('content', 'Remove File'); ?>' class='fa fa-times'></i></a>");
+            input.parent().find(".btn_remove_file").removeClass("hide");
         }
 
         $("#fm").modal('hide');

@@ -3,5 +3,5 @@
 return array (
   'Dashboard' => 'Рабочий стол',
   'Files' => 'Файлы',
-  'Files Manager' => '',
+  'Files Manager' => 'Менеджер файлов',
 );

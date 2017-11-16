@@ -264,7 +264,6 @@ $(function () {
                 }
             }
         });
-
     });
 
     $('#visibility').change(function(e) {

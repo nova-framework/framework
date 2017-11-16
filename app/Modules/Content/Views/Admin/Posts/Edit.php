@@ -68,7 +68,7 @@
     </div>
     <div class="box-footer">
          <div id="edit-status" style="padding: 5px;" class="pull-left"></div>
-         <a class="btn btn-primary btn-sm col-sm-2 btn_upload_image pull-right" href="#" file_type="image" selecter="contentEditorInsertImage" role="button"><?= __d('content', 'Add Media'); ?></a>
+         <a class="btn btn-primary btn-sm col-sm-2 btn_upload_image pull-right" href="#" file_type="image" selecter="contentEditorInsertMedia" role="button"><?= __d('content', 'Add Media'); ?></a>
          <div class="clearfix"></div>
     </div>
 </div>
@@ -77,7 +77,7 @@
 
 <script>
 
-function contentEditorInsertImage(url, type, upload) {
+function contentEditorInsertMedia(url, type, upload) {
     var wysihtml5Editor = $('#content').data("wysihtml5").editor;
 
     if (type === 'image') {
@@ -107,6 +107,8 @@ $(function () {
 
         // The Parser Rules.
         //parserRules: '<?= resource_url("vendor/bootstrap-wysihtml5/parser_rules/advanced_and_extended.json"); ?>'
+
+        // Disable the Parser at all.
         parser: function (html) {
             return html;
         }

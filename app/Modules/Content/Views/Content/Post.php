@@ -61,7 +61,7 @@
 
 <?php if ($post->type == 'revision') { ?>
 <?php $date = $post->created_at->formatLocalized(__d('content', '%d %b %Y, %R')); ?>
-<?= __d('content', 'Revision created at <b>{0}</b> by <b>{1}</b>', $date, $post->author->username); ?>
+<?= __d('content', 'Revision created at <b>{0}</b>, by <b>{1}</b>', $date, $post->author->username); ?>
 <?php } else if (Auth::user()->hasRole('administrator')) { ?>
 <a class="btn btn-sm btn-success pull-right" href="<?= site_url('admin/content/' .$post->id .'/edit'); ?>" title="<?= __d('content', 'Edit this Post'); ?>" role="button"><i class="fa fa-pencil"></i> <?= __d('content', 'Edit'); ?></a>
 <?php } ?>

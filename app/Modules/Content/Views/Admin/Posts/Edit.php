@@ -128,6 +128,7 @@ $(function () {
     </div>
 </div>
 
+<?php $deletables = $restorables = 0; ?>
 <?php if (! $post->revision->isEmpty()) { ?>
 
 <div class="box box-widget">
@@ -143,6 +144,8 @@ $(function () {
                 <th style="text-align: right; vertical-align: middle;"><?= __d('content', 'Operations'); ?></th>
             </tr>
             <?php foreach ($post->revision as $revision) { ?>
+            <?php $deletables++; ?>
+            <?php $restorables++; ?>
             <tr>
                 <td style="text-align: left; vertical-align: middle;" width="50%"><?= $revision->title ?: __d('content', 'Untitled'); ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="20%"><?= $revision->author->username; ?></td>
@@ -159,6 +162,52 @@ $(function () {
         </table>
     </div>
 </div>
+
+<?php } ?>
+
+<?php if ($deletables > 0) { ?>
+
+<div class="modal modal-default" id="modal-delete-revision-dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-label="<?= __d('content', 'Close'); ?>" data-dismiss="modal" class="close" type="button">
+                <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title"><?= __d('content', 'Delete this {0} revision?', $name); ?></h4>
+            </div>
+            <div class="modal-body">
+                <p><?= __d('content', 'Are you sure you want to remove this {0} revision, the operation being irreversible?', $name); ?></p>
+                <p><?= __d('content', 'Please click the button <b>Delete</b> to proceed, or <b>Cancel</b> to abandon the operation.'); ?></p>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('content', 'Cancel'); ?></button>
+                <form id="modal-delete-form" action="" method="POST">
+                    <input type="hidden" name="id" id="delete-record-id" value="0" />
+                    <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
+                    <input type="submit" name="button" class="btn btn btn-danger pull-right col-md-3" value="<?= __d('content', 'Delete'); ?>">
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+
+<script>
+
+$(function () {
+    $('#modal-delete-revision-dialog').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+
+        var id = button.data('id');
+
+        //
+        $('#delete-record-id').val(id);
+
+        $('#modal-delete-form').attr('action', '<?= site_url("admin/content"); ?>/' + id + '/destroy');
+    });
+});
+
+</script>
 
 <?php } ?>
 

@@ -359,6 +359,28 @@ class Posts extends BaseController
         ), 200);
     }
 
+    public function restore($id)
+    {
+        try {
+            $revision = Post::with('parent')->where('type', 'revision')->findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
+        }
+
+        $post = $revision->parent;
+
+        // Restore the Post's title, content and excerpt.
+        $post->content = $revision->content;
+        $post->excerpt = $revision->excerpt;
+        $post->title   = $revision->title;
+
+        $post->save();
+
+        return Redirect::back()
+            ->withStatus(__d('content', 'The record <b>#{0}</b> was successfully restored.', $post->id), 'success');
+    }
+
     public function destroy($id)
     {
         try {

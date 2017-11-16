@@ -181,8 +181,7 @@ $(function () {
             </div>
             <div class="modal-footer">
                 <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('content', 'Cancel'); ?></button>
-                <form id="modal-delete-form" action="" method="POST">
-                    <input type="hidden" name="id" id="delete-record-id" value="0" />
+                <form id="modal-delete-revision-form" action="" method="POST">
                     <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
                     <input type="submit" name="button" class="btn btn btn-danger pull-right col-md-3" value="<?= __d('content', 'Delete'); ?>">
                 </form>
@@ -200,10 +199,49 @@ $(function () {
 
         var id = button.data('id');
 
-        //
-        $('#delete-record-id').val(id);
+        $('#modal-delete-revision-form').attr('action', '<?= site_url("admin/content"); ?>/' + id + '/destroy');
+    });
+});
 
-        $('#modal-delete-form').attr('action', '<?= site_url("admin/content"); ?>/' + id + '/destroy');
+</script>
+
+<?php } ?>
+
+<?php if ($restorables > 0) { ?>
+
+<div class="modal modal-default" id="modal-delete-revision-dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-label="<?= __d('content', 'Close'); ?>" data-dismiss="modal" class="close" type="button">
+                <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title"><?= __d('content', 'Restore this {0} revision?', $name); ?></h4>
+            </div>
+            <div class="modal-body">
+                <p><?= __d('content', 'Are you sure you want to restore this {0} revision?', $name); ?></p>
+                <p><?= __d('content', 'Please click the button <b>Delete</b> to proceed, or <b>Cancel</b> to abandon the operation.'); ?></p>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('content', 'Cancel'); ?></button>
+                <form id="modal-restore-revision-form" action="" method="POST">
+                    <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
+                    <input type="submit" name="button" class="btn btn btn-danger pull-right col-md-3" value="<?= __d('content', 'Delete'); ?>">
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+
+<script>
+
+$(function () {
+    $('#modal-delete-revision-dialog').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+
+        var id = button.data('id');
+
+        $('#modal-restore-revision-form').attr('action', '<?= site_url("admin/content"); ?>/' + id + '/restore');
     });
 });
 

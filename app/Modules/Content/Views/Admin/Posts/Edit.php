@@ -135,7 +135,7 @@ $(function () {
     <div class="box-header">
         <h3 class="box-title"><?= __d('content', 'Revisions : {0}', $post->revision->count()); ?></h3>
         <div class="box-tools">
-            <a href="<?= site_url('admin/content/' .$post->id .'/revisions'); ?>" class="btn btn-primary btn-sm pull-right" role="button"><i class="fa fa-list"></i> <?= __d('content', 'View all revisions'); ?></a>
+            <a href="<?= site_url('admin/content/' .$post->id .'/revisions'); ?>" class="btn btn-primary btn-sm pull-right" role="button"><i class="fa fa-list"></i> <?= __d('content', 'View all'); ?></a>
         </div>
     </div>
     <div class="box-body no-padding">

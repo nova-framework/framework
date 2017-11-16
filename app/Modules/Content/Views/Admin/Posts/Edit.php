@@ -118,6 +118,17 @@ $(function () {
 
 </script>
 
+<div class="box box-widget">
+    <div class="box-header with-border">
+        <h3 class="box-title"><?= __d('content', 'Slug'); ?></h3>
+    </div>
+    <div class="box-body">
+        <div class="form-group" style="margin-bottom: 0;">
+            <input name="slug" id="page-slug" type="text" class="form-control" value="<?= Input::old('slug', $post->name); ?>" placeholder="<?= __d('content', 'Enter slug here'); ?>" autocomplete="off">
+        </div>
+    </div>
+</div>
+
 <?php $deletables = $restorables = 0; ?>
 <?php if (! $revisions->isEmpty()) { ?>
 <?php $format = __d('content', '%d %b %Y, %R'); ?>
@@ -245,17 +256,6 @@ $(function () {
 </script>
 
 <?php } ?>
-
-<div class="box box-widget">
-    <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('content', 'Slug'); ?></h3>
-    </div>
-    <div class="box-body">
-        <div class="form-group" style="margin-bottom: 0;">
-            <input name="slug" id="page-slug" type="text" class="form-control" value="<?= Input::old('slug', $post->name); ?>" placeholder="<?= __d('content', 'Enter slug here'); ?>" autocomplete="off">
-        </div>
-    </div>
-</div>
 
 <div class="clearfix"></div>
 

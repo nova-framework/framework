@@ -377,6 +377,13 @@ class Posts extends BaseController
         $post->excerpt = $revision->excerpt;
         $post->title   = $revision->title;
 
+        // Handle the MetaData.
+        if (! preg_match('#^(?:\d+)-revision-v(\d+)$#', $revision->name, $matches)) {
+            $version = 0;
+        } else {
+            $post->meta->version = $version = (int) $matches[1];
+        }
+
         $post->save();
 
         // Invalidate the content caches.
@@ -387,10 +394,8 @@ class Posts extends BaseController
 
         $name = Config::get("content::labels.{$type}.name", Str::title($type));
 
-        preg_match('#^(?:\d+)-revision-v(\d+)$#', $revision->name, $matches);
-
         return Redirect::back()
-            ->withStatus(__d('content', 'The {0} <b>#{1}</b> was successfully restored to the revision: <b>{2}</b>', $name, $post->id, $matches[1]), 'success');
+            ->withStatus(__d('content', 'The {0} <b>#{1}</b> was successfully restored to the revision: <b>{2}</b>', $name, $post->id, $version), 'success');
     }
 
     public function destroy($id)

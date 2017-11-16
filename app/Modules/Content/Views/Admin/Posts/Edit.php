@@ -69,7 +69,7 @@
     <div class="box-footer">
         <?php $format = __d('content', '%B %d, %Y at %l:%M %p'); ?>
         <div id="edit-status" style="padding: 5px;" class="pull-left text-muted"><?= __d('content', 'Last edited by <b>{0}</b> on {1}', $lastEditor->username, $post->updated_at->formatLocalized($format)); ?></div>
-        <a class="btn btn-primary btn-sm col-sm-2 btn_upload_image pull-right" href="#" file_type="image" selecter="contentEditorInsertMedia" role="button"><?= __d('content', 'Add Media'); ?></a>
+        <a class="btn btn-success btn-sm col-sm-2 btn_upload_image pull-right" href="#" file_type="image" selecter="contentEditorInsertMedia" role="button"><?= __d('content', 'Add Media'); ?></a>
         <div class="clearfix"></div>
     </div>
 </div>
@@ -126,7 +126,7 @@ $(function () {
     <div class="box-header">
         <h3 class="box-title"><?= __d('content', 'Revisions : {0}', $post->revision->count()); ?></h3>
         <div class="box-tools">
-            <a href="<?= site_url('admin/content/' .$post->id .'/revisions'); ?>" class="btn btn-default btn-sm pull-right" role="button"><i class="fa fa-list"></i> <?= __d('content', 'View all'); ?></a>
+            <a href="<?= site_url('admin/content/' .$post->id .'/revisions'); ?>" class="btn btn-primary btn-sm pull-right" role="button"><i class="fa fa-list"></i> <?= __d('content', 'View all'); ?></a>
         </div>
     </div>
     <div class="box-body no-padding">

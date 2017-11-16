@@ -1,13 +1,13 @@
 <?php
 
 return array (
-  '%s (%s) joined the chat.' => '',
-  '%s (%s) left the chat.' => '',
-  'Chat' => '',
-  'Dashboard' => '',
-  'No Users are on-line.' => '',
-  'On-line Users' => '',
-  'Send' => '',
-  'Type Message ...' => '',
-  'WebRTC Chat' => '',
+  '%s (%s) joined the chat.' => '%s (%s) вошли в чат.',
+  '%s (%s) left the chat.' => '%s (%s) покинули чат',
+  'Chat' => 'Чат',
+  'Dashboard' => 'Рабочий стол',
+  'No Users are on-line.' => 'Нет пользователей онлайн',
+  'On-line Users' => 'Онлайн пользователи',
+  'Send' => 'Отправить',
+  'Type Message ...' => 'Тип сообщения',
+  'WebRTC Chat' => 'WebRTC чат',
 );

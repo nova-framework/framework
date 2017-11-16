@@ -110,7 +110,6 @@ return array (
   'Published' => '',
   'Read more ...' => '',
   'Record not found: #{0}' => '',
-  'Remove File' => '',
   'Remove featured image' => '',
   'Save' => '',
   'Save the Items' => '',

@@ -3,10 +3,10 @@
 <div class="modal fade" id="fm" role="dialog" aria-labelledby="fileManagerLabel">
     <input type="hidden" id="image_selecter_origin" value="">
     <input type="hidden" id="image_selecter_origin_type" value="">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="<?= __d('content', 'Close'); ?>"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="fileManagerLabel"><?= __d('content', 'Select File'); ?></h4>
             </div>
             <div class="modal-body p0">

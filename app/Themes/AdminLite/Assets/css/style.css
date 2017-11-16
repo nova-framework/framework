@@ -317,8 +317,8 @@ ul.files_container li:hover {
   display: inline-block;
   height: 100%;
   width: 100%;
-  min-height: 400px;
-  /*overflow: scroll; */
+  min-height: 300px;
+  overflow: scroll;
 }
 
 #fm .fm_file_selector ul li {

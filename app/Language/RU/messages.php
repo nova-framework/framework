@@ -58,7 +58,7 @@ return array (
   'The :attribute must have at least :min items.' => ':attribute должен иметь по крайней мере :min элементов.',
   'The :attribute must have between :min and :max items.' => ':attribute должен иметь между :min and :max элементов',
   'The page you are looking for can not be found.' => 'Страница, которую вы ищете не может быть найдена.',
-  'The selected :attribute is invalid.' => 'Выбранный attribute: недействителен.',
+  'The selected :attribute is invalid.' => 'Выбранный :attribute недействителен.',
   'This could be the result of an invalid Page request.' => 'Это может быть результатом запроса неправильной страницы.',
   'This could be the result of the page being removed, the name being changed or the page being temporarily unavailable.' => 'Это может быть результатом удаления страницы, её переименования или временной недоступности',
   'Troubleshooting' => 'Исправление проблем',

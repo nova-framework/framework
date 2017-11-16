@@ -64,7 +64,7 @@ $languages = Config::get('languages');
 <div class="wrapper">
   <header class="main-header">
     <nav class="navbar navbar-static-top">
-      <div class="container">
+      <div class="container-fluid">
         <div class="navbar-header">
           <a href="<?= site_url(); ?>" class="navbar-brand"><strong><?= $siteName; ?></strong></a>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
@@ -87,8 +87,8 @@ $languages = Config::get('languages');
                     </ul>
                 </li>
                 <?php if (Auth::check()) { ?>
-                <li <?= ($currentUri == 'account') ? 'class="active"' : ''; ?>>
-                    <a href='<?= site_url('account'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Profile'); ?></a>
+                <li>
+                    <a href='<?= site_url('dashboard'); ?>'><i class='fa fa-home'></i> <?= __d('admin_lite', 'Frontend'); ?></a>
                 </li>
                 <li>
                     <a href='<?= site_url('logout'); ?>' onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

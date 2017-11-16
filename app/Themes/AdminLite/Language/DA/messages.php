@@ -6,6 +6,7 @@ return array (
   'Account' => '',
   'Control Panel' => 'Kontorlpanel',
   'Forgot Password?' => 'Glemt kodeord?',
+  'Frontend' => '',
   'Logout' => 'Log ud',
   'Member since {0}' => 'Medlem siden {0}',
   'Notifications updated' => '',

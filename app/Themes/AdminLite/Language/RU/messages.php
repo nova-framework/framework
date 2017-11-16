@@ -6,6 +6,7 @@ return array (
   'Account' => '',
   'Control Panel' => 'Панель управления',
   'Forgot Password?' => 'Забыли пароль?',
+  'Frontend' => '',
   'Logout' => 'Выйти',
   'Member since {0}' => 'Участник с {0}',
   'Notifications updated' => '',

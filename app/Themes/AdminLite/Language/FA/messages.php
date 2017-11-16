@@ -6,6 +6,7 @@ return array (
   'Account' => '',
   'Control Panel' => 'پنل کنترل',
   'Forgot Password?' => 'فراموشی رمزعبور؟',
+  'Frontend' => '',
   'Logout' => 'خروج',
   'Member since {0}' => 'عضو از {0}',
   'Notifications updated' => '',

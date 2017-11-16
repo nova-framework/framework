@@ -153,7 +153,7 @@ $(function () {
                 <td style="text-align: right; vertical-align: middle;" width="15%">
                     <div class="btn-group" role="group" aria-label="...">
                         <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-revision-dialog" data-id="<?= $revision->id; ?>" title="<?= __d('content', 'Delete this Post'); ?>" role="button"><i class="fa fa-remove"></i></a>
-                        <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-reload-revision-dialog" data-id="<?= $revision->id; ?>" title="<?= __d('content', 'Reload this Revision'); ?>" role="button"><i class="fa fa-repeat"></i></a>
+                        <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-restore-revision-dialog" data-id="<?= $revision->id; ?>" title="<?= __d('content', 'Reload this Revision'); ?>" role="button"><i class="fa fa-repeat"></i></a>
                         <a class="btn btn-sm btn-warning" href="<?= site_url('content/' .$revision->slug); ?>" title="<?= __d('content', 'View this Post Revision'); ?>" target="_blank" role="button"><i class="fa fa-search"></i></a>
                     </div>
                 </td>
@@ -197,9 +197,7 @@ $(function () {
     $('#modal-delete-revision-dialog').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal
 
-        var id = button.data('id');
-
-        $('#modal-delete-revision-form').attr('action', '<?= site_url("admin/content"); ?>/' + id + '/destroy');
+        $('#modal-delete-revision-form').attr('action', '<?= site_url("admin/content"); ?>/' + button.data('id') + '/destroy');
     });
 });
 
@@ -209,7 +207,7 @@ $(function () {
 
 <?php if ($restorables > 0) { ?>
 
-<div class="modal modal-default" id="modal-delete-revision-dialog">
+<div class="modal modal-default" id="modal-restore-revision-dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -239,9 +237,7 @@ $(function () {
     $('#modal-delete-revision-dialog').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal
 
-        var id = button.data('id');
-
-        $('#modal-restore-revision-form').attr('action', '<?= site_url("admin/content"); ?>/' + id + '/restore');
+        $('#modal-restore-revision-form').attr('action', '<?= site_url("admin/content"); ?>/' + button.data('id') + '/restore');
     });
 });
 

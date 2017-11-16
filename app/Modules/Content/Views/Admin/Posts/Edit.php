@@ -220,13 +220,13 @@ $(function () {
             </div>
             <div class="modal-body">
                 <p><?= __d('content', 'Are you sure you want to restore this {0} revision?', $name); ?></p>
-                <p><?= __d('content', 'Please click the button <b>Delete</b> to proceed, or <b>Cancel</b> to abandon the operation.'); ?></p>
+                <p><?= __d('content', 'Please click the button <b>Restore</b> to proceed, or <b>Cancel</b> to abandon the operation.'); ?></p>
             </div>
             <div class="modal-footer">
                 <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('content', 'Cancel'); ?></button>
                 <form id="modal-restore-revision-form" action="" method="POST">
                     <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
-                    <input type="submit" name="button" class="btn btn btn-danger pull-right col-md-3" value="<?= __d('content', 'Delete'); ?>">
+                    <input type="submit" name="button" class="btn btn btn-danger pull-right col-md-3" value="<?= __d('content', 'Restore'); ?>">
                 </form>
             </div>
         </div>

@@ -152,6 +152,13 @@ $(function() {
 
 </div>
 
+<div class="clearfix"></div>
+<br>
+<br>
+<a class="btn btn-primary col-sm-2" href="<?= site_url('admin/menus'); ?>"><?= __d('content', '<< Previous Page'); ?></a>
+
+<div class="clearfix"></div>
+
 </section>
 
 <div id="modal-edit-dialog" class="modal modal-default fade" tabindex="-1" role="dialog" aria-labelledby="...">

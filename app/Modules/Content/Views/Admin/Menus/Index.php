@@ -70,7 +70,7 @@
                     <div class="btn-group" role="group" aria-label="...">
                         <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $menu->id; ?>" title="<?= __d('content', 'Delete this Menu'); ?>" role="button"><i class="fa fa-remove"></i></a>
                         <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-edit-dialog" data-id="<?= $menu->id; ?>" data-name="<?= $menu->name; ?>" data-description="<?= $menu->description; ?>" title="<?= __d('content', 'Edit this Menu'); ?>" role="button"><i class="fa fa-pencil"></i></a>
-                        <a class="btn btn-sm btn-warning" href="<?= site_url('admin/menus/' .$menu->id); ?>" title="<?= __d('content', 'Manage the Items on this Menu'); ?>" target="_blank" role="button"><i class="fa fa-search"></i></a>
+                        <a class="btn btn-sm btn-warning" href="<?= site_url('admin/menus/' .$menu->id); ?>" title="<?= __d('content', 'Manage the Items on this Menu'); ?>" role="button"><i class="fa fa-search"></i></a>
                     </div>
                 </td>
             </tr>

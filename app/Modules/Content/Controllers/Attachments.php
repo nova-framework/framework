@@ -37,18 +37,17 @@ class Attachments extends BaseController
         if (isset($size) && Str::is('image/*', $upload->mime_type)) {
             $thumbPath = Config::get('content::attachments.thumbPath', base_path('assets/files/thumbnails'));
 
-            if (! File::exists($thumbPath)) {
-                File::makeDirectory($thumbPath, 0755, true, true);
-            }
             if (! is_numeric($size)) {
                 $size = 150;
             }
 
-            $name = pathinfo($upload->name, PATHINFO_FILENAME);
+            $thumbPath .= DS .$size;
 
-            $extension = pathinfo($upload->name, PATHINFO_EXTENSION);
+            if (! File::exists($thumbPath)) {
+                File::makeDirectory($thumbPath, 0755, true, true);
+            }
 
-            $filePath = $thumbPath .DS .$name .'-' .$size ."x" .$size .'.' .$extension;
+            $filePath = $thumbPath .DS .$name;
 
             if (! File::exists($filePath)) {
                 $image = Image::make($path);

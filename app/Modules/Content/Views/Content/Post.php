@@ -13,7 +13,7 @@
 
 <div class="col-md-<?= $hasSidebar ? 9 : 12; ?>" style="padding-bottom: 40px;">
 
-<?php $thumbnail = isset($post->thumbnail) && isset($post->thumbnail->attachment) ? site_url('content/media/serve/' .$post->thumbnail->attachment->name) .'?s=360' : ''; ?>
+<?php $thumbnail = isset($post->thumbnail) && isset($post->thumbnail->attachment) ? site_url('content/media/serve/' .$post->thumbnail->attachment->name) .'?s=270' : ''; ?>
 
 <?php $format = __d('content', '%d %b %Y'); ?>
 <div class="pull-left"><?= __d('content', '{0}, by <b>{1}</b>', $post->updated_at->formatLocalized($format), $post->author->realname()); ?></div>

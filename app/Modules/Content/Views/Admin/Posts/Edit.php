@@ -64,7 +64,7 @@
         <div class="clearfix"></div>
         <br>
 
-        <textarea name="content" id="content" style="border: 1px solid #dddddd; width: 100%; padding: 10px; height: 550px; resize: vertical;" autocomplete="off"><?= Input::old('content', $post->content); ?></textarea>
+        <textarea name="content" id="content" class="blue" style="border: 1px solid #dddddd; width: 100%; padding: 10px; height: 550px; resize: vertical;" autocomplete="off"><?= Input::old('content', $post->content); ?></textarea>
     </div>
     <div class="box-footer">
         <?php $format = __d('content', '%B %d, %Y at %l:%M %p'); ?>
@@ -105,6 +105,7 @@ $(function () {
              // Use the FontAwesome icons.
             "fa":          true
         },
+        "stylesheets": <?= json_encode($stylesheets) ?>,
 
         // The Parser Rules.
         //parserRules: '<?= resource_url("vendor/bootstrap-wysihtml5/parser_rules/advanced_and_extended.json"); ?>'

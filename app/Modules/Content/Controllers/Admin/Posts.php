@@ -254,6 +254,10 @@ class Posts extends BaseController
             return Response::json(array('redirectTo' => 'refresh'), 400);
         }
 
+        // Fire the stating event.
+        Event::fire('content.post.updating', array($post, $creating));
+
+        //
         $type = $post->type;
 
         $creating = (bool) Arr::get($input, 'creating', 0);
@@ -373,7 +377,7 @@ class Posts extends BaseController
             'comment_status' => 'closed',
         ));
 
-        // Fire the associated event.
+        // Fire the finishing event.
         Event::fire('content.post.updated', array($post, $creating));
 
         // Invalidate the content caches.
@@ -401,6 +405,10 @@ class Posts extends BaseController
             return Redirect::back()->withStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
         }
 
+        // Fire the starting event.
+        Event::fire('content.post.deleted', array($post));
+
+        //
         $taxonomies = $post->taxonomies;
 
         $post->taxonomies()->detach();
@@ -411,6 +419,9 @@ class Posts extends BaseController
         });
 
         $post->delete();
+
+        // Fire the finishing event.
+        Event::fire('content.post.deleted', array($post));
 
         // Invalidate the content caches.
         $this->clearContentCache();

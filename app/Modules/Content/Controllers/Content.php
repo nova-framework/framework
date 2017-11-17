@@ -4,6 +4,7 @@ namespace App\Modules\Content\Controllers;
 
 use Nova\Http\Request;
 use Nova\Support\Facades\App;
+use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Config;
 use Nova\Support\Str;
 
@@ -37,22 +38,32 @@ class Content extends BaseController
             return $this->frontpage();
         }
 
-        $query = Post::with('author', 'thumbnail', 'taxonomies')->whereIn('status', array('publish', 'password', 'inherit'));
+        $post = Cache::remember('content.posts.' .$name, 1440, function () use ($name)
+        {
+            $query = Post::with('author', 'thumbnail', 'taxonomies')->whereIn('status', array('publish', 'password', 'inherit'));
 
-        if (is_numeric($name)) {
-            $query->where('id', (int) $name);
-        } else {
-            $query->where('name', $name);
-        }
-
-        $post = $query->firstOrFail();
-
-        if ($post->status === 'inherit') {
-            $post->load('parent');
-
-            if (! in_array($post->parent->status, array('publish', 'password'))) {
-                App::abort(404);
+            if (is_numeric($name)) {
+                $query->where('id', (int) $name);
+            } else {
+                $query->where('name', $name);
             }
+
+            $post = $query->first();
+
+            // If the Post is a Revision.
+            if (($post->type === 'revision') && ($post->status === 'inherit')) {
+                $parent = $post->parent()->first();
+
+                if (! in_array($parent->status, array('publish', 'password'))) {
+                    return null;
+                }
+            }
+
+            return $post;
+        });
+
+        if (is_null($post)) {
+            App::abort(404);
         }
 
         // Calculate the View used for rendering this Post instance.

@@ -67,7 +67,11 @@ $app = new Application();
 //--------------------------------------------------------------------------
 
 $env = $app->detectEnvironment(array(
-    'local' => array('darkstar'),
+    'local' => array(
+        'darkstar',
+        'darkstar.localdomain',
+        'darkstar.example.org'
+    ),
 ));
 
 //--------------------------------------------------------------------------

@@ -64,7 +64,7 @@
         <div class="clearfix"></div>
         <br>
 
-        <textarea name="content" id="content" class="blue" style="border: 1px solid #dddddd; width: 100%; padding: 10px; height: 550px; resize: vertical;" autocomplete="off"><?= Input::old('content', $post->content); ?></textarea>
+        <textarea name="content" class="blue" id="content" style="border: 1px solid #dddddd; width: 100%; padding: 10px; height: 550px; resize: vertical;" autocomplete="off"><?= Input::old('content', $post->content); ?></textarea>
     </div>
     <div class="box-footer">
         <?php $format = __d('content', '%B %d, %Y at %l:%M %p'); ?>
@@ -105,7 +105,7 @@ $(function () {
              // Use the FontAwesome icons.
             "fa":          true
         },
-        "stylesheets": <?= json_encode($stylesheets) ?>,
+        stylesheets: JSON.parse('<?= json_encode($stylesheets) ?>'),
 
         // The Parser Rules.
         //parserRules: '<?= resource_url("vendor/bootstrap-wysihtml5/parser_rules/advanced_and_extended.json"); ?>'
@@ -311,7 +311,7 @@ $(function () {
 </div>
 
 <input type="hidden" name="creating" value="<?= (int) $creating; ?>" />
-<input type="hidden" name="taxonomy" value="<?= ($type == 'post') ? 'post_tag' : $type; ?>" />
+<input type="hidden" name="type" value="<?= $type; ?>" />
 <input type="hidden" name="_token"   value="<?= csrf_token(); ?>" />
 
 </form>
@@ -326,6 +326,7 @@ $(function () {
 
         var type = '<?= $type; ?>';
 
+        //
         var data = new FormData();
 
         data.append('status',     $('#status').val());
@@ -335,14 +336,29 @@ $(function () {
         data.append('title',      $('#title').val());
         data.append('content',    $('#content').val());
         data.append('creating',   "<?= (int) $creating; ?>");
-        data.append('taxonomy',   "<?= ($type == 'post') ? 'post_tag' : $type; ?>");
+        data.append('type',       type);
 
         data.append('slug',       $('#page-slug').val());
 
         if (type === 'page') {
-            data.append('parent',     $('#page-parent').val());
-            data.append('order',      $('#page-order').val());
-        } else {
+            data.append('parent', $('#page-parent').val());
+            data.append('order',  $('#page-order').val());
+        }
+
+        // For the Blocks.
+        else if (type === 'block') {
+            data.append('order', $('#page-order').val());
+
+            data.append('block-show-title', $('#block-show-title').is(":checked") ? 1 : 0);
+
+            data.append('block-show-mode', $('#block-show-mode').val());
+            data.append('block-show-path', $('#block-show-path').val());
+
+            data.append('block-position', $('#block-position').val());
+        }
+
+        // For the Posts.
+        else {
             data.append('categories', $('.category-checkbox:checked').serialize());
         }
 
@@ -377,11 +393,11 @@ $(function () {
 
 </script>
 
-<?php if ($type == 'page') { ?>
+<?php if (($type == 'page') || ($type == 'block')) { ?>
 
 <div class="box box-widget">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('content', 'Page Attributes'); ?></h3>
+        <h3 class="box-title"><?= __d('content', '{0} Attributes', $name); ?></h3>
     </div>
     <div class="box-body" style="padding-bottom: 20px;">
         <div class="md-12">
@@ -395,13 +411,41 @@ $(function () {
             <?php } else { ?>
             <input type="hidden" name="parent"   value="0" />
             <?php } ?>
+            <?php if ($type == 'block') { ?>
+            <div class="clearfix"></div>
+            <div class="form-group">
+                <?php $position  = $post->block_widget_position ?: 'content'; ?>
+                <label class="control-label" for="block-position"><?= __d('content', 'Position'); ?></label>
+                <input name="block-position" id="block-position" type="text" class="form-control" value="<?= $position; ?>" placeholder="<?= __d('content', 'Enter position here'); ?>" autocomplete="off">
+            </div>
+            <?php } ?>
+            <div class="clearfix"></div>
             <div class="form-group">
                 <label class="control-label" for="slug"><?= __d('content', 'Order'); ?></label>
                 <div class="clearfix"></div>
-                <div class="col-md-4" style="padding: 0;">
+                <div class="col-md-6" style="padding: 0;">
                     <input name="order" id="page-order" type="number" class="form-control" style="padding-right: 3px;" min="0" max="1000" value="<?= Input::old('order', $post->menu_order); ?>" autocomplete="off">
                 </div>
             </div>
+            <?php if ($type == 'block') { ?>
+            <div class="clearfix"></div>
+            <div class="form-group" style="padding-top: 15px;">
+                <?php $blockMode  = $post->block_visibility_mode ?: 'show'; ?>
+                <label class="control-label" for="slug"><?= __d('content', 'Mode'); ?></label>
+                <select name="block-show-mode" id="block-show-mode" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', 'Select the visibility mode'); ?>" style="width: 100%;" autocomplete="off">
+                    <option value="show" <?= $blockMode == 'show' ? 'selected="selected"' : ''; ?>><?= __d('content', 'Show on the following request paths'); ?></option>
+                    <option value="hide" <?= $blockMode == 'hide' ? 'selected="selected"' : ''; ?>><?= __d('content', 'Hide on the following request paths'); ?></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="block-path"><?= __d('content', 'Paths'); ?></label>
+                <textarea name="block-show-path" id="block-show-path" style="resize: none;" rows="5" class="form-control"><?= $post->block_visibility_path; ?></textarea>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="block-title" style="margin-right: 10px;"><?= __d('content', 'Show the Block Title'); ?></label>
+                <input type="checkbox" name="block-show-title" id="block-show-title" value="1" />
+            </div>
+            <?php } ?>
         </div>
 
         <div class="clearfix"></div>

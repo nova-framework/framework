@@ -16,7 +16,7 @@ Event::listen('backend.menu.sidebar', function ()
             'url'    => site_url('admin/files'),
             'title'  => __d('files', 'Files'),
             'icon'   => 'file',
-            'weight' => 3,
+            'weight' => 5,
 
             //
             'path'   => 'files',

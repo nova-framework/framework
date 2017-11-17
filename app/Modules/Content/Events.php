@@ -11,24 +11,42 @@
 use App\Modules\Content\Models\Menu;
 use App\Modules\Content\Models\Post;
 
-
 /**
  * Handle the Posts cache.
  */
 Event::listen('content.post.updated', function (Post $post, $creating)
 {
-    if (! is_null($post->name)) {
+    if ($post->name == 'layout-footer') {
+        Cache::forget('content.layout.footer');
+    }
+
+    // If the Post is the Home Header.
+    else if ($post->name == 'home-header') {
+        Cache::forget('content.homepage.header');
+    }
+
+    // The Homepage.
+    else if (! is_null($name = Config::get('content::frontpage')) && ($post->name == $name)) {
+        Cache::forget('content.homepage');
+    }
+
+    // The standard Posts and Pages.
+    else if (! empty($post->name)) {
         Cache::forget('content.posts.' .$post->name);
+    }
+
+    // The Blocks.
+    else if ($post->type === 'block') {
+        Cache::forget('content.blocks');
     }
 });
 
 Event::listen('content.post.deleted', function (Post $post)
 {
-    if (! is_null($post->name)) {
+    if (! empty($post->name)) {
         Cache::forget('content.posts.' .$post->name);
     }
 });
-
 
 /**
  * Handle the Backend Menu Sidebar.
@@ -46,27 +64,6 @@ Event::listen('backend.menu.sidebar', function ()
 
             //
             'path'   => 'media',
-        ),
-
-        // Menus.
-        array(
-            'url'    => '#',
-            'title'  => __d('content', 'Appearance'),
-            'icon'   => 'paint-brush',
-            'weight' => 1,
-
-            //
-            'path'   => 'appearance',
-        ),
-        array(
-            'url'    => site_url('admin/menus'),
-            'title'  => __d('content', 'Menus'),
-            'icon'   => 'circle-o',
-            'weight' => 0,
-
-            //
-            'path'   => 'appearance.menus',
-            //'can'    => 'lists:' .Menu::class,
         ),
 
         // Posts.
@@ -148,6 +145,49 @@ Event::listen('backend.menu.sidebar', function ()
 
             //
             'path'   => 'pages.create',
+            //'can'    => 'create:' .Post::class,
+        ),
+
+        // Menus.
+        array(
+            'url'    => site_url('admin/menus'),
+            'title'  => __d('content', 'Menus'),
+            'icon'   => 'bars',
+            'weight' => 3,
+
+            //
+            'path'   => 'menus',
+            //'can'    => 'lists:' .Menu::class,
+        ),
+
+        // Blocks.
+        array(
+            'url'    => '#',
+            'title'  => __d('content', 'Blocks'),
+            'icon'   => 'cubes',
+            'weight' => 4,
+
+            //
+            'path'   => 'blocks',
+        ),
+        array(
+            'url'    => site_url('admin/content/blocks'),
+            'title'  => __d('content', 'All Blocks'),
+            'icon'   => 'circle-o',
+            'weight' => 0,
+
+            //
+            'path'   => 'blocks.list',
+            //'can'    => 'lists:' .Post::class,
+        ),
+        array(
+            'url'    => site_url('admin/content/create/block'),
+            'title'  => __d('content', 'Create a new Block'),
+            'icon'   => 'circle-o',
+            'weight' => 1,
+
+            //
+            'path'   => 'blocks.create',
             //'can'    => 'create:' .Post::class,
         ),
     );

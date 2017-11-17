@@ -26,9 +26,6 @@ class ModuleServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        parent::boot();
-
-        //
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.

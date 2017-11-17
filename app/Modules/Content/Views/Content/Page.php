@@ -12,9 +12,12 @@
 <div class="clearfix pull-left" style="margin: 0 20px 20px 0;"><img class="img-responsive img-thumbnail" src="<?= $thumbnail; ?>"></div>
 <?php } ?>
 
-<div style="text-align: justify;">
+<?php if (($post->status == 'password') && ! Session::has('content-unlocked-post-' .$post->id)) { ?>
+<?= View::fetch('Partials/ProtectedContent', compact('post'), 'Content'); ?>
+<?php } else { ?>
 <?= $post->getContent(); ?>
-</div>
+<?php } ?>
+
 
 <?php if ($post->type == 'revision') { ?>
 <hr style="margin-bottom: 10px;">
@@ -30,4 +33,4 @@
 <div class="clearfix"></div>
 <br>
 
-</div>
+</section>

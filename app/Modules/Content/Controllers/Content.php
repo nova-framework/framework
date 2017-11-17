@@ -2,11 +2,15 @@
 
 namespace App\Modules\Content\Controllers;
 
+use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Http\Request;
 use Nova\Support\Facades\App;
 use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Config;
-use Nova\Support\Facades\Request as RequestFacade;
+use Nova\Support\Facades\Hash;
+use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Response;
+use Nova\Support\Facades\Session;
 use Nova\Support\Facades\View;
 use Nova\Support\Str;
 
@@ -166,5 +170,23 @@ class Content extends BaseController
 
         return $this->createView(compact('posts'), 'Index')
             ->shares('title', __d('content', 'Search results : {0}', htmlentities($search)));
+    }
+
+    public function unlock(Request $request, $id)
+    {
+        try {
+            $post = Post::where('status', 'password')->findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
+        }
+
+        if (! Hash::check($request->input('password'), $post->password)) {
+            return Redirect::back()->withStatus(__d('content', 'Invalid password', $id), 'danger');
+        }
+
+        Session::set('content-unlocked-post-' .$post->id, true);
+
+        return Redirect::back();
     }
 }

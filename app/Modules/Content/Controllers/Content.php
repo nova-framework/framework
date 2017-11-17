@@ -24,14 +24,14 @@ class Content extends BaseController
      *
      * @var mixed
      */
-    protected $theme = 'Debut';
+    protected $theme = 'Bootstrap';
 
     /**
      * The currently used Layout.
      *
      * @var mixed
      */
-    protected $layout = 'Default';
+    protected $layout = 'Content';
 
 
     public function homepage()

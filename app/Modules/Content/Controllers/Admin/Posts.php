@@ -303,6 +303,11 @@ class Posts extends BaseController
             $post->menu_order = (int) Arr::get($input, 'order',  0);
         }
 
+        // For the Blocks.
+        else if ($type == 'block') {
+            $post->menu_order = (int) Arr::get($input, 'order',  0);
+        }
+
         // Handle the MetaData.
         $post->meta->thumbnail_id = (int) $request->input('thumbnail');
 

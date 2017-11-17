@@ -63,8 +63,8 @@
         </table>
         <?php } else { ?>
         <div class="alert alert-warning" style="margin: 0 5px 5px;">
-            <h4><i class="icon fa fa-warning"></i> <?= strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('content', 'No registered Posts'); ?></h4>
-            <?= __d('content', 'There are no registered Posts.'); ?>
+            <h4><i class="icon fa fa-warning"></i> <?= strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('content', 'No registered {0}', $title); ?></h4>
+            <?= __d('content', 'There are no registered {0}.', $title); ?>
         </div>
         <?php } ?>
     </div>

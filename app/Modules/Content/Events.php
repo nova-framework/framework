@@ -12,8 +12,27 @@ use App\Modules\Content\Models\Menu;
 use App\Modules\Content\Models\Post;
 
 
-/** Define Events. */
+/**
+ * Handle the Posts cache.
+ */
+Event::listen('content.post.updated', function (Post $post, $creating)
+{
+    if (! is_null($post->name)) {
+        Cache::forget('content.posts.' .$post->name);
+    }
+});
 
+Event::listen('content.post.deleted', function (Post $post)
+{
+    if (! is_null($post->name)) {
+        Cache::forget('content.posts.' .$post->name);
+    }
+});
+
+
+/**
+ * Handle the Backend Menu Sidebar.
+ */
 Event::listen('backend.menu.sidebar', function ()
 {
     return array(

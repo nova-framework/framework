@@ -370,12 +370,17 @@ $(function () {
             processData: false,
             contentType: false,
             type: 'POST',
+
+            //
             success: function(data) {
                 if (data.redirectTo === 'refresh') {
                     window.location.reload(true);
                 } else {
                     window.location.href = data.redirectTo;
                 }
+            },
+            complete: function() {
+                $('#post-submit').prop('disabled', false);
             }
         });
     });

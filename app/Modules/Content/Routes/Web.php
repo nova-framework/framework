@@ -41,6 +41,8 @@ Route::get('content/{slug?}', array(
     ),
 ));
 
+Route::post('content/{id}', 'Content@unlock');
+
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
 {

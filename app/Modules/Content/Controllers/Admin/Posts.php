@@ -289,7 +289,7 @@ class Posts extends BaseController
         }
 
         // Only the published posts can have a password.
-        else if (($visibility == 'password') && ($status == 'public')) {
+        else if (($visibility == 'password') && ($status == 'publish')) {
             $status = 'password';
 
             $password = Hash::make($input['password']);

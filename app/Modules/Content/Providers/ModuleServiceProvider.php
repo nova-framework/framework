@@ -67,7 +67,7 @@ class ModuleServiceProvider extends ServiceProvider
      */
     protected function registerContentBlocks(Request $request)
     {
-        if ($request->ajax() || $request->wantsJson()) {
+        if ($this->app->runningInConsole() || $request->ajax() || $request->wantsJson()) {
             return;
         }
 

@@ -1,7 +1,7 @@
 <div class="container">
     <div class="row" style="margin-top: 5%; margin-bottom: 5%;">
         <div class="col-sm-6 col-md-4 col-md-offset-4">
-            <div class="panel panel-primary">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title"><i class="fa fa-lock"></i> <?= __d('content', 'Enter password to unlock'); ?></h3>
                 </div>
@@ -18,7 +18,7 @@
                                 <div id="captcha" style="width: 304px; height: 78px;"></div>
                             </div>
                             <div class="clearfix"></div>
-                            <hr style="margin-top: 15px;">
+                            <hr style="margin-top: 15px; margin-bottom: 15px;">
                             <?php } ?>
                             <input name="submit" id="unlock-content-submit" type="submit" class="btn btn-success col-md-6 pull-right" value="<?= __d('content', 'Unlock'); ?>" />
                             <?= csrf_field(); ?>

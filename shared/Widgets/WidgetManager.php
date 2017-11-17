@@ -2,17 +2,26 @@
 
 namespace Shared\Widgets;
 
+use Nova\Http\Request;
 use Nova\Container\Container;
+use Nova\Support\Arr;
 
 
 class WidgetManager
 {
     /**
-     * The container implementation.
+     * The Container instance.
      *
      * @var \Nova\Container\Container
      */
     protected $container;
+
+    /**
+     * The Request instance.
+     *
+     * @var \Nova\Http\Request
+     */
+    protected $request;
 
     /**
      * Classes registered widgets
@@ -41,9 +50,11 @@ class WidgetManager
      *
      * @return void
      */
-    public function __construct(Container $container = null)
+    public function __construct(Request $request, Container $container = null)
     {
         $this->container = $container ?: new Container();
+
+        $this->request = $request;
     }
 
     /**
@@ -53,11 +64,16 @@ class WidgetManager
      * @param  string $name
      * @param  string|null $position
      * @param  int $order
+     * @param  array|string $parameters
      * @return void
      */
-    public function register($widget, $name, $position = null, $order = 0)
+    public function register($widget, $name, $position = null, $order = 0, $parameters = array())
     {
-        $this->widgets[$name] = $widget;
+        if (is_string($parameters)) {
+            $parameters = array_map('trim', explode(',', $parameters));
+        }
+
+        $this->widgets[$name] = compact('widget', 'parameters');
 
         if (! is_null($position)) {
             $this->positions[$position][] = compact('name', 'order');
@@ -94,9 +110,9 @@ class WidgetManager
             return $this->instances[$name];
         }
 
-        $widget = $this->widgets[$name];
+        extract($this->widgets[$name]);
 
-        return $this->instances[$name] = $this->container->make($widget);
+        return $this->instances[$name] = $this->container->make($widget, $parameters);
     }
 
     public function position($position)
@@ -120,10 +136,62 @@ class WidgetManager
         foreach ($this->positions[$position] as $widget) {
             $name = $widget['name'];
 
+            $config = $this->container['config']->get('widgets.widgets.' .$name, array());
+
+            // Calculate the widget visibility, then skip its rendering if is not visible.
+            $mode = Arr::get($config, 'mode', 'show');
+
+            $patterns = Arr::get($config, 'paths', array('*'));
+
+            $pathMatches = call_user_func_array(array($this->request, 'is'), $patterns);
+
+            if (($pathMatches && ($mode == 'hide')) || (! $pathMatches && ($mode == 'show'))) {
+                continue;
+            }
+
+            // The User is authorized to see this Widget?
+            else if (! $this->widgetFiltersAllows($config)) {
+                continue;
+            }
+
             $result .= $this->render($name, $parameters);
         }
 
         return $result;
+    }
+
+    protected function widgetFiltersAllows(array $config)
+    {
+        $filters = Arr::get($config, 'filters', array());
+
+        foreach ($filters as $filter) {
+            list ($type, $parameter) = array_pad(explode(':', $filter, 2), 2, null);
+
+            $guards = array_filter(array_map('trim', explode(',', $parameter)), function ($value)
+            {
+                return ! empty($value);
+            });
+
+            if (empty($guards)) {
+                $guards[] = $this->container['config']->get('auth.defaults.guard');
+            }
+
+            foreach ($guards as $guard) {
+                $auth = $this->container['auth']->guard($guard);
+
+                // Authenticated users only?
+                if (($type === 'auth') && $auth->guest()) {
+                    return false;
+                }
+
+                // Guests only?
+                else if (($type === 'guest') && $auth->check()) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     public function exists($name)

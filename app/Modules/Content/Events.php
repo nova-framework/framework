@@ -17,14 +17,14 @@ use App\Modules\Content\Models\Post;
  */
 Event::listen('content.post.updated', function (Post $post, $creating)
 {
-    if (! is_null($post->name)) {
+    if (! empty($post->name)) {
         Cache::forget('content.posts.' .$post->name);
     }
 });
 
 Event::listen('content.post.deleted', function (Post $post)
 {
-    if (! is_null($post->name)) {
+    if (! empty($post->name)) {
         Cache::forget('content.posts.' .$post->name);
     }
 });

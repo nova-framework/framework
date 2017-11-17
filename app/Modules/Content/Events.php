@@ -16,28 +16,19 @@ use App\Modules\Content\Models\Post;
  */
 Event::listen('content.post.updated', function (Post $post, $creating)
 {
-    if ($post->name == 'layout-footer') {
-        Cache::forget('content.layout.footer');
-    }
-
-    // If the Post is the Home Header.
-    else if ($post->name == 'home-header') {
-        Cache::forget('content.homepage.header');
-    }
-
     // The Homepage.
-    else if (! is_null($name = Config::get('content::frontpage')) && ($post->name == $name)) {
+    if (! is_null($name = Config::get('content::frontpage')) && ($post->name == $name)) {
         Cache::forget('content.homepage');
-    }
-
-    // The standard Posts and Pages.
-    else if (! empty($post->name)) {
-        Cache::forget('content.posts.' .$post->name);
     }
 
     // The Blocks.
     else if ($post->type === 'block') {
         Cache::forget('content.blocks');
+    }
+
+    // The standard Posts and Pages.
+    else if (! empty($post->name)) {
+        Cache::forget('content.posts.' .$post->name);
     }
 });
 

@@ -5,6 +5,7 @@ namespace App\Modules\Content\Controllers;
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Http\Request;
 use Nova\Support\Facades\App;
+use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Hash;
@@ -13,6 +14,8 @@ use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Session;
 use Nova\Support\Facades\View;
 use Nova\Support\Str;
+
+use Shared\Support\ReCaptcha;
 
 use App\Modules\Content\Models\Post;
 use App\Modules\Content\Models\Taxonomy;
@@ -174,6 +177,11 @@ class Content extends BaseController
 
     public function unlock(Request $request, $id)
     {
+        // Verify the submitted reCAPTCHA
+        if (! Auth::check() && ! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {
+            return Redirect::back()->withStatus(__d('platform', 'The reCaptcha verification failed.'), 'danger');
+        }
+
         try {
             $post = Post::where('status', 'password')->findOrFail($id);
         }
@@ -182,7 +190,7 @@ class Content extends BaseController
         }
 
         if (! Hash::check($request->input('password'), $post->password)) {
-            return Redirect::back()->withStatus(__d('content', 'Invalid password', $id), 'danger');
+            return Redirect::back()->withStatus(__d('content', 'The password is not valid.', $id), 'danger');
         }
 
         Session::set('content-unlocked-post-' .$post->id, true);

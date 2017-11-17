@@ -28,7 +28,7 @@ class WidgetServiceProvider extends ServiceProvider
     {
         $this->app->bindShared('widgets', function($app)
         {
-            return new WidgetManager($app);
+            return new WidgetManager($app['request'], $app);
         });
     }
 }

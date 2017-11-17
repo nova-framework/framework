@@ -23,6 +23,8 @@ Route::get('content/archive/{year}/{month}', array(
     ),
 ));
 
+Route::get('/', 'Content@homepage');
+
 Route::get('content/search', 'Content@search');
 
 Route::get('content/{type}/{slug}', array(

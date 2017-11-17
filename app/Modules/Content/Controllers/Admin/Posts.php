@@ -120,6 +120,10 @@ class Posts extends BaseController
         //
         $menuSelect = $this->generateParentSelect();
 
+        $blockTitle = false;
+        $blockMode  = 'show';
+        $blockPath  = null;
+
         $categories = $this->generateCategories(
             $ids = $post->taxonomies()->where('taxonomy', 'category')->lists('id')
         );
@@ -138,12 +142,11 @@ class Posts extends BaseController
         $stylesheets = $this->getDefaultThemeStylesheets();
 
         //
-        $data = compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'revisions', 'categorySelect', 'menuSelect', 'lastEditor');
+        $data = compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'revisions');
 
         return $this->createView($data, 'Edit')
             ->shares('title', __d('content', 'Create a new {0}', $name))
-            ->with('tags', $tags)
-            ->with('stylesheets', $stylesheets)
+            ->with(compact('categorySelect', 'menuSelect', 'lastEditor', 'tags', 'stylesheets'))
             ->with('creating', true);
     }
 
@@ -224,17 +227,15 @@ class Posts extends BaseController
             ? User::findOrFail($post->meta->edit_last)
             : $authUser;
 
-
         // Compute the stylesheets needed to be loaded in editor.
         $stylesheets = $this->getDefaultThemeStylesheets();
 
         //
-        $data = compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'revisions', 'categorySelect', 'menuSelect', 'lastEditor');
+        $data = compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'revisions');
 
         return $this->createView($data, 'Edit')
             ->shares('title', __d('content', 'Edit a {0}', $name))
-            ->with('tags', $tags)
-            ->with('stylesheets', $stylesheets)
+            ->with(compact('categorySelect', 'menuSelect', 'lastEditor', 'tags', 'stylesheets'))
             ->with('creating', false);
     }
 
@@ -254,13 +255,13 @@ class Posts extends BaseController
             return Response::json(array('redirectTo' => 'refresh'), 400);
         }
 
-        // Fire the stating event.
+        $creating = (bool) Arr::get($input, 'creating', 0);
+
+        // Fire the starting event.
         Event::fire('content.post.updating', array($post, $creating));
 
         //
         $type = $post->type;
-
-        $creating = (bool) Arr::get($input, 'creating', 0);
 
         $slug = Arr::get($input, 'slug') ?: Post::uniqueName($input['title'], $post->id);
 
@@ -306,6 +307,15 @@ class Posts extends BaseController
         $post->meta->thumbnail_id = (int) $request->input('thumbnail');
 
         $post->meta->edit_last = $authUser->id;
+
+        if ($type == 'block') {
+            $post->meta->block_show_title = (int) $request->input('block-show-title');
+
+            $post->meta->block_visibility_mode = $request->input('block-show-mode');
+            $post->meta->block_visibility_path = $request->input('block-show-path');
+
+            $post->meta->block_widget_position = $request->input('block-position');
+        }
 
         // Save the Post instance before to process the Categories and Tags.
         $post->save();
@@ -406,9 +416,9 @@ class Posts extends BaseController
         }
 
         // Fire the starting event.
-        Event::fire('content.post.deleted', array($post));
+        Event::fire('content.post.deleting', array($post));
 
-        //
+        // Delete the Post.
         $taxonomies = $post->taxonomies;
 
         $post->taxonomies()->detach();

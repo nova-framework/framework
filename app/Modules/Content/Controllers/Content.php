@@ -6,6 +6,8 @@ use Nova\Http\Request;
 use Nova\Support\Facades\App;
 use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Config;
+use Nova\Support\Facades\Request as RequestFacade;
+use Nova\Support\Facades\View;
 use Nova\Support\Str;
 
 use App\Modules\Content\Models\Post;
@@ -22,15 +24,34 @@ class Content extends BaseController
      *
      * @var mixed
      */
-    protected $theme = 'Bootstrap';
+    protected $theme = 'Debut';
 
     /**
      * The currently used Layout.
      *
      * @var mixed
      */
-    protected $layout = 'Content';
+    protected $layout = 'Default';
 
+
+    public function homepage()
+    {
+        if (is_null($name = Config::get('content::frontpage'))) {
+            return $this->frontpage();
+        }
+
+        $post = Cache::remember('content.homepage', 1440, function () use ($name)
+        {
+            return Post::with('author', 'thumbnail')
+                ->where('type', 'page')
+                ->whereIn('status', array('publish', 'password'))
+                ->where('name', $name)
+                ->firstOrFail();
+        });
+
+        return $this->createView(compact('post'), 'Page')
+            ->shares('title', $post->title);
+    }
 
     public function index($name = null)
     {

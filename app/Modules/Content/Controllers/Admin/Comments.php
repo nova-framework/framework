@@ -92,15 +92,20 @@ class Comments extends BaseController
             return Redirect::back()->withStatus(__d('content', 'Comment not found: #{0}', $id), 'danger');
         }
 
+        $post = $comment->post()->first();
+
+        // Delete the Comment.
         $comment->delete();
 
+        // Update the comments count in the parent Post.
+        $post->updateCommentCount();
+
         // Invalidate the parent Post cache.
-        Cache::forget('content.posts.' .$comment->post->name);
+        Cache::forget('content.posts.' .$post->name);
 
         return Redirect::back()
             ->withStatus(__d('content', 'The Comment was successfully deleted.'), 'success');
     }
-
 
     public function approve($id)
     {

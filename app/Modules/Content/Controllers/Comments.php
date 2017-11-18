@@ -79,6 +79,9 @@ class Comments extends BaseController
             $post->author->notify(new CommentSubmittedNotification($comment, $post));
         }
 
+        // Update the comments count in the parent Post.
+        $post->updateCommentCount();
+
         // Invalidate the parent Post cache.
         Cache::forget('content.posts.' .$post->name);
 

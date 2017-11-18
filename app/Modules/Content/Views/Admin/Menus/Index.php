@@ -13,7 +13,7 @@
 
 <div class="row">
 
-<div class="col-md-4">
+<div class="col-md-3">
 
 <form id="page-form" action="<?= site_url('admin/menus'); ?>" method='POST' role="form">
 
@@ -42,7 +42,7 @@
 
 </div>
 
-<div class="col-md-8">
+<div class="col-md-9">
 
 <div class="box box-default">
     <div class="box-header">

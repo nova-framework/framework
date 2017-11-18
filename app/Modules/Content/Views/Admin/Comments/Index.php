@@ -19,7 +19,7 @@
         </div>
     </div>
     <div class="box-body no-padding">
-        <?php $deletables = 0; ?>
+        <?php $deletables = $editables = 0; ?>
         <?php if (! $comments->isEmpty()) { ?>
         <table id="left" class="table table-striped table-hover responsive">
             <tr class="bg-navy disabled">
@@ -30,6 +30,8 @@
                 <th style="text-align: right; vertical-align: middle;"><?= __d('content', 'Operations'); ?></th>
             </tr>
             <?php foreach ($comments as $comment) { ?>
+            <?php $editables++; ?>
+            <?php $deletables++; ?>
             <tr>
                 <td style="text-align: left; vertical-align: top;" width="20%">
                     <div style="padding-bottom: 5px;">
@@ -58,10 +60,7 @@
                     </form>
                     <?php } ?>
                     <a class="btn btn-xs btn-primary btn-block" style="min-width: 80%; margin-top: 5px; margin-bottom: 5px;" href="#" data-toggle="modal" data-target="#modal-edit-dialog" data-id="<?= $comment->id; ?>" title="<?= __d('content', 'Edit this Comment'); ?>" role="button"><?= __d('content', 'Edit'); ?></a>
-                    <form action="<?= site_url('admin/comments/' .$comment->id .'/destroy'); ?>" method="POST">
-                        <?= csrf_field(); ?>
-                        <input type="submit" value="<?= __d('content', 'Delete'); ?>" class="btn btn-xs btn-block btn-danger" />
-                    </form>
+                    <a class="btn btn-xs btn-danger btn-block" style="min-width: 80%; margin-top: 5px; margin-bottom: 5px;" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $comment->id; ?>" title="<?= __d('content', 'Delete this Comment'); ?>" role="button"><?= __d('content', 'Delete'); ?></a>
                 </td>
             </tr>
             <?php } ?>
@@ -76,6 +75,8 @@
 </div>
 
 </section>
+
+<?php if ($editables > 0) { ?>
 
 <div id="modal-edit-dialog" class="modal modal-default fade" tabindex="-1" role="dialog" aria-labelledby="...">
     <div class="modal-dialog" role="document">
@@ -166,3 +167,49 @@ $(function () {
 });
 
 </script>
+
+<?php } ?>
+
+<?php if ($deletables > 0) { ?>
+
+<div id="modal-delete-dialog" class="modal modal-default fade" tabindex="-1" role="dialog" aria-labelledby="...">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-label="Close" data-dismiss="modal" class="close" type="button">
+                <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title"><?= __d('content', 'Delete this Comment?'); ?></h4>
+            </div>
+            <div class="modal-body">
+                <p><?= __d('content', 'Are you sure you want to remove this Comment, the operation being irreversible?'); ?></p>
+                <p><?= __d('content', 'Please click the button <b>Delete</b> to proceed, or <b>Cancel</b> to abandon the operation.'); ?></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-primary col-md-3"><?= __d('content', 'Cancel'); ?></button>
+                <form id="modal-delete-form" action="" method="POST">
+                    <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
+                    <button type="submit" name="button" class="btn btn-danger col-md-3 pull-right"><?= __d('content', 'Delete'); ?></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+$(function() {
+    // The Modal Delete dialog.
+    $('#modal-delete-dialog').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+
+        var id = button.data('id');
+
+        $('#modal-delete-form').attr('action', '<?= site_url("admin/comments/"); ?>/' + id + '/destroy');
+    });
+});
+
+</script>
+
+<?php } ?>
+
+

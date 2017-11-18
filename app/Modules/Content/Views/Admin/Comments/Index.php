@@ -33,7 +33,7 @@
             <tr>
                 <td style="text-align: left; vertical-align: top;" width="20%">
                     <div style="padding-bottom: 5px;">
-                        <big><a style="font-weight: bold;" href="<?= site_url('admin/comments/' .$comment->id .'/edit'); ?>"><?= $comment->author; ?></a></big>
+                        <a style="font-weight: bold;" href="<?= site_url('admin/comments/' .$comment->id .'/edit'); ?>"><?= $comment->author; ?></a>
                     </div>
                     <div style="padding-bottom: 5px;">
                         <a href="mailto:<?= $comment->author_email; ?>"><?= $comment->author_email; ?></a>

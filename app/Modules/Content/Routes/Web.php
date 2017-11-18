@@ -41,7 +41,12 @@ Route::get('content/{slug?}', array(
     ),
 ));
 
-Route::post('content/{id}', 'Content@unlock');
+// Content unlocking for the Password Protected pages and posts.
+Route::post('content/{id}', 'Content@unlock')->where('id', '\d+');
+
+// Comments.
+Route::post('content/{id}/comment', 'Comments@store')->where('id', '\d+');
+
 
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
@@ -53,7 +58,6 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
 
     Route::post('media/upload',         array('middleware' => 'auth', 'uses' => 'Attachments@upload'));
     Route::get( 'media/uploaded',       array('middleware' => 'auth', 'uses' => 'Attachments@uploaded'));
-
 
     // The Menus CRUD.
     Route::get( 'menus',               array('middleware' => 'auth', 'uses' => 'Menus@index'));
@@ -68,6 +72,9 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
     Route::post('menus/{id}/items',                  array('middleware' => 'auth', 'uses' => 'Menus@itemsOrder'));
     Route::post('menus/{id}/items/{itemId}',         array('middleware' => 'auth', 'uses' => 'Menus@updateItem'));
     Route::post('menus/{id}/items/{itemId}/destroy', array('middleware' => 'auth', 'uses' => 'Menus@deleteItem'));
+
+    // The Comments CRUD.
+    Route::get( 'comments',               array('middleware' => 'auth', 'uses' => 'Comments@index'));
 
     // The Posts CRUD.
     Route::get( 'content/create/{type}',  array('middleware' => 'auth', 'uses' => 'Posts@create'));

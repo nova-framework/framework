@@ -108,6 +108,18 @@ Event::listen('backend.menu.sidebar', function ()
             //'can'    => 'lists:' .Post::class,
         ),
 
+        // Comments.
+        array(
+            'url'    => site_url('admin/comments'),
+            'title'  => __d('content', 'Comments'),
+            'icon'   => 'comments',
+            'weight' => 4,
+
+            //
+            'path'   => 'comments',
+            //'can'    => 'lists:' .Comment::class,
+        ),
+
         // Pages.
         array(
             'url'    => '#',
@@ -126,7 +138,7 @@ Event::listen('backend.menu.sidebar', function ()
 
             //
             'path'   => 'pages.list',
-            //'can'    => 'lists:' .Post::class,
+            //'can'    => 'lists:' .Page::class,
         ),
         array(
             'url'    => site_url('admin/content/create/page'),
@@ -136,7 +148,7 @@ Event::listen('backend.menu.sidebar', function ()
 
             //
             'path'   => 'pages.create',
-            //'can'    => 'create:' .Post::class,
+            //'can'    => 'create:' .page::class,
         ),
 
         // Menus.
@@ -169,7 +181,7 @@ Event::listen('backend.menu.sidebar', function ()
 
             //
             'path'   => 'blocks.list',
-            //'can'    => 'lists:' .Post::class,
+            //'can'    => 'lists:' .Block::class,
         ),
         array(
             'url'    => site_url('admin/content/create/block'),
@@ -179,7 +191,7 @@ Event::listen('backend.menu.sidebar', function ()
 
             //
             'path'   => 'blocks.create',
-            //'can'    => 'create:' .Post::class,
+            //'can'    => 'create:' .Block::class,
         ),
     );
 });

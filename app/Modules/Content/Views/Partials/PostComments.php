@@ -76,7 +76,7 @@
     <hr style="margin-top: 15px; margin-bottom: 15px;">
     <?php } ?>
     <div class="form-group">
-        <input type="submit" class="btn btn-primary pull-right col-md-3" value="<?= __d('content', 'Submit Comment'); ?>" />
+        <input type="submit" class="btn btn-primary pull-right" value="<?= __d('content', 'Submit Comment'); ?>" />
     </div>
 </form>
 

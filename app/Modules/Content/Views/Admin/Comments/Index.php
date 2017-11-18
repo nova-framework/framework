@@ -57,11 +57,11 @@
                         <input type="submit" value="<?= __d('content', 'Approve'); ?>" class="btn btn-xs btn-block btn-primary" />
                     </form>
                     <?php } ?>
-                    <div class="clearfix"></div>
-                    <a class="btn btn-xs btn-success btn-block" style="min-width: 80%; margin-top: 5px; margin-bottom: 5px;" href="#" data-toggle="modal" data-target="#modal-edit-dialog" data-id="<?= $comment->id; ?>" data-name="<?= $comment->name; ?>" data-description="<?= $comment->description; ?>" title="<?= __d('content', 'Edit this Comment'); ?>" role="button"><?= __d('content', 'Edit'); ?></a>
-                    <div clearfix></div>
-                    <a class="btn btn-xs btn-danger btn-block" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $comment->id; ?>" title="<?= __d('content', 'Delete this Comment'); ?>" role="button"><?= __d('content', 'Delete'); ?></a>
-                    <div clearfix></div>
+                    <a class="btn btn-xs btn-success btn-block" style="min-width: 80%; margin-top: 5px; margin-bottom: 5px;" href="#" data-toggle="modal" data-target="#modal-edit-dialog" data-id="<?= $comment->id; ?>" title="<?= __d('content', 'Edit this Comment'); ?>" role="button"><?= __d('content', 'Edit'); ?></a>
+                    <form action="<?= site_url('admin/comments/' .$comment->id .'/destroy'); ?>" method="POST">
+                        <?= csrf_field(); ?>
+                        <input type="submit" value="<?= __d('content', 'Delete'); ?>" class="btn btn-xs btn-block btn-danger" />
+                    </form>
                 </td>
             </tr>
             <?php } ?>

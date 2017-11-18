@@ -68,8 +68,8 @@
         </table>
         <?php } else { ?>
         <div class="alert alert-warning" style="margin: 0 5px 5px;">
-            <h4><i class="icon fa fa-warning"></i> <?= strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('content', 'No registered Comments'); ?></h4>
-            <?= __d('content', 'There are no registered Comments.'); ?>
+            <h4><i class="icon fa fa-warning"></i> <?= strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('content', 'No Comments'); ?></h4>
+            <?= __d('content', 'No comment has been added yet!'); ?>
         </div>
         <?php } ?>
     </div>

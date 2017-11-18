@@ -131,6 +131,8 @@ class WidgetManager
         });
 
         // We render each registered Widget for this position.
+        $authenticated = $this->container['auth']->check();
+
         $result = '';
 
         foreach ($this->positions[$position] as $widget) {
@@ -141,16 +143,18 @@ class WidgetManager
             // Calculate the widget visibility, then skip its rendering if is not visible.
             $mode = Arr::get($config, 'mode', 'show');
 
-            $patterns = Arr::get($config, 'paths', array('*'));
+            $matches = call_user_func_array(
+                array($this->request, 'is'), Arr::get($config, 'paths', array('*'))
+            );
 
-            $pathMatches = call_user_func_array(array($this->request, 'is'), $patterns);
-
-            if (($pathMatches && ($mode == 'hide')) || (! $pathMatches && ($mode == 'show'))) {
+            if (($matches && ($mode == 'hide')) || (! $matches && ($mode == 'show'))) {
                 continue;
             }
 
             // The User is authorized to see this Widget?
-            else if (! $this->widgetFiltersAllows($config)) {
+            $filter = Arr::get($config, 'filter', 'any');
+
+            if (($authenticated && ($filter == 'guest')) || (! $authenticated && ($filter == 'user'))) {
                 continue;
             }
 
@@ -158,40 +162,6 @@ class WidgetManager
         }
 
         return $result;
-    }
-
-    protected function widgetFiltersAllows(array $config)
-    {
-        $filters = Arr::get($config, 'filters', array());
-
-        foreach ($filters as $filter) {
-            list ($type, $parameter) = array_pad(explode(':', $filter, 2), 2, null);
-
-            $guards = array_filter(array_map('trim', explode(',', $parameter)), function ($value)
-            {
-                return ! empty($value);
-            });
-
-            if (empty($guards)) {
-                $guards[] = $this->container['config']->get('auth.defaults.guard');
-            }
-
-            foreach ($guards as $guard) {
-                $auth = $this->container['auth']->guard($guard);
-
-                // Authenticated users only?
-                if (($type === 'auth') && $auth->guest()) {
-                    return false;
-                }
-
-                // Guests only?
-                else if (($type === 'guest') && $auth->check()) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 
     public function exists($name)

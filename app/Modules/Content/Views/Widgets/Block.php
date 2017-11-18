@@ -1,4 +1,4 @@
-<?php if (isset($post->block_show_title) && ($post->block_show_title === true)) { ?>
-<h3><?= $post->title; ?></h3>
+<?php if ($post->block_show_title === 1) { ?>
+<h4><?= e($post->title); ?></h4>
 <?php } ?>
-<?= $post->getContent(); ?>
+<?php  eval('?>' .$content); ?>

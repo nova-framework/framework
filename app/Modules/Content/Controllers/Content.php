@@ -53,8 +53,12 @@ class Content extends BaseController
                 ->where('type', 'page')
                 ->whereIn('status', array('publish', 'password'))
                 ->where('name', $name)
-                ->firstOrFail();
+                ->first();
         });
+
+        if (is_null($post)) {
+            App::abort(500);
+        }
 
         return $this->createView(compact('post'), 'Page')
             ->shares('title', $post->title);

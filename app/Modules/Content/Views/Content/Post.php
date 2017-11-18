@@ -9,6 +9,8 @@
 
 <?php $hasSidebar = ! Widget::isEmptyPosition('content.posts.sidebar'); ?>
 
+<?php $userIsAdmin = ! is_null($user = Auth::user()) && $user->hasRole('administrator'); ?>
+
 <div class="row">
 
 <div class="col-md-<?= $hasSidebar ? 9 : 12; ?>" style="padding-bottom: 40px;">
@@ -37,8 +39,7 @@
 <?php if (! empty($thumbnail)) { ?>
 <div class="clearfix pull-left" style="margin: 0 20px 20px 0;"><img class="img-responsive img-thumbnail" src="<?= $thumbnail; ?>"></div>
 <?php } ?>
-
-<?php if (($post->status == 'password') && ! Session::has('content-unlocked-post-' .$post->id)) { ?>
+<?php if (($post->status == 'password') && ! $userIsAdmin && ! Session::has('content-unlocked-post-' .$post->id)) { ?>
 <?= View::fetch('Partials/ProtectedContent', compact('post'), 'Content'); ?>
 <?php } else { ?>
 <?= $post->getContent(); ?>
@@ -64,7 +65,7 @@
 <?php if ($post->type == 'revision') { ?>
 <?php $date = $post->created_at->formatLocalized(__d('content', '%d %b %Y, %R')); ?>
 <?= __d('content', 'Revision created at <b>{0}</b>, by <b>{1}</b>', $date, $post->author->username); ?>
-<?php } else if (! is_null($user = Auth::user()) && $user->hasRole('administrator')) { ?>
+<?php } else if ($userIsAdmin) { ?>
 <a class="btn btn-sm btn-success pull-right" href="<?= site_url('admin/content/' .$post->id .'/edit'); ?>" title="<?= __d('content', 'Edit this Post'); ?>" role="button"><i class="fa fa-pencil"></i> <?= __d('content', 'Edit'); ?></a>
 <?php } ?>
 

@@ -101,7 +101,7 @@ class Comments extends BaseController
         $comment->save();
 
         return Redirect::back()
-            ->withStatus(__d('content', 'The Comment <b>{0}</b> was successfully updated.', $id), 'success');
+            ->withStatus(__d('content', 'The Comment was successfully updated.'), 'success');
     }
 
     public function destroy($id)
@@ -116,6 +116,6 @@ class Comments extends BaseController
         $comment->delete();
 
         return Redirect::back()
-            ->withStatus(__d('content', 'The Comment <b>{0}</b> was successfully deleted.', $id), 'success');
+            ->withStatus(__d('content', 'The Comment was successfully deleted.'), 'success');
     }
 }

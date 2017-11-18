@@ -3,15 +3,12 @@
     <div class="col-sm-<?= $field->columns; ?>">
         <div class="input-group">
             <input type="text" id="file_path_<?= $field->key; ?>" class="form-control" placeholder="<?= __d('fields', 'Browse...'); ?>" autocomplete="off">
-                <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button" id="file_browser_<?= $field->key; ?>">
-                        <i class="fa fa-search"></i> <?= __d('fields', 'Browse'); ?>
-                    </button>
-                </span>
-            </div>
+            <span class="input-group-btn">
+                <button class="btn btn-primary" type="button" id="file_browser_<?= $field->key; ?>"><i class="fa fa-search"></i> <?= __d('fields', 'Browse'); ?></button>
+            </span>
             <input type="file" class="hidden" id="<?= $field->key; ?>" name="<?= $field->key; ?>">
         </div>
-     </div>
+    </div>
 </div>
 
 <script>

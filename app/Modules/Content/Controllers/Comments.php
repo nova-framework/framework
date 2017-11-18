@@ -28,7 +28,14 @@ class Comments extends BaseController
             'comment_content'       => 'required'
         );
 
-        return Validator::make($data, $rules);
+        $attributes = array(
+            'comment_author'       => __d('content', 'Name'),
+            'comment_author_email' => __d('content', 'Email Address'),
+            'comment_author_url'   => __d('content', 'Website'),
+            'comment_content'      => __d('content', 'Message'),
+        );
+
+        return Validator::make($data, $rules, array(), $attributes);
     }
 
     public function store(Request $request, $id)
@@ -50,7 +57,7 @@ class Comments extends BaseController
         $validator = $this->validator($input);
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput($input)->withErrors($validator->errors());
+            return Redirect::back()->withInput($input)->withErrors($validator);
         }
 
         $userId = Auth::id() ?: 0;

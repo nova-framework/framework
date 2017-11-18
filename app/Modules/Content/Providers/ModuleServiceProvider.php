@@ -82,32 +82,8 @@ class ModuleServiceProvider extends ServiceProvider
         foreach ($blocks as $block) {
             $position = $block->block_widget_position ?: 'content';
 
-            // Calculate the block visibility, then skip its registration if is not visible.
-            if (! empty($path = $block->block_visibility_path)) {
-                $pattern = str_replace('<front>', '/', $path);
-            } else {
-                $pattern = '*';
-            }
-
-            $parameters = array_filter(array_map('trim', explode("\n", $pattern)), function ($value)
-            {
-                return ! empty($value);
-            });
-
-            $pathMatches = call_user_func_array(array($request, 'is'), $parameters);
-
-            if (empty($mode = $block->block_visibility_mode)) {
-                $mode = 'show';
-            }
-
-            if (($pathMatches && ($mode == 'hide')) || (! $pathMatches && ($mode == 'show'))) {
-                continue;
-            }
-
-            $parameters = array($block);
-
             Widget::register(
-                'App\Modules\Content\Widgets\Block', 'content.block.' .$block->name, $position, $block->order, $parameters
+                'App\Modules\Content\Widgets\Block', 'content.block.' .$block->name, $position, $block->order, array($block)
             );
         }
     }

@@ -25,6 +25,11 @@ class Comment extends Model
     /**
      * @var array
      */
+    protected $fillable = array('post_id', 'author', 'author_email', 'author_url', 'author_ip', 'content', 'approved', 'user_id');
+
+    /**
+     * @var array
+     */
     protected $with = array('meta');
 
 
@@ -41,7 +46,7 @@ class Comment extends Model
      */
     public function post()
     {
-        return $this->belongsTo('App\Modules\Content\Models\Comment', 'post_id');
+        return $this->belongsTo('App\Modules\Content\Models\Post', 'post_id');
     }
 
     /**

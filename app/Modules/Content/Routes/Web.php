@@ -41,7 +41,12 @@ Route::get('content/{slug?}', array(
     ),
 ));
 
-Route::post('content/{id}', 'Content@unlock');
+// Content unlocking for the Password Protected pages and posts.
+Route::post('content/{id}', 'Content@unlock')->where('id', '\d+');
+
+// Comments.
+Route::post('content/{id}/comment', 'Comments@store')->where('id', '\d+');
+
 
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
@@ -53,7 +58,6 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
 
     Route::post('media/upload',         array('middleware' => 'auth', 'uses' => 'Attachments@upload'));
     Route::get( 'media/uploaded',       array('middleware' => 'auth', 'uses' => 'Attachments@uploaded'));
-
 
     // The Menus CRUD.
     Route::get( 'menus',               array('middleware' => 'auth', 'uses' => 'Menus@index'));
@@ -68,6 +72,15 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
     Route::post('menus/{id}/items',                  array('middleware' => 'auth', 'uses' => 'Menus@itemsOrder'));
     Route::post('menus/{id}/items/{itemId}',         array('middleware' => 'auth', 'uses' => 'Menus@updateItem'));
     Route::post('menus/{id}/items/{itemId}/destroy', array('middleware' => 'auth', 'uses' => 'Menus@deleteItem'));
+
+    // The Comments CRUD.
+    Route::get( 'comments',                array('middleware' => 'auth', 'uses' => 'Comments@index'));
+    Route::get( 'comments/{id}',           array('middleware' => 'auth', 'uses' => 'Comments@load'))->where('id', '\d+');
+    Route::post('comments/{id}',           array('middleware' => 'auth', 'uses' => 'Comments@update'))->where('id', '\d+');
+    Route::post('comments/{id}/destroy',   array('middleware' => 'auth', 'uses' => 'Comments@destroy'))->where('id', '\d+');
+
+    Route::post('comments/{id}/approve',   array('middleware' => 'auth', 'uses' => 'Comments@approve'))->where('id', '\d+');
+    Route::post('comments/{id}/unapprove', array('middleware' => 'auth', 'uses' => 'Comments@unapprove'))->where('id', '\d+');
 
     // The Posts CRUD.
     Route::get( 'content/create/{type}',  array('middleware' => 'auth', 'uses' => 'Posts@create'));
@@ -102,8 +115,8 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
 
     // The Taxonomies CRUD.
     Route::post('taxonomies',               array('middleware' => 'auth', 'uses' => 'Taxonomies@store'));
-    Route::post('taxonomies/{id}',          array('middleware' => 'auth', 'uses' => 'Taxonomies@update'));
-    Route::post('taxonomies/{id}/destroy',  array('middleware' => 'auth', 'uses' => 'Taxonomies@destroy'));
+    Route::post('taxonomies/{id}',          array('middleware' => 'auth', 'uses' => 'Taxonomies@update'))->where('id', '\d+');
+    Route::post('taxonomies/{id}/destroy',  array('middleware' => 'auth', 'uses' => 'Taxonomies@destroy'))->where('id', '\d+');
 
     // For AJAX.
     Route::get('taxonomies/{id}/{parent}', array(

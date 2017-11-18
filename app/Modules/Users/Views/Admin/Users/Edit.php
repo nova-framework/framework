@@ -60,7 +60,9 @@
             <div class="clearfix"></div>
             <h4><?= __d('users', 'Profile'); ?></h4>
             <hr>
-            <?= $fields; ?>
+
+<?= $fields; ?>
+
             <div class="clearfix"></div>
             <br>
             <font color="#CC0000">*</font><?= __d('users', 'Required field'); ?>

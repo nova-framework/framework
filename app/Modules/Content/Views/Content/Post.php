@@ -17,8 +17,8 @@
 
 <?php $thumbnail = isset($post->thumbnail) && isset($post->thumbnail->attachment) ? site_url('content/media/serve/' .$post->thumbnail->attachment->name) .'?s=270' : ''; ?>
 
-<?php $format = __d('content', '%d %b %Y'); ?>
-<div class="pull-left"><?= __d('content', '{0}, by <b>{1}</b>', $post->updated_at->formatLocalized($format), $post->author->realname()); ?></div>
+<?php $format = __d('content', '%B %d, %Y'); ?>
+<div class="pull-left"><?= __d('content', '{0} by <b>{1}</b>', $post->updated_at->formatLocalized($format), $post->author->realname()); ?></div>
 
 <?php $categories = $post->taxonomies->where('taxonomy', 'category'); ?>
 <?php if (! $categories->isEmpty()) { ?>
@@ -70,6 +70,9 @@
 <?php } ?>
 
 <div class="clearfix"></div>
+<br>
+
+<?= View::fetch('Partials/PostComments', compact('post'), 'Content'); ?>
 
 </div>
 

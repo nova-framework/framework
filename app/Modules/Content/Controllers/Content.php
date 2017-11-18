@@ -72,7 +72,7 @@ class Content extends BaseController
 
         $post = Cache::remember('content.posts.' .$name, 1440, function () use ($name)
         {
-            $query = Post::with('author', 'thumbnail', 'taxonomies')->whereIn('status', array('publish', 'password', 'inherit'));
+            $query = Post::with('author', 'thumbnail', 'taxonomies', 'comments')->whereIn('status', array('publish', 'password', 'inherit'));
 
             if (is_numeric($name)) {
                 $query->where('id', (int) $name);
@@ -183,7 +183,7 @@ class Content extends BaseController
     {
         // Verify the submitted reCAPTCHA
         if (! Auth::check() && ! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {
-            return Redirect::back()->withStatus(__d('platform', 'The reCaptcha verification failed.'), 'danger');
+            return Redirect::back()->withStatus(__d('content', 'The reCaptcha verification failed.'), 'danger');
         }
 
         try {

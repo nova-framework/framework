@@ -24,7 +24,7 @@ Route::get('content/archive/{year}/{month}', array(
     ),
 ));
 
-Route::get('/', 'Content@homepage');
+//Route::get('/', 'Content@homepage');
 
 Route::get('content/search', 'Content@search');
 

@@ -33,6 +33,7 @@ class UsersTableSeeder extends Seeder
             'email'          => 'admin@novaframework.dev',
             'remember_token' => '',
             'profile_id'     => 1,
+            'api_token'      => $this->uniqueToken(),
         ));
 
         $user->load('meta');
@@ -43,8 +44,6 @@ class UsersTableSeeder extends Seeder
 
         $user->activated       = 1;
         $user->activation_code = '';
-
-        $user->api_token = $this->uniqueToken();
 
         $user->save();
 
@@ -58,6 +57,7 @@ class UsersTableSeeder extends Seeder
             'email'          => 'marcus@novaframework.dev',
             'remember_token' => '',
             'profile_id'     => 1,
+            'api_token'      => $this->uniqueToken(),
         ));
 
         $user->load('meta');
@@ -68,8 +68,6 @@ class UsersTableSeeder extends Seeder
 
         $user->activated       = 1;
         $user->activation_code = '';
-
-        $user->api_token = $this->uniqueToken();
 
         $user->save();
 
@@ -83,6 +81,7 @@ class UsersTableSeeder extends Seeder
             'email'          => 'michael@novaframework.dev',
             'remember_token' => '',
             'profile_id'     => 1,
+            'api_token'      => $this->uniqueToken(),
         ));
 
         $user->load('meta');
@@ -93,8 +92,6 @@ class UsersTableSeeder extends Seeder
 
         $user->activated       = 1;
         $user->activation_code = '';
-
-        $user->api_token = $this->uniqueToken();
 
         $user->save();
 
@@ -108,6 +105,7 @@ class UsersTableSeeder extends Seeder
             'email'          => 'john@novaframework.dev',
             'remember_token' => '',
             'profile_id'     => 1,
+            'api_token'      => $this->uniqueToken(),
         ));
 
         $user->load('meta');
@@ -118,8 +116,6 @@ class UsersTableSeeder extends Seeder
 
         $user->activated       = 1;
         $user->activation_code = '';
-
-        $user->api_token = $this->uniqueToken();
 
         $user->save();
 
@@ -133,6 +129,7 @@ class UsersTableSeeder extends Seeder
             'email'          => 'mark@novaframework.dev',
             'remember_token' => '',
             'profile_id'     => 1,
+            'api_token'      => $this->uniqueToken(),
         ));
 
         $user->load('meta');
@@ -143,8 +140,6 @@ class UsersTableSeeder extends Seeder
 
         $user->activated       = 1;
         $user->activation_code = '';
-
-        $user->api_token = $this->uniqueToken();
 
         $user->save();
 

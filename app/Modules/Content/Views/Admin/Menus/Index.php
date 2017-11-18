@@ -32,7 +32,7 @@
         </div>
     </div>
     <div class="box-footer">
-        <input type="submit" name="submit"  class="btn btn-success col-sm-6 pull-right" value="<?= __d('users', 'Add new Menu'); ?>" />
+        <input type="submit" name="submit"  class="btn btn-success col-sm-6 pull-right" value="<?= __d('content', 'Add new Menu'); ?>" />
     </div>
 </div>
 

@@ -45,9 +45,9 @@
         <input type="text" name="comment_author" class="form-control" value="<?= Input::old('comment_author'); ?>" />
 
         <?php if ($errors->has('comment_author')) { ?>
-            <span class="help-block">
-                <strong><?= $errors->first('comment_author'); ?></strong>
-            </span>
+        <span class="help-block">
+            <strong><?= $errors->first('comment_author'); ?></strong>
+        </span>
         <?php } ?>
     </div>
     <div class="form-group<?= $errors->has('comment_author_email') ? ' has-error' : ''; ?>">
@@ -55,18 +55,28 @@
         <input type="text" name="comment_author_email" class="form-control" value="<?= Input::old('comment_author_email'); ?>" />
 
         <?php if ($errors->has('comment_author_email')) { ?>
-            <span class="help-block">
-                <strong><?= $errors->first('comment_author_email'); ?></strong>
-            </span>
+        <span class="help-block">
+            <strong><?= $errors->first('comment_author_email'); ?></strong>
+        </span>
         <?php } ?>
     </div>
-    <div class="form-group">
+    <div class="form-group<?= $errors->has('comment_author_url') ? ' has-error' : ''; ?>">
         <label for="comment_author_url"><?= __d('content', 'Website'); ?></label> <br/>
         <input type="text" name="comment_author_url" class="form-control" value="<?= Input::old('comment_author_url'); ?>" />
-    </div>
-    <div class="form-group">
+        <?php if ($errors->has('comment_content')) { ?>
+        <span class="help-block">
+            <strong><?= $errors->first('comment_author_url'); ?></strong>
+        </span>
+        <?php } ?>
+     </div>
+    <div class="form-group<?= $errors->has('comment_content') ? ' has-error' : ''; ?>">
         <label for="comment_content"><?= __d('content', 'Message'); ?></label> <br/>
         <textarea cols="60" rows="6" class="form-control" name="comment_content"><?= Input::old('comment_content'); ?></textarea>
+        <?php if ($errors->has('comment_content')) { ?>
+        <span class="help-block">
+            <strong><?= $errors->first('comment_content'); ?></strong>
+        </span>
+        <?php } ?>
     </div>
     <?php if (! Auth::check() && (Config::get('reCaptcha.active') === true)) { ?>
     <div style="width: 304px; margin: 0 auto; display: block;">

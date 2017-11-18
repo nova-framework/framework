@@ -319,7 +319,7 @@ class Posts extends BaseController
             $post->meta->block_visibility_mode = $request->input('block-show-mode');
             $post->meta->block_visibility_path = $request->input('block-show-path');
 
-            $post->meta->block_visibility_user = $request->input('block-show-filter', 'any');
+            $post->meta->block_visibility_filter = $request->input('block-show-filter', 'any');
 
             $post->meta->block_widget_position = $request->input('block-position');
         }

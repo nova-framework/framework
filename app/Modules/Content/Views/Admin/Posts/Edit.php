@@ -285,6 +285,9 @@ $(function () {
                 </div>
                 <div class="clearfix"></div>
              </div>
+            <?php if ($type == 'block') { ?>
+            <input type="hidden" name="visibility" value="public" />
+            <?php } else { ?>
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="visibility" style="padding: 0; text-align: right; margin-top: 7px;"><?= __d('content', 'Visibility'); ?></label>
                 <div class="col-sm-8" style="padding-right: 0;">
@@ -296,6 +299,7 @@ $(function () {
                 </div>
                 <div class="clearfix"></div>
              </div>
+            <?php } ?>
             <div class="form-group" id="password-group" style="display: none;">
                 <label class="col-sm-4 control-label" for="password" style="padding: 0; text-align: right; margin-top: 7px;"><?= __d('content', 'Password'); ?></label>
                 <div class="col-sm-8" style="padding-right: 0;">
@@ -406,7 +410,7 @@ $(function () {
     </div>
     <div class="box-body" style="padding-bottom: 20px;">
         <div class="md-12">
-            <?php if ($creating) { ?>
+            <?php if ($creating && ($type != 'block')) { ?>
             <div class="form-group">
                 <label class="control-label" for="slug"><?= __d('content', 'Parent'); ?></label>
                 <select name="parent" id="page-parent" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', 'Select a parent Page'); ?>" style="width: 100%;" autocomplete="off">
@@ -435,20 +439,24 @@ $(function () {
             <?php if ($type == 'block') { ?>
             <div class="clearfix"></div>
             <div class="form-group" style="padding-top: 15px;">
-                <?php $blockMode  = $post->block_visibility_mode ?: 'show'; ?>
-                <label class="control-label" for="slug"><?= __d('content', 'Mode'); ?></label>
-                <select name="block-show-mode" id="block-show-mode" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', 'Select the visibility mode'); ?>" style="width: 100%;" autocomplete="off">
-                    <option value="show" <?= $blockMode == 'show' ? 'selected="selected"' : ''; ?>><?= __d('content', 'Show on the following request paths'); ?></option>
-                    <option value="hide" <?= $blockMode == 'hide' ? 'selected="selected"' : ''; ?>><?= __d('content', 'Hide on the following request paths'); ?></option>
-                </select>
-            </div>
-            <div class="form-group">
                 <label class="control-label" for="block-path"><?= __d('content', 'Paths'); ?></label>
                 <textarea name="block-show-path" id="block-show-path" style="resize: none;" rows="5" class="form-control"><?= $post->block_visibility_path; ?></textarea>
             </div>
             <div class="form-group">
-                <label class="control-label" for="block-title" style="margin-right: 10px;"><?= __d('content', 'Show the Block Title'); ?></label>
-                <input type="checkbox" name="block-show-title" id="block-show-title" value="1" />
+                <?php $blockMode  = $post->block_visibility_mode ?: 'show'; ?>
+                <label class="control-label" for="slug"><?= __d('content', 'Mode'); ?></label>
+                <select name="block-show-mode" id="block-show-mode" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', 'Select the visibility mode'); ?>" style="width: 100%;" autocomplete="off">
+                    <option value="show" <?= $blockMode == 'show' ? 'selected="selected"' : ''; ?>><?= __d('content', 'Show on the specified paths'); ?></option>
+                    <option value="hide" <?= $blockMode == 'hide' ? 'selected="selected"' : ''; ?>><?= __d('content', 'Hide on the specified paths'); ?></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <div class="col-md-1" style="padding: 0;">
+                    <input type="checkbox" name="block-show-title" id="block-show-title" value="1" />
+                </div>
+                <div class="col-md-11" style="padding: 2px 10px;">
+                    <label class="control-label" for="block-title" style="margin-right: 10px;"><?= __d('content', 'Show the Title'); ?></label>
+                </div>
             </div>
             <?php } ?>
         </div>
@@ -660,6 +668,8 @@ $(function () {
 
 <?php } ?>
 
+<?php if ($type != 'block') { ?>
+
 <div class="box box-widget">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('content', 'Featured Image'); ?></h3>
@@ -673,6 +683,8 @@ $(function () {
         <a class="btn btn-danger btn-sm col-sm-8 btn_remove_image <?= ($thumbId == 0) ? 'hide' : ''; ?>" style="margin-top: 15px;" file_type="image" selecter="attachment"></i> <?= __d('content', 'Remove featured image'); ?></a>
     </div>
 </div>
+
+<?php } ?>
 
 <div class="clearfix"></div>
 

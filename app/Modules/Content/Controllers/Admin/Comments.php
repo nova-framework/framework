@@ -16,6 +16,18 @@ use App\Modules\Platform\Controllers\Admin\BaseController;
 class Comments extends BaseController
 {
 
+    protected function validator(array $data)
+    {
+        $rules = array(
+            'author'       => 'required',
+            'author_email' => 'required|email',
+            'author_url'   => 'sometimes|required',
+            'content'      => 'required'
+        );
+
+        return Validator::make($data, $rules);
+    }
+
     public function index()
     {
         $comments = Comment::with('post')->orderBy('created_at', 'DESC')->paginate(10);
@@ -48,12 +60,7 @@ class Comments extends BaseController
             return Redirect::back()->withStatus(__d('content', 'Comment not found: #{0}', $id), 'danger');
         }
 
-        $validator = Validator::make($input, array(
-            'author'        => 'required',
-            'author_email'  => 'required|email',
-            'author_url'    => 'sometimes|required',
-            'content'       => 'required'
-        ));
+        $validator = $this->validator($input);
 
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');

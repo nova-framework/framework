@@ -3,6 +3,7 @@
 namespace App\Modules\Content\Controllers;
 
 use Nova\Http\Request;
+use Nova\Routing\Controller as BaseController;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Redirect;
@@ -13,7 +14,6 @@ use Shared\Support\ReCaptcha;
 use App\Modules\Content\Models\Comment;
 use App\Modules\Content\Models\Post;
 use App\Modules\Content\Notifications\CommentSubmitted as CommentSubmittedNotification;
-use App\Modules\Platform\Controllers\BaseController;
 
 
 class Comments extends BaseController

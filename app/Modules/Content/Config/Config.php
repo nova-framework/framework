@@ -36,12 +36,16 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
-    | Registered Custom Post Types
+    | Registered Post Types
     |--------------------------------------------------------------------------
     |
     */
 
-    'postTypes' => arraY(
+    'postTypes' => array(
+        'post'  => 'App\Modules\Content\Models\Post',
+        'page'  => 'App\Modules\Content\Models\Page',
+        'block' => 'App\Modules\Content\Models\Block',
+
 //        'video' => App\Models\Video::class,
     ),
 

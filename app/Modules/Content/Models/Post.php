@@ -4,6 +4,7 @@ namespace App\Modules\Content\Models;
 
 use Nova\Database\ORM\Model;
 use Nova\Support\Facades\Config;
+use Nova\Support\Arr;
 use Nova\Support\Str;
 
 use App\Modules\Content\Models\Builder\PostBuilder;

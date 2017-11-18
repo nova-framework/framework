@@ -355,8 +355,9 @@ $(function () {
 
             data.append('block-show-title', $('#block-show-title').is(":checked") ? 1 : 0);
 
-            data.append('block-show-mode', $('#block-show-mode').val());
-            data.append('block-show-path', $('#block-show-path').val());
+            data.append('block-show-mode',   $('#block-show-mode').val());
+            data.append('block-show-path',   $('#block-show-path').val());
+            data.append('block-show-filter', $('#block-show-filter').val());
 
             data.append('block-position', $('#block-position').val());
         }
@@ -439,6 +440,16 @@ $(function () {
             <?php if ($type == 'block') { ?>
             <div class="clearfix"></div>
             <div class="form-group" style="padding-top: 15px;">
+                <?php $blockFilter = $post->block_visibility_user ?: 'any'; ?>
+                <label class="control-label" for="block-show-filter"><?= __d('content', 'Filter'); ?></label>
+                <select name="block-show-filter" id="block-show-filter" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', 'Select the Authentication Filter'); ?>" style="width: 100%;" autocomplete="off">
+                    <option value="any"   <?= $blockFilter == 'any'   ? 'selected="selected"' : ''; ?>><?= __d('content', 'Show for any users'); ?></option>
+                    <option value="user"  <?= $blockFilter == 'user'  ? 'selected="selected"' : ''; ?>><?= __d('content', 'Show for the authenticated users'); ?></option>
+                    <option value="guest" <?= $blockFilter == 'guest' ? 'selected="selected"' : ''; ?>><?= __d('content', 'Show for the non-authenticated users'); ?></option>
+                </select>
+                <div class="clearfix"></div>
+             </div>
+            <div class="form-group">
                 <label class="control-label" for="block-path"><?= __d('content', 'Paths'); ?></label>
                 <textarea name="block-show-path" id="block-show-path" style="resize: none;" rows="5" class="form-control"><?= $post->block_visibility_path; ?></textarea>
             </div>

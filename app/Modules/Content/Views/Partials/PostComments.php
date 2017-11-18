@@ -13,7 +13,7 @@
     <?php if (Auth::check() && ($comment->user_id !== Auth::id()) && ($post->author_id != Auth::id())) continue; ?>
     <?php if (! Auth::check() && ($comment->approved != 1)) continue; ?>
     <li>
-        <a rel="nofollow" style="font-weight: bold;" target="_blank" href="<?= urlencode($comment->author_url); ?>"><?= e($comment->author); ?></a> on <span><?= $comment->updated_at->formatLocalized($format); ?></span>
+        <a rel="nofollow" style="font-weight: bold;" target="_blank" href="<?= urlencode($comment->author_url); ?>"><?= e($comment->author); ?></a> <span><?= __d('content', 'commented on <b>{0}</b>', $comment->updated_at->formatLocalized($format)); ?></span>
         <div class="comment-body" style="margin-top: 10px; margin-bottom: 25px;">
         <?= e($comment->content); ?>
         </div>

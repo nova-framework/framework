@@ -1,4 +1,4 @@
-<?php $comments = $post->comments->where('approved', '1')->sortBy('created_at'); ?>
+<?php $comments = $post->comments->sortBy('created_at'); ?>
 
 <?php if (($comments->count() > 0) || ($post->comment_status == 'open')) { ?>
 <h3><?= __d('content', 'Comments'); ?></h3>
@@ -10,6 +10,8 @@
 
 <ul>
     <?php foreach($comments as $comment) { ?>
+    <?php if (Auth::check() && ($comment->user_id !== Auth::id()) && ($post->author_id != Auth::id())) continue; ?>
+    <?php if (! Auth::check() && ($comment->approved != 1)) continue; ?>
     <li>
         <a rel="nofollow" style="font-weight: bold;" target="_blank" href="<?= urlencode($comment->author_url); ?>"><?= e($comment->author); ?></a> on <span><?= $comment->updated_at->formatLocalized($format); ?></span>
         <div class="comment-body" style="margin-top: 10px; margin-bottom: 25px;">

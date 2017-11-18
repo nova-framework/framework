@@ -45,7 +45,7 @@
                     <a target="_blank" href="<?= site_url('content/' .$comment->post->name); ?>" title="<?= __d('content', 'View the Post'); ?>"><?= $comment->post->title; ?></a>
                 </td>
                 <td style="text-align: center; vertical-align: top;" width="15%"><?= $comment->created_at->formatLocalized(__d('content', '%d %b %Y, %R')); ?></td>
-                <td style="text-align: right; vertical-align: middle;" width="10%">
+                <td style="text-align: right; vertical-align: middle; padding-bottom: 30px;" width="10%">
                     <?php if( $comment->approved == 1) { ?>
                     <form action="<?= site_url('admin/comments/' .$comment->id .'/unapprove'); ?>" method="POST">
                         <?= csrf_field(); ?>
@@ -101,9 +101,9 @@
                         <label class="control-label" for="author_url"><?= __d('content', 'Author URL'); ?></label>
                         <input name="author_url" id="modal-edit-author-url" type="text" class="form-control" value="" placeholder="<?= __d('content', 'Author URL'); ?>">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="margin-bottom: 0;">
                         <label class="control-label" for="content"><?= __d('content', 'Message'); ?></label>
-                        <textarea name="content" id="modal-edit-content" class="form-control" style="resize: none;" rows="5" value="" placeholder="<?= __d('content', 'Message'); ?>"></textarea>
+                        <textarea name="content" id="modal-edit-content" class="form-control" style="resize: none;" rows="10" value="" placeholder="<?= __d('content', 'Message'); ?>"></textarea>
                     </div>
                 </div>
 

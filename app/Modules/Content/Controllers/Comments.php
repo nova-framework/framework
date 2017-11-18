@@ -12,6 +12,7 @@ use Shared\Support\ReCaptcha;
 
 use App\Modules\Content\Models\Comment;
 use App\Modules\Content\Models\Post;
+use App\Modules\Content\Notifications\CommentSubmitted as CommentSubmittedNotification;
 use App\Modules\Platform\Controllers\BaseController;
 
 
@@ -32,12 +33,12 @@ class Comments extends BaseController
 
     public function store(Request $request, $id)
     {
+        $input = $request->all();
+
         // Verify the submitted reCAPTCHA
         if (! Auth::check() && ! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {
-            return Redirect::back()->withStatus(__d('content', 'The reCaptcha verification failed.'), 'danger');
+            return Redirect::back()->withInput($input)->withStatus(__d('content', 'The reCaptcha verification failed.'), 'danger');
         }
-
-        $input = $request->all();
 
         try {
             $post = Post::where('type', 'post')->findOrFail($id);
@@ -52,6 +53,8 @@ class Comments extends BaseController
             return Redirect::back()->withInput($input)->withErrors($validator->errors());
         }
 
+        $userId = Auth::id() ?: 0;
+
         $comment = Comment::create(array(
             'post_id'      => $post->id,
             'author'       => $input['comment_author'],
@@ -60,8 +63,14 @@ class Comments extends BaseController
             'author_ip'    => $request->ip(),
             'content'      => $input['comment_content'],
             'approved'     => 0,
-            'user_id'      => Auth::id(),
+            'user_id'      => $userId,
         ));
+
+        if (! is_null($userId) && ($userId === $post->author->id)) {
+            // DO not send a notication to yourself.
+        } else {
+            $post->author->notify(new CommentSubmittedNotification($comment, $post));
+        }
 
         // Invalidate the parent Post cache.
         Cache::forget('content.posts.' .$post->name);

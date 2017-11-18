@@ -194,7 +194,7 @@ return array (
   'The Menu {0} was successfully deleted.' => 'Меню {0} успешно удалено',
   'The password is not valid.' => 'Пароль недействителен.',
   'The reCaptcha verification failed.' => 'Ошибка проверки reCaptcha.',
-  'The registered {0}' => 'Зарегистрированный {0}',
+  'The registered {0}' => 'Зарегистрированные {0}',
   'The {0} <b>#{1}</b> was successfully deleted.' => '{0} <b>#{1}</b> был успешно удален.',
   'The {0} <b>#{1}</b> was successfully restored to the revision: <b>{2}</b>' => '{0} <b>#{1}</b> был успешно восстановлен до версии: <b>{2}</b>',
   'The {0} <b>#{1}</b> was successfully saved.' => '{0} <b>#{1}</b> был успешно сохранён',

@@ -578,6 +578,8 @@ class Posts extends BaseController
         $result = array();
 
         foreach ($taxonomies as $taxonomy) {
+            $taxonomy->load('term');
+
             $post->taxonomies()->attach($taxonomy);
 
             $taxonomy->updateCount();

@@ -27,6 +27,11 @@ class Block extends Widget
 
     public function render()
     {
-        return View::make('Widgets/Block', array('post' => $this->post), 'Content')->render();
+        $post = $this->post;
+
+        // The WYSIHTML5 editor do some naughty things with the PHP tags.
+        $content = preg_replace('/<!--\?(.*)\?-->/sm', '<?$1?>', $post->getContent());
+
+        return View::make('Widgets/Block', compact('post', 'content'), 'Content')->render();
     }
 }

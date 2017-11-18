@@ -11,6 +11,7 @@
 |
 */
 
+
 // The Media Files serving.
 Route::get('content/media/serve/{name}', 'Attachments@serve');
 
@@ -23,7 +24,7 @@ Route::get('content/archive/{year}/{month}', array(
     ),
 ));
 
-//Route::get('/', 'Content@homepage');
+Route::get('/', 'Content@homepage');
 
 Route::get('content/search', 'Content@search');
 
@@ -51,6 +52,10 @@ Route::post('content/{id}/comment', 'Comments@store')->where('id', '\d+');
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
 {
+    $types = array_keys(
+        Config::get('content::postTypes', array())
+    );
+
     // The Media CRUD.
     Route::get( 'media',                array('middleware' => 'auth', 'uses' => 'Attachments@index'));
     Route::post('media/update/{field}', array('middleware' => 'auth', 'uses' => 'Attachments@update'));
@@ -83,7 +88,11 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
     Route::post('comments/{id}/unapprove', array('middleware' => 'auth', 'uses' => 'Comments@unapprove'))->where('id', '\d+');
 
     // The Posts CRUD.
-    Route::get( 'content/create/{type}',  array('middleware' => 'auth', 'uses' => 'Posts@create'));
+    $route = Route::get( 'content/create/{type}',  array('middleware' => 'auth', 'uses' => 'Posts@create'));
+
+    $route->where('type', '(' .implode('|', $types) .')');
+
+    //
     Route::get( 'content/{id}/edit',      array('middleware' => 'auth', 'uses' => 'Posts@edit'));
     Route::post('content/{id}',           array('middleware' => 'auth', 'uses' => 'Posts@update'))->where('id', '\d+');
     Route::post('content/{id}/restore',   array('middleware' => 'auth', 'uses' => 'Posts@restore'))->where('id', '\d+');
@@ -108,10 +117,13 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
     Route::get('content/categories',    array('middleware' => 'auth', 'uses' => 'Taxonomies@index'));
     Route::get('content/tags',          array('middleware' => 'auth', 'uses' => 'Taxonomies@tags'));
 
-    Route::get('content/{type}/{slug}', array('middleware' => 'auth', 'uses' => 'Posts@taxonomy'));
+    Route::get('content/{type}/{slug}', array('middleware' => 'auth', 'uses' => 'Posts@taxonomy'))
+        ->where('type', '(category|tag)');
 
     // The Posts listing.
-    Route::get('content/{type?}',       array('middleware' => 'auth', 'uses' => 'Posts@index'));
+    $route = Route::get('content/{type?}', array('middleware' => 'auth', 'uses' => 'Posts@index'));
+
+    $route->where('type', '(' .implode('|', array_map(array('Nova\Support\Str', 'plural'), $types)) .')');
 
     // The Taxonomies CRUD.
     Route::post('taxonomies',               array('middleware' => 'auth', 'uses' => 'Taxonomies@store'));

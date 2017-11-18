@@ -61,6 +61,12 @@ return array(
             'enabled'  => true,
             'order'    => 8003,
         ),
+        'content' => array(
+            'name'     => 'Modules/Content',
+            'basename' => 'Content',
+            'enabled'  => true,
+            'order'    => 8004,
+        ),
         'chat' => array(
             'name'     => 'Modules/Chat',
             'basename' => 'Chat',

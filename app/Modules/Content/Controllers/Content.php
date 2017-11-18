@@ -80,7 +80,7 @@ class Content extends BaseController
                 $query->where('name', $name);
             }
 
-            if (is_null($post = $query->first()) {
+            if (is_null($post = $query->first())) {
                 return null;
             }
 

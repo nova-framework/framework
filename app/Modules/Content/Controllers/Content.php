@@ -80,10 +80,12 @@ class Content extends BaseController
                 $query->where('name', $name);
             }
 
-            $post = $query->first();
+            if (is_null($post = $query->first()) {
+                return null;
+            }
 
             // If the Post is a Revision.
-            if (($post->type === 'revision') && ($post->status === 'inherit')) {
+            else if (($post->type === 'revision') && ($post->status === 'inherit')) {
                 $parent = $post->parent()->first();
 
                 if (! in_array($parent->status, array('publish', 'password'))) {

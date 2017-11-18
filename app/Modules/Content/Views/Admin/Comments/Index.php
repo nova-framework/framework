@@ -49,15 +49,15 @@
                     <?php if( $comment->approved == 1) { ?>
                     <form action="<?= site_url('admin/comments/' .$comment->id .'/approve'); ?>" method="POST">
                         <?= csrf_field(); ?>
-                        <input type="submit" value="<?= __d('content', 'Unapprove'); ?>" class="btn btn-xs btn-block btn-primary" />
+                        <input type="submit" value="<?= __d('content', 'Unapprove'); ?>" class="btn btn-xs btn-block btn-warning" />
                     </form>
                     <?php } else { ?>
                     <form action="<?= site_url('admin/comments/' .$comment->id .'/unapprove'); ?>" method="POST">
                         <?= csrf_field(); ?>
-                        <input type="submit" value="<?= __d('content', 'Approve'); ?>" class="btn btn-xs btn-block btn-primary" />
+                        <input type="submit" value="<?= __d('content', 'Approve'); ?>" class="btn btn-xs btn-block btn-success" />
                     </form>
                     <?php } ?>
-                    <a class="btn btn-xs btn-success btn-block" style="min-width: 80%; margin-top: 5px; margin-bottom: 5px;" href="#" data-toggle="modal" data-target="#modal-edit-dialog" data-id="<?= $comment->id; ?>" title="<?= __d('content', 'Edit this Comment'); ?>" role="button"><?= __d('content', 'Edit'); ?></a>
+                    <a class="btn btn-xs btn-primary btn-block" style="min-width: 80%; margin-top: 5px; margin-bottom: 5px;" href="#" data-toggle="modal" data-target="#modal-edit-dialog" data-id="<?= $comment->id; ?>" title="<?= __d('content', 'Edit this Comment'); ?>" role="button"><?= __d('content', 'Edit'); ?></a>
                     <form action="<?= site_url('admin/comments/' .$comment->id .'/destroy'); ?>" method="POST">
                         <?= csrf_field(); ?>
                         <input type="submit" value="<?= __d('content', 'Delete'); ?>" class="btn btn-xs btn-block btn-danger" />

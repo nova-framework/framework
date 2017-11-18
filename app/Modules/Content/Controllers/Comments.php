@@ -4,10 +4,14 @@ namespace App\Modules\Content\Controllers;
 
 use Nova\Http\Request;
 use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 
+use Shared\Support\ReCaptcha;
+
 use App\Modules\Content\Models\Comment;
+use App\Modules\Content\Models\Post;
 use App\Modules\Platform\Controllers\BaseController;
 
 
@@ -28,7 +32,19 @@ class Comments extends BaseController
 
     public function store(Request $request, $id)
     {
+        // Verify the submitted reCAPTCHA
+        if (! Auth::check() && ! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {
+            return Redirect::back()->withStatus(__d('content', 'The reCaptcha verification failed.'), 'danger');
+        }
+
         $input = $request->all();
+
+        try {
+            $post = Post::where('type', 'post')->findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Post not found: #{0}', $id), 'danger');
+        }
 
         $validator = $this->validator($input);
 
@@ -37,7 +53,7 @@ class Comments extends BaseController
         }
 
         $comment = Comment::create(array(
-            'post_id'      => $input['post_id'],
+            'post_id'      => $post->id,
             'author'       => $input['comment_author'],
             'author_email' => $input['comment_author_email'],
             'author_url'   => $input['comment_author_url'],
@@ -46,6 +62,9 @@ class Comments extends BaseController
             'approved'     => 0,
             'user_id'      => Auth::id(),
         ));
+
+        // Invalidate the parent Post cache.
+        Cache::forget('content.posts.' .$post->name);
 
         return Redirect::back()
             ->withStatus(__d('content', 'Your comment is waiting approval.'), 'success');

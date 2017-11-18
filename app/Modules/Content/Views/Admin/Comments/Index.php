@@ -13,7 +13,7 @@
 
 <div class="box box-default">
     <div class="box-header">
-        <h3 class="box-title"><?= __d('content', 'The submitted Comments'); ?></h3>
+        <h3 class="box-title"><?= __d('content', 'Submitted Comments'); ?></h3>
         <div class="box-tools">
         <?= $comments->links(); ?>
         </div>
@@ -47,12 +47,12 @@
                 <td style="text-align: center; vertical-align: top;" width="15%"><?= $comment->created_at->formatLocalized(__d('content', '%d %b %Y, %R')); ?></td>
                 <td style="text-align: right; vertical-align: middle;" width="10%">
                     <?php if( $comment->approved == 1) { ?>
-                    <form action="<?= site_url('admin/comments/' .$comment->id .'/approve'); ?>" method="POST">
+                    <form action="<?= site_url('admin/comments/' .$comment->id .'/unapprove'); ?>" method="POST">
                         <?= csrf_field(); ?>
                         <input type="submit" value="<?= __d('content', 'Unapprove'); ?>" class="btn btn-xs btn-block btn-warning" />
                     </form>
                     <?php } else { ?>
-                    <form action="<?= site_url('admin/comments/' .$comment->id .'/unapprove'); ?>" method="POST">
+                    <form action="<?= site_url('admin/comments/' .$comment->id .'/approve'); ?>" method="POST">
                         <?= csrf_field(); ?>
                         <input type="submit" value="<?= __d('content', 'Approve'); ?>" class="btn btn-xs btn-block btn-success" />
                     </form>
@@ -76,3 +76,93 @@
 </div>
 
 </section>
+
+<div id="modal-edit-dialog" class="modal modal-default fade" tabindex="-1" role="dialog" aria-labelledby="...">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="modal-edit-form" class="form-horizontal" action="" method='POST' role="form">
+
+            <div class="modal-header">
+                <button aria-label="Close" data-dismiss="modal" class="close" type="button">
+                <span aria-hidden="true">×</span></button>
+                <h4 class="modal-edit-title"><?= __d('content', 'Edit a Comment'); ?></h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label" for="author"><?= __d('content', 'Author'); ?></label>
+                        <input name="author" id="modal-edit-author" type="text" class="form-control" value="" placeholder="<?= __d('content', 'Author'); ?>">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="author_email"><?= __d('content', 'Author E-mail'); ?></label>
+                        <input name="author_email" id="modal-edit-author-email" type="text" class="form-control" value="" placeholder="<?= __d('content', 'Author E-mail'); ?>">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="author_url"><?= __d('content', 'Author URL'); ?></label>
+                        <input name="author_url" id="modal-edit-author-url" type="text" class="form-control" value="" placeholder="<?= __d('content', 'Author URL'); ?>">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="content"><?= __d('content', 'Message'); ?></label>
+                        <textarea name="content" id="modal-edit-content" class="form-control" style="resize: none;" rows="5" value="" placeholder="<?= __d('content', 'Message'); ?>"></textarea>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-primary col-md-3"><?= __d('content', 'Cancel'); ?></button>
+                <input type="submit" name="button" class="update-item-button btn btn-success col-md-3 pull-right" value="<?= __d('content', 'Save'); ?>" />
+            </div>
+
+            <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+$(function () {
+    function setupModalEditComment(id, data) {
+        console.log(data);
+
+        $('#modal-edit-author').val(data.author);
+
+        $('#modal-edit-author-email').val(data.author_email);
+
+        $('#modal-edit-author-url').val(data.author_url);
+
+        $('#modal-edit-content').val(data.content);
+
+        // The title.
+        var title = sprintf("<?= __d('content', 'Edit the Comment <b>#%s</b>'); ?>", id);
+
+        $('#modal-edit-title').html(title);
+
+        // The form action.
+        $('#modal-edit-form').attr('action', '<?= site_url("admin/comments/"); ?>/' + id);
+    }
+
+    $('#modal-edit-dialog').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+
+        var id = button.data('id');
+
+        $.ajax({
+            url: "<?= site_url('admin/comments'); ?>/" + id,
+            type: 'GET',
+            data: {
+                id: id
+            },
+            success: function(response) {
+                setupModalEditComment(id, response);
+            },
+            error: function () {
+                console.log("Error on loading the Comment information");
+            }
+        });
+    });
+});
+
+</script>

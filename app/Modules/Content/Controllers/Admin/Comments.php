@@ -4,6 +4,7 @@ namespace App\Modules\Content\Controllers\Admin;
 
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Http\Request;
+use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Validator;
@@ -17,43 +18,11 @@ class Comments extends BaseController
 
     public function index()
     {
-        $comments = Comment::with('post')->paginate(15);
+        $comments = Comment::with('post')->orderBy('created_at', 'DESC')->paginate(10);
 
         return $this->createView()
             ->shares('title', __d('content', 'Comments'))
             ->with('comments', $comments);
-    }
-
-    public function approve($id)
-    {
-        try {
-            $comment = Comment::findOrFail($id);
-        }
-        catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Comment not found: #{0}', $id), 'danger');
-        }
-
-        $comment->approved = 1;
-
-        $comment->save();
-
-        return Redirect::back()->withStatus(__d('content', 'The Comment <b>{0}</b> was approved', $id), 'success');
-    }
-
-    public function unapprove($id)
-    {
-        try {
-            $comment = Comment::findOrFail($id);
-        }
-        catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Comment not found: #{0}', $id), 'danger');
-        }
-
-        $comment->approved = 0;
-
-        $comment->save();
-
-        return Redirect::back()->withStatus(__d('content', 'The Comment <b>{0}</b> was unapproved', $id), 'success');
     }
 
     public function load($id)
@@ -62,7 +31,7 @@ class Comments extends BaseController
             $comment = Comment::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Response::json(array('error' => 'Not Found'), 400);
+            return Response::json(array('error' => 'Not Found'), 404);
         }
 
         return Response::json($comment->toArray(), 200);
@@ -80,14 +49,14 @@ class Comments extends BaseController
         }
 
         $validator = Validator::make($input, array(
-            'comment_author'        => 'required',
-            'comment_author_email'  => 'required|email',
-            'comment_author_url'    => 'sometimes|required',
-            'comment_content'       => 'required'
+            'author'        => 'required',
+            'author_email'  => 'required|email',
+            'author_url'    => 'sometimes|required',
+            'content'       => 'required'
         ));
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput($input)->withErrors($validator->errors());
+            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
         }
 
         $comment->author       = $input['author'];
@@ -99,6 +68,9 @@ class Comments extends BaseController
         $comment->approved = (int) $request->has('approved');
 
         $comment->save();
+
+        // Invalidate the parent Post cache.
+        Cache::forget('content.posts.' .$comment->post->name);
 
         return Redirect::back()
             ->withStatus(__d('content', 'The Comment was successfully updated.'), 'success');
@@ -115,7 +87,49 @@ class Comments extends BaseController
 
         $comment->delete();
 
+        // Invalidate the parent Post cache.
+        Cache::forget('content.posts.' .$comment->post->name);
+
         return Redirect::back()
             ->withStatus(__d('content', 'The Comment was successfully deleted.'), 'success');
+    }
+
+
+    public function approve($id)
+    {
+        try {
+            $comment = Comment::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Comment not found: #{0}', $id), 'danger');
+        }
+
+        $comment->approved = 1;
+
+        $comment->save();
+
+        // Invalidate the parent Post cache.
+        Cache::forget('content.posts.' .$comment->post->name);
+
+        return Redirect::back()->withStatus(__d('content', 'The Comment was approved.'), 'success');
+    }
+
+    public function unapprove($id)
+    {
+        try {
+            $comment = Comment::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Comment not found: #{0}', $id), 'danger');
+        }
+
+        $comment->approved = 0;
+
+        $comment->save();
+
+        // Invalidate the parent Post cache.
+        Cache::forget('content.posts.' .$comment->post->name);
+
+        return Redirect::back()->withStatus(__d('content', 'The Comment was unapproved.'), 'success');
     }
 }

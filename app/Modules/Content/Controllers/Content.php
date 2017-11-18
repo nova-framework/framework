@@ -17,9 +17,9 @@ use Nova\Support\Str;
 
 use Shared\Support\ReCaptcha;
 
+use App\Controllers\BaseController;
 use App\Modules\Content\Models\Post;
 use App\Modules\Content\Models\Taxonomy;
-use App\Modules\Platform\Controllers\BaseController;
 
 use Carbon\Carbon;
 

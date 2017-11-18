@@ -104,7 +104,7 @@ class Posts extends BaseController
             'status'         => 'draft',
             'author_id'      => $userId = $authUser->id,
             'menu_order'     => 0,
-            'comment_status' => ($type == 'page') ? 'closed' : 'open',
+            'comment_status' => ($type == 'post') ? 'open' : 'closed',
         ));
 
         $post->name = $post->id;

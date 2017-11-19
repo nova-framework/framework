@@ -7,7 +7,7 @@
 
 <?= Session::getMessages(); ?>
 
-<?php $hasSidebar = ! Widget::isEmptyPosition('content.posts.sidebar'); ?>
+<?php $hasSidebar = ! Widget::isEmptyPosition('content-posts-sidebar'); ?>
 
 <?php $userIsAdmin = ! is_null($user = Auth::user()) && $user->hasRole('administrator'); ?>
 
@@ -78,9 +78,9 @@
 
 <?php if ($hasSidebar) { ?>
 
-<div class="col-md-3">
+<div class="posts-sidebar col-md-3">
 
-<?= Widget::position('content.posts.sidebar'); ?>
+<?= Widget::position('content-posts-sidebar'); ?>
 
 </div>
 

@@ -20,8 +20,8 @@
     </div>
     <div class="box-body">
         <?php if (! $positions->isEmpty()) { ?>
-        <div style="padding: 5px; text-align: center;"><big><?= __d('content', 'There are <b>{0}</b> Widget Position(s) where the Blocks are registered.', $positions->count()); ?></big></div>
-        <div style="padding-bottom: 5px; text-align: center;"><?= __d('content', 'Please use the handles to order the Blocks, then submit your changes with the button bellow.'); ?></div>
+        <div style="padding: 5px; text-align: center;"><big><?= __d('content', '<b>{0}</b> Widget Position(s) have Blocks registered.', $positions->count()); ?></big></div>
+        <div style="padding-bottom: 5px; text-align: center;"><?= __d('content', 'Please use the handles to order the Blocks, then submit your clicking the button bellow.'); ?></div>
         <?php } else { ?>
         <div class="alert alert-warning" style="margin: 0 5px 5px;">
             <h4><i class="icon fa fa-warning"></i> <?= strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('content', 'No registered Block Positions'); ?></h4>
@@ -37,7 +37,6 @@
 <?php foreach ($positions as $name => $blocks) { ?>
 
 <?php
-$name = str_replace('.', '-', $name);
 
 usort($blocks, function ($a, $b)
 {

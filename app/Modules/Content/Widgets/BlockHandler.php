@@ -35,7 +35,7 @@ class BlockHandler extends Widget
         $content = preg_replace('/<!--\?(.*)\?-->/sm', '<?$1?>', $this->block->getContent());
 
         $data = array(
-            'post'    => $this->block,
+            'block'   => $this->block,
             'content' => $content,
         );
 

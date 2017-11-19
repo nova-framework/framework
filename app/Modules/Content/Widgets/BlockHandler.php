@@ -40,27 +40,23 @@ class BlockHandler extends Widget
             return;
         }
 
-        $content = preg_replace('/<!--\?(.*)\?-->/sm', '<?$1?>', $this->block->getContent());
+        $block = $this->block;
 
-        $data = array(
-            'block'   => $this->block,
-            'content' => $content,
-        );
+        $content = preg_replace('/<!--\?(.*)\?-->/sm', '<?$1?>', $block->getContent());
 
-        $result = array();
+        // Render the Block instance.
+        $result[] = View::make('Widgets/Block', compact('block', 'content'), 'Content')->render();
 
-        $result[] = View::make('Widgets/Block', $data, 'Content')->render();
+        if (! empty($name = $block->block_handler_class)) {
+            $parameters = $block->block_handler_param;
 
-        if (! empty($name = $this->block->block_handler_class)) {
-            $parameters = $this->block->block_handler_param;
-
-            $result[] = $this->callHandler($name, $parameters);
+            $result[] = $this->callBlockHandler($name, $parameters);
         }
 
         return implode("\n", $result);
     }
 
-    protected function callHandler($name, $parameters)
+    protected function callBlockHandler($name, $parameters)
     {
         if (! is_array($parameters)) {
             $parameters = array($parameters);

@@ -155,9 +155,8 @@ class WidgetManager
             return true;
         }
 
-        $status = Arr::get($config, 'status', 'publish');
-
-        if ($status !== 'publish') {
+        // Is the current Widget published?
+        else if (Arr::get($config, 'status', 'publish') != 'publish') {
             return false;
         }
 

@@ -208,11 +208,7 @@ class Post extends Model
             if (isset(static::$postTypes[$type])) {
                 $className = static::$postTypes[$type];
             } else {
-                $postTypes = Config::get('content::postTypes', array());
-
-                if (isset($postTypes[$type])) {
-                    $className = $postTypes[$type];
-                }
+                $className = Config::get("content::postTypes.{$type}.model", $className);
             }
         }
 

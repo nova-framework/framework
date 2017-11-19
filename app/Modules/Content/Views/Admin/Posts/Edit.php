@@ -2,7 +2,7 @@
     <h1><?= __d('content', $title); ?></h1>
     <ol class="breadcrumb">
         <li><a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <?= __d('content', 'Dashboard'); ?></a></li>
-        <li><a href="<?= site_url('admin/content/' .$type); ?>"><?= $mode; ?></a></li>
+        <li><a href="<?= site_url('admin/content/' .$postType->label()); ?>"><?= $postType->label('namePlural'); ?></a></li>
         <li><?= $title; ?></li>
     </ol>
 </section>

@@ -10,7 +10,7 @@ return array (
   '(no parent)' => 'без родителя',
   '-- Parent Category --' => '-- Родительская категория --',
   '<< Previous Page' => '<< Предыдущая страница',
-  '<b>{0}</b> Widget Position(s) have Blocks registered.' => '',
+  '<b>{0}</b> Widget Position(s) have Blocks registered.' => '<b>{0}</b> Позиция(и) виджета имеет зарегистрированные блоки.',
   'Add' => 'Добавить',
   'Add Media' => 'Добавить Медиа',
   'Add New' => 'Добавить новый',

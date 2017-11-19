@@ -22,9 +22,94 @@ class postsTableSeeder extends Seeder
         // Truncate the table before seeding.
         Post::truncate();
 
-        // The sample Post.
+        //
+        // The Archives Block.
         $post = Post::create(array(
             'id'             => 1,
+            'author_id'      => 1,
+            'content'        => null,
+            'title'          => 'Archives',
+            'name'           => 'block-archives',
+            'excerpt'        => null,
+            'status'         => 'publish',
+            'menu_order'     => 1,
+            'type'           => 'block',
+            'guid'           => site_url('content/1'),
+            'comment_status' => 'closed',
+        ));
+
+        // Setup the Metadata.
+        $post->meta->block_show_title        = 0;
+        $post->meta->block_visibility_mode   = 'show';
+        $post->meta->block_visibility_path   = '';
+        $post->meta->block_visibility_filter = 'any';
+        $post->meta->block_widget_position   = 'content.posts.sidebar';
+
+        $post->meta->block_handler_class = 'App\Modules\Content\Blocks\Archives';
+        $post->meta->block_handler_param = null;
+
+        $post->save();
+
+        //
+        // The Categories Block.
+        $post = Post::create(array(
+            'id'             => 2,
+            'author_id'      => 1,
+            'content'        => null,
+            'title'          => 'Categories',
+            'name'           => 'block-categories',
+            'excerpt'        => null,
+            'status'         => 'publish',
+            'menu_order'     => 2,
+            'type'           => 'block',
+            'guid'           => site_url('content/2'),
+            'comment_status' => 'closed',
+        ));
+
+        // Setup the Metadata.
+        $post->meta->block_show_title        = 0;
+        $post->meta->block_visibility_mode   = 'show';
+        $post->meta->block_visibility_path   = '';
+        $post->meta->block_visibility_filter = 'any';
+        $post->meta->block_widget_position   = 'content.posts.sidebar';
+
+        $post->meta->block_handler_class = 'App\Modules\Content\Blocks\Categories';
+        $post->meta->block_handler_param = null;
+
+        $post->save();
+
+        //
+        // The Search Block.
+        $post = Post::create(array(
+            'id'             => 3,
+            'author_id'      => 1,
+            'content'        => null,
+            'title'          => 'Search',
+            'name'           => 'block-search',
+            'excerpt'        => null,
+            'status'         => 'publish',
+            'menu_order'     => 0,
+            'type'           => 'block',
+            'guid'           => site_url('content/3'),
+            'comment_status' => 'closed',
+        ));
+
+        // Setup the Metadata.
+        $post->meta->block_show_title        = 0;
+        $post->meta->block_visibility_mode   = 'show';
+        $post->meta->block_visibility_path   = '';
+        $post->meta->block_visibility_filter = 'any';
+        $post->meta->block_widget_position   = 'content.posts.sidebar';
+
+        $post->meta->block_handler_class = 'App\Modules\Content\Blocks\Search';
+        $post->meta->block_handler_param = null;
+
+        $post->save();
+
+        //
+        // The sample Post.
+        $post = Post::create(array(
+            'id'             => 4,
             'author_id'      => 1,
             'content'        => 'Welcome to Nova Framework. This is your first post. Edit or delete it, then start writing!',
             'title'          => 'Hello world!',
@@ -43,9 +128,10 @@ class postsTableSeeder extends Seeder
             $taxonomy->updateCount();
         });
 
+        //
         // The sample Page.
         $post = Post::create(array(
-            'id'             => 2,
+            'id'             => 5,
             'author_id'      => 1,
             'content'        => 'This is an example page. It\'s different from a blog post because it will stay in one place and will show up in your site navigation (in most themes). Most people start with an About page that introduces them to potential site visitors. It might say something like this:
 
@@ -77,18 +163,19 @@ As a new Nova user, you should go to <a href="' .site_url('admin') . '">your das
             $taxonomy->updateCount();
         });
 
+        //
         // The sample MenuItem.
         $post = Post::create(array(
-            'id'             => 3,
+            'id'             => 6,
             'author_id'      => 1,
             'content'        => null,
             'title'          => null,
-            'name'           => '3',
+            'name'           => '6',
             'excerpt'        => null,
             'status'         => 'publish',
             'menu_order'     => 1,
             'type'           => 'nav_menu_item',
-            'guid'           => site_url('content/3'),
+            'guid'           => site_url('content/6'),
             'comment_status' => 'closed',
         ));
 
@@ -96,7 +183,7 @@ As a new Nova user, you should go to <a href="' .site_url('admin') . '">your das
         $post->meta->menu_item_type             = 'page';
         $post->meta->menu_item_menu_item_parent = 0;
         $post->meta->menu_item_object           = 'page';
-        $post->meta->menu_item_object_id        = 2;
+        $post->meta->menu_item_object_id        = 5;
         $post->meta->menu_item_target           = null;
         $post->meta->menu_item_url              = null;
 

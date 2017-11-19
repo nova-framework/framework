@@ -69,8 +69,8 @@ class WidgetManager
      */
     public function register($widget, $name, $position = null, $order = 0, $parameters = array())
     {
-        if (is_string($parameters)) {
-            $parameters = array_map('trim', explode(',', $parameters));
+        if (! is_array($parameters)) {
+            $parameters = array($parameters);
         }
 
         $this->widgets[$name] = compact('widget', 'parameters');
@@ -110,9 +110,14 @@ class WidgetManager
             return $this->instances[$name];
         }
 
-        extract($this->widgets[$name]);
+        list ($widget, $parameters) = array_values($this->widgets[$name]);
 
-        return $this->instances[$name] = $this->container->make($widget, $parameters);
+        return $this->instances[$name] = $this->makeWidget($widget, $parameters);
+    }
+
+    protected function makeWidget($name, $parameters)
+    {
+        return $this->container->make($name, $parameters);
     }
 
     public function position($position)
@@ -134,7 +139,7 @@ class WidgetManager
         $result = array();
 
         foreach ($this->positions[$position] as $widget) {
-            $name = $widget['name'];
+            list ($name) = array_values($widget);
 
             if ($this->widgetAllowsRendering($name)) {
                 $result[] = $this->render($name, $parameters);
@@ -146,8 +151,18 @@ class WidgetManager
 
     protected function widgetAllowsRendering($name)
     {
-        if (empty($config = $this->getWidgetConfig($name))) {
+        $className = Arr::get($this->widgets, $name .'.widget');
+
+        if ($className === 'App\Modules\Content\Widgets\BlockHandler') {
+            // The Content Block Handler should be always allowed.
             return true;
+        } else if (empty($config = $this->getWidgetConfig($name))) {
+            return true;
+        }
+
+        // Check first whether or not the Widget is published/enabled.
+        else if (Arr::get($config, 'status', 'publish') !== 'publish') {
+            return false;
         }
 
         $parameters = Arr::get($config, 'path', array('*'));

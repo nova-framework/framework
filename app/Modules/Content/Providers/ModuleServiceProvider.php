@@ -85,7 +85,7 @@ class ModuleServiceProvider extends ServiceProvider
             $name = 'content.block.' .$block->name;
 
             Widget::register(
-                'App\Modules\Content\Widgets\BlockHandler', $name, $position, $block->order, array($block)
+                'App\Modules\Content\Widgets\BlockHandler', $name, $position, $block->menu_order, array($this->app, $block)
             );
         }
     }

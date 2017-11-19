@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Content\Widgets;
+namespace App\Modules\Content\Blocks;
 
 use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\View;
@@ -10,7 +10,7 @@ use Shared\Widgets\Widget;
 use App\Modules\Content\Models\Taxonomy;
 
 
-class Categories extends Widget
+class Categories
 {
 
     public function render()
@@ -20,6 +20,6 @@ class Categories extends Widget
             return Taxonomy::where('taxonomy', 'category')->where('count', '>', 0)->get();
         });
 
-        return View::make('Widgets/Categories', compact('categories'), 'Content')->render();
+        return View::make('Blocks/Categories', compact('categories'), 'Content')->render();
     }
 }

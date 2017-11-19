@@ -2,6 +2,7 @@
 
 namespace App\Modules\Content\Widgets;
 
+use Nova\Container\Container;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Request;
 use Nova\Support\Facades\View;
@@ -16,13 +17,20 @@ use Carbon\Carbon;
 class BlockHandler extends Widget
 {
     /**
-     * @var \App\Modules\Content\Models\Post
+     * @var \Nova\Container\Container
      */
-    protected $post;
+    protected $container;
+
+    /**
+     * @var \App\Modules\Content\Models\Block
+     */
+    protected $block;
 
 
-    public function __construct(Block $block)
+    public function __construct(Container $container, Block $block)
     {
+        $this->container = $container;
+
         $this->block = $block;
     }
 
@@ -35,11 +43,32 @@ class BlockHandler extends Widget
         $content = preg_replace('/<!--\?(.*)\?-->/sm', '<?$1?>', $this->block->getContent());
 
         $data = array(
-            'post'    => $this->block,
+            'block'   => $this->block,
             'content' => $content,
         );
 
-        return View::make('Widgets/Block', $data, 'Content')->render();
+        $result = array();
+
+        $result[] = View::make('Widgets/Block', $data, 'Content')->render();
+
+        if (! empty($name = $this->block->block_handler_class)) {
+            $parameters = $this->block->block_handler_param;
+
+            $result[] = $this->callHandler($name, $parameters);
+        }
+
+        return implode("\n", $result);
+    }
+
+    protected function callHandler($name, $parameters)
+    {
+        if (! is_array($parameters)) {
+            $parameters = array($parameters);
+        }
+
+        $handler = $this->container->make($name);
+
+        return $this->container->call(array($handler, 'render'), $parameters);
     }
 
     protected function blockAllowsRendering()

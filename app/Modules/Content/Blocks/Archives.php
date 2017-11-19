@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Content\Widgets;
+namespace App\Modules\Content\Blocks;
 
 use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\View;
@@ -12,7 +12,7 @@ use App\Modules\Content\Models\Post;
 use Carbon\Carbon;
 
 
-class Archives extends Widget
+class Archives
 {
 
     public function render()
@@ -34,6 +34,6 @@ class Archives extends Widget
             });
         });
 
-        return View::make('Widgets/Archives', compact('items'), 'Content')->render();
+        return View::make('Blocks/Archives', compact('items'), 'Content')->render();
     }
 }

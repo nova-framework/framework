@@ -110,9 +110,14 @@ class WidgetManager
             return $this->instances[$name];
         }
 
-        extract($this->widgets[$name]);
+        list ($widget, $parameters) = array_values($this->widgets[$name]);
 
-        return $this->instances[$name] = $this->container->make($widget, $parameters);
+        return $this->instances[$name] = $this->makeWidget($widget, $parameters);
+    }
+
+    protected function makeWidget($name, $parameters)
+    {
+        return $this->container->make($name, $parameters);
     }
 
     public function position($position)
@@ -134,7 +139,7 @@ class WidgetManager
         $result = array();
 
         foreach ($this->positions[$position] as $widget) {
-            $name = $widget['name'];
+            list ($name, ) = array_values($widget);
 
             if ($this->widgetAllowsRendering($name)) {
                 $result[] = $this->render($name, $parameters);

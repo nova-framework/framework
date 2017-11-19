@@ -148,15 +148,15 @@ class WidgetManager
     {
         $className = Arr::get($this->widgets, $name .'.widget');
 
-        if ($className == 'App\Modules\Content\Widgets\BlockHandler') {
+        if ($className === 'App\Modules\Content\Widgets\BlockHandler') {
             // The Content Block Handler should be always allowed.
             return true;
         } else if (empty($config = $this->getWidgetConfig($name))) {
             return true;
         }
 
-        // Check first whether or not the Widget published/enabled.
-        else if (Arr::get($config, 'status', 'publish') != 'publish') {
+        // Check first whether or not the Widget is published/enabled.
+        else if (Arr::get($config, 'status', 'publish') !== 'publish') {
             return false;
         }
 

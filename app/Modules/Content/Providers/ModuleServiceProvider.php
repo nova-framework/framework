@@ -82,8 +82,10 @@ class ModuleServiceProvider extends ServiceProvider
         foreach ($blocks as $block) {
             $position = $block->block_widget_position ?: 'content';
 
+            $name = 'content.block.' .$block->name;
+
             Widget::register(
-                'App\Modules\Content\Widgets\Block', 'content.block.' .$block->name, $position, $block->order, array($block)
+                'App\Modules\Content\Widgets\BlockHandler', $name, $position, $block->order, array($block)
             );
         }
     }

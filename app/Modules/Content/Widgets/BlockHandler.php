@@ -8,12 +8,12 @@ use Nova\Support\Facades\View;
 
 use Shared\Widgets\Widget;
 
-use App\Modules\Content\Models\Post;
+use App\Modules\Content\Models\Block;
 
 use Carbon\Carbon;
 
 
-class Block extends Widget
+class BlockHandler extends Widget
 {
     /**
      * @var \App\Modules\Content\Models\Post
@@ -21,31 +21,33 @@ class Block extends Widget
     protected $post;
 
 
-    public function __construct(Post $post)
+    public function __construct(Block $block)
     {
-        $this->post = $post;
+        $this->block = $block;
     }
 
     public function render()
     {
-        if (! $this->blockIsVisible()) {
+        if (! $this->blockAllowsRendering()) {
             return;
         }
 
+        $content = preg_replace('/<!--\?(.*)\?-->/sm', '<?$1?>', $this->block->getContent());
+
         $data = array(
-            'post'    => $this->post,
-            'content' => preg_replace('/<!--\?(.*)\?-->/sm', '<?$1?>', $this->post->getContent()),
-        )
-        ;
+            'post'    => $this->block,
+            'content' => $content,
+        );
+
         return View::make('Widgets/Block', $data, 'Content')->render();
     }
 
-    protected function blockIsVisible()
+    protected function blockAllowsRendering()
     {
         $request = Request::instance();
 
         // Calculate the block visibility, then skip its registration if is not visible.
-        if (! empty($path = $this->post->block_visibility_path)) {
+        if (! empty($path = $this->block->block_visibility_path)) {
             $pattern = str_replace('<front>', '/', $path);
         } else {
             $pattern = '*';
@@ -58,7 +60,7 @@ class Block extends Widget
 
         $matches = call_user_func_array(array($request, 'is'), $parameters);
 
-        if (empty($mode = $this->post->block_visibility_mode)) {
+        if (empty($mode = $this->block->block_visibility_mode)) {
             $mode = 'show';
         }
 
@@ -66,7 +68,7 @@ class Block extends Widget
             return false;
         }
 
-        if (empty($filter = $this->post->block_visibility_filter)) {
+        if (empty($filter = $this->block->block_visibility_filter)) {
             $filter = 'any';
         }
 

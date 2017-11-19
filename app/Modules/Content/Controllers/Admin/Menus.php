@@ -281,7 +281,7 @@ class Menus extends BaseController
         $post->meta->menu_item_type             = 'custom';
         $post->meta->menu_item_menu_item_parent = 0;
         $post->meta->menu_item_object           = 'custom';
-        $post->meta->menu_item_object_id        = $postId;
+        $post->meta->menu_item_object_id        = $post->id;
         $post->meta->menu_item_target           = null;
         $post->meta->menu_item_url              = $url;
 

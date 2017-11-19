@@ -11,19 +11,6 @@
 
 <?= Session::getMessages(); ?>
 
-<?php if (! isset($simple)) { ?>
-
-<div class="box box-default">
-    <div class="box-header with-border">
-        <h3 class="box-title"><?= $postType->label('add_new_item'); ?></h3>
-    </div>
-    <div class="box-body">
-        <a class="btn btn-success col-sm-2 pull-right" href="<?= site_url('admin/content/create/' .$type); ?>"><?= $postType->label('add_new_item'); ?></a>
-    </div>
-</div>
-
-<?php } ?>
-
 <div class="box box-default">
     <div class="box-header">
         <h3 class="box-title"><?= $postType->label('all_items'); ?></h3>

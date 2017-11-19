@@ -54,8 +54,7 @@ class Posts extends BaseController
             ->paginate(15);
 
         return $this->createView(compact('type', 'name', 'statuses', 'posts'), 'Index')
-            ->shares('title', $title)
-            ->with('simple', true);
+            ->shares('title', $title);
     }
 
     public function index(Request $request, $type = null)

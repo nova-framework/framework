@@ -139,7 +139,7 @@ class WidgetManager
         $result = array();
 
         foreach ($this->positions[$position] as $widget) {
-            list ($name, ) = array_values($widget);
+            list ($name) = array_values($widget);
 
             if ($this->widgetAllowsRendering($name)) {
                 $result[] = $this->render($name, $parameters);

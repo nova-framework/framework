@@ -192,7 +192,7 @@ class Menus extends BaseController
         }
 
         // Invalidate the cached menu data.
-        Cache::forget('content.menus.' .$menu->slug);
+        Cache::forget('content.menus.' .$taxonomy->slug);
 
         return Redirect::back()
             ->withStatus(__d('content', 'The Menu Item(s) was successfully created.'), 'success');
@@ -243,7 +243,7 @@ class Menus extends BaseController
         }
 
         // Invalidate the cached menu data.
-        Cache::forget('content.menus.' .$menu->slug);
+        Cache::forget('content.menus.' .$taxonomy->slug);
 
         return Redirect::back()
             ->withStatus(__d('content', 'The Menu Item(s) was successfully created.'), 'success');

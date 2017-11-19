@@ -8,7 +8,7 @@ use Nova\Support\Facades\Cache;
 
 use Shared\Support\Facades\Widget;
 
-use App\Modules\Content\Models\Post;
+use App\Modules\Content\Models\Block;
 
 
 class ModuleServiceProvider extends ServiceProvider
@@ -76,7 +76,7 @@ class ModuleServiceProvider extends ServiceProvider
 
         $blocks = Cache::remember('content.blocks', 1440, function ()
         {
-            return Post::where('type', 'block')->where('status', 'publish')->get();
+            return Block::where('status', 'publish')->get();
         });
 
         foreach ($blocks as $block) {

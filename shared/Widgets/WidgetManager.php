@@ -136,25 +136,26 @@ class WidgetManager
         foreach ($this->positions[$position] as $widget) {
             $name = $widget['name'];
 
-            $config = $this->container['config']->get('widgets.widgets.' .$name, array());
-
-            if (! $this->configAllowsRendering($config)) {
-                continue;
+            if ($this->widgetAllowsRendering($name)) {
+                $result .= $this->render($name, $parameters);
             }
-
-            $result .= $this->render($name, $parameters);
         }
 
         return $result;
     }
 
-    protected function configAllowsRendering(array $config)
+    protected function widgetAllowsRendering($name)
     {
-        $mode = Arr::get($config, 'mode', 'show');
+        if (empty($config = $this->getWidgetConfig($name))) {
+            return true;
+        }
 
-        $pathMatches = call_user_func_array(
-            array($this->request, 'is'), Arr::get($config, 'path', array('*'))
-        );
+        $parameters = Arr::get($config, 'path', array('*'));
+
+        $pathMatches = call_user_func_array(array($this->request, 'is'), $parameters);
+
+        //
+        $mode = Arr::get($config, 'mode', 'show');
 
         if ($pathMatches && ($mode == 'hide')) {
             return false;
@@ -173,6 +174,13 @@ class WidgetManager
         }
 
         return true;
+    }
+
+    protected function getWidgetConfig($name)
+    {
+        $config = $this->container['config'];
+
+        return $config->get('widgets.widgets.' .$name, array());
     }
 
     public function exists($name)

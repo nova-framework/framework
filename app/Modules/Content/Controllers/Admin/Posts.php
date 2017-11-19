@@ -109,8 +109,13 @@ class Posts extends BaseController
 
         $post->name = $post->id;
 
-        // Metadata.
+        // Handle the Metadata.
         $post->meta->edit_lock = sprintf('%d:%d', time(), $userId);
+
+        if ($type === 'block') {
+            $post->meta->block_handler_class = null;
+            $post->meta->block_handler_param = null;
+        }
 
         // Save the Post again, to update its name and metadata.
         $post->save();
@@ -163,7 +168,7 @@ class Posts extends BaseController
 
         $type = $post->type;
 
-        // Metadata.
+        // Handle the Metadata.
         $post->meta->edit_lock = sprintf('%d:%d', time(), $authUser->id);
 
         // Save the Post, to update its metadata.

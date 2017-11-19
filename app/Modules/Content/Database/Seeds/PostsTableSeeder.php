@@ -39,11 +39,11 @@ class postsTableSeeder extends Seeder
         ));
 
         // Setup the Metadata.
-        $post->meta->block_show_title        = 0;
+        $post->meta->block_show_title        = 1;
         $post->meta->block_visibility_mode   = 'show';
         $post->meta->block_visibility_path   = '';
         $post->meta->block_visibility_filter = 'any';
-        $post->meta->block_widget_position   = 'content.posts.sidebar';
+        $post->meta->block_widget_position   = 'content-posts-sidebar';
 
         $post->meta->block_handler_class = 'App\Modules\Content\Blocks\Archives';
         $post->meta->block_handler_param = null;
@@ -67,11 +67,11 @@ class postsTableSeeder extends Seeder
         ));
 
         // Setup the Metadata.
-        $post->meta->block_show_title        = 0;
+        $post->meta->block_show_title        = 1;
         $post->meta->block_visibility_mode   = 'show';
         $post->meta->block_visibility_path   = '';
         $post->meta->block_visibility_filter = 'any';
-        $post->meta->block_widget_position   = 'content.posts.sidebar';
+        $post->meta->block_widget_position   = 'content-posts-sidebar';
 
         $post->meta->block_handler_class = 'App\Modules\Content\Blocks\Categories';
         $post->meta->block_handler_param = null;
@@ -99,7 +99,7 @@ class postsTableSeeder extends Seeder
         $post->meta->block_visibility_mode   = 'show';
         $post->meta->block_visibility_path   = '';
         $post->meta->block_visibility_filter = 'any';
-        $post->meta->block_widget_position   = 'content.posts.sidebar';
+        $post->meta->block_widget_position   = 'content-posts-sidebar';
 
         $post->meta->block_handler_class = 'App\Modules\Content\Blocks\Search';
         $post->meta->block_handler_param = null;

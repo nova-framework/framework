@@ -7,7 +7,7 @@
 
 <?= Session::getMessages(); ?>
 
-<?php $hasSidebar = ! Widget::isEmptyPosition('content.posts.sidebar'); ?>
+<?php $hasSidebar = ! Widget::isEmptyPosition('content-posts-sidebar'); ?>
 
 <div class="row">
 
@@ -82,8 +82,8 @@
 </div>
 
 <?php if ($hasSidebar) { ?>
-<div class="col-md-3">
-<?= Widget::position('content.posts.sidebar'); ?>
+<div class="posts-sidebar col-md-3">
+<?= Widget::position('content-posts-sidebar'); ?>
 </div>
 <?php } ?>
 

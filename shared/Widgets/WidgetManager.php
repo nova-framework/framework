@@ -155,7 +155,7 @@ class WidgetManager
             return true;
         }
 
-        // Is the current Widget published?
+        // Check first whether or not the Widget published/enabled.
         else if (Arr::get($config, 'status', 'publish') != 'publish') {
             return false;
         }

@@ -66,7 +66,7 @@ class BlockHandler extends Widget
             $parameters = array($parameters);
         }
 
-        $handler = $this->container->make($name);
+        $handler = $this->container->make($name, array($this->block));
 
         return $this->container->call(array($handler, 'render'), $parameters);
     }

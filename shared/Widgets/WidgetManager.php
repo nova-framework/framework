@@ -156,7 +156,7 @@ class WidgetManager
         }
 
         // First we will check the Widget status.
-        else if ('publish' !== Arr::get($config, 'status', 'publish')) {
+        else if ('publish' != Arr::get($config, 'status', 'publish')) {
             return false;
         }
 

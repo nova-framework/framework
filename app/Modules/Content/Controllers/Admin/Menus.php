@@ -174,7 +174,7 @@ class Menus extends BaseController
             // We need to update this information.
             $post->name = $postId = $post->id;
 
-            $post->name = site_url('content/' .$postId);
+            $post->guid = site_url('content/' .$postId);
 
             // Setup the Metadata.
             $post->meta->menu_item_type             = $type;
@@ -225,7 +225,7 @@ class Menus extends BaseController
             // We need to update this information.
             $post->name = $postId = $post->id;
 
-            $post->name = site_url('content/' .$postId);
+            $post->guid = site_url('content/' .$postId);
 
             // Setup the Metadata.
             $post->meta->menu_item_type             = 'taxonomy';
@@ -273,9 +273,9 @@ class Menus extends BaseController
         ));
 
         // We need to update this information.
-        $post->name = $postId = $post->id;
+        $post->name = Post::uniqueName($name);
 
-        $post->name = site_url('content/' .$postId);
+        $post->guid = site_url('content/' .$post->id);
 
         // Setup the Metadata.
         $post->meta->menu_item_type             = 'custom';

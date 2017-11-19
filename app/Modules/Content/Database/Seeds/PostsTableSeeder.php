@@ -45,8 +45,8 @@ class postsTableSeeder extends Seeder
         $post->meta->block_visibility_filter = 'any';
         $post->meta->block_widget_position   = 'content.posts.sidebar';
 
-        $post->meta->block_handler_class    = 'App\Modules\Content\Blocks\Archives';
-        $post->meta->block_handler_argument = null;
+        $post->meta->block_handler_class = 'App\Modules\Content\Blocks\Archives';
+        $post->meta->block_handler_param = null;
 
         $post->save();
 
@@ -73,8 +73,8 @@ class postsTableSeeder extends Seeder
         $post->meta->block_visibility_filter = 'any';
         $post->meta->block_widget_position   = 'content.posts.sidebar';
 
-        $post->meta->block_handler_class    = 'App\Modules\Content\Blocks\Categories';
-        $post->meta->block_handler_argument = null;
+        $post->meta->block_handler_class = 'App\Modules\Content\Blocks\Categories';
+        $post->meta->block_handler_param = null;
 
         $post->save();
 
@@ -101,8 +101,8 @@ class postsTableSeeder extends Seeder
         $post->meta->block_visibility_filter = 'any';
         $post->meta->block_widget_position   = 'content.posts.sidebar';
 
-        $post->meta->block_handler_class    = 'App\Modules\Content\Blocks\Search';
-        $post->meta->block_handler_argument = null;
+        $post->meta->block_handler_class = 'App\Modules\Content\Blocks\Search';
+        $post->meta->block_handler_param = null;
 
         $post->save();
 

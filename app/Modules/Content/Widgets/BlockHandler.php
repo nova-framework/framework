@@ -52,22 +52,23 @@ class BlockHandler extends Widget
         $result[] = View::make('Widgets/Block', $data, 'Content')->render();
 
         if (! empty($name = $this->block->block_handler_class)) {
-            // The Handler argument is optional, and it is, for example, the ID of a Menu.
-            if (empty($argument = $this->block->block_handler_argument)) {
-                $argument = null;
-            }
+            $parameters = $this->block->block_handler_param;
 
-            $result[] = $this->callBlockHandler($name, $argument);
+            $result[] = $this->callHandler($name, $parameters);
         }
 
         return implode("\n", $result);
     }
 
-    protected function callBlockHandler($name, $argument)
+    protected function callHandler($name, $parameters)
     {
+        if (! is_array($parameters)) {
+            $parameters = array($parameters);
+        }
+
         $handler = $this->container->make($name);
 
-        return $handler->render($argument);
+        return $this->container->call(array($handler, 'render'), $parameters);
     }
 
     protected function blockAllowsRendering()

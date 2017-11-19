@@ -69,8 +69,8 @@ class WidgetManager
      */
     public function register($widget, $name, $position = null, $order = 0, $parameters = array())
     {
-        if (is_string($parameters)) {
-            $parameters = array_map('trim', explode(',', $parameters));
+        if (! is_array($parameters)) {
+            $parameters = array($parameters);
         }
 
         $this->widgets[$name] = compact('widget', 'parameters');

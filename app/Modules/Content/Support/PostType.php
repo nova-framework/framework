@@ -111,6 +111,8 @@ class PostType
             return $this->label;
         }
 
+        $name = Str::camel($name);
+
         return Arr::get($this->labels, $name, $default ?: Str::title($name));
     }
 

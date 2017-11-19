@@ -80,7 +80,7 @@ class Posts extends BaseController
             ->paginate(15);
 
         return $this->createView()
-            ->shares('title', $postType->label('namePlural'))
+            ->shares('title', $postType->label('items'))
             ->with(compact('type', 'name', 'statuses', 'posts', 'postType'));
     }
 
@@ -148,7 +148,7 @@ class Posts extends BaseController
         $data = compact('post', 'status', 'visibility', 'type', 'name', 'categories', 'revisions');
 
         return $this->createView($data, 'Edit')
-            ->shares('title', $postType->label('addNewItem'))
+            ->shares('title', $postType->label('add_new_item'))
             ->with(compact('categorySelect', 'menuSelect', 'lastEditor', 'tags', 'stylesheets'))
             ->with('creating', true);
     }
@@ -232,7 +232,7 @@ class Posts extends BaseController
         $data = compact('post', 'postType', 'status', 'visibility', 'type', 'name', 'categories', 'revisions');
 
         return $this->createView($data, 'Edit')
-            ->shares('title', $postType->label('editItem'))
+            ->shares('title', $postType->label('edit_item'))
             ->with(compact('categorySelect', 'menuSelect', 'lastEditor', 'tags', 'stylesheets'))
             ->with('creating', false);
     }

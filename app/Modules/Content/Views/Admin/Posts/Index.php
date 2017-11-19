@@ -2,7 +2,7 @@
     <h1><?= $title; ?></h1>
     <ol class="breadcrumb">
         <li><a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <?= __d('content', 'Dashboard'); ?></a></li>
-        <li><?= __d('content', 'Content'); ?></li>
+        <li><?= $title; ?></li>
     </ol>
 </section>
 
@@ -15,10 +15,10 @@
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= $postType->label('addNewItem'); ?></h3>
+        <h3 class="box-title"><?= $postType->label('add_new_item'); ?></h3>
     </div>
     <div class="box-body">
-        <a class="btn btn-success col-sm-2 pull-right" href="<?= site_url('admin/content/create/' .$type); ?>"><?= $postType->label('addNewItem'); ?></a>
+        <a class="btn btn-success col-sm-2 pull-right" href="<?= site_url('admin/content/create/' .$type); ?>"><?= $postType->label('add_new_item'); ?></a>
     </div>
 </div>
 
@@ -26,7 +26,7 @@
 
 <div class="box box-default">
     <div class="box-header">
-        <h3 class="box-title"><?= $postType->label('allItems'); ?></h3>
+        <h3 class="box-title"><?= $postType->label('all_items'); ?></h3>
         <div class="box-tools">
         <?= $posts->links(); ?>
         </div>

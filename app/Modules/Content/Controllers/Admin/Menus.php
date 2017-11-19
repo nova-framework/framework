@@ -51,9 +51,6 @@ class Menus extends BaseController
 
         $taxonomy->save();
 
-        // Invalidate the cached menu data.
-        Cache::forget('content.menus.main_menu');
-
         return Redirect::back()
             ->withStatus(__d('content', 'The Menu <b>{0}</b> was successfully updated.', $name), 'success');
     }
@@ -67,12 +64,17 @@ class Menus extends BaseController
             return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
         }
 
-        $name = $menu->name;
+        $term = $menu->term()->first();
+
+        // Get the original information of the Term.
+        $original = $term->name;
+
+        $slug = $term->slug;
 
         // Update the Term.
-        $term = $menu->term;
+        $term->name = $name = $request->input('name');
 
-        $term->name = $request->input('name');
+        $term->slug = Term::uniqueSlug($name, 'nav_menu');
 
         $term->save();
 
@@ -82,10 +84,10 @@ class Menus extends BaseController
         $menu->save();
 
         // Invalidate the cached menu data.
-        Cache::forget('content.menus.main_menu');
+        Cache::forget('content.menus.' .$slug);
 
         return Redirect::back()
-            ->withStatus(__d('content', 'The Menu <b>{0}</b> was successfully updated.', $name), 'success');
+            ->withStatus(__d('content', 'The Menu <b>{0}</b> was successfully updated.', $original), 'success');
     }
 
     public function destroy($id)
@@ -99,6 +101,8 @@ class Menus extends BaseController
 
         $name = $menu->name;
 
+        $slug = $menu->slug;
+
         $menu->items->each(function ($item) use ($menu)
         {
             $item->taxonomies()->detach($menu);
@@ -111,7 +115,7 @@ class Menus extends BaseController
         $menu->delete();
 
         // Invalidate the cached menu data.
-        Cache::forget('content.menus.main_menu');
+        Cache::forget('content.menus.' .$slug);
 
         return Redirect::back()
             ->withStatus(__d('content', 'The Menu {0} was successfully deleted.', $name), 'success');
@@ -188,7 +192,7 @@ class Menus extends BaseController
         }
 
         // Invalidate the cached menu data.
-        Cache::forget('content.menus.main_menu');
+        Cache::forget('content.menus.' .$menu->slug);
 
         return Redirect::back()
             ->withStatus(__d('content', 'The Menu Item(s) was successfully created.'), 'success');
@@ -239,7 +243,7 @@ class Menus extends BaseController
         }
 
         // Invalidate the cached menu data.
-        Cache::forget('content.menus.main_menu');
+        Cache::forget('content.menus.' .$menu->slug);
 
         return Redirect::back()
             ->withStatus(__d('content', 'The Menu Item(s) was successfully created.'), 'success');
@@ -288,7 +292,7 @@ class Menus extends BaseController
         $taxonomy->updateCount();
 
         // Invalidate the cached menu data.
-        Cache::forget('content.menus.main_menu');
+        Cache::forget('content.menus.' .$menu->slug);
 
         return Redirect::back()
             ->withStatus(__d('content', 'The Menu Item(s) was successfully created.'), 'success');
@@ -348,7 +352,7 @@ class Menus extends BaseController
         $taxonomy->updateCount();
 
         // Invalidate the cached menu data.
-        Cache::forget('content.menus.main_menu');
+        Cache::forget('content.menus.' .$menu->slug);
 
         return Redirect::back()
             ->withStatus(__d('content', 'The Menu Item was successfully deleted.'), 'success');

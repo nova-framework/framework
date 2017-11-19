@@ -150,6 +150,11 @@ class WidgetManager
             return true;
         }
 
+        // First we will check the Widget status.
+        else if ('publish' !== Arr::get($config, 'status', 'publish')) {
+            return false;
+        }
+
         $parameters = Arr::get($config, 'path', array('*'));
 
         $pathMatches = call_user_func_array(array($this->request, 'is'), $parameters);

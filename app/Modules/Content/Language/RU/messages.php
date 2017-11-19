@@ -144,7 +144,7 @@ return array (
   'Pending Review' => 'На рассмотрении',
   'Please click the button <b>Delete</b> to proceed, or <b>Cancel</b> to abandon the operation.' => 'Пожалуйста, нажмите кнопку <b>Удалить</b> для начала процесса или <b>Отмена</b> для прерывания операции.',
   'Please click the button <b>Restore</b> to proceed, or <b>Cancel</b> to abandon the operation.' => 'Пожалуйста, нажмите кнопку <b>Восстановить</b> для начала процесса или <b>Отмена</b> для прерывания операции.',
-  'Please use the handles to order the Blocks, then submit your clicking the button bellow.' => '',
+  'Please use the handles to order the Blocks, then submit your changes clicking the button bellow.' => '',
   'Position' => 'Позиция',
   'Post' => 'Пост',
   'Post not found: #{0}' => 'Пост : #{0} не найден',

@@ -144,7 +144,7 @@ return array (
   'Pending Review' => '',
   'Please click the button <b>Delete</b> to proceed, or <b>Cancel</b> to abandon the operation.' => '',
   'Please click the button <b>Restore</b> to proceed, or <b>Cancel</b> to abandon the operation.' => '',
-  'Please use the handles to order the Blocks, then submit your clicking the button bellow.' => '',
+  'Please use the handles to order the Blocks, then submit your changes clicking the button bellow.' => '',
   'Position' => '',
   'Post' => '',
   'Post not found: #{0}' => '',

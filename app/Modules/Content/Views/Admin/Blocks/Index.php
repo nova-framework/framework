@@ -75,7 +75,7 @@ usort($blocks, function ($a, $b)
         </div>
     </div>
     <div class="box-footer">
-        <input type="submit" name="submit" class="btn btn-success col-sm-5 pull-right" value="<?= __d('users', 'Save the order'); ?>" />
+        <input type="submit" name="submit" class="btn btn-success col-sm-5 pull-right" value="<?= __d('content', 'Save the order'); ?>" />
     </div>
 </div>
 

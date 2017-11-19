@@ -146,7 +146,12 @@ class WidgetManager
 
     protected function widgetAllowsRendering($name)
     {
-        if (empty($config = $this->getWidgetConfig($name))) {
+        $className = Arr::get($this->widgets, $name .'.widget');
+
+        if ($className == 'App\Modules\Content\Widgets\BlockHandler') {
+            // The Content Block Handler should be always allowed.
+            return true;
+        } else if (empty($config = $this->getWidgetConfig($name))) {
             return true;
         }
 

@@ -131,17 +131,17 @@ class WidgetManager
         });
 
         // We render each registered Widget for this position.
-        $result = '';
+        $result = array();
 
         foreach ($this->positions[$position] as $widget) {
             $name = $widget['name'];
 
             if ($this->widgetAllowsRendering($name)) {
-                $result .= $this->render($name, $parameters);
+                $result[] = $this->render($name, $parameters);
             }
         }
 
-        return $result;
+        return implode("\n", $result);
     }
 
     protected function widgetAllowsRendering($name)

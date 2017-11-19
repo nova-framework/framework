@@ -131,37 +131,56 @@ class WidgetManager
         });
 
         // We render each registered Widget for this position.
-        $authenticated = $this->container['auth']->check();
-
-        $result = '';
+        $result = array();
 
         foreach ($this->positions[$position] as $widget) {
             $name = $widget['name'];
 
-            $config = $this->container['config']->get('widgets.widgets.' .$name, array());
-
-            // Calculate the widget visibility, then skip its rendering if is not visible.
-            $mode = Arr::get($config, 'mode', 'show');
-
-            $matches = call_user_func_array(
-                array($this->request, 'is'), Arr::get($config, 'paths', array('*'))
-            );
-
-            if (($matches && ($mode == 'hide')) || (! $matches && ($mode == 'show'))) {
-                continue;
+            if ($this->widgetAllowsRendering($name)) {
+                $result[] = $this->render($name, $parameters);
             }
-
-            // The User is authorized to see this Widget?
-            $filter = Arr::get($config, 'filter', 'any');
-
-            if (($authenticated && ($filter == 'guest')) || (! $authenticated && ($filter == 'user'))) {
-                continue;
-            }
-
-            $result .= $this->render($name, $parameters);
         }
 
-        return $result;
+        return implode("\n", $result);
+    }
+
+    protected function widgetAllowsRendering($name)
+    {
+        if (empty($config = $this->getWidgetConfig($name))) {
+            return true;
+        }
+
+        $parameters = Arr::get($config, 'path', array('*'));
+
+        $pathMatches = call_user_func_array(array($this->request, 'is'), $parameters);
+
+        //
+        $mode = Arr::get($config, 'mode', 'show');
+
+        if ($pathMatches && ($mode == 'hide')) {
+            return false;
+        } else if (! $pathMatches && ($mode == 'show')) {
+            return false;
+        }
+
+        $authenticated = $this->container['auth']->check();
+
+        $filter = Arr::get($config, 'filter', 'any');
+
+        if (($filter == 'guest') && $authenticated) {
+            return false;
+        } else if (($filter == 'user') && ! $authenticated) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function getWidgetConfig($name)
+    {
+        $config = $this->container['config'];
+
+        return $config->get('widgets.widgets.' .$name, array());
     }
 
     public function exists($name)

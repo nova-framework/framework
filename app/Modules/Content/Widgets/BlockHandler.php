@@ -58,23 +58,27 @@ class BlockHandler extends Widget
             return ! empty($value);
         });
 
-        $matches = call_user_func_array(array($request, 'is'), $parameters);
+        $pathMatches = call_user_func_array(array($request, 'is'), $parameters);
 
         if (empty($mode = $this->block->block_visibility_mode)) {
             $mode = 'show';
         }
 
-        if (($matches && ($mode == 'hide')) || (! $matches && ($mode == 'show'))) {
+        if ($pathMatches && ($mode == 'hide')) {
+            return false;
+        } else if (! $pathMatches && ($mode == 'show')) {
             return false;
         }
+
+        $authenticated = Auth::check();
 
         if (empty($filter = $this->block->block_visibility_filter)) {
             $filter = 'any';
         }
 
-        $authenticated = Auth::check();
-
-        if (($authenticated && ($filter == 'guest')) || (! $authenticated && ($filter == 'user'))) {
+        if (($filter == 'guest') && $authenticated) {
+            return false;
+        } else if (($filter == 'user') && ! $authenticated) {
             return false;
         }
 

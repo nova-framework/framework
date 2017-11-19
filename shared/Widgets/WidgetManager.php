@@ -131,8 +131,6 @@ class WidgetManager
         });
 
         // We render each registered Widget for this position.
-        $authenticated = $this->container['auth']->check();
-
         $result = '';
 
         foreach ($this->positions[$position] as $widget) {
@@ -140,21 +138,7 @@ class WidgetManager
 
             $config = $this->container['config']->get('widgets.widgets.' .$name, array());
 
-            // Calculate the widget visibility, then skip its rendering if is not visible.
-            $mode = Arr::get($config, 'mode', 'show');
-
-            $matches = call_user_func_array(
-                array($this->request, 'is'), Arr::get($config, 'paths', array('*'))
-            );
-
-            if (($matches && ($mode == 'hide')) || (! $matches && ($mode == 'show'))) {
-                continue;
-            }
-
-            // The User is authorized to see this Widget?
-            $filter = Arr::get($config, 'filter', 'any');
-
-            if (($authenticated && ($filter == 'guest')) || (! $authenticated && ($filter == 'user'))) {
+            if (! $this->configAllowsRendering($config)) {
                 continue;
             }
 
@@ -162,6 +146,33 @@ class WidgetManager
         }
 
         return $result;
+    }
+
+    protected function configAllowsRendering(array $config)
+    {
+        $mode = Arr::get($config, 'mode', 'show');
+
+        $pathMatches = call_user_func_array(
+            array($this->request, 'is'), Arr::get($config, 'path', array('*'))
+        );
+
+        if ($pathMatches && ($mode == 'hide')) {
+            return false;
+        } else if (! $pathMatches && ($mode == 'show')) {
+            return false;
+        }
+
+        $authenticated = $this->container['auth']->check();
+
+        $filter = Arr::get($config, 'filter', 'any');
+
+        if (($filter == 'guest') && $authenticated) {
+            return false;
+        } else if (($filter == 'user') && ! $authenticated) {
+            return false;
+        }
+
+        return true;
     }
 
     public function exists($name)

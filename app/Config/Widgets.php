@@ -12,7 +12,7 @@ return array(
             'mode'   => 'show',
 
             // The request paths on which the Widget is visible.
-            'paths'  => array('*'),
+            'path'  => array('*'),
 
             // Authentication filter applied: 'any', 'user' or 'guest'
             'filter' => 'any',

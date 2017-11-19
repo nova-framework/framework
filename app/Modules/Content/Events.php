@@ -193,6 +193,16 @@ Event::listen('backend.menu.sidebar', function ()
             'path'   => 'blocks.create',
             //'can'    => 'create:' .Block::class,
         ),
+        array(
+            'url'    => site_url('admin/blocks'),
+            'title'  => __d('content', 'Widget Positions'),
+            'icon'   => 'circle-o',
+            'weight' => 2,
+
+            //
+            'path'   => 'blocks.position',
+            //'can'    => 'lists:' .Block::class,
+        ),
     );
 });
 

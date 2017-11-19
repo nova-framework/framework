@@ -64,6 +64,10 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
     Route::post('media/upload',         array('middleware' => 'auth', 'uses' => 'Attachments@upload'));
     Route::get( 'media/uploaded',       array('middleware' => 'auth', 'uses' => 'Attachments@uploaded'));
 
+    // The Blocks positions.
+    Route::get( 'blocks', array('middleware' => 'auth', 'uses' => 'Blocks@index'));
+    Route::post('blocks', array('middleware' => 'auth', 'uses' => 'Blocks@order'));
+
     // The Menus CRUD.
     Route::get( 'menus',               array('middleware' => 'auth', 'uses' => 'Menus@index'));
     Route::post('menus',               array('middleware' => 'auth', 'uses' => 'Menus@store'));

@@ -2,6 +2,7 @@
 
 namespace App\Modules\Content\Widgets;
 
+use Nova\Container\Container;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Request;
 use Nova\Support\Facades\View;
@@ -16,13 +17,20 @@ use Carbon\Carbon;
 class BlockHandler extends Widget
 {
     /**
-     * @var \App\Modules\Content\Models\Post
+     * @var \Nova\Container\Container
      */
-    protected $post;
+    protected $container;
+
+    /**
+     * @var \App\Modules\Content\Models\Block
+     */
+    protected $block;
 
 
-    public function __construct(Block $block)
+    public function __construct(Container $container, Block $block)
     {
+        $this->container = $container;
+
         $this->block = $block;
     }
 
@@ -39,7 +47,27 @@ class BlockHandler extends Widget
             'content' => $content,
         );
 
-        return View::make('Widgets/Block', $data, 'Content')->render();
+        $result = array();
+
+        $result[] = View::make('Widgets/Block', $data, 'Content')->render();
+
+        if (! empty($name = $this->block->block_handler_class)) {
+            // The Handler argument is optional, and it is, for example, the ID of a Menu.
+            if (empty($argument = $this->block->block_handler_argument)) {
+                $argument = null;
+            }
+
+            $result[] = $this->callBlockHandler($name, $argument);
+        }
+
+        return implode("\n", $result);
+    }
+
+    protected function callBlockHandler($name, $argument)
+    {
+        $handler = $this->container->make($name);
+
+        return $handler->render($argument);
     }
 
     protected function blockAllowsRendering()

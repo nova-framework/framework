@@ -7,10 +7,11 @@ use Nova\Support\Facades\View;
 
 use Shared\Widgets\Widget;
 
+use App\Modules\Content\Blocks\Block;
 use App\Modules\Content\Models\Taxonomy;
 
 
-class Categories
+class Categories extends Block
 {
 
     public function render()

@@ -66,7 +66,7 @@ class Block extends Widget
             return false;
         }
 
-        if (empty($filter = $this->post->block_visibility_user)) {
+        if (empty($filter = $this->post->block_visibility_filter)) {
             $filter = 'any';
         }
 

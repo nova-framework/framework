@@ -33,6 +33,7 @@
 
 <div class="row">
 
+<?php $count = 0; ?>
 <?php foreach ($positions as $name => $blocks) { ?>
 
 <?php
@@ -46,6 +47,11 @@ usort($blocks, function ($a, $b)
 });
 
 ?>
+
+<?php if (($count % 3) == 0) { ?>
+<div class="clearfix"></div>
+<?php }; ?>
+<?php $count++; ?>
 
 <div class="col-md-4">
 

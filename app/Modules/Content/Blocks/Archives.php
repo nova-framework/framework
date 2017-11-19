@@ -7,12 +7,13 @@ use Nova\Support\Facades\View;
 
 use Shared\Widgets\Widget;
 
+use App\Modules\Content\Blocks\Block;
 use App\Modules\Content\Models\Post;
 
 use Carbon\Carbon;
 
 
-class Archives
+class Archives extends Block
 {
 
     public function render()

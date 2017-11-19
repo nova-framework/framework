@@ -6,4 +6,5 @@
     <?php  eval('?>' . preg_replace('/<!--\?(.*)\?-->/sm', '<?$1?>', $block->getContent())); ?>
     <?php } ?>
     <?= $content; ?>
+    <div class="clearfix"></div>
 </div>

@@ -42,11 +42,96 @@ return array(
     */
 
     'postTypes' => array(
-        'post'  => 'App\Modules\Content\Models\Post',
-        'page'  => 'App\Modules\Content\Models\Page',
-        'block' => 'App\Modules\Content\Models\Block',
+        'post' => array(
+            'model' => 'App\Modules\Content\Models\Post',
 
-//        'video' => App\Models\Video::class,
+            'labels' => array(
+                'name'        => __d('content', 'Post'),
+                'namePlural'  => __d('content', 'Posts'),
+                'menuName'    => __d('content', 'Posts'),
+
+                'addNew'      => __d('content', 'Add New'),
+                'addNewItem'  => __d('content', 'Create a new Post'),
+                'editItem'    => __d('content', 'Edit Post'),
+                'updateItem'  => __d('content', 'Update Post'),
+                'deleteItem'  => __d('content', 'Delete Post'),
+                'newItem'     => __d('content', 'New Post'),
+                'allItems'    => __d('content', 'All Posts'),
+                'viewItem'    => __d('content', 'View Post'),
+                'searchItems' => __d('content', 'Search Posts'),
+                'notFound'    => __d('content', 'No posts found'),
+            ),
+
+            'label'       => __d('content', 'posts'),
+            'description' => __d('content', 'A type of content for blogging, featuring categories, tags and comments.'),
+
+            'hierarchical' => false,
+            'hasArchive'   => true,
+
+            'rewrite' => array(
+                'slug' => 'posts'
+            ),
+        ),
+        'page' => array(
+            'model' => 'App\Modules\Content\Models\Page',
+
+            'labels' => array(
+                'name'        => __d('content', 'Page'),
+                'namePlural'  => __d('content', 'Pages'),
+                'menuName'    => __d('content', 'Pages'),
+
+                'addNew'      => __d('content', 'Add New'),
+                'addNewItem'  => __d('content', 'Create a new Page'),
+                'editItem'    => __d('content', 'Edit Page'),
+                'updateItem'  => __d('content', 'Update Page'),
+                'deleteItem'  => __d('content', 'Delete Page'),
+                'newItem'     => __d('content', 'New Page'),
+                'allItems'    => __d('content', 'All Pages'),
+                'viewItem'    => __d('content', 'View Page'),
+                'searchItems' => __d('content', 'Search Pages'),
+                'notFound'    => __d('content', 'No pages found'),
+            ),
+
+            'label'       => __d('content', 'pages'),
+            'description' => __d('content', 'A stand-alone page, optionally with menu items.'),
+
+            'hierarchical' => true,
+            'hasArchive'   => false,
+
+            'rewrite' => array(
+                'slug' => 'pages'
+            ),
+        ),
+        'block' => array(
+            'model' => 'App\Modules\Content\Models\Block',
+
+            'labels' => array(
+                'name'        => __d('content', 'Block'),
+                'namePlural'  => __d('content', 'Blocks'),
+                'menuName'    => __d('content', 'Blocks'),
+
+                'addNew'      => __d('content', 'Add New'),
+                'addNewItem'  => __d('content', 'Create a new Block'),
+                'editItem'    => __d('content', 'Edit Block'),
+                'updateItem'  => __d('content', 'Update Block'),
+                'deleteItem'  => __d('content', 'Delete Block'),
+                'newItem'     => __d('content', 'New Block'),
+                'allItems'    => __d('content', 'All Blocks'),
+                'viewItem'    => __d('content', 'View Block'),
+                'searchItems' => __d('content', 'Search Blocks'),
+                'notFound'    => __d('content', 'No blocks found'),
+            ),
+
+            'label'       => __d('content', 'blocks'),
+            'description' => __d('content', 'A content element which is displayed in one of the Widget Positions.'),
+
+            'hierarchical' => false,
+            'hasArchive'   => false,
+
+            'rewrite' => array(
+                'slug' => 'blocks'
+            ),
+        ),
     ),
 
     /*

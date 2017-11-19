@@ -23,7 +23,7 @@
 <?php $categories = $post->taxonomies->where('taxonomy', 'category'); ?>
 <?php if (! $categories->isEmpty()) { ?>
 <?php $count = 0; ?>
-<div class="pull-right" style="font-weight: bold;">
+<div class="pull-right" style="font-weight: bold;"><span class="fa fa-folder-open-o"></span>
 <?php ob_start(); ?>
 <?php foreach ($categories as $category) { ?>
 <?= ($count > 0) ? ', ' : ''; ?><a href="<?= site_url('content/category/' .$category->slug); ?>"><?= $category->name; ?></a>

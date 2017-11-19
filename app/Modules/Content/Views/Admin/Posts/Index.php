@@ -15,10 +15,10 @@
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('content', 'Create a new {0}', $name); ?></h3>
+        <h3 class="box-title"><?= $postType->label('addNewItem'); ?></h3>
     </div>
     <div class="box-body">
-        <a class="btn btn-success col-sm-2 pull-right" href="<?= site_url('admin/content/create/' .$type); ?>"><?= __d('content', 'Create a new {0}', $name); ?></a>
+        <a class="btn btn-success col-sm-2 pull-right" href="<?= site_url('admin/content/create/' .$type); ?>"><?= $postType->label('addNewItem'); ?></a>
     </div>
 </div>
 
@@ -26,7 +26,7 @@
 
 <div class="box box-default">
     <div class="box-header">
-        <h3 class="box-title"><?= __d('content', 'The registered {0}', $title); ?></h3>
+        <h3 class="box-title"><?= $postType->label('allItems'); ?></h3>
         <div class="box-tools">
         <?= $posts->links(); ?>
         </div>
@@ -53,9 +53,9 @@
                 <td style="text-align: center; vertical-align: middle;" width="12%"><?= $post->updated_at->formatLocalized(__d('content', '%d %b %Y, %R')); ?></td>
                 <td style="text-align: right; vertical-align: middle;" width="15%">
                     <div class="btn-group" role="group" aria-label="...">
-                        <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $post->id; ?>" title="<?= __d('content', 'Delete this Post'); ?>" role="button"><i class="fa fa-remove"></i></a>
-                        <a class="btn btn-sm btn-success" href="<?= site_url('admin/content/' .$post->id .'/edit'); ?>" title="<?= __d('content', 'Edit this Post'); ?>" role="button"><i class="fa fa-pencil"></i></a>
-                        <a class="btn btn-sm btn-warning" href="<?= site_url('content/' .$post->slug); ?>" title="<?= __d('content', 'View the Details'); ?>" target="_blank" role="button"><i class="fa fa-search"></i></a>
+                        <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $post->id; ?>" title="<?= $postType->label('deleteItem'); ?>" role="button"><i class="fa fa-remove"></i></a>
+                        <a class="btn btn-sm btn-success" href="<?= site_url('admin/content/' .$post->id .'/edit'); ?>" title="<?= $postType->label('editItem'); ?>" role="button"><i class="fa fa-pencil"></i></a>
+                        <a class="btn btn-sm btn-warning" href="<?= site_url('content/' .$post->slug); ?>" title="<?= $postType->label('viewItem'); ?>" target="_blank" role="button"><i class="fa fa-search"></i></a>
                     </div>
                 </td>
             </tr>

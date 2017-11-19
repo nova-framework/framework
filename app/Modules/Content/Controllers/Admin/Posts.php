@@ -22,6 +22,7 @@ use App\Modules\Content\Models\Post;
 use App\Modules\Content\Models\Tag;
 use App\Modules\Content\Models\Term;
 use App\Modules\Content\Models\Taxonomy;
+use App\Modules\Content\Support\PostType;
 use App\Modules\Platform\Controllers\Admin\BaseController;
 use App\Modules\Users\Models\User;
 
@@ -65,8 +66,10 @@ class Posts extends BaseController
             $type = 'post';
         }
 
-        $name  = Config::get('content::labels.' .$type .'.name', Str::title($type));
-        $title = Config::get('content::labels.' .$type .'.title', Str::title(Str::plural($type)));
+        $postType = PostType::make($type);
+
+        //
+        $name = $postType->label('name');
 
         $statuses = Config::get('content::statuses', array());
 
@@ -77,24 +80,19 @@ class Posts extends BaseController
             ->paginate(15);
 
         return $this->createView()
-            ->shares('title', $title)
-            ->with(compact('type', 'name', 'statuses', 'posts'));
+            ->shares('title', $postType->label('namePlural'))
+            ->with(compact('type', 'name', 'statuses', 'posts', 'postType'));
     }
 
     public function create(Request $request, $type)
     {
         $authUser = Auth::user();
 
+        $postType = PostType::make($type);
+
+        $name = $postType->label('name');
+
         //
-        $name  = Config::get('content::labels.' .$type .'.name', Str::title($type));
-        $mode = Config::get('content::labels.' .$type .'.title', Str::title(Str::plural($type)));
-
-        $mainCategory = Taxonomy::category()->whereHas('term', function ($query)
-        {
-            $query->where('slug', 'uncategorized');
-
-        })->first();
-
         $status     = 'draft';
         $visibility = 'public';
 
@@ -147,10 +145,10 @@ class Posts extends BaseController
         $stylesheets = $this->getDefaultThemeStylesheets();
 
         //
-        $data = compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'revisions');
+        $data = compact('post', 'status', 'visibility', 'type', 'name', 'categories', 'revisions');
 
         return $this->createView($data, 'Edit')
-            ->shares('title', __d('content', 'Create a new {0}', $name))
+            ->shares('title', $postType->label('addNewItem'))
             ->with(compact('categorySelect', 'menuSelect', 'lastEditor', 'tags', 'stylesheets'))
             ->with('creating', true);
     }
@@ -168,6 +166,8 @@ class Posts extends BaseController
 
         $type = $post->type;
 
+        $postType = PostType::make($type);
+
         // Handle the Metadata.
         $post->meta->edit_lock = sprintf('%d:%d', time(), $authUser->id);
 
@@ -175,14 +175,7 @@ class Posts extends BaseController
         $post->save();
 
         //
-        $name  = Config::get('content::labels.' .$type .'.name', Str::title($type));
-        $mode = Config::get('content::labels.' .$type .'.title', Str::title(Str::plural($type)));
-
-        $mainCategory = Taxonomy::category()->whereHas('term', function ($query)
-        {
-            $query->where('slug', 'uncategorized');
-
-        })->first();
+        $name = $postType->label('name');
 
         $status = $post->status;
 
@@ -236,10 +229,10 @@ class Posts extends BaseController
         $stylesheets = $this->getDefaultThemeStylesheets();
 
         //
-        $data = compact('post', 'status', 'visibility', 'type', 'name', 'mode', 'categories', 'revisions');
+        $data = compact('post', 'postType', 'status', 'visibility', 'type', 'name', 'categories', 'revisions');
 
         return $this->createView($data, 'Edit')
-            ->shares('title', __d('content', 'Edit a {0}', $name))
+            ->shares('title', $postType->label('editItem'))
             ->with(compact('categorySelect', 'menuSelect', 'lastEditor', 'tags', 'stylesheets'))
             ->with('creating', false);
     }
@@ -259,6 +252,8 @@ class Posts extends BaseController
 
             return Response::json(array('redirectTo' => 'refresh'), 400);
         }
+
+        $postType = PostType::make($post->type);
 
         $creating = (bool) Arr::get($input, 'creating', 0);
 
@@ -406,9 +401,7 @@ class Posts extends BaseController
         $this->clearContentCache();
 
         //
-        $name = Config::get("content::labels.{$type}.name", Str::title($type));
-
-        $status = __d('content', 'The {0} <b>#{1}</b> was successfully saved.', $name, $post->id);
+        $status = __d('content', 'The {0} <b>#{1}</b> was successfully saved.', $postType->label('name'), $post->id);
 
         Session::pushStatus($status, 'success');
 
@@ -426,6 +419,8 @@ class Posts extends BaseController
         catch (ModelNotFoundException $e) {
             return Redirect::back()->withStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
         }
+
+        $postType = PostType::make($post->type);
 
         // Fire the starting event.
         Event::fire('content.post.deleting', array($post));
@@ -448,13 +443,8 @@ class Posts extends BaseController
         // Invalidate the content caches.
         $this->clearContentCache();
 
-        //
-        $type = $post->type;
-
-        $name = Config::get("content::labels.{$type}.name", Str::title($type));
-
         return Redirect::back()
-            ->withStatus(__d('content', 'The {0} <b>#{1}</b> was successfully deleted.', $name, $post->id), 'success');
+            ->withStatus(__d('content', 'The {0} <b>#{1}</b> was successfully deleted.', $postType->label('name'), $post->id), 'success');
     }
 
     public function restore($id)
@@ -467,6 +457,8 @@ class Posts extends BaseController
         }
 
         $post = $revision->parent;
+
+        $postType = PostType::make($post->type);
 
         // Restore the Post's title, content and excerpt.
         $post->content = $revision->content;
@@ -486,11 +478,7 @@ class Posts extends BaseController
         $this->clearContentCache();
 
         //
-        $type = $post->type;
-
-        $name = Config::get("content::labels.{$type}.name", Str::title($type));
-
-        $status = __d('content', 'The {0} <b>#{1}</b> was successfully restored to the revision: <b>{2}</b>', $name, $post->id, $version);
+        $status = __d('content', 'The {0} <b>#{1}</b> was successfully restored to the revision: <b>{2}</b>', $postType->label('name'), $post->id, $version);
 
         return Redirect::back()->withStatus($status, 'success');
     }
@@ -504,14 +492,14 @@ class Posts extends BaseController
             return Redirect::back()->withStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
         }
 
+        $postType = PostType::make($post->type);
+
         $revisions = $post->revision()
             ->orderBy('created_at', 'desc')
             ->paginate(25);
 
         //
-        $type = $post->type;
-
-        $name = Config::get("content::labels.{$type}.name", Str::title($type));
+        $name = $postType->label('name');
 
         return $this->createView(compact('type', 'name', 'post', 'revisions'))
             ->shares('title', __d('content', 'Revisions of the {0} : {1}', $name, $post->title));

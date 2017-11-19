@@ -2,7 +2,7 @@
     <h1><?= $title; ?></h1>
     <ol class="breadcrumb">
         <li><a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <?= __d('content', 'Dashboard'); ?></a></li>
-        <li><a href="<?= site_url('admin/content/' .$postType->label()); ?>"><?= Config::get("content::labels.{$type}.title", Str::plural($name)); ?></a></li>
+        <li><a href="<?= site_url('admin/content/' .$postType->label()); ?>"><?= $postType->label('items'); ?></a></li>
         <li><?= __d('content', '{0} revisions', $name); ?></li>
     </ol>
 </section>

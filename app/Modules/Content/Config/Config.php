@@ -47,8 +47,6 @@ return array(
 
             'labels' => array(
                 'name'        => __d('content', 'Post'),
-                'namePlural'  => __d('content', 'Posts'),
-                'menuName'    => __d('content', 'Posts'),
 
                 'addNew'      => __d('content', 'Add New'),
                 'addNewItem'  => __d('content', 'Create a new Post'),
@@ -60,6 +58,7 @@ return array(
                 'viewItem'    => __d('content', 'View Post'),
                 'searchItems' => __d('content', 'Search Posts'),
                 'notFound'    => __d('content', 'No posts found'),
+                'items'       => __d('content', 'Posts'),
             ),
 
             'label'       => __d('content', 'posts'),
@@ -77,8 +76,6 @@ return array(
 
             'labels' => array(
                 'name'        => __d('content', 'Page'),
-                'namePlural'  => __d('content', 'Pages'),
-                'menuName'    => __d('content', 'Pages'),
 
                 'addNew'      => __d('content', 'Add New'),
                 'addNewItem'  => __d('content', 'Create a new Page'),
@@ -90,6 +87,7 @@ return array(
                 'viewItem'    => __d('content', 'View Page'),
                 'searchItems' => __d('content', 'Search Pages'),
                 'notFound'    => __d('content', 'No pages found'),
+                'items'       => __d('content', 'Pages'),
             ),
 
             'label'       => __d('content', 'pages'),
@@ -107,8 +105,6 @@ return array(
 
             'labels' => array(
                 'name'        => __d('content', 'Block'),
-                'namePlural'  => __d('content', 'Blocks'),
-                'menuName'    => __d('content', 'Blocks'),
 
                 'addNew'      => __d('content', 'Add New'),
                 'addNewItem'  => __d('content', 'Create a new Block'),
@@ -120,6 +116,7 @@ return array(
                 'viewItem'    => __d('content', 'View Block'),
                 'searchItems' => __d('content', 'Search Blocks'),
                 'notFound'    => __d('content', 'No blocks found'),
+                'items'       => __d('content', 'Blocks'),
             ),
 
             'label'       => __d('content', 'blocks'),

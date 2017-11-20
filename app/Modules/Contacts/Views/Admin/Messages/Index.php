@@ -40,7 +40,7 @@
                     </div>
                     <div style="padding-bottom: 5px; font-weight: bold;"><?= $message->contact_author_ip; ?></div>
                 </td>
-                <td style="text-align: left; vertical-align: top;" width="55%"><?= nl2br($message->content); ?></td>
+                <td style="text-align: left; vertical-align: top;" width="55%"><?= nl2br($message->contact_message); ?></td>
                 <td style="text-align: center; vertical-align: top;" width="15%"><?= $message->created_at->formatLocalized(__d('contacts', '%d %b %Y, %R')); ?></td>
                 <td style="text-align: right; vertical-align: top; padding-bottom: 5px 5px 30px 5px;" width="10%">
                     <a class="btn btn-xs btn-danger btn-block" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $message->id; ?>" title="<?= __d('contacts', 'Delete this Message'); ?>" role="button"><i class="fa fa-remove"></i> <?= __d('contacts', 'Delete'); ?></a>

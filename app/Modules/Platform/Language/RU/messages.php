@@ -11,7 +11,7 @@ return array (
   'Activate your Account' => 'Активируйте ваш аккаунт',
   'Activated! You can now Sign in!' => 'Активировано! Теперь вы можете Войти!',
   'Activation instructions have been sent to your email address.' => 'На ваш адрес электронной почты были отправлены инструкции по активации.',
-  'Administration' => 'Администрация',
+  'Administration' => 'Администрирование',
   'Apply the changes' => 'Применить изменения',
   'Authentication Token' => 'Токен аутентификации',
   'Backend Skin' => 'Скин админки',

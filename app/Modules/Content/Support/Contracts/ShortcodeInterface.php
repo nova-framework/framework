@@ -2,10 +2,10 @@
 
 namespace App\Modules\Content\Support\Contracts;
 
-use Thunder\Shortcode\Shortcode\ShortcodeInterface;
+use Thunder\Shortcode\Shortcode\ShortcodeInterface as Shortcode;
 
 
-interface ShortcodeInterface
+interface ShortcodeInterface extends Shortcode
 {
     /**
      * @param ShortcodeInterface $shortcode

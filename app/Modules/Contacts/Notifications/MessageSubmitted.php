@@ -30,7 +30,7 @@ class MessageSubmitted extends Notification
     public function __construct(Message $message, Contact $contact)
     {
         $this->message = $message;
-        $this->contact    = $contact;
+        $this->contact = $contact;
     }
 
     /**

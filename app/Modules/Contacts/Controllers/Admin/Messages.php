@@ -38,7 +38,13 @@ class Messages extends BaseController
             return Redirect::back()->withStatus(__d('content', 'Message not found: #{0}', $id), 'danger');
         }
 
+        $contact = $message->contact()->first();
+
+        // Delete the Message.
         $message->delete();
+
+        // Update the Contact's messages count.
+        $contact->updateMessageCount();
 
         return Redirect::back()
             ->withStatus(__d('content', 'The Message was successfully deleted.'), 'success');

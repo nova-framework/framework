@@ -81,6 +81,9 @@ class Contacts extends BaseController
 
         $message->save();
 
+        // Update the Contact's messages count.
+        $contact->updateMessageCount();
+
         // Notify the associated User, if exists.
         $user = User::where('email', $contact->email)->first();
 

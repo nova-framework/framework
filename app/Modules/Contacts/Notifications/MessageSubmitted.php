@@ -54,7 +54,7 @@ class MessageSubmitted extends Notification
     {
         return with(new MailMessage)
             ->subject(__d('contacts', 'New Message received via {0}', $this->contact->name))
-            ->line(__d('contacts', 'A new Message was received via {0}', $this->contact->name))
+            ->line(__d('contacts', 'A new Message was received via {0}.', $this->contact->name))
             ->line(__d('contacts', 'Author: {0}', e($this->message->contact_author)))
             ->line(__d('contacts', 'Author E-mail: {0}', e($this->message->contact_author_email)))
             ->line(__d('contacts', 'Message: {0}', e($this->message->contact_message)))
@@ -74,7 +74,7 @@ class MessageSubmitted extends Notification
         return array(
             'message' => __d('contacts', 'Contact Message recieved via {0}', $this->contact->name),
             'link'    => url('admin/contacts/', $this->contact->id),
-            'icon'    => 'message',
+            'icon'    => 'envelope',
         );
     }
 }

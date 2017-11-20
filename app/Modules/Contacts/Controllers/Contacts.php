@@ -58,7 +58,7 @@ class Contacts extends BaseController
 
         $message = Message::create(array(
             'author_id'      => 1,
-            'content'        => $input['content'],
+            'content'        => null,
             'title'          => null,
             'parent_id'      => $contact->id,
             'excerpt'        => null,
@@ -76,6 +76,7 @@ class Contacts extends BaseController
         $message->meta->contact_author       = $input['author'];
         $message->meta->contact_author_email = $input['author_email'];
         $message->meta->contact_author_ip    = $request->ip();
+        $message->meta->contact_message      = $input['content'];
         $message->meta->contact_path         = $path;
 
         $message->save();

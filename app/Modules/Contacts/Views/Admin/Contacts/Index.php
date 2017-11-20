@@ -31,12 +31,12 @@
             <input name="email" id="email" type="text" class="form-control" value="<?= Input::old('email'); ?>" placeholder="<?= __d('contacts', 'E-mail'); ?>">
         </div>
         <div class="form-group">
-            <label class="control-label" for="description"><?= __d('contacts', 'Description'); ?></label>
-            <textarea name="description" id="description" class="form-control" rows="4" style="resize: none;" placeholder="<?= __d('contacts', 'Description'); ?>"><?= Input::old('description'); ?></textarea>
-        </div>
-        <div class="form-group" style=" margin-bottom: 0;">
             <label class="control-label" for="path"><?= __d('contacts', 'Paths'); ?></label>
             <textarea name="path" id="path" class="form-control" rows="4" style="resize: none;" placeholder="<?= __d('contacts', 'Paths'); ?>"><?= Input::old('path'); ?></textarea>
+        </div>
+        <div class="form-group" style=" margin-bottom: 0;">
+            <label class="control-label" for="description"><?= __d('contacts', 'Description'); ?></label>
+            <textarea name="description" id="description" class="form-control" rows="4" style="resize: none;" placeholder="<?= __d('contacts', 'Description'); ?>"><?= Input::old('description'); ?></textarea>
         </div>
     </div>
     <div class="box-footer">
@@ -123,12 +123,12 @@
                     <input name="email" id="modal-edit-email" type="text" class="form-control" value="" placeholder="<?= __d('contacts', 'E-mail'); ?>">
                 </div>
                 <div class="form-group">
-                    <label class="control-label" for="description"><?= __d('contacts', 'Description'); ?></label>
-                    <textarea name="description" id="modal-edit-description" class="form-control" rows="4" style="resize: none;" placeholder="<?= __d('contacts', 'Description'); ?>"></textarea>
-                </div>
-                <div class="form-group" style=" margin-bottom: 0;">
                     <label class="control-label" for="path"><?= __d('contacts', 'Paths'); ?></label>
                     <textarea name="path" id="modal-edit-path" class="form-control" rows="4" style="resize: none;" placeholder="<?= __d('contacts', 'Paths'); ?>"></textarea>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="control-label" for="description"><?= __d('contacts', 'Description'); ?></label>
+                    <textarea name="description" id="modal-edit-description" class="form-control" rows="4" style="resize: none;" placeholder="<?= __d('contacts', 'Description'); ?>"></textarea>
                 </div>
 
                 </div>

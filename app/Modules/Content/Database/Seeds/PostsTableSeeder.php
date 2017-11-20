@@ -9,7 +9,7 @@ use App\Modules\Content\Models\Post;
 use App\Modules\Content\Models\Taxonomy;
 
 
-class postsTableSeeder extends Seeder
+class PostsTableSeeder extends Seeder
 {
 
     /**

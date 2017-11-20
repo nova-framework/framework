@@ -31,6 +31,7 @@
         "twbs/bootstrap": "^3.3",
         "ramsey/uuid": "~3.0",
         "studio-42/elfinder": "^2.1",
+        "guzzlehttp/guzzle": "^5.0",
         "filp/whoops": "^2.1",
         "google/recaptcha": "~1.1",
         "dompdf/dompdf": "^0.8",

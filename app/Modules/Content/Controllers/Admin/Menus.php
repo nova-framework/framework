@@ -52,7 +52,7 @@ class Menus extends BaseController
         $taxonomy->save();
 
         return Redirect::back()
-            ->withStatus(__d('content', 'The Menu <b>{0}</b> was successfully updated.', $name), 'success');
+            ->withStatus(__d('content', 'The Menu <b>{0}</b> was successfully created.', $name), 'success');
     }
 
     public function update(Request $request, $id)

@@ -219,6 +219,7 @@ return array (
   'The Comment was successfully deleted.' => 'Комментарий успешно удален.',
   'The Comment was successfully updated.' => 'Комментарий был успешно обновлен.',
   'The Comment was unapproved.' => 'Комментарий не был одобрен.',
+  'The Menu <b>{0}</b> was successfully created.' => '',
   'The Menu <b>{0}</b> was successfully updated.' => 'Меню <b>{0}</b> успешно обновлено',
   'The Menu Item was successfully deleted.' => 'Элемент меню успешно удалено',
   'The Menu Item was successfully updated.' => 'Элемент меню успешно обновлён',

@@ -30,6 +30,8 @@
     {{ $content }}
 @show
 
+{{ Widget::position('content-footer') }}
+
 </div>
 
 @section('footer')

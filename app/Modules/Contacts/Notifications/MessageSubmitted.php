@@ -74,7 +74,7 @@ class MessageSubmitted extends Notification
         return array(
             'message' => __d('contacts', 'Contact Message recieved via {0}', $this->contact->name),
             'link'    => url('admin/contacts/', $this->contact->id),
-            'icon'    => 'message',
+            'icon'    => 'envelope',
         );
     }
 }

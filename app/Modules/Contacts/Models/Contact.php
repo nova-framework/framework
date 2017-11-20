@@ -33,10 +33,9 @@ class Contact extends Model
                 $pattern = '*';
             }
 
-            $patterns = array_filter(array_map('trim', explode("\n", $pattern)), function ($value)
-            {
-                return ! empty($value);
-            });
+            $patterns = array_filter(
+                array_map('trim', explode("\n", $pattern)), 'is_not_empty'
+            );
 
             foreach ($patterns as $pattern) {
                 if (Str::is($pattern, $path)) {
@@ -44,6 +43,8 @@ class Contact extends Model
                 }
             }
         }
+
+        return $contacts->first();
     }
 
     /**

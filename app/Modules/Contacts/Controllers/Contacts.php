@@ -57,7 +57,7 @@ class Contacts extends BaseController
         }
 
         $message = Message::create(array(
-            'author_id'      => 1,
+            'author_id'      => Auth::id() ?: 0,
             'content'        => null,
             'title'          => null,
             'parent_id'      => $contact->id,

@@ -28,8 +28,8 @@ class ContactsTableSeeder extends Seeder
             'id'          => 1,
             'name'        => 'Site Contact',
             'email'       => 'admin@novaframework.dev',
+            'path'        => 'content/contact-us',
             'description' => 'The default site-wide Contact',
-            'path' => 'content/contact-us',
         ));
     }
 }

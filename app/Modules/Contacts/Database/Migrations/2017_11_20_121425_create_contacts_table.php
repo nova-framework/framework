@@ -20,9 +20,9 @@ class CreateContactsTable extends Migration
 
             $table->string('name')->nullable();
             $table->string('email')->nullable();
+            $table->text('path')->nullable();
             $table->text('description')->nullable();
 
-            $table->text('path')->nullable();
             $table->integer('message_count')->unsigned()->default(0);
 
             $table->timestamps();

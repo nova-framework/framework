@@ -23,7 +23,7 @@
         <?php if (! $contacts->isEmpty()) { ?>
         <table id="left" class="table table-striped table-hover responsive">
             <tr class="bg-navy disabled">
-                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'ID'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('contacts', 'ID'); ?></th>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Name'); ?></th>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'E-mail'); ?></th>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Paths'); ?></th>

@@ -12,28 +12,18 @@ use Nova\Support\Facades\Validator;
 use App\Modules\Contacts\Models\Contact;
 use App\Modules\Contacts\Models\Message;
 use App\Modules\Contacts\Notifications\MessageSubmitted as MessageSubmittedNotification;
+use App\Modules\Content\Traits\ShortcodesTrait;
 use App\Modules\Users\Models\User;
+
+use Thunder\Shortcode\Shortcode\ShortcodeInterface as Shortcode;
+
+use ErrorException;
 
 
 class Contacts extends BaseController
 {
+    use ShortcodesTrait;
 
-    protected function validator(array $data)
-    {
-        $rules = array(
-            'author'        => 'required',
-            'author_email'  => 'required|email',
-            'content'       => 'required'
-        );
-
-        $attributes = array(
-            'author'       => __d('content', 'Name'),
-            'author_email' => __d('content', 'Email Address'),
-            'content'      => __d('content', 'Message'),
-        );
-
-        return Validator::make($data, $rules, array(), $attributes);
-    }
 
     public function store(Request $request)
     {
@@ -47,10 +37,35 @@ class Contacts extends BaseController
         $path = $request->input('path');
 
         if (is_null($contact = Contact::findByPath($path))) {
-            App::abort(500);
+            throw new LogicErrorException('Contact not found.');
         }
 
-        $validator = $this->validator($input);
+        $shortcodes = $this->parseShortcodes($contact->content);
+
+        //
+        $rules      = array();
+        $attributes = array();
+
+        foreach ($shortcodes as $shortcode) {
+            if (! $shortcode->hasParameter('validation')) {
+                continue;
+            } else if ($shortcode->hasParameter('name')) {
+                $name = $shortcode->getParameter('name');
+            } else {
+                throw new ErrorException('Invalid shorcode.');
+            }
+
+            $rules[$name] = $shortcode->getParameter('validation');
+
+            if ($shortcode->hasParameter('label')) {
+                $attributes[$name] = $shortcode->getParameter('label');
+            } else {
+                throw new ErrorException('Invalid shorcode.');
+            }
+
+        }
+
+        $validator = Validator::make($input, $rules, array(), $attributes);
 
         if ($validator->fails()) {
             return Redirect::back()->withInput($input)->withErrors($validator);

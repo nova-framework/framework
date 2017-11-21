@@ -8,9 +8,10 @@ use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
+use Nova\Support\Facades\View;
+use Nova\Support\Str;
 
 use App\Modules\Contacts\Models\Contact;
-
 use App\Modules\Platform\Controllers\Admin\BaseController;
 
 
@@ -26,6 +27,12 @@ class Contacts extends BaseController
             ->with(compact('contacts'));
     }
 
+    public function create()
+    {
+        return $this->createView()
+            ->shares('title', __d('contacts', 'Create a new Contact'));
+    }
+
     public function store(Request $request)
     {
         $name = $request->input('name');
@@ -37,8 +44,22 @@ class Contacts extends BaseController
             'path' => $request->input('path'),
         ));
 
-        return Redirect::back()
+        return Redirect::to('admin/contacts')
             ->withStatus(__d('content', 'The Contact <b>{0}</b> was successfully created.', $name), 'success');
+    }
+
+    public function edit($id)
+    {
+        try {
+            $contact = Contact::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Contact not found: #{0}', $id), 'danger');
+        }
+
+        return $this->createView()
+            ->shares('title', __d('contacts', 'Edit a Contact'))
+            ->with(compact('contact'));
     }
 
     public function update(Request $request, $id)
@@ -60,7 +81,7 @@ class Contacts extends BaseController
 
         $contact->save();
 
-        return Redirect::back()
+        return Redirect::to('admin/contacts')
             ->withStatus(__d('content', 'The Contact <b>{0}</b> was successfully updated.', $name), 'success');
     }
 

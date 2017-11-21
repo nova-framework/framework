@@ -11,47 +11,6 @@
 
 <?= Session::getMessages(); ?>
 
-<div class="row">
-
-<div class="col-md-3">
-
-<form id="page-form" action="<?= site_url('admin/contacts'); ?>" method='POST' role="form">
-
-<div class="box box-default">
-    <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('contacts', 'Create a new Contact'); ?></h3>
-    </div>
-    <div class="box-body">
-        <div class="form-group">
-            <label class="control-label" for="name"><?= __d('contacts', 'Name'); ?></label>
-            <input name="name" id="name" type="text" class="form-control" value="<?= Input::old('name'); ?>" placeholder="<?= __d('contacts', 'Name'); ?>">
-        </div>
-        <div class="form-group">
-            <label class="control-label" for="email"><?= __d('contacts', 'E-mail'); ?></label>
-            <input name="email" id="email" type="text" class="form-control" value="<?= Input::old('email'); ?>" placeholder="<?= __d('contacts', 'E-mail'); ?>">
-        </div>
-        <div class="form-group">
-            <label class="control-label" for="path"><?= __d('contacts', 'Paths'); ?></label>
-            <textarea name="path" id="path" class="form-control" rows="4" style="resize: none;" placeholder="<?= __d('contacts', 'Paths'); ?>"><?= Input::old('path'); ?></textarea>
-        </div>
-        <div class="form-group" style=" margin-bottom: 0;">
-            <label class="control-label" for="description"><?= __d('contacts', 'Description'); ?></label>
-            <textarea name="description" id="description" class="form-control" rows="4" style="resize: none;" placeholder="<?= __d('contacts', 'Description'); ?>"><?= Input::old('description'); ?></textarea>
-        </div>
-    </div>
-    <div class="box-footer">
-        <input type="submit" name="submit"  class="btn btn-success col-sm-6 pull-right" value="<?= __d('contacts', 'Add new Contact'); ?>" />
-    </div>
-</div>
-
-<input type="hidden" name="_token"   value="<?= csrf_token(); ?>" />
-
-</form>
-
-</div>
-
-<div class="col-md-9">
-
 <div class="box box-default">
     <div class="box-header">
         <h3 class="box-title"><?= __d('contacts', 'The registered {0}', $title); ?></h3>
@@ -64,6 +23,7 @@
         <?php if (! $contacts->isEmpty()) { ?>
         <table id="left" class="table table-striped table-hover responsive">
             <tr class="bg-navy disabled">
+                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'ID'); ?></th>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Name'); ?></th>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'E-mail'); ?></th>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Paths'); ?></th>
@@ -72,6 +32,7 @@
             </tr>
             <?php foreach ($contacts as $contact) { ?>
             <tr>
+                <td style="text-align: center; vertical-align: middle;" width="5%"><?= $contact->id; ?></td>
                 <td style="text-align: left; vertical-align: middle;" title="<?= $contact->description ?: __d('contacts', 'No description'); ?>" width="20%"><?= $contact->name; ?></td>
                 <td style="text-align: left; vertical-align: middle;" width="25%"><?= implode(', ', array_filter(array_map('trim', explode("\n", $contact->email)), 'is_not_empty')); ?></td>
                 <td style="text-align: left; vertical-align: middle;" width="25%"><?= $contact->path ?: '*'; ?></td>
@@ -79,8 +40,8 @@
                 <td style="text-align: right; vertical-align: middle;" width="20%">
                     <div class="btn-group" role="group" aria-label="...">
                         <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $contact->id; ?>" title="<?= __d('contacts', 'Delete this Contact'); ?>" role="button"><i class="fa fa-remove"></i></a>
-                        <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-edit-dialog" data-id="<?= $contact->id; ?>" data-name="<?= $contact->name; ?>" data-email="<?= $contact->email; ?>" data-description="<?= $contact->description; ?>" data-path="<?= $contact->path; ?>" title="<?= __d('contacts', 'Edit this Contact'); ?>" role="button"><i class="fa fa-pencil"></i></a>
-                        <a class="btn btn-sm btn-warning" href="<?= site_url('admin/contacts/' .$contact->id); ?>" title="<?= __d('contacts', 'View the Messages received by this Contact'); ?>" role="button"><i class="fa fa-search"></i></a>
+                        <a class="btn btn-sm btn-success" href="<?= site_url('admin/contacts/' .$contact->id); ?>" title="<?= __d('contacts', 'Edit this Contact'); ?>" role="button"><i class="fa fa-pencil"></i></a>
+                        <a class="btn btn-sm btn-warning" href="<?= site_url('admin/contacts/' .$contact->id .'/messages'); ?>" title="<?= __d('contacts', 'View the Messages received by this Contact'); ?>" role="button"><i class="fa fa-search"></i></a>
                    </div>
                 </td>
             </tr>
@@ -93,10 +54,6 @@
         </div>
         <?php } ?>
     </div>
-</div>
-
-</div>
-
 </div>
 
 </section>

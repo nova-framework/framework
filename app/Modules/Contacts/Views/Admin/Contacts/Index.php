@@ -13,7 +13,7 @@
 
 <div class="box box-default">
     <div class="box-header">
-        <h3 class="box-title"><?= __d('contacts', 'The registered {0}', $title); ?></h3>
+        <h3 class="box-title"><?= __d('contacts', 'All Contacts'); ?></h3>
         <div class="box-tools">
         <?= $contacts->links(); ?>
         </div>
@@ -38,10 +38,11 @@
                 <td style="text-align: left; vertical-align: middle;" width="25%"><?= $contact->path ?: '*'; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="10%"><?= $contact->count; ?></td>
                 <td style="text-align: right; vertical-align: middle;" width="20%">
+                    <a class="btn btn-sm btn-primary" href="<?= site_url('admin/contacts/' .$contact->id .'/messages'); ?>" title="<?= __d('contacts', 'View the Messages received by this Contact'); ?>" role="button"><i class="fa fa-envelope"></i></a>
                     <div class="btn-group" role="group" aria-label="...">
                         <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $contact->id; ?>" title="<?= __d('contacts', 'Delete this Contact'); ?>" role="button"><i class="fa fa-remove"></i></a>
-                        <a class="btn btn-sm btn-success" href="<?= site_url('admin/contacts/' .$contact->id); ?>" title="<?= __d('contacts', 'Edit this Contact'); ?>" role="button"><i class="fa fa-pencil"></i></a>
-                        <a class="btn btn-sm btn-warning" href="<?= site_url('admin/contacts/' .$contact->id .'/messages'); ?>" title="<?= __d('contacts', 'View the Messages received by this Contact'); ?>" role="button"><i class="fa fa-search"></i></a>
+                        <a class="btn btn-sm btn-success" href="<?= site_url('admin/contacts/' .$contact->id .'/edit'); ?>" title="<?= __d('contacts', 'Edit this Contact'); ?>" role="button"><i class="fa fa-pencil"></i></a>
+                        <a class="btn btn-sm btn-warning" href="<?= site_url('admin/contacts/' .$contact->id); ?>" title="<?= __d('contacts', 'View this Contact'); ?>" role="button"><i class="fa fa-search"></i></a>
                    </div>
                 </td>
             </tr>
@@ -57,81 +58,6 @@
 </div>
 
 </section>
-
-<div id="modal-edit-dialog" class="modal modal-default fade" tabindex="-1" role="dialog" aria-labelledby="...">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form id="modal-edit-form" class="form-horizontal" action="" method='POST' role="form">
-
-            <div class="modal-header">
-                <button aria-label="Close" data-dismiss="modal" class="close" type="button">
-                <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title"><?= __d('contacts', 'Edit or create a new Contact'); ?></h4>
-            </div>
-            <div class="modal-body">
-                <div class="col-md-12">
-
-                <div class="form-group">
-                    <label class="control-label" for="name"><?= __d('contacts', 'Name'); ?></label>
-                    <input name="name" id="modal-edit-name" type="text" class="form-control" value="" placeholder="<?= __d('contacts', 'Name'); ?>">
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="email"><?= __d('contacts', 'E-mail'); ?></label>
-                    <input name="email" id="modal-edit-email" type="text" class="form-control" value="" placeholder="<?= __d('contacts', 'E-mail'); ?>">
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="path"><?= __d('contacts', 'Paths'); ?></label>
-                    <textarea name="path" id="modal-edit-path" class="form-control" rows="4" style="resize: none;" placeholder="<?= __d('contacts', 'Paths'); ?>"></textarea>
-                </div>
-                <div class="form-group" style="margin-bottom: 0;">
-                    <label class="control-label" for="description"><?= __d('contacts', 'Description'); ?></label>
-                    <textarea name="description" id="modal-edit-description" class="form-control" rows="4" style="resize: none;" placeholder="<?= __d('contacts', 'Description'); ?>"></textarea>
-                </div>
-
-                </div>
-
-                <div class="clearfix"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-primary col-md-3"><?= __d('contacts', 'Cancel'); ?></button>
-                <input type="submit" name="button" class="update-item-button btn btn-success col-md-3 pull-right" value="<?= __d('contacts', 'Save'); ?>" />
-            </div>
-
-            <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
-
-            </form>
-        </div>
-    </div>
-</div>
-
-<script>
-
-$(function () {
-    $('#modal-edit-dialog').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Button that triggered the modal
-
-        var id    = button.data('id');
-        var name  = button.data('name');
-        var email = button.data('email');
-        var text  = button.data('description');
-        var path  = button.data('path');
-
-        $('#modal-edit-name').val(name);
-        $('#modal-edit-email').val(email);
-        $('#modal-edit-description').val(text);
-        $('#modal-edit-path').val(path);
-
-        // The title.
-        var title = sprintf("<?= __d('contacts', 'Edit the Contact Item : <b>%s</b>'); ?>", name);
-
-        $('.modal-edit-title').html(title);
-
-        // The form action.
-        $('#modal-edit-form').attr('action', '<?= site_url("admin/contacts"); ?>/' + id);
-    });
-});
-
-</script>
 
 <div id="modal-delete-dialog" class="modal modal-default fade" tabindex="-1" role="dialog" aria-labelledby="...">
     <div class="modal-dialog" role="document">

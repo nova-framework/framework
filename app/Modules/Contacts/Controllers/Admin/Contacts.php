@@ -38,14 +38,29 @@ class Contacts extends BaseController
         $name = $request->input('name');
 
         $contact = Contact::create(array(
-            'name' => $name,
-            'email' => $request->input('email', Config::get('app.email')),
+            'name'        => $name,
+            'email'       => $request->input('email', Config::get('app.email')),
             'description' => $request->input('description'),
-            'path' => $request->input('path'),
+            'path'        => $request->input('path'),
+            'content'     => $request->input('content'),
         ));
 
         return Redirect::to('admin/contacts')
             ->withStatus(__d('content', 'The Contact <b>{0}</b> was successfully created.', $name), 'success');
+    }
+
+    public function show($id)
+    {
+        try {
+            $contact = Contact::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Contact not found: #{0}', $id), 'danger');
+        }
+
+        return $this->createView()
+            ->shares('title', __d('contacts', 'Show Contact'))
+            ->with(compact('contact'));
     }
 
     public function edit($id)
@@ -78,6 +93,7 @@ class Contacts extends BaseController
         $contact->email       = $request->input('email', Config::get('app.email'));
         $contact->description = $request->input('description');
         $contact->path        = $request->input('path');
+        $contact->content     = $request->input('content');
 
         $contact->save();
 

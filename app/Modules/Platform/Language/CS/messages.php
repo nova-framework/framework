@@ -21,6 +21,7 @@ return array (
   'Blue Light' => '',
   'Center Login' => '',
   'Confirm Password' => '',
+  'Content' => '',
   'Created At' => '',
   'Current Password' => '',
   'Dashboard' => '',

@@ -42,27 +42,22 @@ class BlockHandler extends Widget
 
         $block = $this->block;
 
-        // Render the Block Handler instance.
+        // Get the content of the Block Handler instance rendering.
         $content = '';
 
-        if (! empty($name = $block->block_handler_class)) {
-            $parameters = $block->block_handler_param;
+        if (! empty($handler = $block->block_handler_class)) {
+            $parameters = $block->block_handler_param ?: array();
 
             if (! is_array($parameters)) {
                 $parameters = array($parameters);
             }
 
-            $content = $this->callBlockHandler($name, $parameters);
+            $instance = $this->container->make($handler);
+
+            $content = $this->container->call(array($instance, 'render'), $parameters);
         }
 
         return View::make('Widgets/Block', compact('block', 'content'), 'Content')->render();
-    }
-
-    protected function callBlockHandler($name, $parameters)
-    {
-        $instance = $this->container->make($name);
-
-        return $this->container->call(array($instance, 'render'), $parameters);
     }
 
     protected function blockAllowsRendering()

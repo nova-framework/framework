@@ -23,7 +23,7 @@
         <?php if (! $messages->isEmpty()) { ?>
         <table id="left" class="table table-striped table-hover responsive">
             <tr class="bg-navy disabled">
-                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Author'); ?></th>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Remote IP'); ?></th>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Message'); ?></th>
                 <th style="text-align: center; vertical-align: middle;"><?= __d('contacts', 'Submitted On'); ?></th>
                 <th style="text-align: right; vertical-align: middle;"><?= __d('contacts', 'Operations'); ?></th>
@@ -31,16 +31,31 @@
             <?php foreach ($messages as $message) { ?>
             <?php $deletables++; ?>
             <tr>
-                <td style="text-align: left; vertical-align: top;" width="20%">
-                    <div style="padding-bottom: 5px;">
-                        <a style="font-weight: bold;" href="<?= site_url('admin/contacts/' .$message->id .'/edit'); ?>"><?= e($message->contact_author); ?></a>
-                    </div>
-                    <div style="padding-bottom: 5px;">
-                        <a href="mailto:<?= $message->author_email; ?>"><?= e($message->contact_author_email); ?></a>
-                    </div>
+                <td style="text-align: left; vertical-align: top;" width="15%">
                     <div style="padding-bottom: 5px; font-weight: bold;"><?= $message->contact_author_ip; ?></div>
                 </td>
-                <td style="text-align: left; vertical-align: top;" width="55%"><?= nl2br(e($message->content)); ?></td>
+                <?php
+                $items = array();
+
+                foreach ($message->meta as $meta) {
+                    if (! Str::is('contact_*', $key = $meta->key)) {
+                        continue;
+                    }
+
+                    $key = str_replace('contact_', '', $key);
+
+                    if (($key == 'author_ip') || ($key == 'path')) {
+                        continue;
+                    }
+
+                    $label = Arr::get($labels, $key, __d('contacts', 'Unknown Label'));
+
+                    $items[] = '<div class="col-md-3" style="padding: 10px;"><b>' .$label .'</b></div><div class="col-md-9" style="padding: 10px;">' .nl2br(e($meta->value)) .'</div><div class="clearfix"></div>';
+                }
+
+                $content = implode("\n", $items);
+                ?>
+                <td style="text-align: left; vertical-align: top;" width="60%"><?= $content; ?></td>
                 <td style="text-align: center; vertical-align: top;" width="15%"><?= $message->created_at->formatLocalized(__d('contacts', '%d %b %Y, %R')); ?></td>
                 <td style="text-align: right; vertical-align: top; padding-bottom: 5px 5px 30px 5px;" width="10%">
                     <a class="btn btn-xs btn-danger btn-block" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $message->id; ?>" title="<?= __d('contacts', 'Delete this Message'); ?>" role="button"><i class="fa fa-remove"></i> <?= __d('contacts', 'Delete'); ?></a>

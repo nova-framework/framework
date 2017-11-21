@@ -164,18 +164,52 @@ As a new Nova user, you should go to <a href="' .site_url('admin') . '">your das
         });
 
         //
-        // The sample MenuItem.
+        // The sample MenuItems.
+
+        $taxonomy = Taxonomy::where('taxonomy', 'nav_menu')->whereHas('term', function ($query)
+        {
+            $query->where('slug', 'main-menu');
+
+        })->firstOrFail();
+
         $post = Post::create(array(
             'id'             => 6,
             'author_id'      => 1,
             'content'        => null,
-            'title'          => null,
+            'title'          => $name = 'Frontpage',
             'name'           => '6',
             'excerpt'        => null,
             'status'         => 'publish',
-            'menu_order'     => 1,
+            'menu_order'     => 0,
             'type'           => 'nav_menu_item',
             'guid'           => site_url('content/6'),
+            'comment_status' => 'closed',
+        ));
+
+        // Setup the Metadata.
+        $post->meta->menu_item_type             = 'custom';
+        $post->meta->menu_item_menu_item_parent = 0;
+        $post->meta->menu_item_object           = 'custom';
+        $post->meta->menu_item_object_id        = $post->id;
+        $post->meta->menu_item_target           = null;
+        $post->meta->menu_item_url              = site_url('content');
+
+        $post->save();
+
+        $post->taxonomies()->attach($taxonomy);
+
+        //
+        $post = Post::create(array(
+            'id'             => 7,
+            'author_id'      => 1,
+            'content'        => null,
+            'title'          => null,
+            'name'           => '7',
+            'excerpt'        => null,
+            'status'         => 'publish',
+            'menu_order'     => 7,
+            'type'           => 'nav_menu_item',
+            'guid'           => site_url('content/7'),
             'comment_status' => 'closed',
         ));
 
@@ -189,11 +223,9 @@ As a new Nova user, you should go to <a href="' .site_url('admin') . '">your das
 
         $post->save();
 
-        $post->taxonomies()->attach(2);
+        $post->taxonomies()->attach($taxonomy);
 
-        $post->taxonomies->each(function ($taxonomy)
-        {
-            $taxonomy->updateCount();
-        });
+        // Update the Taxonomy count.
+        $taxonomy->updateCount();
     }
 }

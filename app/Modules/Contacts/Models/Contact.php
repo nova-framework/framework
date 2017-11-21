@@ -50,9 +50,9 @@ class Contact extends Model
     /**
      * Update the comment count field.
      */
-    public function updateMessageCount()
+    public function updateCount()
     {
-        $this->message_count = $this->messages()->count();
+        $this->count = $this->messages()->count();
 
         $this->save();
     }

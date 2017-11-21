@@ -44,7 +44,7 @@ class Messages extends BaseController
         $message->delete();
 
         // Update the Contact's messages count.
-        $contact->updateMessageCount();
+        $contact->updateCount();
 
         return Redirect::back()
             ->withStatus(__d('content', 'The Message was successfully deleted.'), 'success');

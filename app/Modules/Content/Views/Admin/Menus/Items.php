@@ -82,12 +82,20 @@
     <div class="box-body">
         <div class="form-group">
             <label class="control-label" for="name"><?= __d('content', 'Name'); ?></label>
-            <input name="name" id="name" type="text" class="form-control" value="<?= Input::old('name'); ?>" placeholder="<?= __d('content', 'Name'); ?>">
+            <input name="name" id="custom-name" type="text" class="form-control" value="<?= Input::old('name'); ?>" placeholder="<?= __d('content', 'Name'); ?>">
         </div>
         <div class="form-group">
             <label class="control-label" for="link"><?= __d('content', 'URL'); ?></label>
-            <input name="link" id="link" type="text" class="form-control" value="<?= Input::old('name'); ?>" placeholder="<?= __d('content', 'URL'); ?>">
+            <input name="link" id="custom-link" type="text" class="form-control" value="<?= Input::old('link'); ?>" placeholder="<?= __d('content', 'URL'); ?>">
         </div>
+            <div class="form-group">
+                <div class="col-md-1" style="padding: 0;">
+                    <input type="checkbox" name="local" id="custom-local" value="1" <?= (1 == Input::old('local')) ? 'checked="checked"' : ''; ?> />
+                </div>
+                <div class="col-md-11" style="padding: 2px 10px;">
+                    <label class="control-label" for="custom-local" style="margin-right: 10px;"><?= __d('content', 'Use a local URI'); ?></label>
+                </div>
+            </div>
     </div>
     <div class="box-footer">
         <input type="submit" name="submit" class="btn btn-primary col-sm-5 pull-right" value="<?= __d('users', 'Add to Menu'); ?>" />

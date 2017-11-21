@@ -261,7 +261,13 @@ class Menus extends BaseController
         }
 
         $name = $request->input('name');
-        $url  = $request->input('link');
+
+        $url = $request->input('link');
+
+        if ($request->has('local')) {
+            // The link field contains a local URI, not an absolute URL.
+            $url = site_url($url);
+        }
 
         $post = Post::create(array(
             'author_id'      => $authUser->id,

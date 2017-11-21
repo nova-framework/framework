@@ -256,6 +256,7 @@ return array (
   'Update Post' => '',
   'Updated At' => 'Обновлено',
   'Uploaded files' => 'Загруженные файлы',
+  'Use a local URI' => '',
   'View Block' => '',
   'View Page' => '',
   'View Post' => '',

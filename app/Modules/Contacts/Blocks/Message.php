@@ -12,6 +12,8 @@ use App\Modules\Content\Traits\ShortcodesTrait;
 
 use Thunder\Shortcode\Shortcode\ShortcodeInterface as Shortcode;
 
+use ErrorException;
+
 
 class Message extends Block
 {
@@ -23,7 +25,7 @@ class Message extends Block
         $path = Request::path();
 
         if (is_null($contact = Contact::findByPath($path))) {
-            App::abort(500);
+            throw new ErrorException('Contact not found');
         }
 
         $this->addShortcode('input', function (Shortcode $shortcode)

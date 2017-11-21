@@ -23,7 +23,7 @@ class CreateContactsTable extends Migration
             $table->text('path')->nullable();
             $table->text('description')->nullable();
 
-            $table->integer('message_count')->unsigned()->default(0);
+            $table->integer('count')->unsigned()->default(0);
 
             $table->timestamps();
         });

@@ -75,7 +75,7 @@
                 <td style="text-align: left; vertical-align: middle;" title="<?= $contact->description ?: __d('contacts', 'No description'); ?>" width="20%"><?= $contact->name; ?></td>
                 <td style="text-align: left; vertical-align: middle;" width="25%"><?= implode(', ', array_filter(array_map('trim', explode("\n", $contact->email)), 'is_not_empty')); ?></td>
                 <td style="text-align: left; vertical-align: middle;" width="25%"><?= $contact->path ?: '*'; ?></td>
-                <td style="text-align: center; vertical-align: middle;" width="10%"><?= $contact->message_count; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="10%"><?= $contact->count; ?></td>
                 <td style="text-align: right; vertical-align: middle;" width="20%">
                     <div class="btn-group" role="group" aria-label="...">
                         <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $contact->id; ?>" title="<?= __d('contacts', 'Delete this Contact'); ?>" role="button"><i class="fa fa-remove"></i></a>

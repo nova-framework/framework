@@ -35,14 +35,14 @@
             <tr>
                 <td style="text-align: left; vertical-align: top;" width="20%">
                     <div style="padding-bottom: 5px;">
-                        <a style="font-weight: bold;" href="<?= site_url('admin/comments/' .$comment->id .'/edit'); ?>"><?= $comment->author; ?></a>
+                        <a style="font-weight: bold;" href="<?= site_url('admin/comments/' .$comment->id .'/edit'); ?>"><?= e($comment->author); ?></a>
                     </div>
                     <div style="padding-bottom: 5px;">
-                        <a href="mailto:<?= $comment->author_email; ?>"><?= $comment->author_email; ?></a>
+                        <a href="mailto:<?= $comment->author_email; ?>"><?= e($comment->author_email); ?></a>
                     </div>
                     <div style="padding-bottom: 5px; font-weight: bold;"><?= $comment->author_ip; ?></div>
                 </td>
-                <td style="text-align: left; vertical-align: top;" width="35%"><?= nl2br($comment->content); ?></td>
+                <td style="text-align: left; vertical-align: top;" width="35%"><?= nl2br(e($comment->content)); ?></td>
                 <td style="text-align: center; vertical-align: top; font-weight: bold;" width="20%">
                     <a target="_blank" href="<?= site_url('content/' .$comment->post->name); ?>" title="<?= __d('content', 'View the Post'); ?>"><?= $comment->post->title; ?></a>
                 </td>

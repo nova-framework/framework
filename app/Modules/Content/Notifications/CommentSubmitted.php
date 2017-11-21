@@ -53,8 +53,11 @@ class CommentSubmitted extends Notification
     public function toMail($notifiable)
     {
         return with(new MailMessage)
-            ->line(__d('content', 'Comment submitted in response to your post:'))
-            ->line($this->post->title)
+            ->subject(__d('contacts', 'New comment submitted'))
+            ->line(__d('content', 'Comment submitted in response to your post {0}', $this->post->title))
+            ->line(__d('content', 'Author: {0}', e($this->comment->author)))
+            ->line(__d('content', 'Author E-mail: {0}', e($this->comment->author_email)))
+            ->line(__d('content', 'Message: {0}', nl2br(e($this->comment->content))))
             ->action(__d('content', 'View the post'), url('content', $this->post->name))
             ->line('Thank you for using our application!')
             ->queued();

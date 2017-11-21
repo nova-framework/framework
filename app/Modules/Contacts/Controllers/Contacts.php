@@ -43,29 +43,35 @@ class Contacts extends BaseController
         $shortcodes = $this->parseShortcodes($contact->content);
 
         //
-        $rules      = array();
-        $attributes = array();
+        $rules  = array();
+        $labels = array();
 
         foreach ($shortcodes as $shortcode) {
-            if (! $shortcode->hasParameter('validation')) {
-                continue;
-            } else if ($shortcode->hasParameter('name')) {
+            if ($shortcode->hasParameter('name')) {
                 $name = $shortcode->getParameter('name');
             } else {
                 throw new ErrorException('Invalid shorcode.');
             }
 
-            $rules[$name] = $shortcode->getParameter('validation');
+            $type = $shortcode->getParameter('type');
+
+            if (($shortcode->getName() == 'input') && ($type === 'submit')) {
+                // This is the submit button.
+                continue;
+            }
 
             if ($shortcode->hasParameter('label')) {
-                $attributes[$name] = $shortcode->getParameter('label');
+                $labels[$name] = $shortcode->getParameter('label');
             } else {
                 throw new ErrorException('Invalid shorcode.');
             }
 
+            if ($shortcode->hasParameter('validation')) {
+                $rules[$name] = $shortcode->getParameter('validation');
+            }
         }
 
-        $validator = Validator::make($input, $rules, array(), $attributes);
+        $validator = Validator::make($input, $rules, array(), $labels);
 
         if ($validator->fails()) {
             return Redirect::back()->withInput($input)->withErrors($validator);
@@ -88,10 +94,14 @@ class Contacts extends BaseController
         $message->guid = site_url('content/' .$id);
 
         // Handle the Metadata.
-        $message->meta->contact_author       = $input['author'];
-        $message->meta->contact_author_email = $input['author_email'];
-        $message->meta->contact_author_ip    = $request->ip();
-        $message->meta->contact_path         = $path;
+        foreach ($labels as $name => $label) {
+            $key = 'contact_' .$name;
+
+            $message->meta->addItem($key, $input[$name]);
+        }
+
+        $message->meta->contact_author_ip = $request->ip();
+        $message->meta->contact_path      = $path;
 
         $message->save();
 
@@ -102,7 +112,7 @@ class Contacts extends BaseController
         $user = User::where('email', $contact->email)->first();
 
         if (! is_null($user)) {
-            $user->notify(new MessageSubmittedNotification($message, $contact));
+            $user->notify(new MessageSubmittedNotification($message, $contact, $labels));
         }
 
         return Redirect::back()

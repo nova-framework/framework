@@ -2,7 +2,7 @@
 
 return array (
   '%d %b %Y, %R' => '',
-  'A new Message was received via {0}' => '',
+  'A new message was received via {0}.' => '',
   'Add new Contact' => '',
   'Are you sure you want to remove this Contact, the operation being irreversible?' => '',
   'Are you sure you want to remove this Message, the operation being irreversible?' => '',
@@ -11,7 +11,7 @@ return array (
   'Author: {0}' => '',
   'Cancel' => '',
   'Contact Form' => '',
-  'Contact Message recieved via {0}' => '',
+  'Contact Message received via {0}' => '',
   'Contact not found: #{0}' => '',
   'Contacts' => '',
   'Create a new Contact' => '',
@@ -33,7 +33,7 @@ return array (
   'Messages' => '',
   'Messages received by : {0}' => '',
   'Name' => '',
-  'New Message received via {0}' => '',
+  'New message received via {0}' => '',
   'No Messages' => '',
   'No description' => '',
   'No message has been added yet!' => '',

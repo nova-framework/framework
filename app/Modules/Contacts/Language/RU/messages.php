@@ -2,7 +2,7 @@
 
 return array (
   '%d %b %Y, %R' => '%d %b %Y, %R',
-  'A new Message was received via {0}' => 'Новое сообщение было получено через {0}',
+  'A new message was received via {0}.' => '',
   'Add new Contact' => 'Добавить новый контакт',
   'Are you sure you want to remove this Contact, the operation being irreversible?' => 'Вы уверены, что хотите удалить этот контакт, т.к. операция необратима?',
   'Are you sure you want to remove this Message, the operation being irreversible?' => 'Вы уверены, что хотите удалить это сообщение, т.к. операция необратима',
@@ -11,7 +11,7 @@ return array (
   'Author: {0}' => 'Автор: {0} ',
   'Cancel' => 'Отмена',
   'Contact Form' => 'Форма контаков',
-  'Contact Message recieved via {0}' => 'Контактное сообщение, полученное через {0}',
+  'Contact Message received via {0}' => '',
   'Contact not found: #{0}' => 'Контакт: #{0} не найден',
   'Contacts' => 'Контакты',
   'Create a new Contact' => 'Создать новый контакт',
@@ -33,7 +33,7 @@ return array (
   'Messages' => 'Сообщения',
   'Messages received by : {0}' => 'Сообщения, полученные : {0}',
   'Name' => 'Имя',
-  'New Message received via {0}' => 'Новое сообщение, полученное {0}',
+  'New message received via {0}' => '',
   'No Messages' => 'Нет сообщений',
   'No description' => 'Нет описания',
   'No message has been added yet!' => 'Сообщение еще не добавлено!',

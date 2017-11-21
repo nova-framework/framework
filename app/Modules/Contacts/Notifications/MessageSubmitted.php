@@ -53,11 +53,11 @@ class MessageSubmitted extends Notification
     public function toMail($notifiable)
     {
         return with(new MailMessage)
-            ->subject(__d('contacts', 'New Message received via {0}', $this->contact->name))
-            ->line(__d('contacts', 'A new Message was received via {0}.', $this->contact->name))
+            ->subject(__d('contacts', 'New message received via {0}', $this->contact->name))
+            ->line(__d('contacts', 'A new message was received via {0}.', $this->contact->name))
             ->line(__d('contacts', 'Author: {0}', e($this->message->contact_author)))
             ->line(__d('contacts', 'Author E-mail: {0}', e($this->message->contact_author_email)))
-            ->line(__d('contacts', 'Message: {0}', e($this->message->contact_message)))
+            ->line(__d('contacts', 'Message: {0}', nl2br(e($this->message->content))))
             ->action(__d('contacts', 'View the Contact Messages'), url('admin/contacts/', $this->contact->id))
             ->line('Thank you for using our application!')
             ->queued();
@@ -72,7 +72,7 @@ class MessageSubmitted extends Notification
     public function toArray($notifiable)
     {
         return array(
-            'message' => __d('contacts', 'Contact Message recieved via {0}', $this->contact->name),
+            'message' => __d('contacts', 'Contact Message received via {0}', $this->contact->name),
             'link'    => url('admin/contacts/', $this->contact->id),
             'icon'    => 'envelope',
         );

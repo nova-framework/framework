@@ -41,6 +41,56 @@ class Content extends BaseController
     protected $layout = 'Content';
 
 
+    public function index($name = null)
+    {
+        if (is_null($name)) {
+            return $this->frontpage();
+        }
+
+        $post = Cache::remember('content.posts.' .$name, 1440, function () use ($name)
+        {
+            $query = Post::with('author', 'thumbnail', 'taxonomies', 'comments')
+                ->where('type', '!=', 'block')
+                ->whereIn('status', array('publish', 'password', 'inherit'));
+
+            if (is_numeric($name)) {
+                $query->where('id', (int) $name);
+            } else {
+                $query->where('name', $name);
+            }
+
+            if (is_null($post = $query->first())) {
+                return null;
+            }
+
+            // If the Post status is 'protected', it is for internal use only.
+            else if ($post->status === 'protected') {
+                return null;
+            }
+
+            // If the Post is a Revision.
+            else if ((($post->type === 'revision') || ($post->type === 'attachment')) && ($post->status === 'inherit')) {
+                $parent = $post->parent()->first();
+
+                if (! in_array($parent->status, array('publish', 'password'))) {
+                    return null;
+                }
+            }
+
+            return $post;
+        });
+
+        if (is_null($post)) {
+            App::abort(404);
+        }
+
+        // Calculate the View used for rendering this Post instance.
+        $view = ($post->type == 'page') ? 'Page' : 'Post';
+
+        return $this->createView(compact('post'), $view)
+            ->shares('title', $post->title);
+    }
+
     public function homepage()
     {
         if (is_null($name = Config::get('content::frontpage'))) {
@@ -61,49 +111,6 @@ class Content extends BaseController
         }
 
         return $this->createView(compact('post'), 'Page')
-            ->shares('title', $post->title);
-    }
-
-    public function index($name = null)
-    {
-        if (is_null($name)) {
-            return $this->frontpage();
-        }
-
-        $post = Cache::remember('content.posts.' .$name, 1440, function () use ($name)
-        {
-            $query = Post::with('author', 'thumbnail', 'taxonomies', 'comments')->whereIn('status', array('publish', 'password', 'inherit'));
-
-            if (is_numeric($name)) {
-                $query->where('id', (int) $name);
-            } else {
-                $query->where('name', $name);
-            }
-
-            if (is_null($post = $query->first())) {
-                return null;
-            }
-
-            // If the Post is a Revision.
-            else if (($post->type === 'revision') && ($post->status === 'inherit')) {
-                $parent = $post->parent()->first();
-
-                if (! in_array($parent->status, array('publish', 'password'))) {
-                    return null;
-                }
-            }
-
-            return $post;
-        });
-
-        if (is_null($post)) {
-            App::abort(404);
-        }
-
-        // Calculate the View used for rendering this Post instance.
-        $view = ($post->type == 'page') ? 'Page' : 'Post';
-
-        return $this->createView(compact('post'), $view)
             ->shares('title', $post->title);
     }
 

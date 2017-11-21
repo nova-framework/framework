@@ -51,6 +51,21 @@ trait ShortcodesTrait
 
         return $facade->process($content);
     }
+    /**
+     * Process the shortcodes.
+     *
+     * @param string $content the content
+     * @return string
+     */
+    public function parseShortcodes($content)
+    {
+        $facade = new ShortcodeFacade();
+
+        $this->parseClassShortcodes($facade);
+        $this->parseConfigShortcodes($facade);
+
+        return $facade->parse($content);
+    }
 
     /**
      * @param ShortcodeFacade $facade

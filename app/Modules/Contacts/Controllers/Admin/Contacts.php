@@ -38,10 +38,11 @@ class Contacts extends BaseController
         $name = $request->input('name');
 
         $contact = Contact::create(array(
-            'name' => $name,
-            'email' => $request->input('email', Config::get('app.email')),
+            'name'        => $name,
+            'email'       => $request->input('email', Config::get('app.email')),
             'description' => $request->input('description'),
-            'path' => $request->input('path'),
+            'path'        => $request->input('path'),
+            'content'     => $request->input('content'),
         ));
 
         return Redirect::to('admin/contacts')
@@ -92,6 +93,7 @@ class Contacts extends BaseController
         $contact->email       = $request->input('email', Config::get('app.email'));
         $contact->description = $request->input('description');
         $contact->path        = $request->input('path');
+        $contact->content     = $request->input('content');
 
         $contact->save();
 

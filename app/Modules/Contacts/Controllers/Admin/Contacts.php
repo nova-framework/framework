@@ -48,6 +48,20 @@ class Contacts extends BaseController
             ->withStatus(__d('content', 'The Contact <b>{0}</b> was successfully created.', $name), 'success');
     }
 
+    public function show($id)
+    {
+        try {
+            $contact = Contact::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Contact not found: #{0}', $id), 'danger');
+        }
+
+        return $this->createView()
+            ->shares('title', __d('contacts', 'Show Contact'))
+            ->with(compact('contact'));
+    }
+
     public function edit($id)
     {
         try {

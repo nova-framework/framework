@@ -38,7 +38,7 @@
         </div>
         <div class="form-group">
             <label class="control-label" for="content"><?= __d('contacts', 'Description'); ?></label>
-            <textarea name="content" id="content" class="form-control" rows="10" style="resize: none;" placeholder="<?= __d('contacts', 'Content'); ?>"><?= Input::old('description'); ?></textarea>
+            <textarea name="content" id="content" class="form-control" rows="25" style="resize: none;" placeholder="<?= __d('contacts', 'Content'); ?>"><?= Input::old('description'); ?></textarea>
         </div>
 
         </div>
@@ -51,5 +51,10 @@
 <input type="hidden" name="_token"   value="<?= csrf_token(); ?>" />
 
 </form>
+
+<a class="btn btn-primary col-sm-2" href="<?= site_url('admin/contacts'); ?>"><?= __d('contacts', '<< Previous Page'); ?></a>
+
+<div class="clearfix"></div>
+<br>
 
 </section>

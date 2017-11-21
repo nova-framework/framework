@@ -144,7 +144,7 @@ class Posts extends BaseController
         $stylesheets = $this->getDefaultThemeStylesheets();
 
         //
-        $data = compact('post', 'status', 'visibility', 'type', 'name', 'categories', 'revisions');
+        $data = compact('post', 'postType', 'status', 'visibility', 'type', 'name', 'categories', 'revisions');
 
         return $this->createView($data, 'Edit')
             ->shares('title', $postType->label('add_new_item'))

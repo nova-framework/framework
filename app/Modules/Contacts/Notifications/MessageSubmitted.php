@@ -66,15 +66,11 @@ class MessageSubmitted extends Notification
             ->line(__d('contacts', 'A new message was received via {0}.', $this->contact->name));
 
         foreach ($this->message->meta as $meta) {
-            if (! Str::is('contact_*', $key = $meta->key)) {
+            if (! Str::is('contact_*', $key = $meta->key) || ($key == 'contact_author_ip') || ($key == 'contact_path')) {
                 continue;
             }
 
             $key = str_replace('contact_', '', $key);
-
-            if (($key == 'author_ip') || ($key == 'path')) {
-                continue;
-            }
 
             $label = Arr::get($this->labels, $key, __d('contacts', 'Unknown Label'));
 

@@ -26,7 +26,7 @@
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Remote IP'); ?></th>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Message'); ?></th>
                 <th style="text-align: center; vertical-align: middle;"><?= __d('contacts', 'Submitted On'); ?></th>
-                <th style="text-align: right; vertical-align: middle;"><?= __d('contacts', 'Operations'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('contacts', 'Operations'); ?></th>
             </tr>
             <?php foreach ($messages as $message) { ?>
             <?php $deletables++; ?>
@@ -38,15 +38,11 @@
                 $items = array();
 
                 foreach ($message->meta as $meta) {
-                    if (! Str::is('contact_*', $key = $meta->key)) {
+                    if (! Str::is('contact_*', $key = $meta->key) || ($key == 'contact_author_ip') || ($key == 'contact_path')) {
                         continue;
                     }
 
                     $key = str_replace('contact_', '', $key);
-
-                    if (($key == 'author_ip') || ($key == 'path')) {
-                        continue;
-                    }
 
                     $label = Arr::get($labels, $key, __d('contacts', 'Unknown Label'));
 

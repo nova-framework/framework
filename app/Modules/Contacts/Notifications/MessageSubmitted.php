@@ -70,9 +70,7 @@ class MessageSubmitted extends Notification
                 continue;
             }
 
-            $key = str_replace('contact_', '', $key);
-
-            $label = Arr::get($this->labels, $key, __d('contacts', 'Unknown Label'));
+            $label = Arr::get($this->labels, str_replace('contact_', '', $key), __d('contacts', 'Unknown Label'));
 
             $value = nl2br(e($meta->value));
 

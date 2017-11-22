@@ -42,9 +42,7 @@
                         continue;
                     }
 
-                    $key = str_replace('contact_', '', $key);
-
-                    $label = Arr::get($labels, $key, __d('contacts', 'Unknown Label'));
+                    $label = Arr::get($labels, str_replace('contact_', '', $key), __d('contacts', 'Unknown Label'));
 
                     $items[] = '<div class="col-md-3" style="padding: 10px;"><b>' .$label .'</b></div><div class="col-md-9" style="padding: 10px;">' .nl2br(e($meta->value)) .'</div><div class="clearfix"></div>';
                 }

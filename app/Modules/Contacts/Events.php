@@ -26,7 +26,7 @@ Event::listen('backend.menu.sidebar', function ()
         ),
         array(
             'url'    => site_url('admin/contacts'),
-            'title'  => __d('content', 'All Contacts'),
+            'title'  => __d('contacts', 'All Contacts'),
             'icon'   => 'circle-o',
             'weight' => 0,
 
@@ -36,7 +36,7 @@ Event::listen('backend.menu.sidebar', function ()
         ),
         array(
             'url'    => site_url('admin/contacts/create'),
-            'title'  => __d('content', 'Create a new Contact'),
+            'title'  => __d('contacts', 'Create a new Contact'),
             'icon'   => 'circle-o',
             'weight' => 1,
 

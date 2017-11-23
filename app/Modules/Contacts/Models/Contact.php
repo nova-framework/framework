@@ -27,8 +27,8 @@ class Contact extends Model
         $contacts = static::all();
 
         foreach ($contacts as $contact) {
-            if (! empty($path = $contact->path)) {
-                $pattern = str_replace('<front>', '/', $path);
+            if (! empty($pattern = $contact->path)) {
+                $pattern = str_replace('<front>', '/', $pattern);
             } else {
                 $pattern = '*';
             }

@@ -38,7 +38,17 @@ class Message extends Block
             return View::make('Shortcodes/Textarea', compact('shortcode'), 'Contacts');
         });
 
-        $content = $this->stripShortcodes($contact->content);
+        $this->addShortcode('select', function (Shortcode $shortcode)
+        {
+            return View::make('Shortcodes/Select', compact('shortcode'), 'Contacts');
+        });
+
+        $this->addShortcode('option', function (Shortcode $shortcode)
+        {
+            return View::make('Shortcodes/Option', compact('shortcode'), 'Contacts');
+        });
+
+        $content = $this->stripShortcodes($contact->message);
 
         return View::make('Blocks/Message', compact('path', 'content'), 'Contacts')->render();
     }

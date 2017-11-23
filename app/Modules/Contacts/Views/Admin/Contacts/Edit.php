@@ -37,8 +37,8 @@
             <textarea name="description" id="description" class="form-control" rows="4" style="resize: none;" placeholder="<?= __d('contacts', 'Description'); ?>"><?= Input::old('description', $contact->description); ?></textarea>
         </div>
         <div class="form-group">
-            <label class="control-label" for="content"><?= __d('contacts', 'Content'); ?></label>
-            <textarea name="content" id="content" class="form-control" rows="25" style="resize: none;" placeholder="<?= __d('contacts', 'Content'); ?>"><?= Input::old('content', $contact->content); ?></textarea>
+            <label class="control-label" for="message"><?= __d('contacts', 'Content'); ?></label>
+            <textarea name="message" id="message" class="form-control" rows="25" style="resize: none;" placeholder="<?= __d('contacts', 'Message'); ?>"><?= Input::old('message', $contact->message); ?></textarea>
         </div>
 
         </div>

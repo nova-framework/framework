@@ -40,14 +40,22 @@ class Contacts extends BaseController
             throw new LogicErrorException('Contact not found.');
         }
 
-        $shortcodes = $this->parseShortcodes($contact->content);
+        $shortcodes = $this->parseShortcodes($contact->message);
 
         //
         $rules  = array();
         $labels = array();
 
         foreach ($shortcodes as $shortcode) {
-            if ($shortcode->hasParameter('name')) {
+            $element = $shortcode->getName();
+
+            if ($element == 'option') {
+                // A select option.
+                continue;
+            }
+
+            // An element with name parameter.
+            else if ($shortcode->hasParameter('name')) {
                 $name = $shortcode->getParameter('name');
             } else {
                 throw new ErrorException('Invalid shorcode.');
@@ -55,7 +63,7 @@ class Contacts extends BaseController
 
             $type = $shortcode->getParameter('type');
 
-            if (($shortcode->getName() == 'input') && ($type === 'submit')) {
+            if (($element == 'input') && ($type == 'submit')) {
                 // This is the submit button.
                 continue;
             }

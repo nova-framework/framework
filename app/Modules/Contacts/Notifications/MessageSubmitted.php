@@ -85,7 +85,7 @@ class MessageSubmitted extends Notification
             $message->line('');
         }
 
-        return $message->action(__d('contacts', 'View the Contact Messages'), url('admin/contacts/', array($this->contact->id, 'messages')))
+        return $message->action(__d('contacts', 'View the Message'), url('admin/contacts', array($this->contact->id, 'messages', $this->message->id)))
             ->line('Thank you for using our application!')
             ->queued();
     }
@@ -100,7 +100,7 @@ class MessageSubmitted extends Notification
     {
         return array(
             'message' => __d('contacts', 'Contact Message received via {0}', $this->contact->name),
-            'link'    => url('admin/contacts', array($this->contact->id, 'messages')),
+            'link'    => url('admin/contacts', array($this->contact->id, 'messages', $this->message->id)),
             'icon'    => 'envelope',
         );
     }

@@ -2,6 +2,7 @@
 
 namespace App\Modules\Contacts\Controllers\Admin;
 
+use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\Redirect;
 
 use App\Modules\Contacts\Models\Contact;
@@ -29,30 +30,36 @@ class Messages extends BaseController
             return Redirect::back()->withStatus(__d('content', 'Contact not found: #{0}', $id), 'danger');
         }
 
-        $shortcodes = $this->parseShortcodes($contact->content);
+        $elements = $this->getMessageElements($contact);
 
-        //
-        $labels = array();
-
-        foreach ($shortcodes as $shortcode) {
-            if ($shortcode->hasParameter('name')) {
-                $name = $shortcode->getParameter('name');
-            } else {
-                throw new ErrorException('Invalid shorcode.');
-            }
-
-            if ($shortcode->hasParameter('label')) {
-                $labels[$name] = $shortcode->getParameter('label');
-            } else {
-                throw new ErrorException('Invalid shorcode.');
-            }
-        }
-
-        $messages = $contact->messages()->orderBy('created_at', 'DESC')->paginate(15);
+        $messages = $contact->messages()->orderBy('created_at', 'DESC')->paginate(10);
 
         return $this->createView()
             ->shares('title', __d('contacts', 'Messages received by : {0}', $contact->name))
-            ->with(compact('contact', 'messages', 'labels'));
+            ->with(compact('contact', 'messages', 'elements'));
+    }
+
+    public function show($cid, $mid)
+    {
+        try {
+            $contact = Contact::findOrFail($cid);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Contact not found: #{0}', $cid), 'danger');
+        }
+
+        $elements = $this->getMessageElements($contact);
+
+        try {
+            $message = Message::findOrFail($mid);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->withStatus(__d('content', 'Message not found: #{0}', $mid), 'danger');
+        }
+
+        return $this->createView()
+            ->shares('title', __d('contacts', 'Show Message'))
+            ->with(compact('contact', 'message', 'elements'));
     }
 
     public function destroy($contactId, $id)
@@ -74,5 +81,46 @@ class Messages extends BaseController
 
         return Redirect::back()
             ->withStatus(__d('content', 'The Message was successfully deleted.'), 'success');
+    }
+
+    protected function getMessageElements(Contact $contact)
+    {
+        $shortcodes = $this->parseShortcodes($contact->message);
+
+        //
+        $elements = array();
+
+        foreach ($shortcodes as $shortcode) {
+            $type = $shortcode->getName();
+
+            if ($type == 'option') {
+                $name = $shortcode->getParameter('value');
+            }
+
+            // The shortcode should have a name parameter.
+            else {
+                $name = 'contact_' .$shortcode->getParameter('name');
+            }
+
+            if (empty($name)) {
+                throw new ErrorException('Invalid shorcode.');
+            }
+
+            // Skip the submit button.
+            else if (($type == 'input') && ($shortcode->getParameter('type') == 'submit')) {
+                continue;
+            }
+
+            // The shortcode should have a label.
+            else if ($shortcode->hasParameter('label')) {
+                $label = $shortcode->getParameter('label');
+            } else {
+                throw new ErrorException('Invalid shorcode.');
+            }
+
+            $elements[$name] = compact('type', 'label');
+        }
+
+        return $elements;
     }
 }

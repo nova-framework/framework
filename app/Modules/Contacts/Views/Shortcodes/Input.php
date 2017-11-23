@@ -1,5 +1,6 @@
 <?php $type  = $shortcode->getParameter('type'); ?>
 <?php $label = $shortcode->getParameter('label'); ?>
+<?php $class = $shortcode->getParameter('class'); ?>
 
 <?php $required = Str::is('*required*', $shortcode->getParameter('validation')); ?>
 
@@ -19,18 +20,18 @@
         </div>
         <?php } else if ($type == 'checkbox') { ?>
         <div class="col-md-1" style="padding: 0;">
-            <input type="checkbox" name="<?= $name; ?>" id="contact-form-<?= $name; ?>" value="1" />
+            <input type="checkbox" name="<?= $name; ?>" id="contact-form-<?= $name; ?>" <?= ! empty($class) ? 'class="' .$class .'"' : ''; ?> value="1" />
         </div>
         <div class="col-md-11" style="padding: 2px;">
             <label class="control-label" for="block-title" style="margin-right: 10px;"><?= $label; ?></label>
         </div>
         <div class="clearfix"></div>
         <?php } else if ($type == 'number') { ?>
-        <input type="number" class="form-control" name="<?= $name; ?>" id="contact-form-<?= $name; ?>"  min="<?= $shortcode->getParameter('min'); ?>" max="<?= $shortcode->getParameter('max'); ?>" placeholder="<?= $label; ?>" />
+        <input type="number" class="form-control<?= ! empty($class) ? ' ' .$class : ''; ?>" name="<?= $name; ?>" id="contact-form-<?= $name; ?>"  min="<?= $shortcode->getParameter('min'); ?>" max="<?= $shortcode->getParameter('max'); ?>" />
         <?php } else if ($type == 'submit') { ?>
         <input type="submit" name="submit" class="btn btn-primary pull-right" value="<?= $label; ?>" />
         <?php } else { ?>
-        <input type="<?= $type; ?>" class="form-control" name="<?= $name; ?>" id="contact-form-<?= $name; ?>" placeholder="<?= $label; ?>" />
+        <input type="<?= $type; ?>" class="form-control<?= ! empty($class) ? ' ' .$class : ''; ?>" name="<?= $name; ?>" id="contact-form-<?= $name; ?>" placeholder="<?= $shortcode->getParameter('placeholder') ?: $label; ?>" />
         <?php } ?>
 
         <?php if ($errors->has($name)) { ?>

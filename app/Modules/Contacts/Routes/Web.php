@@ -27,7 +27,11 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
     Route::post('contacts/{id}/destroy',  array('middleware' => 'auth', 'uses' => 'Contacts@destroy'))->where('id', '\d+');
 
     // The Contact Messages.
-    Route::get( 'contacts/{id}/messages', array('middleware' => 'auth', 'uses' => 'Messages@index'))->where('id', '\d+');
+    Route::get('contacts/{id}/messages', array('middleware' => 'auth', 'uses' => 'Messages@index'))->where('id', '\d+');
+
+    Route::get('contacts/{cid}/messages/{mid}', array('middleware' => 'auth', 'uses' => 'Messages@show'))
+        ->where('cid', '\d+')
+        ->where('mid', '\d+');
 
     Route::post('contacts/{contactId}/messages/{id}', array('middleware' => 'auth', 'uses' => 'Messages@destroy'))
         ->where('contactId', '\d+')

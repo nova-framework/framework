@@ -93,29 +93,27 @@ class Messages extends BaseController
         foreach ($shortcodes as $shortcode) {
             $type = $shortcode->getName();
 
-            if ($type == 'option') {
+            if (($type == 'input') && ($shortcode->getParameter('type') == 'submit')) {
+                continue;
+            }
+
+            // Not a submit button.
+            else if ($type == 'option') {
                 $name = $shortcode->getParameter('value');
             }
 
             // The shortcode should have a name parameter.
-            else {
+            else if ($shortcode->hasParameter('name')) {
                 $name = 'contact_' .$shortcode->getParameter('name');
-            }
-
-            if (empty($name)) {
-                throw new ErrorException('Invalid shorcode.');
-            }
-
-            // Skip the submit button.
-            else if (($type == 'input') && ($shortcode->getParameter('type') == 'submit')) {
-                continue;
+            } else {
+                throw new ErrorException('Invalid shortcode.');
             }
 
             // The shortcode should have a label.
-            else if ($shortcode->hasParameter('label')) {
+            if ($shortcode->hasParameter('label')) {
                 $label = $shortcode->getParameter('label');
             } else {
-                throw new ErrorException('Invalid shorcode.');
+                throw new ErrorException('Invalid shortcode.');
             }
 
             $elements[$name] = compact('type', 'label');

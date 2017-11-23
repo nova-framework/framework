@@ -43,43 +43,52 @@ class Contacts extends BaseController
         $shortcodes = $this->parseShortcodes($contact->message);
 
         //
-        $rules  = array();
-        $labels = array();
+        $rules      = array();
+        $attributes = array();
+        $elements   = array();
 
         foreach ($shortcodes as $shortcode) {
-            $element = $shortcode->getName();
+            $type = $shortcode->getName();
 
-            if ($element == 'option') {
-                // A select option.
+            if (($type == 'input') && ($shortcode->getParameter('type') == 'submit')) {
                 continue;
             }
 
-            // An element with name parameter.
+            // Not a submit button.
+            else if ($type == 'option') {
+                $name = $shortcode->getParameter('value');
+            }
+
+            // The shortcode should have a name parameter.
             else if ($shortcode->hasParameter('name')) {
-                $name = $shortcode->getParameter('name');
+                $name = 'contact_' .$shortcode->getParameter('name');
             } else {
-                throw new ErrorException('Invalid shorcode.');
+                throw new ErrorException('Invalid shortcode.');
             }
 
-            $type = $shortcode->getParameter('type');
+            // The shortcode should have a label.
+            if ($shortcode->hasParameter('label')) {
+                $label = $shortcode->getParameter('label');
+            } else {
+                throw new ErrorException('Invalid shortcode.');
+            }
 
-            if (($element == 'input') && ($type == 'submit')) {
-                // This is the submit button.
+            $elements[$name] = compact('type', 'label');
+
+            if ($type == 'option') {
                 continue;
             }
 
-            if ($shortcode->hasParameter('label')) {
-                $labels[$name] = $shortcode->getParameter('label');
-            } else {
-                throw new ErrorException('Invalid shorcode.');
-            }
+            $name = $shortcode->getParameter('name');
+
+            $attributes[$name] = $label;
 
             if ($shortcode->hasParameter('validation')) {
                 $rules[$name] = $shortcode->getParameter('validation');
             }
         }
 
-        $validator = Validator::make($input, $rules, array(), $labels);
+        $validator = Validator::make($input, $rules, array(), $attributes);
 
         if ($validator->fails()) {
             return Redirect::back()->withInput($input)->withErrors($validator);
@@ -102,7 +111,7 @@ class Contacts extends BaseController
         $message->guid = site_url('content/' .$id);
 
         // Handle the Metadata.
-        foreach ($labels as $name => $label) {
+        foreach (array_keys($attributes) as $name) {
             $key = 'contact_' .$name;
 
             $message->meta->addItem($key, $input[$name]);
@@ -120,7 +129,7 @@ class Contacts extends BaseController
         $user = User::where('email', $contact->email)->first();
 
         if (! is_null($user)) {
-            $user->notify(new MessageSubmittedNotification($message, $contact, $labels));
+            $user->notify(new MessageSubmittedNotification($message, $contact, $elements));
         }
 
         return Redirect::back()

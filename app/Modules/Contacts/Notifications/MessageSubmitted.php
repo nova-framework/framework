@@ -27,7 +27,7 @@ class MessageSubmitted extends Notification
     /**
      * @var array
      */
-    protected $labels;
+    protected $elements;
 
 
     /**
@@ -35,11 +35,11 @@ class MessageSubmitted extends Notification
      *
      * @return void
      */
-    public function __construct(Message $message, Contact $contact, array $labels)
+    public function __construct(Message $message, Contact $contact, array $elements)
     {
-        $this->message = $message;
-        $this->contact = $contact;
-        $this->labels  = $labels;
+        $this->message  = $message;
+        $this->contact  = $contact;
+        $this->elements = $elements;
     }
 
     /**
@@ -66,13 +66,19 @@ class MessageSubmitted extends Notification
             ->line(__d('contacts', 'A new message was received via {0}.', $this->contact->name));
 
         foreach ($this->message->meta as $meta) {
-            if (! Str::is('contact_*', $key = $meta->key) || ($key == 'contact_author_ip') || ($key == 'contact_path')) {
+            if (! Str::is('contact_*', $name = $meta->key) || ($name == 'contact_author_ip') || ($name == 'contact_path')) {
                 continue;
             }
 
-            $label = Arr::get($this->labels, str_replace('contact_', '', $key), __d('contacts', 'Unknown Label'));
+            $value = $meta->value;
 
-            $value = nl2br(e($meta->value));
+            if ('select' == Arr::get($this->elements, $name .'.type')) {
+                $value = Arr::get($this->elements, $value, $value);
+            }
+
+            $label = Arr::get($this->elements, $name .'.label', __d('contacts', 'Unknown'));
+
+            $value = nl2br(e($value));
 
             if (strlen($value) < 50) {
                 $message->line($label .': ' .$value);

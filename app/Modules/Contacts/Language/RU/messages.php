@@ -61,7 +61,6 @@ return array (
   'The reCaptcha verification failed.' => 'Ошибка проверки reCaptcha.',
   'There are no registered Contacts.' => 'Нет зарегистрированных контактов.',
   'Unknown' => '',
-  'Unknown Label' => 'Неизвестная метка',
   'Updated At' => 'Обновлён',
   'Value' => 'значение',
   'View the Message' => '',

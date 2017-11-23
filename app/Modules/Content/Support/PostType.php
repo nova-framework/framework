@@ -90,7 +90,7 @@ class PostType
     public static function make($type)
     {
         if ($type instanceof Post) {
-            $type = $post->type;
+            $type = $type->type;
         }
 
         if (isset(static::$types[$type])) {

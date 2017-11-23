@@ -11,60 +11,93 @@
 
 <?= Session::getMessages(); ?>
 
+<?php if (! $messages->isEmpty()) { ?>
+
 <div class="box box-default">
-    <div class="box-header">
+    <div class="box-header with-border">
         <h3 class="box-title"><?= __d('contacts', 'Submitted Messages'); ?></h3>
         <div class="box-tools">
         <?= $messages->links(); ?>
         </div>
     </div>
+    <div class="box-body">
+        <div class="text-center" style="padding: 5px;"><big><?= __d('contacts', '<b>{0}</b> message(s) was received by <b>{1}</b>.', $messages->getTotal(), $contact->name); ?></big></div>
+    </div>
+</div>
+
+<?php $deletables = 0; ?>
+<?php foreach ($messages as $message) { ?>
+<?php $deletables++; ?>
+
+<div class="box box-widget">
+    <div class="box-header">
+        <h3 class="box-title"><?= $message->created_at->formatLocalized(__d('contacts', '%d %B %Y, %R')); ?></h3>
+        <div class="box-tools">
+            <div class="btn-group" role="group" aria-label="...">
+                <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $message->id; ?>" title="<?= __d('contacts', 'Delete this Message'); ?>" role="button"><i class="fa fa-trash"></i></a>
+                <a class="btn btn-sm btn-success" href="<?= site_url('admin/contacts/' .$contact->id .'/messages/' .$message->id .'?offset=' .Input::get('offset', 1)); ?>" title="<?= __d('contacts', 'View this Message'); ?>" role="button"><i class="fa fa-search"></i></a>
+            </div>
+        </div>
+    </div>
     <div class="box-body no-padding">
-        <?php $deletables = 0; ?>
-        <?php if (! $messages->isEmpty()) { ?>
-        <table id="left" class="table table-striped table-hover responsive">
+        <table id="left" class="table table-hover responsive">
             <tr class="bg-navy disabled">
-                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Remote IP'); ?></th>
-                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Message'); ?></th>
-                <th style="text-align: center; vertical-align: middle;"><?= __d('contacts', 'Submitted On'); ?></th>
-                <th style="text-align: center; vertical-align: middle;"><?= __d('contacts', 'Operations'); ?></th>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Field'); ?></th>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Value'); ?></th>
             </tr>
-            <?php foreach ($messages as $message) { ?>
-            <?php $deletables++; ?>
             <tr>
-                <td style="text-align: left; vertical-align: top;" width="15%">
-                    <div style="padding-bottom: 5px; font-weight: bold;"><?= $message->contact_author_ip; ?></div>
-                </td>
-                <?php
-                $items = array();
-
-                foreach ($message->meta as $meta) {
-                    if (! Str::is('contact_*', $key = $meta->key) || ($key == 'contact_author_ip') || ($key == 'contact_path')) {
-                        continue;
-                    }
-
-                    $label = Arr::get($labels, str_replace('contact_', '', $key), __d('contacts', 'Unknown Label'));
-
-                    $items[] = '<div class="col-md-3" style="padding: 10px;"><b>' .$label .'</b></div><div class="col-md-9" style="padding: 10px;">' .nl2br(e($meta->value)) .'</div><div class="clearfix"></div>';
+                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Path'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $message->contact_path; ?></td>
+            <tr>
+            <tr>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Author IP'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $message->contact_author_ip; ?></td>
+            <tr>
+            <?php
+            foreach ($message->meta as $meta) {
+                if (! Str::is('contact_*', $name = $meta->key) || ($name == 'contact_author_ip') || ($name == 'contact_path')) {
+                    continue;
                 }
 
-                $content = implode("\n", $items);
-                ?>
-                <td style="text-align: left; vertical-align: top;" width="60%"><?= $content; ?></td>
-                <td style="text-align: center; vertical-align: top;" width="15%"><?= $message->created_at->formatLocalized(__d('contacts', '%d %b %Y, %R')); ?></td>
-                <td style="text-align: right; vertical-align: top; padding-bottom: 5px 5px 30px 5px;" width="10%">
-                    <a class="btn btn-xs btn-danger btn-block" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $message->id; ?>" title="<?= __d('contacts', 'Delete this Message'); ?>" role="button"><i class="fa fa-remove"></i> <?= __d('contacts', 'Delete'); ?></a>
-                </td>
-            </tr>
+                $value = $meta->value;
+
+                if ('select' == Arr::get($elements, $name .'.type')) {
+                    $value = Arr::get($elements, $value, $value);
+                }
+
+                $label = Arr::get($elements, $name .'.label', __d('contacts', 'Unknown'));
+            ?>
+            <tr>
+                <th style="text-align: left; vertical-align: middle;"><?= $label; ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= nl2br(e($value)); ?></td>
+            <tr>
             <?php } ?>
         </table>
-        <?php } else { ?>
+    </div>
+</div>
+
+<?php } ?>
+
+<?php } else { ?>
+
+<div class="box box-default">
+    <div class="box-header">
+        <h3 class="box-title"><?= __d('contacts', 'Submitted Messages'); ?></h3>
+    </div>
+    <div class="box-body no-padding">
         <div class="alert alert-warning" style="margin: 0 5px 5px;">
             <h4><i class="icon fa fa-warning"></i> <?= strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('contacts', 'No Messages'); ?></h4>
             <?= __d('contacts', 'No message has been added yet!'); ?>
         </div>
-        <?php } ?>
     </div>
 </div>
+
+<?php } ?>
+
+<a class="btn btn-primary col-sm-2" href="<?= site_url('admin/contacts'); ?>"><?= __d('contacts', '<< Previous Page'); ?></a>
+
+<div class="clearfix"></div>
+<br>
 
 </section>
 

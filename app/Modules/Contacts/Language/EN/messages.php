@@ -61,7 +61,6 @@ return array (
   'The reCaptcha verification failed.' => '',
   'There are no registered Contacts.' => '',
   'Unknown' => '',
-  'Unknown Label' => '',
   'Updated At' => '',
   'Value' => '',
   'View the Message' => '',

@@ -18,7 +18,6 @@ return array (
   'Contact details' => 'Подробности контакта',
   'Contact not found: #{0}' => 'Контакт: #{0} не найден',
   'Contacts' => 'Контакты',
-  'Content' => 'Содержание',
   'Create a new Contact' => 'Создать новый контакт',
   'Created At' => 'Создан',
   'Dashboard' => 'Рабочий стол',

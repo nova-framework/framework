@@ -18,7 +18,6 @@ return array (
   'Contact details' => '',
   'Contact not found: #{0}' => '',
   'Contacts' => '',
-  'Content' => '',
   'Create a new Contact' => '',
   'Created At' => '',
   'Dashboard' => '',

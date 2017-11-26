@@ -162,7 +162,7 @@ $langMenuLinks = ob_get_clean();
         <!-- search form -->
         <form action="<?= site_url('admin/users/search'); ?>" method="POST" class="sidebar-form">
             <div class="input-group">
-                <input type="text" name="query" class="form-control" placeholder="Search...">
+                <input type="text" name="query" class="form-control" placeholder="<?= __d('admin_lite', 'Search...'); ?>">
                 <span class="input-group-btn">
                     <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
                     </button>

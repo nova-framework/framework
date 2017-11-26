@@ -19,7 +19,7 @@ class RegisteredRoles extends Widget
         $data = array(
             'color' => 'yellow',
             'title' => $count,
-            'content' => __d('Roles', 'Registered Roles'),
+            'content' => __d('roles', 'Registered Roles'),
             'icon'    => 'cubes',
             'url'     => site_url('admin/roles')
         );

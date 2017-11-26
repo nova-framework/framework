@@ -22,7 +22,7 @@ class Messages extends Widget
         $data = array(
             'color' => 'red',
             'title' => $count,
-            'content' => __d('users', 'Messages'),
+            'content' => __d('messages', 'Messages'),
             'icon'    => 'envelope',
             'url'     => site_url('admin/messages')
         );

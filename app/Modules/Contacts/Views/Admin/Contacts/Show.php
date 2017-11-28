@@ -38,8 +38,8 @@
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= nl2br($contact->description); ?></td>
             </tr>
             <tr>
-                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Message'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= nl2br($contact->message); ?></td>
+                <th style="text-align: left; vertical-align: top;"><?= __d('contacts', 'Message'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><textarea rows="15" style="padding: 10px; width: 100%; resize: none;" readonly><?= $contact->message; ?></textarea></td>
             </tr>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Created At'); ?></th>

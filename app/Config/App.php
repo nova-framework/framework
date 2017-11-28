@@ -207,7 +207,7 @@ return array(
         'Validator'     => 'Nova\Support\Facades\Validator',
         'Log'           => 'Nova\Support\Facades\Log',
         'URL'           => 'Nova\Support\Facades\URL',
-        'Layout'        => 'Nova\Support\Facades\Layout',
+        'Template'      => 'Nova\Support\Facades\Template',
         'View'          => 'Nova\Support\Facades\View',
         'Cron'          => 'Nova\Support\Facades\Cron',
         'Module'        => 'Nova\Support\Facades\Module',

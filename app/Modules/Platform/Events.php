@@ -81,7 +81,7 @@ Event::listen('backend.menu.sidebar', function ()
         ),
         array(
             'url'    => '#',
-            'title'  => __d('settings', 'Platform'),
+            'title'  => __d('platform', 'Platform'),
             'icon'   => 'cube',
             'weight' => 0,
 
@@ -90,7 +90,7 @@ Event::listen('backend.menu.sidebar', function ()
         ),
         array(
             'url'    => site_url('admin/settings'),
-            'title'  => __d('settings', 'Settings'),
+            'title'  => __d('platform', 'Settings'),
             'icon'   => 'circle-o',
             'weight' => 0,
 

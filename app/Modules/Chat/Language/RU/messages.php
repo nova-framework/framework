@@ -8,6 +8,6 @@ return array (
   'No Users are on-line.' => 'Нет пользователей онлайн',
   'On-line Users' => 'Онлайн пользователи',
   'Send' => 'Отправить',
-  'Type Message ...' => 'Тип сообщения',
+  'Type Message ...' => 'Напечатать сообщение',
   'WebRTC Chat' => 'WebRTC чат',
 );

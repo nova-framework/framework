@@ -15,7 +15,7 @@
     <div class="col-md-9">
         <div class="box box-primary direct-chat direct-chat-primary">
             <div class="box-header with-border">
-                <h3 class="box-title"><?= __d('users', 'WebRTC Chat'); ?></h3>
+                <h3 class="box-title"><?= __d('chat', 'WebRTC Chat'); ?></h3>
             </div>
             <div class="box-body">
                 <div class="direct-chat-messages" id="chat-output" style="height: 550px;">
@@ -38,7 +38,7 @@
     <div class="col-md-3">
         <div class="box box-default">
             <div class="box-header with-border">
-                <h3 class="box-title"><?= __d('users', 'On-line Users'); ?></h3>
+                <h3 class="box-title"><?= __d('chat', 'On-line Users'); ?></h3>
             </div>
             <div class="box-body">
                 <div id="chat-list" style="height: 586px; overflow:auto;">

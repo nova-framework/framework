@@ -35,7 +35,7 @@
 </section>
 
 <div class="modal fade" id="edit-file-modal" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document" style="width: 97%; !important; margin-left: 1.5%; margin-top: 1.7%;">
+    <div class="modal-dialog" role="document" style="width: 97% !important; margin-left: 1.5%; margin-top: 1.7%;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i></button>

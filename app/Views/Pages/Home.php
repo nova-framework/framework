@@ -2,9 +2,9 @@
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-if (Config::get('app.debug') !== true):
-    throw new NotFoundException('Please replace app/Views/Pages/Home.php with your own version.');
-endif;
+if (Config::get('app.debug') !== true) {
+    throw new NotFoundHttpException('Please replace app/Views/Pages/Home.php with your own version.');
+}
 
 ?>
 

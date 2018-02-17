@@ -58,20 +58,20 @@ trait HasMetaFieldsTrait
     }
 
     /**
-     * @param string $meta
+     * @param string|array $meta
      * @param mixed $value
      * @return bool
      */
-    public function saveMeta($key, $value = null)
+    public function saveMeta($meta, $value = null)
     {
-        if (! is_array($key)) {
-            $result = $this->saveOneMeta($key, $value);
+        if (! is_array($meta)) {
+            $result = $this->saveOneMeta($meta, $value);
         }
 
         // Save multiple meta fields.
         else {
-            foreach ($key as $innerKey => $innerValue) {
-                $this->saveOneMeta($innerKey, $innerValue);
+            foreach ($meta as $key => $value) {
+                $this->saveOneMeta($key, $value);
             }
 
             $result = true;
@@ -89,39 +89,39 @@ trait HasMetaFieldsTrait
      */
     private function saveOneMeta($key, $value)
     {
-        $relation = $this->meta();
+        $meta = $this->meta();
 
-        $meta = $relation->where('key', $key)->firstOr(function () use ($relation, $key)
+        $item = $meta->where('key', $key)->firstOr(function () use ($meta, $key)
         {
-            $related = $relation->getRelated();
+            $foreignKey = $meta->getPlainForeignKey();
 
-            $foreignKey = $relation->getPlainForeignKey();
-
-            return $related->newInstance(array(
-                $foreignKey => $relation->getParentKey(),
+            $attributes = array(
+                $foreignKey => $meta->getParentKey(),
                 'key'       => $key,
-            ));
+            );
+
+            return $meta->getRelated()->newInstance($attributes);
         });
 
-        $meta->value = $value;
+        $item->value = $value;
 
-        return $meta->save();
+        return $item->save();
     }
 
     /**
-     * @param string $key
+     * @param string|array $meta
      * @param mixed $value
      * @return \Nova\Database\ORM\Model|\Nova\Support\Collection
      */
-    public function createMeta($key, $value = null)
+    public function createMeta($meta, $value = null)
     {
-        if (! is_array($key)) {
-            $result = $this->createOneMeta($key, $value);
+        if (! is_array($meta)) {
+            $result = $this->createOneMeta($meta, $value);
         }
 
         // Create and return a collection of meta fields.
         else {
-            $result = collect($key)->map(function ($value, $key)
+            $result = collect($meta)->map(function ($value, $key)
             {
                 return $this->createOneMeta($key, $value);
             });

@@ -20,7 +20,6 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('email', 100)->unique();
             $table->string('remember_token')->nullable();
-            $table->integer('profile_id')->unsigned();
             $table->string('api_token', 100)->unique()->nullable();
             $table->timestamps();
         });

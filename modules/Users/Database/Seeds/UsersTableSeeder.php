@@ -32,7 +32,6 @@ class UsersTableSeeder extends Seeder
             'password'       => Hash::make('admin'),
             'email'          => 'admin@novaframework.dev',
             'remember_token' => '',
-            'profile_id'     => 1,
             'api_token'      => $this->uniqueToken(),
         ));
 
@@ -42,8 +41,9 @@ class UsersTableSeeder extends Seeder
             'first_name'      => 'Site',
             'last_name'       => 'Administrator',
             'location'        => 'Craiova, Romania',
+            'picture'         => null,
             'activated'       => 1,
-            'activation_code' => '',
+            'activation_code' => null,
         ));
 
         //
@@ -53,7 +53,6 @@ class UsersTableSeeder extends Seeder
             'password'       => Hash::make('marcus'),
             'email'          => 'marcus@novaframework.dev',
             'remember_token' => '',
-            'profile_id'     => 1,
             'api_token'      => $this->uniqueToken(),
         ));
 
@@ -63,8 +62,9 @@ class UsersTableSeeder extends Seeder
             'first_name'      => 'Marcus',
             'last_name'       => 'Spears',
             'location'        => 'London, UK',
+            'picture'         => null,
             'activated'       => 1,
-            'activation_code' => '',
+            'activation_code' => null,
         ));
 
         //
@@ -74,7 +74,6 @@ class UsersTableSeeder extends Seeder
             'password'       => Hash::make('michael'),
             'email'          => 'michael@novaframework.dev',
             'remember_token' => '',
-            'profile_id'     => 1,
             'api_token'      => $this->uniqueToken(),
         ));
 
@@ -84,8 +83,9 @@ class UsersTableSeeder extends Seeder
             'first_name'      => 'Michael',
             'last_name'       => 'White',
             'location'        => 'Rome, Italy',
+            'picture'         => null,
             'activated'       => 1,
-            'activation_code' => '',
+            'activation_code' => null,
         ));
 
         //
@@ -95,7 +95,6 @@ class UsersTableSeeder extends Seeder
             'password'       => Hash::make('john'),
             'email'          => 'john@novaframework.dev',
             'remember_token' => '',
-            'profile_id'     => 1,
             'api_token'      => $this->uniqueToken(),
         ));
 
@@ -105,8 +104,9 @@ class UsersTableSeeder extends Seeder
             'first_name'      => 'John',
             'last_name'       => 'Kennedy',
             'location'        => 'Moscow, Russia',
+            'picture'         => null,
             'activated'       => 1,
-            'activation_code' => '',
+            'activation_code' => null,
         ));
 
         //
@@ -116,7 +116,6 @@ class UsersTableSeeder extends Seeder
             'password'       => Hash::make('mark'),
             'email'          => 'mark@novaframework.dev',
             'remember_token' => '',
-            'profile_id'     => 1,
             'api_token'      => $this->uniqueToken(),
         ));
 
@@ -126,8 +125,9 @@ class UsersTableSeeder extends Seeder
             'first_name'      => 'Mark',
             'last_name'       => 'Black',
             'location'        => 'Paris, France',
+            'picture'         => null,
             'activated'       => 1,
-            'activation_code' => '',
+            'activation_code' => null,
         ));
     }
 

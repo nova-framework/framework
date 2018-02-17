@@ -13,13 +13,14 @@ use Shared\Auth\Reminders\RemindableInterface;
 use Shared\Notifications\NotifiableTrait;
 
 use Modules\Messages\Traits\HasMessagesTrait;
+use Modules\Platform\Traits\AliasesTrait;
 use Modules\Platform\Traits\HasActivitiesTrait;
 use Modules\Platform\Traits\HasMetaFieldsTrait;
 
 
 class User extends BaseModel implements UserInterface, RemindableInterface
 {
-    use UserTrait, RemindableTrait, AuthorizableTrait, HasMetaFieldsTrait, HasActivitiesTrait, NotifiableTrait, HasMessagesTrait;
+    use UserTrait, RemindableTrait, AuthorizableTrait, AliasesTrait, HasMetaFieldsTrait, HasActivitiesTrait, HasMessagesTrait, NotifiableTrait;
 
     //
     protected $table = 'users';
@@ -40,6 +41,16 @@ class User extends BaseModel implements UserInterface, RemindableInterface
      * @var array
      */
     protected $with = array('meta');
+
+    /**
+     * @var array
+     */
+    protected static $aliases = array(
+        'first_name' => array('meta' => 'first_name'),
+        'last_name'  => array('meta' => 'last_name'),
+        'location'   => array('meta' => 'location'),
+        'activated'  => array('meta' => 'activated'),
+    );
 
     // ACL caches.
     protected $cachedRoles;

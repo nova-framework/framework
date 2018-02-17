@@ -65,29 +65,25 @@ trait HasMetaFieldsTrait
     public function saveMeta($meta, $value = null)
     {
         if (! is_array($meta)) {
-            $result = $this->saveOneMeta($meta, $value);
+            return $this->saveOneMeta($meta, $value, true);
         }
 
-        // Save multiple meta fields.
-        else {
-            foreach ($meta as $key => $value) {
-                $this->saveOneMeta($key, $value);
-            }
-
-            $result = true;
+        foreach ($meta as $key => $value) {
+            $this->saveOneMeta($key, $value);
         }
 
         $this->load('meta');
 
-        return $result;
+        return true;
     }
 
     /**
      * @param string $key
      * @param mixed $value
+     * @param boolean $loadMeta
      * @return bool
      */
-    private function saveOneMeta($key, $value)
+    private function saveOneMeta($key, $value, $loadMeta = false)
     {
         $meta = $this->meta();
 
@@ -105,7 +101,13 @@ trait HasMetaFieldsTrait
 
         $item->value = $value;
 
-        return $item->save();
+        $result = $item->save();
+
+        if ($loadMeta) {
+            $this->load('meta');
+        }
+
+        return $result;
     }
 
     /**
@@ -116,16 +118,13 @@ trait HasMetaFieldsTrait
     public function createMeta($meta, $value = null)
     {
         if (! is_array($meta)) {
-            $result = $this->createOneMeta($meta, $value);
+            return $this->createOneMeta($meta, $value, true);
         }
 
-        // Create and return a collection of meta fields.
-        else {
-            $result = collect($meta)->map(function ($value, $key)
-            {
-                return $this->createOneMeta($key, $value);
-            });
-        }
+        $result = collect($meta)->map(function ($value, $key)
+        {
+            return $this->createOneMeta($key, $value);
+        });
 
         $this->load('meta');
 
@@ -135,14 +134,21 @@ trait HasMetaFieldsTrait
     /**
      * @param string $key
      * @param mixed $value
+     * @param boolean $loadMeta
      * @return \Nova\Database\ORM\Model
      */
-    private function createOneMeta($key, $value)
+    private function createOneMeta($key, $value, $loadMeta = false)
     {
-        return $this->meta()->create(array(
+        $item = $this->meta()->create(array(
             'key'   => $key,
             'value' => $value,
         ));
+
+        if ($loadMeta) {
+            $this->load('meta');
+        }
+
+        return $item;
     }
 
     /**

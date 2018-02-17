@@ -49,6 +49,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
         'first_name' => array('meta' => 'first_name'),
         'last_name'  => array('meta' => 'last_name'),
         'location'   => array('meta' => 'location'),
+        'picture'    => array('meta' => 'picture'),
         'activated'  => array('meta' => 'activated'),
     );
 

@@ -38,7 +38,7 @@ class UsersTableSeeder extends Seeder
 
         $user->roles()->attach(array(1));
 
-        $user->saveMeta(array(
+        $user->createMeta(array(
             'first_name'      => 'Site',
             'last_name'       => 'Administrator',
             'location'        => 'Craiova, Romania',
@@ -59,7 +59,7 @@ class UsersTableSeeder extends Seeder
 
         $user->roles()->attach(array(2));
 
-        $user->saveMeta(array(
+        $user->createMeta(array(
             'first_name'      => 'Marcus',
             'last_name'       => 'Spears',
             'location'        => 'London, UK',
@@ -80,7 +80,7 @@ class UsersTableSeeder extends Seeder
 
         $user->roles()->attach(array(3));
 
-        $user->saveMeta(array(
+        $user->createMeta(array(
             'first_name'      => 'Michael',
             'last_name'       => 'White',
             'location'        => 'Rome, Italy',
@@ -101,7 +101,7 @@ class UsersTableSeeder extends Seeder
 
         $user->roles()->attach(array(4));
 
-        $user->saveMeta(array(
+        $user->createMeta(array(
             'first_name'      => 'John',
             'last_name'       => 'Kennedy',
             'location'        => 'Moscow, Russia',
@@ -120,17 +120,15 @@ class UsersTableSeeder extends Seeder
             'api_token'      => $this->uniqueToken(),
         ));
 
-        $user->saveMeta(array(
+        $user->roles()->attach(array(4));
+
+        $user->createMeta(array(
             'first_name'      => 'Mark',
             'last_name'       => 'Black',
             'location'        => 'Paris, France',
             'activated'       => 1,
             'activation_code' => '',
         ));
-
-        $user->save();
-
-        $user->roles()->attach(array(4));
     }
 
     protected function uniqueToken($length = 60)

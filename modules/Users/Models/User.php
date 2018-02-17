@@ -12,7 +12,6 @@ use Shared\Auth\Reminders\RemindableTrait;
 use Shared\Auth\Reminders\RemindableInterface;
 use Shared\Notifications\NotifiableTrait;
 
-use Modules\Attachments\Traits\HasAttachmentsTrait;
 use Modules\Fields\Traits\MetableTrait;
 use Modules\Messages\Traits\HasMessagesTrait;
 use Modules\Platform\Traits\HasActivitiesTrait;
@@ -21,7 +20,7 @@ use Modules\Users\Models\Profile;
 
 class User extends BaseModel implements UserInterface, RemindableInterface
 {
-    use UserTrait, RemindableTrait, AuthorizableTrait, MetableTrait, NotifiableTrait, HasActivitiesTrait, HasMessagesTrait, HasAttachmentsTrait;
+    use UserTrait, RemindableTrait, AuthorizableTrait, MetableTrait, NotifiableTrait, HasActivitiesTrait, HasMessagesTrait;
 
     //
     protected $table = 'users';

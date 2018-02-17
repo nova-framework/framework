@@ -165,7 +165,7 @@ return array(
     /**
      * The Service Providers Manifest path.
      */
-    'manifest' => ROOTDIR .'storage',
+    'manifest' => BASEPATH .'storage',
 
     /**
      * The registered Class Aliases.

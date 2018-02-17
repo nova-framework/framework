@@ -16,7 +16,7 @@ use Nova\Http\Request;
 Event::listen('router.matched', function($route, Request $request)
 {
     // Share the Application version.
-    $path = ROOTDIR .'VERSION.txt';
+    $path = BASEPATH .'VERSION.txt';
 
     if (is_readable($path)) {
         $version = trim(file_get_contents($path));

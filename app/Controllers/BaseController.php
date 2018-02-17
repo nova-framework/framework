@@ -34,11 +34,39 @@ abstract class BaseController extends Controller
     private $action;
 
     /**
-     * The View path (and module name) for views of this Controller.
+     * The Module which hosts the Controller.
+     *
+     * @var string
+     */
+    private $module = null;
+
+    /**
+     * The current Views path for Controller.
+     *
+     * @var string
+     */
+    private $viewPath;
+
+    /**
+     * The View variables.
      *
      * @var array
      */
-    protected $viewInfo;
+    private $viewData = array();
+
+    /**
+     * True when the auto-rendering is active.
+     *
+     * @var bool
+     */
+    protected $autoRender = true;
+
+    /**
+     * True when the auto-layouting is active.
+     *
+     * @var bool
+     */
+    protected $autoLayout = true;
 
     /**
      * The currently used Theme.
@@ -59,11 +87,26 @@ abstract class BaseController extends Controller
      * Method executed before any action.
      *
      * @return void
+     * @throws \BadMethodCallException
      */
     protected function initialize()
     {
         if (! isset($this->theme)) {
-            return $this->theme = Config::get('app.theme', 'Bootstrap');
+            $this->theme = Config::get('app.theme', 'Bootstrap');
+        }
+
+        // Transform the complete class name on a path like variable.
+        $classPath = str_replace('\\', '/', static::class);
+
+        // Check for a valid controller on App and its Modules.
+        if (preg_match('#^(App|Modules)(?:/(.+))?/Controllers/(.*)$#', $classPath, $matches) !== 1) {
+            throw new BadMethodCallException('Invalid Controller namespace');
+        }
+
+        $this->viewPath = $matches[3];
+
+        if (($matches[1] == 'Modules') && ! empty($module = $matches[2])) {
+            $this->module = $module;
         }
     }
 
@@ -78,7 +121,7 @@ abstract class BaseController extends Controller
     {
         $this->action = $method;
 
-        //
+        // Initialize the Controller instance.
         $this->initialize();
 
         $response = call_user_func_array(array($this, $method), $parameters);
@@ -94,12 +137,21 @@ abstract class BaseController extends Controller
      */
     protected function processResponse($response)
     {
+        if (! $this->autoRender()) {
+            return $response;
+        }
+
+        // The auto-rendering is active.
+        else if (is_null($response)) {
+            $response = $this->createView();
+        }
+
         if (! $response instanceof Renderable) {
             return $response;
         }
 
         // The auto-rendering in a Layout of the returned View instance.
-        else if ((! $response instanceof Layout) && ! empty($this->layout)) {
+        else if ($this->autoLayout() && ! empty($this->layout) && (! $response instanceof Layout)) {
             return $this->createLayout()->with('content', $response);
         }
 
@@ -119,12 +171,12 @@ abstract class BaseController extends Controller
         }
 
         if (! is_null($theme = $this->getTheme()) && ($theme !== false)) {
-            return View::createLayout($layout, $theme);
+            return View::createLayout($layout, $theme, $this->viewData);
         }
 
-        $view = 'Layouts/' .($layout ?: 'Default');
+        $view = 'Layouts/' .$layout;
 
-        return View::make($view);
+        return View::make($view, $this->viewData);
     }
 
     /**
@@ -140,48 +192,78 @@ abstract class BaseController extends Controller
             $view = ucfirst($this->action);
         }
 
-        list ($module, $viewPath) = $this->getViewInfo();
+        $data = array_merge($this->viewData, $data);
 
-        // Compute the full qualified View name.
-        $view = $viewPath .'/' .$view;
+        // Compute the fully qualified View name.
+        $view = $this->viewPath .'/' .$view;
 
-        return View::make($view, $data, $module, $this->theme);
+        return View::make($view, $data, $this->module, $this->theme);
     }
 
     /**
-     * Gets the default View's path and module.
+     * Add a key / value pair to the view data.
+     *
+     * Bound data will be available to the view as variables.
+     *
+     * @param  string|array  $one
+     * @param  string|array  $two
+     * @return View
+     */
+    public function set($one, $two = null)
+    {
+        if (is_array($one)) {
+            $data = is_array($two) ? array_combine($one, $two) : $one;
+        } else {
+            $data = array($one => $two);
+        }
+
+        $this->viewData = array_merge($data, $this->viewData);
+
+        return $this;
+    }
+
+    /**
+     * Turns on or off Nova's conventional mode of auto-rendering.
+     *
+     * @param bool|null  $enable
+     * @return bool
+     */
+    public function autoRender($enable = null)
+    {
+        if (! is_null($enable)) {
+            $this->autoRender = (bool) $enable;
+
+            return $this;
+        }
+
+        return $this->autoRender;
+    }
+
+    /**
+     * Turns on or off Nova's conventional mode of applying layout files.
+     *
+     * @param bool|null  $enable
+     * @return bool
+     */
+    public function autoLayout($enable = null)
+    {
+        if (! is_null($enable)) {
+            $this->autoLayout = (bool) $enable;
+
+            return $this;
+        }
+
+        return $this->autoLayout;
+    }
+
+    /**
+     * Return the current called action.
      *
      * @return string
-     * @throws \BadMethodCallException
      */
-    protected function getViewInfo()
+    public function getAction()
     {
-        if (isset($this->viewInfo)) {
-            return $this->viewInfo;
-        }
-
-        // Cumpute the (application) base path - usually, it is: 'App'
-        $basePath = str_replace('\\', '/', trim(App::getNamespace(), '\\'));
-
-         // Transform the complete class name on a path like variable.
-        $classPath = str_replace('\\', '/', static::class);
-
-        // Check for a valid controller on App and its Modules.
-        if (preg_match('#^' .$basePath .'(?:/Modules/(.+))?/Controllers/(.*)$#', $classPath, $matches) === 1) {
-            return $this->viewInfo = array_slice($matches, 1);
-        }
-
-        throw new BadMethodCallException('Invalid Controller namespace');
-    }
-
-    /**
-     * Return a default View instance.
-     *
-     * @return \Nova\View\View
-     */
-    protected function getView(array $data = array())
-    {
-        return $this->createView($data);
+        return $this->action;
     }
 
     /**
@@ -191,10 +273,6 @@ abstract class BaseController extends Controller
      */
     public function getTheme()
     {
-        if (! isset($this->theme)) {
-            return $this->theme = Config::get('app.theme', 'Bootstrap');
-        }
-
         return $this->theme;
     }
 
@@ -206,5 +284,35 @@ abstract class BaseController extends Controller
     public function getLayout()
     {
         return $this->layout;
+    }
+
+    /**
+     * Return the Controller's Module if any or null.
+     *
+     * @return string|null
+     */
+    public function getModule()
+    {
+        return $this->module;
+    }
+
+    /**
+     * Return the current Views path for Controller.
+     *
+     * @return string
+     */
+    public function getViewPath()
+    {
+        return $this->viewPath;
+    }
+
+    /**
+     * Return the current View data.
+     *
+     * @return string
+     */
+    public function getViewData()
+    {
+        return $this->viewData;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Nova\Support\Facades\Config;
 use Nova\Support\ServiceProvider;
 
 use InvalidArgumentException;
@@ -14,7 +15,7 @@ class ThemeServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $namespace = 'App\\Themes';
+    protected $namespace = 'Themes';
 
 
     /**
@@ -38,12 +39,14 @@ class ThemeServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $namespace = Config::get('view.themes.namespace');
+
         $themes = $this->getInstalledThemes();
 
-        $themes->each(function ($theme)
+        $themes->each(function ($theme) use ($namespace)
         {
-            $provider = sprintf('%s\\%s\\Providers\\ThemeServiceProvider', $this->namespace, $theme);
-            
+            $provider = sprintf('%s\\%s\\Providers\\ThemeServiceProvider', $namespace, $theme);
+
             if (class_exists($provider)) {
                 $this->app->register($provider);
             }
@@ -52,7 +55,7 @@ class ThemeServiceProvider extends ServiceProvider
 
     protected function getInstalledThemes()
     {
-        $themesPath = APPDIR .'Themes';
+        $themesPath = Config::get('view.themes.path');
 
         try {
             $paths = $this->app['files']->directories($themesPath);

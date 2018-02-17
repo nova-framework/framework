@@ -34,13 +34,13 @@ if (function_exists('mb_internal_encoding')) {
 // Set The System Path
 //--------------------------------------------------------------------------
 
-define('SYSTEMDIR', ROOTDIR .str_replace('/', DS, 'vendor/nova-framework/system/'));
+define('SYSTEMDIR', BASEPATH .str_replace('/', DS, 'vendor/nova-framework/system/'));
 
 //--------------------------------------------------------------------------
 // Set The Storage Path
 //--------------------------------------------------------------------------
 
-define('STORAGE_PATH', ROOTDIR .'storage' .DS);
+define('STORAGE_PATH', BASEPATH .'storage' .DS);
 
 //--------------------------------------------------------------------------
 // Set The Framework Version
@@ -52,7 +52,7 @@ define('VERSION', Application::version());
 // Load Global Configuration
 //--------------------------------------------------------------------------
 
-$path = APPDIR .'Config.php';
+$path = APPPATH .'Config.php';
 
 if (is_readable($path)) require $path;
 
@@ -79,9 +79,9 @@ $env = $app->detectEnvironment(array(
 //--------------------------------------------------------------------------
 
 $paths = array(
-    'base'    => ROOTDIR,
-    'app'     => APPDIR,
-    'public'  => PUBLICDIR,
+    'base'    => BASEPATH,
+    'app'     => APPPATH,
+    'public'  => WEBPATH,
     'storage' => STORAGE_PATH,
 );
 

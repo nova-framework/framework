@@ -16,9 +16,9 @@ return array(
     */
 
     'themes' => array(
-        'path'      => APPDIR .'Themes',
+        'path'      => BASEPATH .'themes',
 
-        'namespace' => 'App\Themes\\',
+        'namespace' => 'Themes\\',
     ),
 
     /*

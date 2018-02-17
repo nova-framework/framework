@@ -122,7 +122,7 @@ class Profiler
             $size = filesize($file);
 
             $fileList[] = array(
-                'name' => str_replace(ROOTDIR, '/', $file),
+                'name' => str_replace(BASEPATH, '/', $file),
                 'size' => $this->getReadableFileSize($size)
             );
 

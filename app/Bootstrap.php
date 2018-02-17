@@ -1,6 +1,6 @@
 <?php
 
-use App\Modules\Platform\Models\Option;
+use Modules\Platform\Models\Option;
 
 //--------------------------------------------------------------------------
 // Load The Options

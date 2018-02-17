@@ -8,7 +8,7 @@
  *
  */
 
-use App\Modules\Attachments\Models\Attachment;
+use Modules\Attachments\Models\Attachment;
 
 use Carbon\Carbon;
 

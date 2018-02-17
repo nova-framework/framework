@@ -6,7 +6,7 @@ use Nova\Auth\Access\GateInterface as Gate;
 use Nova\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Nova\Support\Facades\Cache;
 
-use App\Modules\Permissions\Models\Permission;
+use Modules\Permissions\Models\Permission;
 
 
 class AuthServiceProvider extends ServiceProvider

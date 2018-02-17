@@ -209,7 +209,6 @@ return array(
         'URL'           => 'Nova\Support\Facades\URL',
         'Template'      => 'Nova\Support\Facades\Template',
         'View'          => 'Nova\Support\Facades\View',
-        'Cron'          => 'Nova\Support\Facades\Cron',
         'Module'        => 'Nova\Support\Facades\Module',
 
         // The Shared Facades.

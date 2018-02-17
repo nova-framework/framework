@@ -29,11 +29,3 @@
     </div>
 </footer>
 @stop
-
-@assets('js', array(
-    'https://code.jquery.com/jquery-1.12.4.min.js',
-    'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'
-))
-
-</body>
-</html>

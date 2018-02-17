@@ -91,5 +91,6 @@ if (Config::get('app.debug') !== true) {
         <?php else: ?>
             <li><i class='fa fa-close'></i> Your compiled views directory is NOT writable.</li>
         <?php endif; ?>
+        </ul>
     </div>
 </div>

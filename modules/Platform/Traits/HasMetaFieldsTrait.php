@@ -89,23 +89,23 @@ trait HasMetaFieldsTrait
      */
     private function saveOneMeta($key, $value)
     {
-        try {
-            $meta = $this->meta()->where('key', $key)->firstOrFail();
+        $relation = $this->meta();
 
-            $meta->value = $value;
+        $meta = $relation->where('key', $key)->firstOr(function () use ($relation, $key)
+        {
+            $related = $relation->getRelated();
 
-            return $meta->save();
-        }
-        catch (ModelNotFoundException $e) {
-            //
-        }
+            $foreignKey = $relation->getPlainForeignKey();
 
-        $this->meta()->create(array(
-            'key'   => $key,
-            'value' => $value,
-        ));
+            return $related->newInstance(array(
+                $foreignKey => $relation->getParentKey(),
+                'key'       => $key,
+            ));
+        });
 
-        return true;
+        $meta->value = $value;
+
+        return $meta->save();
     }
 
     /**

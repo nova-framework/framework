@@ -8,23 +8,23 @@
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 
 /** Define the absolute paths for configured directories. */
-define('ROOTDIR', realpath(__DIR__) .DS);
+define('BASEPATH', realpath(__DIR__) .DS);
 
-define('APPDIR', ROOTDIR .'app' .DS);
+define('APPPATH', BASEPATH .'app' .DS);
 
-define('PUBLICDIR', ROOTDIR .'webroot' .DS);
+define('WEBPATH', BASEPATH .'webroot' .DS);
 
 //--------------------------------------------------------------------------
 // Register The Auto Loader
 //--------------------------------------------------------------------------
 
-require ROOTDIR .'vendor' .DS .'autoload.php';
+require BASEPATH .'vendor' .DS .'autoload.php';
 
 //--------------------------------------------------------------------------
 // Turn On The Lights
 //--------------------------------------------------------------------------
 
-$app = require_once APPDIR .'Start.php';
+$app = require_once APPPATH .'Start.php';
 
 //--------------------------------------------------------------------------
 // Load The Forge Console Application

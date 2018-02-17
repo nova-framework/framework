@@ -21,17 +21,6 @@ class PermissionsTableSeeder extends Seeder
     public function run()
     {
         $permissions = array(
-
-            // The Users Profile.
-            array(
-                'name'  => 'Manage the Users Profile',
-                'slug'  => 'platform.profiles.manage',
-                'group' => 'users',
-
-                'roles' => array(1, 2),
-            ),
-
-            // The Users.
             array(
                 'name'  => 'View the Users List',
                 'slug'  => 'module.users.lists',

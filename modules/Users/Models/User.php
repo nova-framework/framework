@@ -12,58 +12,46 @@ use Shared\Auth\Reminders\RemindableTrait;
 use Shared\Auth\Reminders\RemindableInterface;
 use Shared\Notifications\NotifiableTrait;
 
-use Modules\Fields\Traits\MetableTrait;
 use Modules\Messages\Traits\HasMessagesTrait;
 use Modules\Platform\Traits\HasActivitiesTrait;
-use Modules\Users\Models\Profile;
+use Modules\Platform\Traits\HasMetaFieldsTrait;
 
 
 class User extends BaseModel implements UserInterface, RemindableInterface
 {
-    use UserTrait, RemindableTrait, AuthorizableTrait, MetableTrait, NotifiableTrait, HasActivitiesTrait, HasMessagesTrait;
+    use UserTrait, RemindableTrait, AuthorizableTrait, HasMetaFieldsTrait, HasActivitiesTrait, NotifiableTrait, HasMessagesTrait;
 
     //
     protected $table = 'users';
 
     protected $primaryKey = 'id';
 
+    /**
+     * @var array
+     */
     protected $fillable = array('username', 'password', 'email', 'image', 'profile_id');
 
+    /**
+     * @var array
+     */
     protected $hidden = array('password', 'remember_token');
 
-    // Setup the Metadata.
+    /**
+     * @var array
+     */
     protected $with = array('meta');
 
-    protected $metaTable   = 'users_meta';
-    protected $metaKeyName = 'user_id';
-
-    // Caches.
-    protected $cachedFields;
+    // ACL caches.
     protected $cachedRoles;
     protected $cachedPermissions;
 
 
-    public function profile()
+    /**
+     * @return \Nova\Database\ORM\Relations\HasMany
+     */
+    public function meta()
     {
-        return $this->belongsTo('Modules\Users\Models\Profile', 'profile_id');
-    }
-
-    public function getMetaFields()
-    {
-        if (isset($this->cachedFields)) {
-            return $this->cachedFields;
-        }
-
-        // The fields are not cached.
-        else if ($this->exists) {
-            $this->load('profile');
-
-            return $this->cachedFields = $this->profile->fields;
-        } else {
-            $profile = Profile::findOrFail(1);
-
-            return $this->cachedFields = $profile->fields;
-        }
+        return $this->hasMany('Modules\Users\Models\UserMeta', 'user_id');
     }
 
     public function realname()
@@ -73,11 +61,11 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     public function picture()
     {
-        $path = 'assets/images/pictures/';
-
         $picture = $this->meta->picture;
 
-        if (! empty($picture) && is_readable(BASEPATH .($path .= basename($picture)))) {
+        $path = ! empty($picture) ? 'assets/images/pictures/' .basename($picture) : null;
+
+        if (! is_null($path) && is_readable(BASEPATH .$path)) {
             // Nothing to do.
         } else {
             // Fallback to the default image.

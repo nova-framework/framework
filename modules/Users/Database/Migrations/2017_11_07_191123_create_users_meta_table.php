@@ -18,7 +18,6 @@ class CreateUsersMetaTable extends Migration
         {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->index();
-            $table->string('type');
             $table->string('key')->index();
             $table->text('value')->nullable();
         });

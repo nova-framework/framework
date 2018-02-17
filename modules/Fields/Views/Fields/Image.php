@@ -1,1 +1,0 @@
-<img src="<?= site_url($path); ?>" class="img-thumbnail img-responsive" alt="<?= isset($name) ? $name : $name = preg_replace('#^([^\-]+)\-(.*)$#s', '$2', basename($path)); ?>" title="<?= $name; ?>" style="margin-bottom: 0; max-height: 200px; width:auto;">

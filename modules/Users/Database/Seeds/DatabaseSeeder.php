@@ -22,7 +22,6 @@ class DatabaseSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
         // Call the seeders.
-        $this->call('Modules\Users\Database\Seeds\UserProfilesTableSeeder');
         $this->call('Modules\Users\Database\Seeds\UsersTableSeeder');
         $this->call('Modules\Users\Database\Seeds\PermissionsTableSeeder');
 

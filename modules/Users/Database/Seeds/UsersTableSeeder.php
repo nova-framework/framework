@@ -36,18 +36,15 @@ class UsersTableSeeder extends Seeder
             'api_token'      => $this->uniqueToken(),
         ));
 
-        $user->load('meta');
-
-        $user->first_name = 'Site';
-        $user->last_name  = 'Administrator';
-        $user->location   = 'Craiova, Romania';
-
-        $user->activated       = 1;
-        $user->activation_code = '';
-
-        $user->save();
-
         $user->roles()->attach(array(1));
+
+        $user->saveMeta(array(
+            'first_name'      => 'Site',
+            'last_name'       => 'Administrator',
+            'location'        => 'Craiova, Romania',
+            'activated'       => 1,
+            'activation_code' => '',
+        ));
 
         //
         $user = User::create(array(
@@ -60,18 +57,15 @@ class UsersTableSeeder extends Seeder
             'api_token'      => $this->uniqueToken(),
         ));
 
-        $user->load('meta');
-
-        $user->first_name = 'Marcus';
-        $user->last_name  = 'Spears';
-        $user->location   = 'London, UK';
-
-        $user->activated       = 1;
-        $user->activation_code = '';
-
-        $user->save();
-
         $user->roles()->attach(array(2));
+
+        $user->saveMeta(array(
+            'first_name'      => 'Marcus',
+            'last_name'       => 'Spears',
+            'location'        => 'London, UK',
+            'activated'       => 1,
+            'activation_code' => '',
+        ));
 
         //
         $user = User::create(array(
@@ -84,18 +78,15 @@ class UsersTableSeeder extends Seeder
             'api_token'      => $this->uniqueToken(),
         ));
 
-        $user->load('meta');
-
-        $user->first_name = 'Michael';
-        $user->last_name  = 'White';
-        $user->location   = 'Rome, Italy';
-
-        $user->activated       = 1;
-        $user->activation_code = '';
-
-        $user->save();
-
         $user->roles()->attach(array(3));
+
+        $user->saveMeta(array(
+            'first_name'      => 'Michael',
+            'last_name'       => 'White',
+            'location'        => 'Rome, Italy',
+            'activated'       => 1,
+            'activation_code' => '',
+        ));
 
         //
         $user = User::create(array(
@@ -108,18 +99,15 @@ class UsersTableSeeder extends Seeder
             'api_token'      => $this->uniqueToken(),
         ));
 
-        $user->load('meta');
-
-        $user->first_name = 'John';
-        $user->last_name  = 'Kennedy';
-        $user->location   = 'Moscow, Russia';
-
-        $user->activated       = 1;
-        $user->activation_code = '';
-
-        $user->save();
-
         $user->roles()->attach(array(4));
+
+        $user->saveMeta(array(
+            'first_name'      => 'John',
+            'last_name'       => 'Kennedy',
+            'location'        => 'Moscow, Russia',
+            'activated'       => 1,
+            'activation_code' => '',
+        ));
 
         //
         $user = User::create(array(
@@ -132,14 +120,13 @@ class UsersTableSeeder extends Seeder
             'api_token'      => $this->uniqueToken(),
         ));
 
-        $user->load('meta');
-
-        $user->first_name = 'Mark';
-        $user->last_name  = 'Black';
-        $user->location   = 'Paris, France';
-
-        $user->activated       = 1;
-        $user->activation_code = '';
+        $user->saveMeta(array(
+            'first_name'      => 'Mark',
+            'last_name'       => 'Black',
+            'location'        => 'Paris, France',
+            'activated'       => 1,
+            'activation_code' => '',
+        ));
 
         $user->save();
 

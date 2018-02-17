@@ -6,7 +6,6 @@
  * @version 3.0
  */
 
-use Modules\Users\Models\Profile;
 use Modules\Users\Models\User;
 
 
@@ -15,27 +14,6 @@ use Modules\Users\Models\User;
 Event::listen('backend.menu.sidebar', function ()
 {
     return array(
-
-        // Profile.
-        array(
-            'url'    => '#',
-            'title'  => __d('roles', 'Platform'),
-            'icon'   => 'cube',
-            'weight' => 0,
-
-            //
-            'path'   => 'platform',
-        ),
-        array(
-            'url'    => site_url('admin/profile'),
-            'title'  => __d('users', 'Users Profile'),
-            'icon'   => 'circle-o',
-            'weight' => 2,
-
-            //
-            'path'   => 'platform.profile',
-            'can'    => 'manage:' .Profile::class,
-        ),
 
         // Users.
         array(

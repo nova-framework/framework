@@ -73,12 +73,6 @@ return array(
             'enabled'  => true,
             'order'    => 9001,
         ),
-        'files' => array(
-            'name'     => 'Modules/Files',
-            'basename' => 'Files',
-            'enabled'  => true,
-            'order'    => 9001,
-        ),
         'messages' => array(
             'name'     => 'Modules/Messages',
             'basename' => 'Messages',

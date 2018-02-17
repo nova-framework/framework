@@ -80,10 +80,10 @@ trait HasMetaFieldsTrait
     /**
      * @param string $key
      * @param mixed $value
-     * @param boolean $loadMeta
+     * @param boolean $load
      * @return bool
      */
-    private function saveOneMeta($key, $value, $loadMeta = false)
+    private function saveOneMeta($key, $value, $load = false)
     {
         $meta = $this->meta();
 
@@ -103,7 +103,7 @@ trait HasMetaFieldsTrait
 
         $result = $item->save();
 
-        if ($loadMeta) {
+        if ($load) {
             $this->load('meta');
         }
 
@@ -134,17 +134,17 @@ trait HasMetaFieldsTrait
     /**
      * @param string $key
      * @param mixed $value
-     * @param boolean $loadMeta
+     * @param boolean $load
      * @return \Nova\Database\ORM\Model
      */
-    private function createOneMeta($key, $value, $loadMeta = false)
+    private function createOneMeta($key, $value, $load = false)
     {
         $item = $this->meta()->create(array(
             'key'   => $key,
             'value' => $value,
         ));
 
-        if ($loadMeta) {
+        if ($load) {
             $this->load('meta');
         }
 

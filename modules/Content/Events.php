@@ -91,7 +91,7 @@ Event::listen('backend.menu.sidebar', function ()
             'url'    => site_url('admin/content/categories'),
             'title'  => __d('content', 'Categories'),
             'icon'   => 'circle-o',
-            'weight' => 2,
+            'weight' => 3,
 
             //
             'path'   => 'posts.categories',
@@ -101,7 +101,7 @@ Event::listen('backend.menu.sidebar', function ()
             'url'    => site_url('admin/content/tags'),
             'title'  => __d('content', 'Tags'),
             'icon'   => 'circle-o',
-            'weight' => 2,
+            'weight' => 3,
 
             //
             'path'   => 'posts.tags',
@@ -112,11 +112,11 @@ Event::listen('backend.menu.sidebar', function ()
         array(
             'url'    => site_url('admin/comments'),
             'title'  => __d('content', 'Comments'),
-            'icon'   => 'comments',
-            'weight' => 4,
+            'icon'   => 'circle-o',
+            'weight' => 2,
 
             //
-            'path'   => 'comments',
+            'path'   => 'posts.comments',
             //'can'    => 'lists:' .Comment::class,
         ),
 

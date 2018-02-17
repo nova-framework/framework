@@ -220,17 +220,6 @@ return array(
         'Password'      => 'Shared\Support\Facades\Password',
         'Widget'        => 'Shared\Support\Facades\Widget',
 
-        // The Shared Helpers.
-        'Date'          => 'Shared\Helpers\Date',
-        'Document'      => 'Shared\Helpers\Document',
-        'Ftp'           => 'Shared\Helpers\Ftp',
-        'GeoCode'       => 'Shared\Helpers\GeoCode',
-        'Inflector'     => 'Shared\Helpers\Inflector',
-        'Number'        => 'Shared\Helpers\Number',
-        'ReservedWords' => 'Shared\Helpers\ReservedWords',
-        'SimpleCurl'    => 'Shared\Helpers\SimpleCurl',
-        'Tags'          => 'Shared\Helpers\Tags',
-
         // The Forensics Console.
         'Console'       => 'Nova\Forensics\Console',
     ),

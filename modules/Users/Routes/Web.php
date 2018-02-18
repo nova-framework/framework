@@ -15,12 +15,6 @@
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
 {
-    // The Users Profile.
-    Route::get( 'profile',              array('middleware' => 'auth', 'uses' => 'Profiles@index'));
-    Route::post('profile',              array('middleware' => 'auth', 'uses' => 'Profiles@store'));
-    Route::post('profile/{id}',         array('middleware' => 'auth', 'uses' => 'Profiles@update'));
-    Route::post('profile/{id}/destroy', array('middleware' => 'auth', 'uses' => 'Profiles@destroy'));
-
     // The Users Search.
     Route::get('users/search', array('middleware' => 'auth', 'uses' => 'Users@search'));
 

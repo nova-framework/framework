@@ -268,8 +268,8 @@ class Registrar extends BaseController
         }
 
         $user->saveMeta(array(
-            'activated'       = 1,
-            'activation_code' = null,
+            'activated'       => 1,
+            'activation_code' => null,
         ));
 
         // Redirect to the login page.

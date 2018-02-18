@@ -23,11 +23,6 @@ trait HasMetaFieldsTrait
     }
 
     /**
-     * @return \Nova\Database\ORM\Relations\HasMany
-     */
-    abstract public function meta();
-
-    /**
      * @param \Nova\Database\ORM\Builder $query
      * @param string $meta
      * @param mixed $value

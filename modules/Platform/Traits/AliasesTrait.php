@@ -44,7 +44,7 @@ trait AliasesTrait
                 if (is_array($value)) {
                     $meta = Arr::get($value, 'meta');
 
-                    return ! is_null($meta) ? $this->meta->getItem($meta) : null;
+                    return ! is_null($meta) ? $this->meta->$meta : null;
                 }
 
                 return parent::getAttribute($value);

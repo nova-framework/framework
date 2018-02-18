@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Platform\Models;
+namespace Modules\Platform\Database\ORM;
 
 use Nova\Database\ORM\Model as BaseModel;
 
-use Modules\Platform\Support\MetaCollection;
+use Modules\Platform\Database\ORM\MetaCollection;
 
 use Exception;
 

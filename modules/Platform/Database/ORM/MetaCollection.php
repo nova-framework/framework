@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Platform\Support;
+namespace Modules\Platform\Database\ORM;
 
 use Nova\Database\ORM\Collection;
 

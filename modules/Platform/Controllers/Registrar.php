@@ -24,6 +24,7 @@ use Shared\Support\ReCaptcha;
 use Modules\Platform\Notifications\AccountActivation as AccountActivationNotification;
 use Modules\Roles\Models\Role;
 use Modules\Users\Models\User;
+use Modules\Users\Models\UserMeta;
 
 use Modules\Platform\Controllers\BaseController;
 
@@ -112,21 +113,20 @@ class Registrar extends BaseController
             'password' => $password,
         ));
 
-        // Update the Meta / Custom Fields.
-        $user->load('meta');
-
-        // Handle the meta-data.
-        $user->meta->activated = 0;
-
-        $user->meta->activation_code = $token = $this->createNewToken();
-
-        $user->save();
-
         // Retrieve the default 'user' Role.
         $role = Role::where('slug', 'user')->firstOrFail();
 
         // Update the user's associated Roles.
         $user->roles()->attach($role);
+
+        // Create a new activation token.
+        $token = $this->createNewToken();
+
+        // Handle the meta-data.
+        $user->saveMeta(array(
+            'activated'       => 0,
+            'activation_code' => $token,
+        ));
 
         // Send the associated Activation Notification.
         $hashKey = Config::get('app.key');
@@ -194,7 +194,9 @@ class Registrar extends BaseController
                 ->withStatus(__d('platform', 'The selected email cannot receive Account Activation links.', $email), 'danger');
         }
 
-        $user->meta->activation_code = $token = $this->createNewToken();
+        $token = $this->createNewToken();
+
+        $user->saveMeta('activation_code', $token);
 
         $user->save();
 
@@ -265,11 +267,10 @@ class Registrar extends BaseController
                 ->withStatus(__d('platform', 'Link is invalid, please request a new link.'), 'danger');
         }
 
-        $user->activated = 1;
-
-        $user->activation_code = null;
-
-        $user->save();
+        $user->saveMeta(array(
+            'activated'       = 1,
+            'activation_code' = null,
+        ));
 
         // Redirect to the login page.
         $guard = Config::get('auth.defaults.guard', 'web');
@@ -298,7 +299,9 @@ class Registrar extends BaseController
      */
     public function createNewToken()
     {
-        $tokens = User::whereNotNull('activation_code')->lists('activation_code');
+        $tokens = UserMeta::where('key', 'activation_code')
+            ->whereNotNull('value')
+            ->lists('value');
 
         do {
             $token = Str::random(100);

@@ -12,6 +12,7 @@ use Nova\Http\Request;
 use Nova\Auth\Access\AuthorizationException;
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\Cache;
+use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
@@ -213,6 +214,8 @@ class Users extends BaseController
         if (Gate::denies('update', $user)) {
             throw new AuthorizationException();
         }
+
+        //$results = Event::fire('module.users.admin.edit', array($request, $user));
 
         $fields = $user->profile->fields;
 

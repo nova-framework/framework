@@ -3,7 +3,6 @@
 namespace Modules\Platform\Traits;
 
 use Nova\Database\ORM\Builder;
-use Nova\Database\ORM\ModelNotFoundException;
 
 
 trait HasMetaFieldsTrait

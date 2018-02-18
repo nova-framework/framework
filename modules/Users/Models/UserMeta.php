@@ -2,7 +2,7 @@
 
 namespace Modules\Users\Models;
 
-use Modules\Platform\Database\ORM\MetaField as BaseModel;
+use Modules\Platform\Database\ORM\MetaModel as BaseModel;
 
 
 class UserMeta extends BaseModel

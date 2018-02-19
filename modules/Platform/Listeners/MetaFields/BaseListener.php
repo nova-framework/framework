@@ -3,13 +3,22 @@
 namespace Modules\Platform\Listeners\MetaFields;
 
 use Nova\Http\Request;
+use Nova\Support\Facades\File;
 use Nova\Support\Facades\View;
 
 use BadMethodCallException;
+use Exception;
 
 
 class BaseListener
 {
+    /**
+     * Where we store the uploaded files.
+     *
+     * @var string
+     */
+    protected $path = BASEPATH .'assets' .DS .'files';
+
     /**
      * @var \Nova\Http\Request
      */
@@ -52,9 +61,39 @@ class BaseListener
 
         $module = ($matches[1] == 'Modules') ? $matches[2] : null;
 
-        $view = 'Listeners/' .$matches[3] .'/' .$view;
+        $view = 'Partials/' .$matches[3] .'/' .$view;
 
         return View::make($view, $data, $module);
+    }
+
+    /**
+     * Delete a file and log the errors if any.
+     *
+     * @param  string  $path
+     * @return void
+     */
+    protected function deleteFile($path)
+    {
+        try {
+            File::delete($path);
+        }
+        catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
+    }
+
+    /**
+     * Gets the path where are stored the (uploaded) files.
+     *
+     * @var string
+     */
+    public function getFilesPath($folder = null)
+    {
+        if (! is_null($folder)) {
+            return $this->path .DS .$folder;
+        }
+
+        return $this->path;
     }
 
     /**

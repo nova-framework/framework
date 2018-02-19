@@ -27,7 +27,7 @@ use Modules\Roles\Models\Role;
 use Modules\Users\Models\Profile;
 use Modules\Users\Models\User;
 
-use Modules\Users\Events\MetaFields\UserValidation;
+use Modules\Users\Events\MetaFields\UpdateValidation;
 use Modules\Users\Events\MetaFields\UserEditing;
 
 use Carbon\Carbon;
@@ -394,7 +394,7 @@ class Users extends BaseController
 
     protected function updateValidator(NovaValidator $validator, User $user = null)
     {
-        $event = new UserValidation($validator, $user);
+        $event = new UpdateValidation($validator, $user);
 
         Event::fire($event);
     }

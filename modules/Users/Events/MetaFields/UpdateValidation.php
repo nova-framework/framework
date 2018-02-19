@@ -10,7 +10,7 @@ use App\Events\Event;
 use Modules\Users\Models\User;
 
 
-class UserValidation extends Event
+class UpdateValidation extends Event
 {
     use DispatchableTrait;
 

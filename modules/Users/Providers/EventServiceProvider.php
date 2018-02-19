@@ -14,14 +14,14 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = array(
+        'Modules\Users\Events\MetaFields\UpdateUserValidation' => array(
+            'Modules\Users\Listeners\MetaFields@updateValidator',
+        ),
         'Modules\Users\Events\MetaFields\UserEditing' => array(
             'Modules\Users\Listeners\MetaFields@edit',
         ),
         'Modules\Users\Events\MetaFields\UserSaving' => array(
             'Modules\Users\Listeners\MetaFields@save',
-        ),
-        'Modules\Users\Events\MetaFields\Validating' => array(
-            'Modules\Users\Listeners\MetaFields@validator',
         ),
     );
 

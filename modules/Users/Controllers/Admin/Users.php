@@ -27,8 +27,9 @@ use Modules\Roles\Models\Role;
 use Modules\Users\Models\Profile;
 use Modules\Users\Models\User;
 
-use Modules\Users\Events\MetaFields\UpdateValidation;
+use Modules\Users\Events\MetaFields\UpdateUserValidation;
 use Modules\Users\Events\MetaFields\UserEditing;
+use Modules\Users\Events\MetaFields\UserSaving;
 
 use Carbon\Carbon;
 
@@ -70,22 +71,25 @@ class Users extends BaseController
             'email'                 => __d('users', 'E-mail'),
         );
 
+        // Create a Validator instance.
+        $validator = Validator::make($data, $rules, $messages, $attributes);
+
         // Add the custom Validation Rule commands.
-        Validator::extend('valid_name', function($attribute, $value, $parameters)
+        $validator->addExtension('valid_name', function($attribute, $value, $parameters)
         {
             $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){1,}$~u';
 
             return (preg_match($pattern, $value) === 1);
         });
 
-        Validator::extend('strong_password', function($attribute, $value, $parameters)
+        $validator->addExtension('strong_password', function($attribute, $value, $parameters)
         {
             $pattern = "/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/";
 
             return (preg_match($pattern, $value) === 1);
         });
 
-        return Validator::make($data, $rules, $messages, $attributes);
+        return $validator;
     }
 
     public function index()
@@ -394,7 +398,7 @@ class Users extends BaseController
 
     protected function updateValidator(NovaValidator $validator, User $user = null)
     {
-        $event = new UpdateValidation($validator, $user);
+        $event = new UpdateUserValidation($validator, $user);
 
         Event::fire($event);
     }

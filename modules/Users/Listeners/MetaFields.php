@@ -7,7 +7,7 @@ use Nova\Support\Facades\File;
 use Nova\Support\Str;
 
 use Modules\Platform\Listeners\MetaFields\BaseListener;
-use Modules\Users\Events\MetaFields\UpdateValidation;
+use Modules\Users\Events\MetaFields\UpdateUserValidation;
 use Modules\Users\Events\MetaFields\UserEditing;
 use Modules\Users\Events\MetaFields\UserSaving;
 
@@ -17,6 +17,43 @@ use InvalidArgumentException;
 
 class MetaFields extends BaseListener
 {
+
+    /**
+     * Handle the event.
+     *
+     * @param  Modules\Users\Events\UpdateValidation  $event
+     * @return void
+     */
+    public function updateValidator(UpdateUserValidation $event)
+    {
+        $rules = array(
+            'first_name' => 'required|min:3|max:100|valid_name',
+            'last_name'  => 'required|min:3|max:100|valid_name',
+            'location'   => 'min:3|max:100',
+            'picture'    => 'max:1024|mimes:png,jpg,jpeg,gif',
+        );
+
+        $messages = array(
+            //
+        );
+
+        $attributes = array(
+            'first_name' => __d('users', 'First Name'),
+            'last_name'  => __d('users', 'Last Name'),
+            'location'   => __d('users', 'Location'),
+            'picture'    => __d('users', 'Picture'),
+        );
+
+        // Update the Validator instance passed via the given Event.
+        $validator = $event->validator;
+
+        $validator->setRules(
+            array_merge($validator->getRules(), $rules)
+        );
+
+        $validator->setCustomMessages($messages);
+        $validator->addCustomAttributes($attributes);
+    }
 
     /**
      * Handle the event.
@@ -41,21 +78,6 @@ class MetaFields extends BaseListener
     /**
      * Handle the event.
      *
-     * @param  Modules\Users\Events\UserValidation  $event
-     * @return void
-     */
-    public function validator(UpdateValidation $event)
-    {
-        $rules = array();
-
-        $attributes = array();
-
-        return array($rules, $attributes);
-    }
-
-    /**
-     * Handle the event.
-     *
      * @param  Modules\Users\Events\UserEditing  $event
      * @return void
      */
@@ -66,8 +88,8 @@ class MetaFields extends BaseListener
         $request = $this->getRequest();
 
         $user->saveMeta(array(
-            'first_name' => $request->input('first-name'),
-            'last_name'  => $request->input('last-name'),
+            'first_name' => $request->input('first_name'),
+            'last_name'  => $request->input('last_name'),
             'location'   => $request->input('location'),
         ));
 

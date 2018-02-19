@@ -1,13 +1,13 @@
 <div class="form-group">
     <label class="col-sm-4 control-label" for="first-name"><?= __d('users', 'First Name'); ?></label>
     <div class="col-sm-8">
-        <input name="first-name" id="first-name" type="text" class="form-control" value="<?= $request->input('first-name', $meta ? $meta->first_name : null); ?>" placeholder="<?= __d('users', 'First Name'); ?>">
+        <input name="first_name" id="first-name" type="text" class="form-control" value="<?= $request->input('first_name', $meta ? $meta->first_name : null); ?>" placeholder="<?= __d('users', 'First Name'); ?>">
      </div>
 </div>
 <div class="form-group">
     <label class="col-sm-4 control-label" for="last-name"><?= __d('users', 'Last Name'); ?></label>
     <div class="col-sm-8">
-        <input name="last-name" id="last-name" type="text" class="form-control" value="<?= $request->input('last-name', $meta ? $meta->last_name : null); ?>" placeholder="<?= __d('users', 'Last Name'); ?>">
+        <input name="last_name" id="last-name" type="text" class="form-control" value="<?= $request->input('last_name', $meta ? $meta->last_name : null); ?>" placeholder="<?= __d('users', 'Last Name'); ?>">
      </div>
 </div>
 <div class="form-group">

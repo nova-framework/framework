@@ -20,11 +20,15 @@ use Nova\Support\Facades\File;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Arr;
+use Nova\Validation\Validator as NovaValidator;
 
 use Modules\Platform\Controllers\Admin\BaseController;
 use Modules\Roles\Models\Role;
 use Modules\Users\Models\Profile;
 use Modules\Users\Models\User;
+
+use Modules\Users\Events\MetaFields\UserValidation;
+use Modules\Users\Events\MetaFields\UserEditing;
 
 use Carbon\Carbon;
 
@@ -215,20 +219,16 @@ class Users extends BaseController
             throw new AuthorizationException();
         }
 
-        //$results = Event::fire('module.users.admin.edit', array($request, $user));
-
-        $fields = $user->profile->fields;
-
         // Get all available User Roles.
         $roles = Role::all();
 
-        // The Custom Fields.
-        $html = $fields->renderForEditor($request, $user->meta);
+        // Handle the User's Meta Fields.
+        $fields = $this->renderFieldsForEditor($user);
 
         return $this->createView()
             ->shares('title', __d('users', 'Edit User'))
             ->with('roles', $roles)
-            ->with('fields', $html)
+            ->with('fields', $fields)
             ->with('user', $user);
     }
 
@@ -381,5 +381,21 @@ class Users extends BaseController
             ->shares('title', __d('users', 'Searching Users for: {0}', $search))
             ->with('search', $search)
             ->with('users', $users);
+    }
+
+    protected function renderFieldsForEditor(User $user = null)
+    {
+        $event = new UserEditing($user);
+
+        $results = Event::fire($event);
+
+        return implode("\n", array_filter($results));
+    }
+
+    protected function updateValidator(NovaValidator $validator, User $user = null)
+    {
+        $event = new UserValidation($validator, $user);
+
+        Event::fire($event);
     }
 }

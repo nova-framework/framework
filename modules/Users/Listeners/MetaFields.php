@@ -7,7 +7,9 @@ use Nova\Support\Facades\File;
 use Nova\Support\Str;
 
 use Modules\Platform\Listeners\MetaFields\BaseListener;
+
 use Modules\Users\Events\MetaFields\UpdateUserValidation;
+use Modules\Users\Events\MetaFields\UserDeleting;
 use Modules\Users\Events\MetaFields\UserEditing;
 use Modules\Users\Events\MetaFields\UserSaving;
 
@@ -58,6 +60,21 @@ class MetaFields extends BaseListener
     /**
      * Handle the event.
      *
+     * @param  Modules\Users\Events\UserDeleting  $event
+     * @return void
+     */
+    public function delete(UserDeleting $event)
+    {
+        $filePath = $event->user->picture;
+
+        if (! empty($filePath) && File::exists($filePath)) {
+            $this->deleteFile($filePath);
+        }
+    }
+
+    /**
+     * Handle the event.
+     *
      * @param  Modules\Users\Events\UserEditing  $event
      * @return void
      */
@@ -85,6 +102,7 @@ class MetaFields extends BaseListener
     {
         $user = $event->user;
 
+        //
         $request = $this->getRequest();
 
         $user->saveMeta(array(
@@ -119,14 +137,27 @@ class MetaFields extends BaseListener
 
         $picture->move($path, $fileName);
 
-        // Finally we save the associated meta field.
-        $filePath = $path .DS .$fileName;
-
-        // We will delete the previous file, before saving the uploaded one.
+        // Before saving the file path, we will delete the previous uploaded file.
         if (! empty($filePath = $user->picture) && File::exists($filePath)) {
             $this->deleteFile($filePath);
         }
 
+        // Finally we save the associated meta field.
+        $filePath = $path .DS .$fileName;
+
         $user->saveMeta('picture', $filePath);
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param  Modules\Users\Events\UserShowing  $event
+     * @return void
+     */
+    public function show(UserShowing $event)
+    {
+        return $this->createView()
+            ->with('meta', $event->user->meta)
+            ->render();
     }
 }

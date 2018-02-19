@@ -17,11 +17,17 @@ class EventServiceProvider extends ServiceProvider
         'Modules\Users\Events\MetaFields\UpdateUserValidation' => array(
             'Modules\Users\Listeners\MetaFields@updateValidator',
         ),
+        'Modules\Users\Events\MetaFields\UserDeleting' => array(
+            'Modules\Users\Listeners\MetaFields@delete',
+        ),
         'Modules\Users\Events\MetaFields\UserEditing' => array(
             'Modules\Users\Listeners\MetaFields@edit',
         ),
         'Modules\Users\Events\MetaFields\UserSaving' => array(
             'Modules\Users\Listeners\MetaFields@save',
+        ),
+        'Modules\Users\Events\MetaFields\UserShowing' => array(
+            'Modules\Users\Listeners\MetaFields@show',
         ),
     );
 
@@ -43,5 +49,18 @@ class EventServiceProvider extends ServiceProvider
         $path = $path .DS .'Events.php';
 
         $this->loadEventsFrom($path);
+    }
+
+    /**
+     * Register the Service Provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        parent::register();
+
+        //
+        $this->app->singleton('Modules\Users\Listeners\MetaFields');
     }
 }

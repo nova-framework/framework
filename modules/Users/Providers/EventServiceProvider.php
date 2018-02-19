@@ -18,7 +18,10 @@ class EventServiceProvider extends ServiceProvider
             'Modules\Users\Listeners\MetaFields@edit',
         ),
         'Modules\Users\Events\MetaFields\UserValidation' => array(
-            'Modules\Users\Listeners\MetaFields@validator',
+            'Modules\Users\Listeners\MetaFields@validate',
+        ),
+        'Modules\Users\Events\MetaFields\UserSaving' => array(
+            'Modules\Users\Listeners\MetaFields@save',
         ),
     );
 

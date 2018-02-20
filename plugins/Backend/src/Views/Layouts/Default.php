@@ -83,9 +83,9 @@
                                 <div class="text-muted" style="margin-bottom: 10px;"><?= __d('backend', 'Member since {0}', $sinceDate); ?></div>
                             </div><!-- /dropdown-toolbar -->
                             <div class="dropdown-footer" style="padding: 10px;">
-                                <a class="btn btn-success pull-left" href="<?= site_url('admin/profile'); ?>"><i class='fa fa-user'></i> <?= __d('backend', 'Account'); ?></a>
+                                <a class="btn btn-sm btn-success pull-left" href="<?= site_url('admin/profile'); ?>"><i class='fa fa-user'></i> <?= __d('backend', 'Account'); ?></a>
 
-                                <a class="btn btn-primary pull-right" href="<?= site_url('logout'); ?>"
+                                <a class="btn btn-sm btn-primary pull-right" href="<?= site_url('logout'); ?>"
                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     <i class='fa fa-sign-out'></i> <?= __d('backend', 'Logout'); ?>
                                 </a>

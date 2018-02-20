@@ -78,7 +78,7 @@ class Roles extends BaseController
 
             array('data' => 'actions', 'uses' => function($role)
             {
-                return View::make('Backend::Partials/RolesTableActions')
+                return View::make('AcmeCorp/Backend::Partials/RolesTableActions')
                     ->with('role', $role)
                     ->render();
             }),

@@ -3,7 +3,7 @@
 
 define("DS", DIRECTORY_SEPARATOR);
 
-define("BASEPATH", dirname(dirname(__FILE__)) .DS);
+define("BASEPATH", dirname(__FILE__) .DS);
 
 $languages = array(
     'cs',

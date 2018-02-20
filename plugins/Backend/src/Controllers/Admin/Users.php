@@ -115,7 +115,7 @@ class Users extends BaseController
 
             array('data' => 'actions', 'uses' => function($user)
             {
-                return View::make('Backend::Partials/UsersTableActions')
+                return View::make('AcmeCorp/Backend::Partials/UsersTableActions')
                     ->with('user', $user)
                     ->render();
             }),

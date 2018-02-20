@@ -2,10 +2,10 @@
 
 namespace Modules\Users\Models;
 
-use Shared\Database\ORM\MetaField\MetaField as BaseModel;
+use Shared\Database\ORM\MetaField\MetaField;
 
 
-class UserMeta extends BaseModel
+class UserMeta extends MetaField
 {
     protected $table = 'users_meta';
 

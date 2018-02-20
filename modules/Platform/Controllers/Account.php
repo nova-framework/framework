@@ -90,7 +90,7 @@ class Account extends BaseController
     {
         $user = Auth::user();
 
-        // Handle the User's Meta Fields.
+        // Handle the User's Meta Fields for displaying.
         $responses = Event::fire(new UserShowing($user));
 
         //
@@ -102,6 +102,7 @@ class Account extends BaseController
             }
         }
 
+        // Handle the User's Meta Fields for editing.
         $responses = Event::fire(new UserEditing($user));
 
         $html = implode("\n", array_filter($responses, function ($response)

@@ -56,20 +56,23 @@ class Registrar extends BaseController
             'g-recaptcha-response' => __d('platform', 'ReCaptcha'),
         );
 
+        // Create a Validator instance.
+        $validator = Validator::make($data, $rules, $messages, $attributes);
+
         // Add the custom Validation Rule commands.
-        Validator::extend('recaptcha', function($attribute, $value, $parameters) use ($remoteIp)
+        $validator->addExtension('recaptcha', function($attribute, $value, $parameters) use ($remoteIp)
         {
             return ReCaptcha::check($value, $remoteIp);
         });
 
-        Validator::extend('strong_password', function($attribute, $value, $parameters)
+        $validator->addExtension('strong_password', function($attribute, $value, $parameters)
         {
             $pattern = "/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/";
 
             return (preg_match($pattern, $value) === 1);
         });
 
-        return Validator::make($data, $rules, $messages, $attributes);
+        return $validator;
     }
 
     /**
@@ -157,15 +160,9 @@ class Registrar extends BaseController
      */
     public function verifyPost(Request $request)
     {
-        $remoteIp = $request->ip();
-
-        Validator::extend('recaptcha', function($attribute, $value, $parameters) use ($remoteIp)
-        {
-            return ReCaptcha::check($value, $remoteIp);
-        });
-
+        // Create a Validator instance.
         $validator = Validator::make(
-            $input = $request->only('email', 'g-recaptcha-response'),
+            $request->only('email', 'g-recaptcha-response'),
             array(
                 'email'                => 'required|email|exists:users,email',
                 'g-recaptcha-response' => 'required|min:1|recaptcha'
@@ -179,11 +176,17 @@ class Registrar extends BaseController
             )
         );
 
+        // Add the custom Validation Rule commands.
+        $validator->addExtension('recaptcha', function($attribute, $value, $parameters) use ($request)
+        {
+            return ReCaptcha::check($value, $request->ip());
+        });
+
         if ($validator->fails()) {
             return Redirect::back()->withStatus($validator->errors(), 'danger');
         }
 
-        $email = $input['email'];
+        $email = $request->input('email');
 
         try {
             $user = User::where('email', $email)->hasMeta('activated', 0)->firstOrFail();
@@ -191,7 +194,7 @@ class Registrar extends BaseController
         catch (ModelNotFoundException $e) {
             return Redirect::back()
                 ->withInput(array('email' => $email))
-                ->withStatus(__d('platform', 'The selected email cannot receive Account Activation links.', $email), 'danger');
+                ->withStatus(__d('platform', 'The selected email cannot receive Account Activation links.'), 'danger');
         }
 
         $token = $this->createNewToken();

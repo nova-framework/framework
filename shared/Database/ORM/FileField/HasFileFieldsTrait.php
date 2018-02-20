@@ -114,22 +114,22 @@ trait HasFileFieldsTrait
         else if (is_string($value)) {
             $rawValue = false;
 
-            if (Str::startsWith($value, 'raw:')) {
-                $rawValue = true;
+            if (! Str::startsWith($value, 'raw:')) {
+                $name = pathinfo($value, PATHINFO_FILENAME);
 
-                $value = substr($value, 4);
-            }
+                $extension = pathinfo($value, PATHINFO_EXTENSION);
 
-            $name = pathinfo($value, PATHINFO_FILENAME);
+                $fileName = join('.', array($name, $extension));
 
-            $extension = pathinfo($value, PATHINFO_EXTENSION);
-
-            $fileName = join('.', array($name, $extension));
-
-            if (! $rawValue) {
+                //
                 $fileField = new FileField($this, $key, $fileName);
 
                 $value = $fileField->copyLocal($value);
+            }
+
+            // A raw file path was given as value.
+            else {
+                $value = substr($value, 4);
             }
 
             $this->attributes[$key] = $value;

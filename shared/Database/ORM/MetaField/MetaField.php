@@ -12,11 +12,6 @@ use Exception;
 abstract class MetaField extends BaseModel
 {
     /**
-     * @var string
-     */
-    protected $primaryKey = 'id';
-
-    /**
      * @var bool
      */
     public $timestamps = false;

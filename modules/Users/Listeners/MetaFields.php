@@ -139,7 +139,7 @@ class MetaFields extends BaseListener
         $picture->move($path, $fileName);
 
         // We will delete first the previous uploaded file.
-        if (! empty($filePath = $user->picture) && File::exists($filePath)) {
+        if (! empty($filePath = $user->meta->picture) && File::exists($filePath)) {
             $this->deleteFile($filePath);
         }
 
@@ -183,8 +183,9 @@ class MetaFields extends BaseListener
 
             $name = preg_replace('#^([^\-]+)\-(.*)$#s', '$2', basename($path));
 
-            $html = '<img src="' .site_url($path) .'" class="img-thumbnail img-responsive" alt="' .$name .'" title="' .$name .'" style="margin-bottom: 0; max-height: 200px; width:auto;">';
+            $html = $this->createView(compact('path', 'name'), 'Picture')->render();
 
+            //
             $result['picture']['text'] = $html;
         }
 

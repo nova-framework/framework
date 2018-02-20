@@ -49,7 +49,6 @@ class User extends BaseModel implements UserInterface, RemindableInterface
         'first_name' => array('meta' => 'first_name'),
         'last_name'  => array('meta' => 'last_name'),
         'location'   => array('meta' => 'location'),
-        'picture'    => array('meta' => 'picture'),
         'activated'  => array('meta' => 'activated'),
     );
 
@@ -75,7 +74,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
     {
         $picture = $this->meta->picture;
 
-        $path = ! empty($picture) ? 'assets/images/pictures/' .basename($picture) : null;
+        $path = ! empty($picture) ? 'assets/files/pictures/' .basename($picture) : null;
 
         if (! is_null($path) && is_readable(BASEPATH .$path)) {
             // Nothing to do.

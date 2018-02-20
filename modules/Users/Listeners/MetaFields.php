@@ -9,9 +9,9 @@ use Nova\Support\Str;
 use Modules\Platform\Listeners\MetaFields\BaseListener;
 
 use Modules\Users\Events\MetaFields\UpdateUserValidation;
-use Modules\Users\Events\MetaFields\UserDeleting;
 use Modules\Users\Events\MetaFields\UserEditing;
 use Modules\Users\Events\MetaFields\UserSaving;
+use Modules\Users\Events\MetaFields\UserShowing;
 use Modules\Users\Models\User;
 
 use BadMethodCallException;
@@ -157,8 +157,37 @@ class MetaFields extends BaseListener
      */
     public function show(UserShowing $event)
     {
-        return $this->createView()
-            ->with('fields', $event->user->meta)
-            ->render();
+        $fields = $event->user->meta;
+
+        $result = array(
+            'first_name' => array(
+                'name' => __d('users', 'First Name'),
+                'text' => $fields->first_name,
+            ),
+            'last_name'  => array(
+                'name' => __d('users', 'Last Name'),
+                'text' => $fields->last_name,
+            ),
+            'location'   => array(
+                'name'  => __d('users', 'Location'),
+                'text' => $fields->location,
+            ),
+            'picture'    => array(
+                'name' => __d('users', 'Picture'),
+                'text' => '-',
+            ),
+        );
+
+        if (! empty($picture = $fields->picture)) {
+            $path = str_replace(BASEPATH, '', $picture);
+
+            $name = preg_replace('#^([^\-]+)\-(.*)$#s', '$2', basename($path));
+
+            $html = '<img src="' .site_url($path) .'" class="img-thumbnail img-responsive" alt="' .$name .'" title="' .$name .'" style="margin-bottom: 0; max-height: 200px; width:auto;">';
+
+            $result['picture']['text'] = $html;
+        }
+
+        return $result;
     }
 }

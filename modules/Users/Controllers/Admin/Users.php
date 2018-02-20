@@ -119,7 +119,7 @@ class Users extends BaseController
         $roles = Role::all();
 
         // Handle the User's Meta Fields.
-        $fields = $this->renderFieldsForEditor();
+        $fields = $this->renderMetaFieldsForEditor();
 
         return $this->createView()
             ->shares('title', __d('users', 'Create User'))
@@ -193,7 +193,7 @@ class Users extends BaseController
         }
 
         // Handle the User's Meta Fields.
-        $fields = $this->renderMetaFields();
+        $fields = $this->renderMetaFields($user);
 
         return $this->createView()
             ->shares('title', __d('users', 'Show User'))
@@ -223,7 +223,7 @@ class Users extends BaseController
         $roles = Role::all();
 
         // Handle the User's Meta Fields.
-        $fields = $this->renderFieldsForEditor($user);
+        $fields = $this->renderMetaFieldsForEditor($user);
 
         return $this->createView()
             ->shares('title', __d('users', 'Edit User'))
@@ -395,9 +395,14 @@ class Users extends BaseController
     {
         $responses = Event::fire(new UserShowing($user));
 
-        return implode("\n", array_filter($responses, function ($response)
-        {
-            return ! is_null($response);
-        }));
+        $result = array();
+
+        foreach ($responses as $response) {
+            if (is_array($response) && ! empty($response)) {
+                $result = array_merge($result, $response);
+            }
+        }
+
+        return $result;
     }
 }

@@ -30,6 +30,7 @@ use Modules\Users\Models\User;
 use Modules\Users\Events\MetaFields\UpdateUserValidation;
 use Modules\Users\Events\MetaFields\UserEditing;
 use Modules\Users\Events\MetaFields\UserSaving;
+use Modules\Users\Events\MetaFields\UserShowing;
 
 use Carbon\Carbon;
 
@@ -114,20 +115,16 @@ class Users extends BaseController
             throw new AuthorizationException();
         }
 
-        $profile = Profile::findOrFail(1);
-
-        $fields = $profile->fields;
-
         // Get all available User Roles.
         $roles = Role::all();
 
-        // The Custom Fields.
-        $html = $fields->renderForEditor($request);
+        // Handle the User's Meta Fields.
+        $fields = $this->renderFieldsForEditor();
 
         return $this->createView()
             ->shares('title', __d('users', 'Create User'))
             ->with('roles', $roles)
-            ->with('fields', $html);
+            ->with('fields', $fields);
     }
 
     public function store(Request $request)
@@ -139,14 +136,10 @@ class Users extends BaseController
             throw new AuthorizationException();
         }
 
-        $profile = Profile::findOrFail(1);
-
-        $fields = $profile->fields;
-
         // Validate the Input data.
         $validator = $this->validator($input);
 
-        $fields->updateValidator($validator);
+        Event::fire(new UpdateUserValidation($validator, $user));
 
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
@@ -160,21 +153,20 @@ class Users extends BaseController
             'username'   => $input['username'],
             'password'   => $password,
             'email'      => $input['email'],
-            'profile_id' => $profile->id,
         ));
-
-        // Update the Meta / Custom Fields.
-        $user->load('meta');
-
-        // Handle the meta-data.
-        $input['activated'] = 1;
-
-        $fields->updateMeta($user->meta, $input);
-
-        $user->save();
 
         // Attach the Roles.
         $user->roles()->attach($input['roles']);
+
+        // Initialize the meta fields associated to User Picture and its activation.
+        $user->saveMeta(array(
+            'picture'         => null,
+            'activated'       => 1,
+            'activation_code' => null,
+        ));
+
+        // Update the other Meta / Custom Fields.
+        Event::fire(new UserSaving($user));
 
         // Prepare the flash message.
         $status = __d('users', 'The User <b>{0}</b> was successfully created.', $user->username);
@@ -200,8 +192,12 @@ class Users extends BaseController
             throw new AuthorizationException();
         }
 
+        // Handle the User's Meta Fields.
+        $fields = $this->renderMetaFields();
+
         return $this->createView()
             ->shares('title', __d('users', 'Show User'))
+            ->with('fields', $fields)
             ->with('user', $user);
     }
 
@@ -260,12 +256,10 @@ class Users extends BaseController
             throw new AuthorizationException();
         }
 
-        $fields = $user->profile->fields;
-
         // Validate the Input data.
         $validator = $this->validator($input, $id);
 
-        $fields->updateValidator($validator);
+        Event::fire(new UpdateUserValidation($validator, $user));
 
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
@@ -283,14 +277,14 @@ class Users extends BaseController
             $user->password = Hash::make($input['password']);
         }
 
-        // Update the Meta / Custom Fields.
-        $fields->updateMeta($user->meta, $input);
-
         // Save the User information.
         $user->save();
 
         // Sync the Roles.
         $user->roles()->sync($input['roles']);
+
+        // Update the Meta / Custom Fields.
+        Event::fire(new UserSaving($user));
 
         // Invalidate the cached user roles and permissions.
         Cache::forget('user.roles.' .$id);
@@ -387,11 +381,9 @@ class Users extends BaseController
             ->with('users', $users);
     }
 
-    protected function renderFieldsForEditor(User $user = null)
+    protected function renderMetaFieldsForEditor(User $user = null)
     {
-        $responses = Event::fire(
-            new UserEditing($user)
-        );
+        $responses = Event::fire(new UserEditing($user));
 
         return implode("\n", array_filter($responses, function ($response)
         {
@@ -399,10 +391,13 @@ class Users extends BaseController
         }));
     }
 
-    protected function updateValidator(Validator $validator, User $user = null)
+    protected function renderMetaFields(User $user = null)
     {
-        Event::fire(
-            new UpdateUserValidation($validator, $user)
-        );
+        $responses = Event::fire(new UserShowing($user));
+
+        return implode("\n", array_filter($responses, function ($response)
+        {
+            return ! is_null($response);
+        }));
     }
 }

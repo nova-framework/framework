@@ -10,12 +10,12 @@ use Nova\Support\Facades\Cache;
 
 use Shared\Auth\Reminders\RemindableTrait;
 use Shared\Auth\Reminders\RemindableInterface;
+use Shared\Database\ORM\MetaField\HasMetaFieldsTrait;
 use Shared\Notifications\NotifiableTrait;
 
 use Modules\Messages\Traits\HasMessagesTrait;
 use Modules\Platform\Traits\AliasesTrait;
 use Modules\Platform\Traits\HasActivitiesTrait;
-use Modules\Platform\Traits\HasMetaFieldsTrait;
 
 
 class User extends BaseModel implements UserInterface, RemindableInterface

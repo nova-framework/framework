@@ -14,7 +14,7 @@ use Modules\Users\Models\User;
 // Handle the Meta Fields when a User instance is deleted.
 User::deleting('Modules\Users\Listeners\MetaFields@deleting');
 
-
+// Handle the Backend's Menu Sidebar.
 Event::listen('backend.menu.sidebar', function ()
 {
     return array(

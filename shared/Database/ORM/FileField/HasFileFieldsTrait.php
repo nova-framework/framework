@@ -12,7 +12,7 @@ use Shared\Database\ORM\FileField\FileField;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 
-trait FileFieldTrait
+trait HasFileFieldsTrait
 {
     /**
      * Listen to ORM events.

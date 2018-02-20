@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Platform\Traits;
+namespace Shared\Database\ORM\MetaField;
 
 use Nova\Database\ORM\Builder;
 

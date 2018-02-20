@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Platform\Database\ORM;
+namespace Shared\Database\ORM\MetaField;
 
-use Nova\Database\ORM\Collection;
+use Nova\Database\ORM\Collection as BaseCollection;
 
 
-class MetaCollection extends Collection
+class Collection extends BaseCollection
 {
 
     /**

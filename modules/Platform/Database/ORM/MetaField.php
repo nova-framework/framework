@@ -9,7 +9,7 @@ use Modules\Platform\Database\ORM\MetaCollection;
 use Exception;
 
 
-abstract class MetaModel extends BaseModel
+abstract class MetaField extends BaseModel
 {
     /**
      * @var string

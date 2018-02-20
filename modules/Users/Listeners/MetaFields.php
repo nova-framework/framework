@@ -12,6 +12,7 @@ use Modules\Users\Events\MetaFields\UpdateUserValidation;
 use Modules\Users\Events\MetaFields\UserDeleting;
 use Modules\Users\Events\MetaFields\UserEditing;
 use Modules\Users\Events\MetaFields\UserSaving;
+use Modules\Users\Models\User;
 
 use BadMethodCallException;
 use InvalidArgumentException;
@@ -19,6 +20,21 @@ use InvalidArgumentException;
 
 class MetaFields extends BaseListener
 {
+
+    /**
+     * Handle the event.
+     *
+     * @param  Modules\Users\Models\User  $user
+     * @return void
+     */
+    public function deleting(User $user)
+    {
+        $user->load('meta');
+
+        if (! empty($filePath = $user->meta->picture) && File::exists($filePath)) {
+            $this->deleteFile($filePath);
+        }
+    }
 
     /**
      * Handle the event.
@@ -55,21 +71,6 @@ class MetaFields extends BaseListener
 
         $validator->setCustomMessages($messages);
         $validator->addCustomAttributes($attributes);
-    }
-
-    /**
-     * Handle the event.
-     *
-     * @param  Modules\Users\Events\UserDeleting  $event
-     * @return void
-     */
-    public function delete(UserDeleting $event)
-    {
-        $user = $event->user;
-
-        if (! empty($filePath = $user->picture) && File::exists($filePath)) {
-            $this->deleteFile($filePath);
-        }
     }
 
     /**

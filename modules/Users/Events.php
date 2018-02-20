@@ -11,6 +11,10 @@ use Modules\Users\Models\User;
 
 /** Define Events. */
 
+// Handle the Meta Fields when a User instance is deleted.
+User::deleting('Modules\Users\Listeners\MetaFields@deleting');
+
+
 Event::listen('backend.menu.sidebar', function ()
 {
     return array(

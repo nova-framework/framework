@@ -105,15 +105,15 @@ class Attachments extends BaseController
         ));
 
         // Handle the MetaData.
-        $upload->meta->attachment_image_extension = $extension;
-        $upload->meta->attachment_image_path      = $filePath;
-        $upload->meta->attachment_image_size      = $fileSize;
-        $upload->meta->attachment_image_alt       = '';
+        $upload->saveMeta(array(
+            'attachment_image_extension' => $extension,
+            'attachment_image_path'      => $filePath,
+            'attachment_image_size'      => $fileSize,
+            'attachment_image_alt'       => '',
 
-        // For the Post thumbnail() relationship.
-        $upload->meta->attachment_metadata = null;
-
-        $upload->save();
+            // For the Post thumbnail() relationship.
+            'attachment_metadata' => null,
+        ));
 
         return Response::json(array(
             'status' => 'success',

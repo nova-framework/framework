@@ -39,16 +39,16 @@ class PostsTableSeeder extends Seeder
         ));
 
         // Setup the Metadata.
-        $post->meta->block_show_title        = 1;
-        $post->meta->block_visibility_mode   = 'show';
-        $post->meta->block_visibility_path   = '';
-        $post->meta->block_visibility_filter = 'any';
-        $post->meta->block_widget_position   = 'content-posts-sidebar';
+        $post->saveMeta(array(
+            'block_show_title'        => 1,
+            'block_visibility_mode'   => 'show',
+            'block_visibility_path'   => '',
+            'block_visibility_filter' => 'any',
+            'block_widget_position'   => 'content-posts-sidebar',
 
-        $post->meta->block_handler_class = 'Modules\Content\Blocks\Archives';
-        $post->meta->block_handler_param = null;
-
-        $post->save();
+            'block_handler_class' => 'Modules\Content\Blocks\Archives',
+            'block_handler_param' => null,
+        ));
 
         //
         // The Categories Block.
@@ -67,16 +67,16 @@ class PostsTableSeeder extends Seeder
         ));
 
         // Setup the Metadata.
-        $post->meta->block_show_title        = 1;
-        $post->meta->block_visibility_mode   = 'show';
-        $post->meta->block_visibility_path   = '';
-        $post->meta->block_visibility_filter = 'any';
-        $post->meta->block_widget_position   = 'content-posts-sidebar';
+        $post->saveMeta(array(
+            'block_show_title'        => 1,
+            'block_visibility_mode'   => 'show',
+            'block_visibility_path'   => '',
+            'block_visibility_filter' => 'any',
+            'block_widget_position'   => 'content-posts-sidebar',
 
-        $post->meta->block_handler_class = 'Modules\Content\Blocks\Categories';
-        $post->meta->block_handler_param = null;
-
-        $post->save();
+            'block_handler_class' => 'Modules\Content\Blocks\Categories',
+            'block_handler_param' => null,
+        ));
 
         //
         // The Search Block.
@@ -95,16 +95,16 @@ class PostsTableSeeder extends Seeder
         ));
 
         // Setup the Metadata.
-        $post->meta->block_show_title        = 0;
-        $post->meta->block_visibility_mode   = 'show';
-        $post->meta->block_visibility_path   = '';
-        $post->meta->block_visibility_filter = 'any';
-        $post->meta->block_widget_position   = 'content-posts-sidebar';
+        $post->saveMeta(array(
+            'block_show_title'        => 0,
+            'block_visibility_mode'   => 'show',
+            'block_visibility_path'   => '',
+            'block_visibility_filter' => 'any',
+            'block_widget_position'   => 'content-posts-sidebar',
 
-        $post->meta->block_handler_class = 'Modules\Content\Blocks\Search';
-        $post->meta->block_handler_param = null;
-
-        $post->save();
+            'block_handler_class' => 'Modules\Content\Blocks\Search',
+            'block_handler_param' => null,
+        ));
 
         //
         // The sample Post.
@@ -152,9 +152,7 @@ As a new Nova user, you should go to <a href="' .site_url('admin') . '">your das
             'comment_status' => 'closed',
         ));
 
-        $post->meta->page_template = 'default';
-
-        $post->save();
+        $post->saveMeta('page_template', 'default');
 
         //$post->taxonomies()->attach(2);
 
@@ -187,14 +185,14 @@ As a new Nova user, you should go to <a href="' .site_url('admin') . '">your das
         ));
 
         // Setup the Metadata.
-        $post->meta->menu_item_type             = 'custom';
-        $post->meta->menu_item_menu_item_parent = 0;
-        $post->meta->menu_item_object           = 'custom';
-        $post->meta->menu_item_object_id        = $post->id;
-        $post->meta->menu_item_target           = null;
-        $post->meta->menu_item_url              = site_url('content');
-
-        $post->save();
+        $post->saveMeta(array(
+            'menu_item_type'             => 'custom',
+            'menu_item_menu_item_parent' => 0,
+            'menu_item_object'           => 'custom',
+            'menu_item_object_id'        => $post->id,
+            'menu_item_target'           => null,
+            'menu_item_url'              => site_url('content'),
+        ));
 
         $post->taxonomies()->attach($taxonomy);
 
@@ -214,14 +212,14 @@ As a new Nova user, you should go to <a href="' .site_url('admin') . '">your das
         ));
 
         // Setup the Metadata.
-        $post->meta->menu_item_type             = 'page';
-        $post->meta->menu_item_menu_item_parent = 0;
-        $post->meta->menu_item_object           = 'page';
-        $post->meta->menu_item_object_id        = 5;
-        $post->meta->menu_item_target           = null;
-        $post->meta->menu_item_url              = null;
-
-        $post->save();
+        $post->saveMeta(array(
+            'menu_item_type'             => 'page',
+            'menu_item_menu_item_parent' => 0,
+            'menu_item_object'           => 'page',
+            'menu_item_object_id'        => 5,
+            'menu_item_target'           => null,
+            'menu_item_url'              => null,
+        ));
 
         $post->taxonomies()->attach($taxonomy);
 

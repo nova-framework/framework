@@ -106,16 +106,20 @@ class Posts extends BaseController
 
         $post->name = $post->id;
 
+        // Save the Post again, to update its name.
+        $post->save();
+
         // Handle the Metadata.
-        $post->meta->edit_lock = sprintf('%d:%d', time(), $userId);
+        $editLock = sprintf('%d:%d', time(), $userId);
+
+        $post->saveMeta('edit_lock', $editLock);
 
         if ($type === 'block') {
-            $post->meta->block_handler_class = null;
-            $post->meta->block_handler_param = null;
+            $post->saveMeta(array(
+                'block_handler_class' => null,
+                'block_handler_param' => null,
+            ));
         }
-
-        // Save the Post again, to update its name and metadata.
-        $post->save();
 
         $post->name = '';
 
@@ -168,7 +172,9 @@ class Posts extends BaseController
         $postType = PostType::make($type);
 
         // Handle the Metadata.
-        $post->meta->edit_lock = sprintf('%d:%d', time(), $authUser->id);
+        $editLock = sprintf('%d:%d', time(), $authUser->id);
+
+        $post->saveMeta('edit_lock', $editLock);
 
         // Save the Post, to update its metadata.
         $post->save();
@@ -307,26 +313,30 @@ class Posts extends BaseController
             $post->menu_order = (int) Arr::get($input, 'order',  0);
         }
 
-        // Handle the MetaData.
-        $post->meta->thumbnail_id = (int) $request->input('thumbnail');
-
-        $post->meta->edit_last = $authUser->id;
-
-        if ($type == 'block') {
-            $post->meta->block_show_title = (int) $request->input('block-show-title');
-
-            $post->meta->block_visibility_mode = $request->input('block-show-mode');
-            $post->meta->block_visibility_path = $request->input('block-show-path');
-
-            $post->meta->block_visibility_filter = $request->input('block-show-filter', 'any');
-
-            $post->meta->block_widget_position = $request->input('block-position');
-        }
-
-        // Save the Post instance before to process the Categories and Tags.
+        // Save the Post instance before to continue the processing.
         $post->save();
 
-        if ($type == 'post') {
+        // Handle the MetaData.
+        $post->saveMeta(array(
+            'thumbnail_id' => (int) $request->input('thumbnail'),
+
+            'edit_last' => $authUser->id,
+        ));
+
+        if ($type == 'block') {
+            $post->saveMeta(array(
+                'block_show_title' => (int) $request->input('block-show-title'),
+
+                'block_visibility_mode'   => $request->input('block-show-mode'),
+                'block_visibility_path'   => $request->input('block-show-path'),
+
+                'block_visibility_filter' => $request->input('block-show-filter', 'any'),
+                'block_widget_position'   => $request->input('block-position'),
+            ));
+        }
+
+        // We have a standard Post.
+        else if ($type == 'post') {
             $categories = array();
 
             if (! empty($result = Arr::get($input, 'categories'))) {
@@ -468,7 +478,7 @@ class Posts extends BaseController
         if (! preg_match('#^(?:\d+)-revision-v(\d+)$#', $revision->name, $matches)) {
             $version = 0;
         } else {
-            $post->meta->version = $version = (int) $matches[1];
+            $post->saveMeta('version', $version = (int) $matches[1]);
         }
 
         $post->save();
@@ -477,7 +487,7 @@ class Posts extends BaseController
         $this->clearContentCache();
 
         //
-        $status = __d('content', 'The {0} <b>#{1}</b> was successfully restored to the revision: <b>{2}</b>', $postType->label('name'), $post->id, $version);
+        $status = __d('content', 'The {0} <b>#{1}</b> was successfully restored to the revision: <b>{2}</b>', $postType->label('name'), $post->id, $post->meta->$version);
 
         return Redirect::back()->with('success', $status);
     }

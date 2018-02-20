@@ -35,14 +35,17 @@ class PostsTableSeeder extends Seeder
         $block->guid = url('content', $block->id);
 
         // Setup the Metadata.
-        $block->meta->block_show_title        = 0;
-        $block->meta->block_visibility_mode   = 'show';
-        $block->meta->block_visibility_path   = 'content/contact-us';
-        $block->meta->block_visibility_filter = 'any';
-        $block->meta->block_widget_position   = 'content-footer';
+        $block->saveMeta(array(
+            'block_show_title'        => 0,
+            'block_visibility_mode'   => 'show',
+            'block_visibility_path'   => 'content/contact-us',
+            'block_visibility_filter' => 'any',
+            'block_widget_position'   => 'content-footer',
 
-        $block->meta->block_handler_class = 'Modules\Contacts\Blocks\Message';
-        $block->meta->block_handler_param = null;
+            //
+            'block_handler_class' => 'Modules\Contacts\Blocks\Message',
+            'block_handler_param' => null,
+        ));
 
         $block->save();
 
@@ -62,9 +65,7 @@ class PostsTableSeeder extends Seeder
 
         $page->guid = url('content', $page->name);
 
-        $page->meta->page_template = 'default';
-
-        $page->save();
+        $page->saveMeta('page_template', 'default');
 
         //
         // The Contact MenuItem.
@@ -99,14 +100,14 @@ class PostsTableSeeder extends Seeder
         $menuItem->guid = url('content', $id);
 
         // Setup the Metadata.
-        $menuItem->meta->menu_item_type             = 'page';
-        $menuItem->meta->menu_item_menu_item_parent = 0;
-        $menuItem->meta->menu_item_object           = 'page';
-        $menuItem->meta->menu_item_object_id        = $page->id;
-        $menuItem->meta->menu_item_target           = null;
-        $menuItem->meta->menu_item_url              = null;
-
-        $menuItem->save();
+        $menuItem->saveMeta(array(
+            'menu_item_type'             => 'page',
+            'menu_item_menu_item_parent' => 0,
+            'menu_item_object'           => 'page',
+            'menu_item_object_id'        => $page->id,
+            'menu_item_target'           => null,
+            'menu_item_url'              => null,
+        ));
 
         // Update the Taxonomy.
         $taxonomy = Menu::slug('main-menu')->firstOrFail();

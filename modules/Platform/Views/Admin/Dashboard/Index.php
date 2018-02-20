@@ -8,7 +8,7 @@
 <!-- Main content -->
 <section class="content">
 
-<?= Session::getMessages(); ?>
+<?= View::fetch('Partials/Messages'); ?>
 
 <?php if (! Widget::isEmptyPosition('backend.dashboard.top')) { ?>
 <div class="row">

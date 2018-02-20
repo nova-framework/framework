@@ -5,10 +5,10 @@
 <!-- Main content -->
 <section class="content">
 
-<?= Session::getMessages(); ?>
+<?= View::fetch('Partials/Messages'); ?>
 
 <div class="row">
-    <?php echo Session::getMessages();?>
+    <?= View::fetch('Partials/Messages'); ?>
 
     <div style="margin-top: 50px" class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
         <div class="panel panel-primary" >

@@ -9,7 +9,7 @@
 <!-- Main content -->
 <section class="content">
 
-<?= Session::getMessages(); ?>
+<?= View::fetch('Partials/Messages'); ?>
 
 <p>
     <button id="addNewUploads" class="btn btn-success btn-sm pull-right"><?= __d('content', 'Add New'); ?></button>

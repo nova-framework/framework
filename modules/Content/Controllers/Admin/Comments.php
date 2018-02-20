@@ -57,13 +57,13 @@ class Comments extends BaseController
             $comment = Comment::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Comment not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Comment not found: #{0}', $id));
         }
 
         $validator = $this->validator($input);
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
+            return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
         $comment->author       = $input['author'];
@@ -79,8 +79,7 @@ class Comments extends BaseController
         // Invalidate the parent Post cache.
         Cache::forget('content.posts.' .$comment->post->name);
 
-        return Redirect::back()
-            ->withStatus(__d('content', 'The Comment was successfully updated.'), 'success');
+        return Redirect::back()->with('success', __d('content', 'The Comment was successfully updated.'));
     }
 
     public function destroy($id)
@@ -89,7 +88,7 @@ class Comments extends BaseController
             $comment = Comment::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Comment not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Comment not found: #{0}', $id));
         }
 
         $post = $comment->post()->first();
@@ -103,8 +102,7 @@ class Comments extends BaseController
         // Invalidate the parent Post cache.
         Cache::forget('content.posts.' .$post->name);
 
-        return Redirect::back()
-            ->withStatus(__d('content', 'The Comment was successfully deleted.'), 'success');
+        return Redirect::back()->with('success', __d('content', 'The Comment was successfully deleted.'));
     }
 
     public function approve($id)
@@ -113,7 +111,7 @@ class Comments extends BaseController
             $comment = Comment::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Comment not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Comment not found: #{0}', $id));
         }
 
         $comment->approved = 1;
@@ -123,7 +121,7 @@ class Comments extends BaseController
         // Invalidate the parent Post cache.
         Cache::forget('content.posts.' .$comment->post->name);
 
-        return Redirect::back()->withStatus(__d('content', 'The Comment was approved.'), 'success');
+        return Redirect::back()->with('success', __d('content', 'The Comment was approved.'));
     }
 
     public function unapprove($id)
@@ -132,7 +130,7 @@ class Comments extends BaseController
             $comment = Comment::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Comment not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Comment not found: #{0}', $id));
         }
 
         $comment->approved = 0;
@@ -142,6 +140,6 @@ class Comments extends BaseController
         // Invalidate the parent Post cache.
         Cache::forget('content.posts.' .$comment->post->name);
 
-        return Redirect::back()->withStatus(__d('content', 'The Comment was unapproved.'), 'success');
+        return Redirect::back()->with('success', __d('content', 'The Comment was unapproved.'));
     }
 }

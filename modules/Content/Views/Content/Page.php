@@ -5,7 +5,7 @@
 <!-- Main content -->
 <section class="content">
 
-<?= Session::getMessages(); ?>
+<?= View::fetch('Partials/Messages'); ?>
 
 <?php $userIsAdmin = ! is_null($user = Auth::user()) && $user->hasRole('administrator'); ?>
 

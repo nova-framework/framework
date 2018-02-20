@@ -12,7 +12,7 @@
 <!-- Main content -->
 <section class="content">
 
-<?= Session::getMessages(); ?>
+<?= View::fetch('Partials/Messages'); ?>
 
 <div class="box box-default">
     <div class="box-header <?= ($positions->count() > 0) ? 'with-border' : ''; ?>">

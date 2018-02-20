@@ -57,7 +57,7 @@ class Authorize extends BaseController
     {
         // Verify the submitted reCAPTCHA
         if(! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {
-            return Redirect::back()->withStatus(__d('platform', 'The reCaptcha verification failed.'), 'danger');
+            return Redirect::back()->with('danger', __d('platform', 'The reCaptcha verification failed.'));
         }
 
         // Retrieve the Authentication credentials.
@@ -68,7 +68,7 @@ class Authorize extends BaseController
 
         // Make an attempt to login the Guest with the given credentials.
         if(! Auth::attempt($credentials, $remember)) {
-            return Redirect::back()->withStatus(__d('platform', 'Wrong username or password.'), 'danger');
+            return Redirect::back()->with('danger', __d('platform', 'Wrong username or password.'));
         }
 
         // The User is authenticated now; retrieve his Model instance.
@@ -89,12 +89,12 @@ class Authorize extends BaseController
             // User not activated; go logout and redirect him to account activation page.
             return Redirect::to('register/verify')
                 ->withInput(array('email' => $user->email))
-                ->withStatus(__d('platform', 'Please activate your Account!'), 'danger');
+                ->with('danger', __d('platform', 'Please activate your Account!'));
         }
 
         // Redirect to the User's Dashboard.
         return Redirect::intended('dashboard')
-            ->withStatus(__d('platform', '<b>{0}</b>, you have successfully logged in.', $user->username), 'success');
+            ->with('success', __d('platform', '<b>{0}</b>, you have successfully logged in.', $user->username));
     }
 
     /**
@@ -111,7 +111,7 @@ class Authorize extends BaseController
 
         $uri = Config::get("auth.guards.{$guard}.authorize", 'login');
 
-        return Redirect::to($uri)->withStatus( __d('platform', 'You have successfully logged out.'), 'success');
+        return Redirect::to($uri)->with('success', __d('platform', 'You have successfully logged out.'));
     }
 
     /**
@@ -156,7 +156,7 @@ class Authorize extends BaseController
         );
 
         if ($validator->fails()) {
-            return Redirect::back()->withStatus($validator->errors(), 'danger');
+            return Redirect::back()->withErrors($validator->errors());
         }
 
         $token = LoginToken::uniqueToken();
@@ -175,7 +175,7 @@ class Authorize extends BaseController
         $loginToken->user->notify(new LoginTokenNotification($hash, $timestamp, $token));
 
         return Redirect::back()
-            ->withStatus(__d('platform', 'Login instructions have been sent to the Center email address.'), 'success');
+            ->with('success', __d('platform', 'Login instructions have been sent to the Center email address.'));
     }
 
     /**
@@ -201,7 +201,7 @@ class Authorize extends BaseController
             $seconds = $limiter->availableIn($throttleKey);
 
             return Redirect::to('authorize')
-                ->withStatus(__d('platform', 'Too many login attempts, please try again in {0} seconds.', $seconds), 'danger');
+                ->with('danger', __d('platform', 'Too many login attempts, please try again in {0} seconds.', $seconds));
         }
 
         $validity = Config::get('platform::tokenLogin.validity', 15); // In minutes.
@@ -217,7 +217,7 @@ class Authorize extends BaseController
             $limiter->hit($throttleKey, $lockoutTime);
 
             return Redirect::to('authorize')
-                ->withStatus(__d('platform', 'Link is invalid, please request a new link.'), 'danger');
+                ->with('danger', __d('platform', 'Link is invalid, please request a new link.'));
         }
 
         try {
@@ -230,7 +230,7 @@ class Authorize extends BaseController
             $limiter->hit($throttleKey, $lockoutTime);
 
             return Redirect::to('authorize')
-                ->withStatus(__d('platform', 'Link is invalid, please request a new link.'), 'danger');
+                ->with('danger', __d('platform', 'Link is invalid, please request a new link.'));
         }
 
         $limiter->clear($throttleKey);
@@ -242,6 +242,6 @@ class Authorize extends BaseController
         Auth::login($loginToken->user, true /* remember */);
 
         return Redirect::to('dashboard')
-            ->withStatus(__d('platform', '<b>{0}</b>, you have successfully logged in.', $loginToken->user->username), 'success');
+            ->with('success', __d('platform', '<b>{0}</b>, you have successfully logged in.', $loginToken->user->username));
     }
 }

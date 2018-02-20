@@ -49,6 +49,6 @@ class Blocks extends BaseController
         Cache::forget('content.blocks');
 
         return Redirect::back()
-            ->withStatus(__d('content', 'The Blocks order, from the position <b>{0}</b>, was successfully updated.', $position), 'success');
+            ->with('success', __d('content', 'The Blocks order, from the position <b>{0}</b>, was successfully updated.', $position));
     }
 }

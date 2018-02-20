@@ -173,7 +173,7 @@ class Content extends BaseController
         ));
 
         if (strlen($search) < 5) {
-            return Redirect::back()->withStatus(__d('content', 'Invalid query string'), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Invalid query string'));
         }
 
         $posts = Post::with('author', 'thumbnail', 'taxonomies')
@@ -193,18 +193,18 @@ class Content extends BaseController
     {
         // Verify the submitted reCAPTCHA
         if (! Auth::check() && ! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {
-            return Redirect::back()->withStatus(__d('content', 'The reCaptcha verification failed.'), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'The reCaptcha verification failed.'));
         }
 
         try {
             $post = Post::where('status', 'password')->findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Record not found: #{0}', $id));
         }
 
         if (! Hash::check($request->input('password'), $post->password)) {
-            return Redirect::back()->withStatus(__d('content', 'The password is not valid.', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'The password is not valid.'));
         }
 
         Session::set('content-unlocked-post-' .$post->id, true);

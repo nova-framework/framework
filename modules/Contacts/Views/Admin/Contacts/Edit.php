@@ -9,7 +9,7 @@
 <!-- Main content -->
 <section class="content">
 
-<?= Session::getMessages(); ?>
+<?= View::fetch('Partials/Messages'); ?>
 
 <form id="page-form" action="<?= site_url('admin/contacts/' .$contact->id); ?>" method='POST' role="form">
 

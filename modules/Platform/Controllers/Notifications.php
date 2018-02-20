@@ -46,7 +46,7 @@ class Notifications extends BaseController
                 return Response::json(array('errors' => $errors), 400);
             }
 
-            return Redirect::back()->withInput()->withStatus($errors, 'danger');
+            return Redirect::back()->withInput()->with('danger', $errors);
         }
 
         $notifications = $authUser->notifications()->whereIn('id', $input['nid'])->get();
@@ -58,6 +58,6 @@ class Notifications extends BaseController
         }
 
         return Redirect::to('notifications')
-            ->withStatus(__d('platform', 'The selected notification(s) was successfully marked as read.'), 'success');
+            ->with('success', __d('platform', 'The selected notification(s) was successfully marked as read.'));
     }
 }

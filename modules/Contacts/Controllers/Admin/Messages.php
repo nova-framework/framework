@@ -27,7 +27,7 @@ class Messages extends BaseController
             $contact = Contact::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Contact not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Contact not found: #{0}', $id));
         }
 
         $elements = $this->getMessageElements($contact);
@@ -45,7 +45,7 @@ class Messages extends BaseController
             $contact = Contact::findOrFail($cid);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Contact not found: #{0}', $cid), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Contact not found: #{0}', $cid));
         }
 
         $elements = $this->getMessageElements($contact);
@@ -54,7 +54,7 @@ class Messages extends BaseController
             $message = Message::findOrFail($mid);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Message not found: #{0}', $mid), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Message not found: #{0}', $mid));
         }
 
         return $this->createView()
@@ -68,7 +68,7 @@ class Messages extends BaseController
             $message = Message::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Message not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Message not found: #{0}', $id));
         }
 
         $contact = $message->contact()->first();
@@ -79,8 +79,7 @@ class Messages extends BaseController
         // Update the Contact's messages count.
         $contact->updateCount();
 
-        return Redirect::back()
-            ->withStatus(__d('content', 'The Message was successfully deleted.'), 'success');
+        return Redirect::back()->with('success', __d('content', 'The Message was successfully deleted.'));
     }
 
     protected function getMessageElements(Contact $contact)

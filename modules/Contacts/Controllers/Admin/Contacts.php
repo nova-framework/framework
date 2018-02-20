@@ -46,7 +46,7 @@ class Contacts extends BaseController
         ));
 
         return Redirect::to('admin/contacts')
-            ->withStatus(__d('content', 'The Contact <b>{0}</b> was successfully created.', $name), 'success');
+            ->with('success', __d('content', 'The Contact <b>{0}</b> was successfully created.', $name));
     }
 
     public function show($id)
@@ -55,7 +55,7 @@ class Contacts extends BaseController
             $contact = Contact::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Contact not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Contact not found: #{0}', $id));
         }
 
         return $this->createView()
@@ -69,7 +69,7 @@ class Contacts extends BaseController
             $contact = Contact::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Contact not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Contact not found: #{0}', $id));
         }
 
         return $this->createView()
@@ -83,7 +83,7 @@ class Contacts extends BaseController
             $contact = Contact::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Contact not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Contact not found: #{0}', $id));
         }
 
         $name = $contact->name;
@@ -98,7 +98,7 @@ class Contacts extends BaseController
         $contact->save();
 
         return Redirect::to('admin/contacts')
-            ->withStatus(__d('content', 'The Contact <b>{0}</b> was successfully updated.', $name), 'success');
+            ->with('success', __d('content', 'The Contact <b>{0}</b> was successfully updated.', $name));
     }
 
     public function destroy($id)
@@ -107,14 +107,13 @@ class Contacts extends BaseController
             $contact = Contact::with('messages')->findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Contact not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Contact not found: #{0}', $id));
         }
 
         $contact->messages()->delete();
 
         $contact->delete();
 
-        return Redirect::back()
-            ->withStatus(__d('content', 'The Contact was successfully deleted.'), 'success');
+        return Redirect::back()->with('success', __d('content', 'The Contact was successfully deleted.'));
     }
 }

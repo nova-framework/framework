@@ -52,7 +52,7 @@ class Reminders extends BaseController
 
         // Verify the reCAPTCHA
         if(! ReCaptcha::check($request->input('g-recaptcha-response'), $remoteIp)) {
-            return Redirect::back()->withStatus(__d('platform', 'The reCaptcha verification failed.'), 'danger');
+            return Redirect::back()->with('danger', __d('platform', 'The reCaptcha verification failed.'));
         }
 
         $credentials = $request->only('email');
@@ -60,11 +60,11 @@ class Reminders extends BaseController
         switch ($response = Password::remind($credentials, $remoteIp)) {
             case Password::INVALID_USER:
                 return Redirect::back()
-                    ->withStatus(__d('platform', 'We can\'t find an User with that e-mail address.'), 'danger');
+                    ->with('danger', __d('platform', 'We can\'t find an User with that e-mail address.'));
 
             case Password::REMINDER_SENT:
                 return Redirect::back()
-                    ->withStatus(__d('platform', 'Reset instructions have been sent to your email address.'));
+                    ->with('success', __d('platform', 'Reset instructions have been sent to your email address.'));
         }
     }
 
@@ -92,7 +92,7 @@ class Reminders extends BaseController
             $seconds = $limiter->availableIn($throttleKey);
 
             return Redirect::to('password/remind')
-                ->withStatus(__d('platform', 'Too many login attempts, please try again in {0} seconds.', $seconds), 'danger');
+                ->with('danger', __d('platform', 'Too many login attempts, please try again in {0} seconds.', $seconds));
         }
 
         $reminder = Config::get('auth.defaults.reminder', 'users');
@@ -110,7 +110,7 @@ class Reminders extends BaseController
             $limiter->hit($throttleKey, $lockoutTime);
 
             return Redirect::to('password/remind')
-                ->withStatus(__d('platform', 'Link is invalid, please request a new link.'), 'danger');
+                ->with('danger', __d('platform', 'Link is invalid, please request a new link.'));
         }
 
         $reminder = DB::table('password_reminders')
@@ -122,7 +122,7 @@ class Reminders extends BaseController
             $limiter->hit($throttleKey, $lockoutTime);
 
             return Redirect::to('password/remind')
-                ->withStatus(__d('platform', 'Link is invalid, please request a new link.'), 'danger');
+                ->with('danger', __d('platform', 'Link is invalid, please request a new link.'));
         }
 
         $limiter->clear($throttleKey);
@@ -166,13 +166,13 @@ class Reminders extends BaseController
 
         switch ($response) {
             case Password::PASSWORD_RESET:
-                return Redirect::to($dashboard)->withStatus($message, 'success');
+                return Redirect::to($dashboard)->with('success', $message);
 
             case Password::INVALID_TOKEN:
-                return Redirect::to('password/remind')->withStatus($message, 'danger');
+                return Redirect::to('password/remind')->with('danger', $message);
 
             default:
-                return Redirect::back()->withInput($request->only('email'))->withStatus($message, 'danger');
+                return Redirect::back()->withInput($request->only('email'))->with('danger', $message);
         }
     }
 

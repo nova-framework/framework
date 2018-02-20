@@ -8,7 +8,7 @@
 <!-- Main content -->
 <section class="content">
 
-<?= Session::getMessages(); ?>
+<?= View::fetch('Partials/Messages'); ?>
 
 <form action="<?= site_url('notifications'); ?>" class="form-horizontal" method='POST' role="form">
 

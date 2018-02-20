@@ -89,9 +89,8 @@ class Messages extends BaseController
              $user = User::findOrFail($userId);
         }
         catch (ModelNotFoundException $e) {
-            $message = __d('messages', 'The User with ID: {0} was not found.', $userId);
-
-            return Redirect::to('admin/dashboard')->with('warning', $status);
+            return Redirect::to('admin/dashboard')
+                ->with('warning', __d('messages', 'The User with ID: {0} was not found.', $userId));
         }
 
         $message = Message::create(array(

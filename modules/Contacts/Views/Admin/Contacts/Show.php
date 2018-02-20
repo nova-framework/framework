@@ -9,7 +9,7 @@
 <!-- Main content -->
 <section class="content">
 
-<?= Session::getMessages(); ?>
+<?= View::fetch('Partials/Messages'); ?>
 
 <div class="box box-widget">
     <div class="box-header">

@@ -98,7 +98,7 @@ class Settings extends BaseController
         $validator = $this->validator($input);
 
         if($validator->fails()) {
-            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
+            return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
         // The Application.
@@ -118,10 +118,8 @@ class Settings extends BaseController
         // Invalidate the cached system options.
         Cache::forget('system_options');
 
-        // Prepare the flash message.
-        $status = __d('platform', 'The Settings was successfully updated.');
-
-        return Redirect::to('admin/settings')->withStatus($status);
+        return Redirect::to('admin/settings')
+            ->with('success', __d('platform', 'The Settings was successfully updated.'));
     }
 
 }

@@ -51,8 +51,7 @@ class Menus extends BaseController
 
         $taxonomy->save();
 
-        return Redirect::back()
-            ->withStatus(__d('content', 'The Menu <b>{0}</b> was successfully created.', $name), 'success');
+        return Redirect::back()->with('success', __d('content', 'The Menu <b>{0}</b> was successfully created.', $name));
     }
 
     public function update(Request $request, $id)
@@ -61,7 +60,7 @@ class Menus extends BaseController
             $menu = Menu::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
         $term = $menu->term()->first();
@@ -86,8 +85,7 @@ class Menus extends BaseController
         // Invalidate the cached menu data.
         Cache::forget('content.menus.' .$slug);
 
-        return Redirect::back()
-            ->withStatus(__d('content', 'The Menu <b>{0}</b> was successfully updated.', $original), 'success');
+        return Redirect::back()->with('success', __d('content', 'The Menu <b>{0}</b> was successfully updated.', $original));
     }
 
     public function destroy($id)
@@ -96,7 +94,7 @@ class Menus extends BaseController
             $menu = Menu::with('items')->findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
         $name = $menu->name;
@@ -117,8 +115,7 @@ class Menus extends BaseController
         // Invalidate the cached menu data.
         Cache::forget('content.menus.' .$slug);
 
-        return Redirect::back()
-            ->withStatus(__d('content', 'The Menu {0} was successfully deleted.', $name), 'success');
+        return Redirect::back()->with('success', __d('content', 'The Menu {0} was successfully deleted.', $name));
     }
 
     public function items($id)
@@ -129,7 +126,7 @@ class Menus extends BaseController
             $menu = Menu::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
         $pages = $this->generatePostsListing('page');
@@ -153,7 +150,7 @@ class Menus extends BaseController
             $taxonomy = Menu::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
         $type = $request->input('type', 'post');
@@ -194,8 +191,7 @@ class Menus extends BaseController
         // Invalidate the cached menu data.
         Cache::forget('content.menus.' .$taxonomy->slug);
 
-        return Redirect::back()
-            ->withStatus(__d('content', 'The Menu Item(s) was successfully created.'), 'success');
+        return Redirect::back()->with('success', __d('content', 'The Menu Item(s) was successfully created.'));
     }
 
     public function addCategory(Request $request, $id)
@@ -206,7 +202,7 @@ class Menus extends BaseController
             $taxonomy = Menu::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
         $categories = $request->input('category', array());
@@ -245,8 +241,7 @@ class Menus extends BaseController
         // Invalidate the cached menu data.
         Cache::forget('content.menus.' .$taxonomy->slug);
 
-        return Redirect::back()
-            ->withStatus(__d('content', 'The Menu Item(s) was successfully created.'), 'success');
+        return Redirect::back()->with('success', __d('content', 'The Menu Item(s) was successfully created.'));
     }
 
     public function addCustom(Request $request, $id)
@@ -257,7 +252,7 @@ class Menus extends BaseController
             $taxonomy = Menu::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
         $name = $request->input('name');
@@ -300,8 +295,7 @@ class Menus extends BaseController
         // Invalidate the cached menu data.
         Cache::forget('content.menus.' .$taxonomy->slug);
 
-        return Redirect::back()
-            ->withStatus(__d('content', 'The Menu Item(s) was successfully created.'), 'success');
+        return Redirect::back()->with('success', __d('content', 'The Menu Item(s) was successfully created.'));
     }
 
     public function updateItem(Request $request, $id, $itemId)
@@ -312,14 +306,14 @@ class Menus extends BaseController
             $taxonomy = Menu::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
         try {
             $item = MenuItem::findOrFail($itemId);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Menu Item not found: #{0}', $itemId), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Menu Item not found: #{0}', $itemId));
         }
 
         $item->title = $request->input('name');
@@ -329,8 +323,7 @@ class Menus extends BaseController
         // Invalidate the cached menu data.
         Cache::forget('content.menus.main_menu');
 
-        return Redirect::back()
-            ->withStatus(__d('content', 'The Menu Item was successfully updated.'), 'success');
+        return Redirect::back()->with('success', __d('content', 'The Menu Item was successfully updated.'));
     }
 
     public function deleteItem(Request $request, $id, $itemId)
@@ -341,14 +334,14 @@ class Menus extends BaseController
             $taxonomy = Menu::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
         try {
             $item = MenuItem::findOrFail($itemId);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Menu Item not found: #{0}', $itemId), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Menu Item not found: #{0}', $itemId));
         }
 
         $item->taxonomies()->detach($taxonomy);
@@ -360,8 +353,7 @@ class Menus extends BaseController
         // Invalidate the cached menu data.
         Cache::forget('content.menus.' .$taxonomy->slug);
 
-        return Redirect::back()
-            ->withStatus(__d('content', 'The Menu Item was successfully deleted.'), 'success');
+        return Redirect::back()->with('success', __d('content', 'The Menu Item was successfully deleted.'));
     }
 
     public function itemsOrder(Request $request, $id)
@@ -370,7 +362,7 @@ class Menus extends BaseController
             $taxonomy = Menu::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Menu not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
         $json = $request->get('items');
@@ -382,8 +374,7 @@ class Menus extends BaseController
         // Invalidate the cached menu data.
         Cache::forget('content.menus.main_menu');
 
-        return Redirect::back()
-            ->withStatus(__d('content', 'The Menu Items order was successfully updated.'), 'success');
+        return Redirect::back()->with('success', __d('content', 'The Menu Items order was successfully updated.'));
     }
 
     /**

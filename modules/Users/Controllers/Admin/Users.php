@@ -141,7 +141,7 @@ class Users extends BaseController
         Event::fire(new UpdateUserValidation($validator, $user));
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
+            return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
         // Encrypt the given Password.
@@ -167,10 +167,8 @@ class Users extends BaseController
         // Update the other Meta / Custom Fields.
         Event::fire(new UserSaved($user));
 
-        // Prepare the flash message.
-        $status = __d('users', 'The User <b>{0}</b> was successfully created.', $user->username);
-
-        return Redirect::to('admin/users')->withStatus($status);
+        return Redirect::to('admin/users')
+            ->with('success', __d('users', 'The User <b>{0}</b> was successfully created.', $user->username));
     }
 
     public function show($id)
@@ -181,9 +179,7 @@ class Users extends BaseController
         }
         catch (ModelNotFoundException $e) {
             // There is no User with this ID.
-            $status = __d('users', 'User not found: #{0}', $id);
-
-            return Redirect::to('admin/users')->withStatus($status, 'danger');
+            return Redirect::to('admin/users')->with('danger', __d('users', 'User not found: #{0}', $id));
         }
 
         // Authorize the current User.
@@ -208,9 +204,7 @@ class Users extends BaseController
         }
         catch (ModelNotFoundException $e) {
             // There is no User with this ID.
-            $status = __d('users', 'User not found: #{0}', $id);
-
-            return Redirect::to('admin/users')->withStatus($status, 'danger');
+            return Redirect::to('admin/users')->with('danger', _d('users', 'User not found: #{0}', $id));
         }
 
         // Authorize the current User.
@@ -245,9 +239,7 @@ class Users extends BaseController
         }
         catch (ModelNotFoundException $e) {
             // There is no User with this ID.
-            $status = __d('users', 'User not found: #{0}', $id);
-
-            return Redirect::to('admin/users')->withStatus($status, 'danger');
+            return Redirect::to('admin/users')->with('danger', __d('users', 'User not found: #{0}', $id));
         }
 
         // Authorize the current User.
@@ -261,7 +253,7 @@ class Users extends BaseController
         Event::fire(new UpdateUserValidation($validator, $user));
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
+            return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
         // Update the User Model instance.
@@ -289,10 +281,8 @@ class Users extends BaseController
         Cache::forget('user.roles.' .$id);
         Cache::forget('user.permissions.' .$id);
 
-        // Prepare the flash message.
-        $status = __d('users', 'The User <b>{0}</b> was successfully updated.', $username);
-
-        return Redirect::to('admin/users')->withStatus($status);
+        return Redirect::to('admin/users')
+            ->with('success', __d('users', 'The User <b>{0}</b> was successfully updated.', $username));
     }
 
     public function destroy($id)
@@ -303,9 +293,7 @@ class Users extends BaseController
         }
         catch (ModelNotFoundException $e) {
             // There is no User with this ID.
-            $status = __d('users', 'User not found: #{0}', $id);
-
-            return Redirect::to('admin/users')->withStatus($status, 'danger');
+            return Redirect::to('admin/users')->with('danger', __d('users', 'User not found: #{0}', $id));
         }
 
         // Authorize the current User.
@@ -323,10 +311,8 @@ class Users extends BaseController
         // Destroy the requested User record.
         $user->delete();
 
-        // Prepare the flash message.
-        $status = __d('users', 'The User <b>{0}</b> was successfully deleted.', $user->username);
-
-        return Redirect::to('admin/users')->withStatus($status);
+        return Redirect::to('admin/users')
+            ->with('success', __d('users', 'The User <b>{0}</b> was successfully deleted.', $user->username));
     }
 
     public function search()
@@ -361,7 +347,7 @@ class Users extends BaseController
         $validator = Validator::make($input, $rules, $messages, $attributes);
 
         if($validator->fails()) {
-            return Redirect::back()->withStatus($validator->errors(), 'danger');
+            return Redirect::back()->withErrors($validator->errors());
         }
 
         // Search the Records on Database.

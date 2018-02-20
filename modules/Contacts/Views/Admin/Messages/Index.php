@@ -9,7 +9,7 @@
 <!-- Main content -->
 <section class="content">
 
-<?= Session::getMessages(); ?>
+<?= View::fetch('Partials/Messages'); ?>
 
 <?php $deletables = 0; ?>
 <?php if (! $messages->isEmpty()) { ?>

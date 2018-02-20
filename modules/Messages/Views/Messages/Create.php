@@ -10,7 +10,7 @@
 <!-- Main content -->
 <section class="content">
 
-<?= Session::getMessages(); ?>
+<?= View::fetch('Partials/Messages'); ?>
 
 <form class="form-horizontal" action="<?= site_url('messages'); ?>" method="POST" role="form">
 

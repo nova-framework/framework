@@ -94,7 +94,7 @@ class Taxonomies extends BaseController
                 return Response::json(array('error' => $validator->errors()), 400);
             }
 
-            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
+            return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
         $slug = ! empty($input['slug']) ? $input['slug'] : Term::uniqueSlug($input['name'], $input['taxonomy']);
@@ -138,7 +138,7 @@ class Taxonomies extends BaseController
         $name = Config::get("content::labels.{$type}.name", Str::title($type));
 
         return Redirect::back()
-            ->withStatus(__d('users', 'The {0} <b>{1}</b> was successfully created.', $name, $input['name']), 'success');
+            ->with('success', __d('users', 'The {0} <b>{1}</b> was successfully created.', $name, $input['name']));
     }
 
     public function update(Request $request, $id)
@@ -149,7 +149,7 @@ class Taxonomies extends BaseController
             $taxonomy = Taxonomy::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('users', 'Field not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('users', 'Field not found: #{0}', $id));
         }
 
         $term = $taxonomy->term;
@@ -158,7 +158,7 @@ class Taxonomies extends BaseController
         $validator = $this->validator($input, $term->id);
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
+            return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
         $slug = ! empty($input['slug']) ? $input['slug'] : Term::uniqueSlug($input['name'], $input['taxonomy']);
@@ -186,7 +186,7 @@ class Taxonomies extends BaseController
         $name = Config::get("content::labels.{$type}.name", Str::title($type));
 
         return Redirect::back()
-            ->withStatus(__d('users', 'The {0} <b>{1}</b> was successfully updated.', $name, $input['name']), 'success');
+            ->with('success', __d('users', 'The {0} <b>{1}</b> was successfully updated.', $name, $input['name']));
     }
 
     public function destroy($id)
@@ -195,7 +195,7 @@ class Taxonomies extends BaseController
             $taxonomy = Taxonomy::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('users', 'Field not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('users', 'Field not found: #{0}', $id));
         }
 
         $taxonomy->children->each(function ($child) use ($taxonomy)
@@ -218,7 +218,7 @@ class Taxonomies extends BaseController
         $name = Config::get("content::labels.{$type}.name", Str::title($type));
 
         return Redirect::back()
-            ->withStatus(__d('users', 'The {0} <b>{1}</b> was successfully deleted.', $name, $taxonomy->name), 'success');
+            ->with('success', __d('users', 'The {0} <b>{1}</b> was successfully deleted.', $name, $taxonomy->name));
     }
 
     public function categories($id, $parent)

@@ -31,7 +31,7 @@ class Contacts extends BaseController
 
         // Verify the submitted reCAPTCHA
         if (! Auth::check() && ! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {
-            return Redirect::back()->withInput($input)->withStatus(__d('content', 'The reCaptcha verification failed.'), 'danger');
+            return Redirect::back()->withInput($input)->with('danger', __d('content', 'The reCaptcha verification failed.'));
         }
 
         $path = $request->input('path');
@@ -133,6 +133,6 @@ class Contacts extends BaseController
         }
 
         return Redirect::back()
-            ->withStatus(__d('content', 'Your message was successfully sent.'), 'success');
+            ->with('success', __d('content', 'Your message was successfully sent.'));
     }
 }

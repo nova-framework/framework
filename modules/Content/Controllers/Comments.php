@@ -44,14 +44,14 @@ class Comments extends BaseController
 
         // Verify the submitted reCAPTCHA
         if (! Auth::check() && ! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {
-            return Redirect::back()->withInput($input)->withStatus(__d('content', 'The reCaptcha verification failed.'), 'danger');
+            return Redirect::back()->withInput($input)->with('danger', __d('content', 'The reCaptcha verification failed.'));
         }
 
         try {
             $post = Post::where('type', 'post')->findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Post not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Post not found: #{0}', $id));
         }
 
         $validator = $this->validator($input);
@@ -86,6 +86,6 @@ class Comments extends BaseController
         Cache::forget('content.posts.' .$post->name);
 
         return Redirect::back()
-            ->withStatus(__d('content', 'Your comment is waiting approval.'), 'success');
+            ->with('success', __d('content', 'Your comment is waiting approval.'));
     }
 }

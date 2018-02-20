@@ -135,7 +135,7 @@ class Account extends BaseController
 
         // Validate the Input.
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
+            return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
         if (isset($input['password'])) {
@@ -151,9 +151,10 @@ class Account extends BaseController
         // Update the Meta / Custom Fields.
         Event::fire(new UserSaved($user));
 
+        //
         // Use a Redirect to avoid the reposting the data.
-        $status = __d('users', 'You have successfully updated your Account information.');
 
-        return Redirect::back()->withStatus($status);
+        return Redirect::back()
+            ->with('success', __d('users', 'You have successfully updated your Account information.'));
     }
 }

@@ -95,16 +95,14 @@ class Roles extends BaseController
         $validator = $this->validator($input);
 
         if($validator->fails()) {
-            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
+            return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
         // Create a Role Model instance.
         Role::create($input);
 
-        // Prepare the flash message.
-        $status = __d('roles', 'The Role <b>{0}</b> was successfully created.', $input['name']);
-
-        return Redirect::to('admin/roles')->withStatus($status);
+        return Redirect::to('admin/roles')
+            ->with('success', __d('roles', 'The Role <b>{0}</b> was successfully created.', $input['name']));
     }
 
     public function show($id)
@@ -115,9 +113,7 @@ class Roles extends BaseController
         }
         catch (ModelNotFoundException $e) {
             // There is no Role with this ID.
-            $status = __d('roles', 'Role not found: #{0}', $id);
-
-            return Redirect::to('admin/roles')->withStatus($status, 'danger');
+            return Redirect::to('admin/roles')->with('danger', __d('roles', 'Role not found: #{0}', $id));
         }
 
         // Authorize the current User.
@@ -138,9 +134,7 @@ class Roles extends BaseController
         }
         catch (ModelNotFoundException $e) {
             // There is no Role with this ID.
-            $status = __('Role not found: #{0}', $id);
-
-            return Redirect::to('admin/roles')->withStatus($status, 'danger');
+            return Redirect::to('admin/roles')->with('danger', __('Role not found: #{0}', $id));
         }
 
         // Authorize the current User.
@@ -163,9 +157,7 @@ class Roles extends BaseController
         }
         catch (ModelNotFoundException $e) {
             // There is no Role with this ID.
-            $status = __d('roles', 'Role not found: #{0}', $id);
-
-            return Redirect::to('admin/roles')->withStatus($status, 'danger');
+            return Redirect::to('admin/roles')->with('danger', __d('roles', 'Role not found: #{0}', $id));
         }
 
         // Authorize the current User.
@@ -177,7 +169,7 @@ class Roles extends BaseController
         $validator = $this->validator($input, $id);
 
         if($validator->fails()) {
-            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
+            return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
         // Update the Role Model instance.
@@ -191,10 +183,8 @@ class Roles extends BaseController
         // Save the Role information.
         $role->save();
 
-        // Prepare the flash message.
-        $status = __d('roles', 'The Role <b>{0}</b> was successfully updated.', $name);
-
-        return Redirect::to('admin/roles')->withStatus($status);
+        return Redirect::to('admin/roles')
+            ->with('success', __d('roles', 'The Role <b>{0}</b> was successfully updated.', $name));
     }
 
     public function destroy($id)
@@ -205,9 +195,7 @@ class Roles extends BaseController
         }
         catch (ModelNotFoundException $e) {
             // There is no Role with this ID.
-            $status = __d('roles', 'Role not found: #{0}', $id);
-
-            return Redirect::to('admin/roles')->withStatus($status, 'danger');
+            return Redirect::to('admin/roles')->with('danger', __d('roles', 'Role not found: #{0}', $id));
         }
 
         // Authorize the current User.
@@ -218,10 +206,8 @@ class Roles extends BaseController
         // Destroy the requested Role record.
         $role->delete();
 
-        // Prepare the flash message.
-        $status = __d('roles', 'The Role <b>{0}</b> was successfully deleted.', $role->name);
-
-        return Redirect::to('admin/roles')->withStatus($status);
+        return Redirect::to('admin/roles')
+            ->with('success', __d('roles', 'The Role <b>{0}</b> was successfully deleted.', $role->name));
     }
 
 }

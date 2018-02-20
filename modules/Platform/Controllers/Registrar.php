@@ -103,7 +103,7 @@ class Registrar extends BaseController
         $validator = $this->validator($input, $request->ip());
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
+            return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
         // Encrypt the given Password.
@@ -139,7 +139,7 @@ class Registrar extends BaseController
         $user->notify(new AccountActivationNotification($hash, $token));
 
         return Redirect::to('register/status')
-            ->withStatus(__d('platform', 'Your Account has been created. Activation instructions have been sent to your email address.'), 'success');
+            ->with('success', __d('platform', 'Your Account has been created. Activation instructions have been sent to your email address.'));
     }
 
     /**
@@ -183,7 +183,7 @@ class Registrar extends BaseController
         });
 
         if ($validator->fails()) {
-            return Redirect::back()->withStatus($validator->errors(), 'danger');
+            return Redirect::back()->withErrors($validator->errors());
         }
 
         $email = $request->input('email');
@@ -193,8 +193,8 @@ class Registrar extends BaseController
         }
         catch (ModelNotFoundException $e) {
             return Redirect::back()
-                ->withInput(array('email' => $email))
-                ->withStatus(__d('platform', 'The selected email cannot receive Account Activation links.'), 'danger');
+                ->onlyInput('email')
+                ->with('danger', __d('platform', 'The selected email cannot receive Account Activation links.'));
         }
 
         $token = $this->createNewToken();
@@ -211,7 +211,7 @@ class Registrar extends BaseController
         $user->notify(new AccountActivationNotification($hash, $token));
 
         return Redirect::to('register/verify')
-            ->withStatus(__d('platform', 'Activation instructions have been sent to your email address.'), 'success');
+            ->with('success', __d('platform', 'Activation instructions have been sent to your email address.'));
     }
 
     /**
@@ -237,7 +237,7 @@ class Registrar extends BaseController
             $seconds = $limiter->availableIn($throttleKey);
 
             return Redirect::to('register/status')
-                ->withStatus(__d('platform', 'Too many verification attempts, please try again in {0} seconds.', $seconds), 'danger');
+                ->with('danger', __d('platform', 'Too many verification attempts, please try again in {0} seconds.', $seconds));
         }
 
         $hashKey = Config::get('app.key');
@@ -246,7 +246,7 @@ class Registrar extends BaseController
             $limiter->hit($throttleKey, $lockoutTime);
 
             return Redirect::to('register/status')
-                ->withStatus(__d('platform', 'Link is invalid, please request a new link.'), 'danger');
+                ->with('danger', __d('platform', 'Link is invalid, please request a new link.'));
         }
 
         try {
@@ -267,7 +267,7 @@ class Registrar extends BaseController
             $limiter->hit($throttleKey, $lockoutTime);
 
             return Redirect::to('password/remind')
-                ->withStatus(__d('platform', 'Link is invalid, please request a new link.'), 'danger');
+                ->with('danger', __d('platform', 'Link is invalid, please request a new link.'));
         }
 
         $user->saveMeta(array(
@@ -281,7 +281,7 @@ class Registrar extends BaseController
         $uri = Config::get("auth.guards.{$guard}.authorize", 'login');
 
         return Redirect::to($uri)
-            ->withStatus(__d('platform', 'Activated! You can now Sign in!'), 'success');
+            ->with('success', __d('platform', 'Activated! You can now Sign in!'));
     }
 
     /**

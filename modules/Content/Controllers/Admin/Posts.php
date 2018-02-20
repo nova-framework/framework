@@ -160,7 +160,7 @@ class Posts extends BaseController
             $post = Post::with('thumbnail', 'revision')->findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Record not found: #{0}', $id));
         }
 
         $type = $post->type;
@@ -416,7 +416,7 @@ class Posts extends BaseController
             $post = Post::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Record not found: #{0}', $id));
         }
 
         $postType = PostType::make($post->type);
@@ -443,7 +443,7 @@ class Posts extends BaseController
         $this->clearContentCache();
 
         return Redirect::back()
-            ->withStatus(__d('content', 'The {0} <b>#{1}</b> was successfully deleted.', $postType->label('name'), $post->id), 'success');
+            ->with('success', __d('content', 'The {0} <b>#{1}</b> was successfully deleted.', $postType->label('name'), $post->id));
     }
 
     public function restore($id)
@@ -452,7 +452,7 @@ class Posts extends BaseController
             $revision = Post::with('parent')->where('type', 'revision')->findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Record not found: #{0}', $id));
         }
 
         $post = $revision->parent;
@@ -479,7 +479,7 @@ class Posts extends BaseController
         //
         $status = __d('content', 'The {0} <b>#{1}</b> was successfully restored to the revision: <b>{2}</b>', $postType->label('name'), $post->id, $version);
 
-        return Redirect::back()->withStatus($status, 'success');
+        return Redirect::back()->with('success', $status);
     }
 
     public function revisions($id)
@@ -488,7 +488,7 @@ class Posts extends BaseController
             $post = Post::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->withStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
+            return Redirect::back()->with('danger', __d('content', 'Record not found: #{0}', $id));
         }
 
         $postType = PostType::make($post->type);

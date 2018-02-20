@@ -10,11 +10,9 @@
 <!-- Main content -->
 <section class="content">
 
-<?= Session::getMessages();
+<?= View::fetch('Partials/Messages'); ?>
 
-use App\Models\User;
-
-?>
+<?php use App\Models\User; ?>
 
 <div class="box box-default">
     <div class="box-header with-border">

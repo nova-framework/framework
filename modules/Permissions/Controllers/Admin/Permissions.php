@@ -75,9 +75,7 @@ class Permissions extends BaseController
         // Invalidate the cached system permissions.
         Cache::forget('system_permissions');
 
-        // Prepare the flash message.
-        $status = __d('permissions', 'The permissions was successfully updated.');
-
-        return Redirect::to('admin/permissions')->withStatus($status);
+        return Redirect::to('admin/permissions')
+            ->with('success', __d('permissions', 'The permissions was successfully updated.'));
     }
 }

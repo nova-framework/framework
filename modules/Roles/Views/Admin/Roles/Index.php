@@ -9,7 +9,7 @@
 <!-- Main content -->
 <section class="content">
 
-<?= Session::getMessages(); ?>
+<?= View::fetch('Partials/Messages'); ?>
 
 <?php if (Gate::allows('create', 'Modules\Roles\Models\Role')) { ?>
 

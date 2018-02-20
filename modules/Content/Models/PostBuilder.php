@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Content\Models\Builder;
+namespace Modules\Content\Models;
 
 use Nova\Database\ORM\Builder;
 

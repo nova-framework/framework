@@ -6,7 +6,7 @@ use Nova\Database\ORM\Model;
 
 use Shared\Database\ORM\MetaField\HasMetaFieldsTrait;
 
-use Modules\Content\Models\Builder\TaxonomyBuilder;
+use Modules\Content\Models\TaxonomyBuilder;
 use Modules\Content\Models\TermMeta;
 
 

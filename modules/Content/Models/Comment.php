@@ -6,7 +6,7 @@ use Nova\Database\ORM\Model;
 
 use Shared\Database\ORM\MetaField\HasMetaFieldsTrait;
 
-use Modules\Content\Models\Builder\CommentBuilder;
+use Modules\Content\Models\CommentBuilder;
 
 
 class Comment extends Model

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Content\Models\Builder;
+namespace Modules\Content\Models;
 
 use Nova\Database\ORM\Builder;
 
@@ -9,7 +9,7 @@ class CommentBuilder extends Builder
 {
 
     /**
-     * @return \Modules\Content\Models\Builder\CommentBuilder
+     * @return \Modules\Content\Models\CommentBuilder
      */
     public function approved()
     {

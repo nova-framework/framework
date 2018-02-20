@@ -9,10 +9,9 @@ use Nova\Support\Str;
 
 use Shared\Database\ORM\MetaField\HasMetaFieldsTrait;
 
-use Modules\Content\Models\Builder\PostBuilder;
+use Modules\Content\Models\PostBuilder;
 use Modules\Content\Traits\OrderedTrait;
 use Modules\Content\Traits\ShortcodesTrait;
-
 use Modules\Platform\Traits\AliasesTrait;
 
 use ErrorException;

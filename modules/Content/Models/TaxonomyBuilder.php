@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Content\Models\Builder;
+namespace Modules\Content\Models;
 
 use Nova\Database\ORM\Builder;
 
@@ -16,7 +16,7 @@ class TaxonomyBuilder extends Builder
     }
 
     /**
-     * @return \Modules\Content\Models\Builder\TaxonomyBuilder
+     * @return \Modules\Content\Models\TaxonomyBuilder
      */
     public function menu()
     {
@@ -25,7 +25,7 @@ class TaxonomyBuilder extends Builder
 
     /**
      * @param string $name
-     * @return \Modules\Content\Models\Builder\TaxonomyBuilder
+     * @return \Modules\Content\Models\TaxonomyBuilder
      */
     public function name($name)
     {
@@ -34,7 +34,7 @@ class TaxonomyBuilder extends Builder
 
     /**
      * @param string $slug
-     * @return \Modules\Content\Models\Builder\TaxonomyBuilder
+     * @return \Modules\Content\Models\TaxonomyBuilder
      */
     public function slug($slug = null)
     {
@@ -50,7 +50,7 @@ class TaxonomyBuilder extends Builder
 
     /**
      * @param null $slug
-     * @return \Modules\Content\Models\Builder\TaxonomyBuilder
+     * @return \Modules\Content\Models\TaxonomyBuilder
      */
     public function term($slug = null)
     {

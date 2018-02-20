@@ -9,7 +9,7 @@ use Shared\Database\ORM\MetaField\Collection;
 use Exception;
 
 
-abstract class MetaField extends BaseModel
+abstract class Model extends BaseModel
 {
     /**
      * @var bool

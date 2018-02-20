@@ -112,8 +112,6 @@ trait HasFileFieldsTrait
 
         // Handle the string values - files specified by path.
         else if (is_string($value)) {
-            $rawValue = false;
-
             if (! Str::startsWith($value, 'raw:')) {
                 $name = pathinfo($value, PATHINFO_FILENAME);
 

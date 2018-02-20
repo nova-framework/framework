@@ -29,7 +29,7 @@ use Modules\Users\Models\User;
 
 use Modules\Users\Events\MetaFields\UpdateUserValidation;
 use Modules\Users\Events\MetaFields\UserEditing;
-use Modules\Users\Events\MetaFields\UserSaving;
+use Modules\Users\Events\MetaFields\UserSaved;
 use Modules\Users\Events\MetaFields\UserShowing;
 
 use Carbon\Carbon;
@@ -158,7 +158,7 @@ class Users extends BaseController
         // Attach the Roles.
         $user->roles()->attach($input['roles']);
 
-        // Initialize the meta fields associated to User Picture and its activation.
+        // Handle the meta fields associated to User Picture and its activation.
         $user->saveMeta(array(
             'picture'         => null,
             'activated'       => 1,
@@ -166,7 +166,7 @@ class Users extends BaseController
         ));
 
         // Update the other Meta / Custom Fields.
-        Event::fire(new UserSaving($user));
+        Event::fire(new UserSaved($user));
 
         // Prepare the flash message.
         $status = __d('users', 'The User <b>{0}</b> was successfully created.', $user->username);
@@ -193,7 +193,7 @@ class Users extends BaseController
         }
 
         // Handle the User's Meta Fields.
-        $fields = $this->renderMetaFields($user);
+        $fields = $this->fetchMetaFields($user);
 
         return $this->createView()
             ->shares('title', __d('users', 'Show User'))
@@ -284,7 +284,7 @@ class Users extends BaseController
         $user->roles()->sync($input['roles']);
 
         // Update the Meta / Custom Fields.
-        Event::fire(new UserSaving($user));
+        Event::fire(new UserSaved($user));
 
         // Invalidate the cached user roles and permissions.
         Cache::forget('user.roles.' .$id);
@@ -391,7 +391,7 @@ class Users extends BaseController
         }));
     }
 
-    protected function renderMetaFields(User $user = null)
+    protected function fetchMetaFields(User $user = null)
     {
         $responses = Event::fire(new UserShowing($user));
 

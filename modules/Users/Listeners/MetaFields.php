@@ -10,7 +10,7 @@ use Modules\Platform\Listeners\MetaFields\BaseListener;
 
 use Modules\Users\Events\MetaFields\UpdateUserValidation;
 use Modules\Users\Events\MetaFields\UserEditing;
-use Modules\Users\Events\MetaFields\UserSaving;
+use Modules\Users\Events\MetaFields\UserSaved;
 use Modules\Users\Events\MetaFields\UserShowing;
 use Modules\Users\Models\User;
 
@@ -96,10 +96,10 @@ class MetaFields extends BaseListener
     /**
      * Handle the event.
      *
-     * @param  Modules\Users\Events\UserSaving  $event
+     * @param  Modules\Users\Events\UserSaved  $event
      * @return void
      */
-    public function save(UserSaving $event)
+    public function save(UserSaved $event)
     {
         $user = $event->user;
 

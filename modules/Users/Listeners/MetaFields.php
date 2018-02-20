@@ -65,9 +65,9 @@ class MetaFields extends BaseListener
      */
     public function delete(UserDeleting $event)
     {
-        $filePath = $event->user->picture;
+        $user = $event->user;
 
-        if (! empty($filePath) && File::exists($filePath)) {
+        if (! empty($filePath = $user->picture) && File::exists($filePath)) {
             $this->deleteFile($filePath);
         }
     }
@@ -81,21 +81,21 @@ class MetaFields extends BaseListener
     public function edit(UserEditing $event)
     {
         if (! is_null($user = $event->user)) {
-            $meta = $user->meta;
+            $fields = $user->meta;
         } else {
-            $meta = null;
+            $fields = null;
         }
 
         return $this->createView()
             ->with('request', $this->getRequest())
-            ->with('meta', $meta)
+            ->with('fields', $fields)
             ->render();
     }
 
     /**
      * Handle the event.
      *
-     * @param  Modules\Users\Events\UserEditing  $event
+     * @param  Modules\Users\Events\UserSaving  $event
      * @return void
      */
     public function save(UserSaving $event)
@@ -137,7 +137,7 @@ class MetaFields extends BaseListener
 
         $picture->move($path, $fileName);
 
-        // Before saving the file path, we will delete the previous uploaded file.
+        // We will delete first the previous uploaded file.
         if (! empty($filePath = $user->picture) && File::exists($filePath)) {
             $this->deleteFile($filePath);
         }
@@ -157,7 +157,7 @@ class MetaFields extends BaseListener
     public function show(UserShowing $event)
     {
         return $this->createView()
-            ->with('meta', $event->user->meta)
+            ->with('fields', $event->user->meta)
             ->render();
     }
 }

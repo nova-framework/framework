@@ -18,9 +18,9 @@ use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\File;
 use Nova\Support\Facades\Redirect;
-use Nova\Support\Facades\Validator;
+use Nova\Support\Facades\Validator as ValidatorFactory;
 use Nova\Support\Arr;
-use Nova\Validation\Validator as NovaValidator;
+use Nova\Validation\Validator;
 
 use Modules\Platform\Controllers\Admin\BaseController;
 use Modules\Roles\Models\Role;
@@ -72,7 +72,7 @@ class Users extends BaseController
         );
 
         // Create a Validator instance.
-        $validator = Validator::make($data, $rules, $messages, $attributes);
+        $validator = ValidatorFactory::make($data, $rules, $messages, $attributes);
 
         // Add the custom Validation Rule commands.
         $validator->addExtension('valid_name', function($attribute, $value, $parameters)
@@ -389,17 +389,20 @@ class Users extends BaseController
 
     protected function renderFieldsForEditor(User $user = null)
     {
-        $event = new UserEditing($user);
+        $responses = Event::fire(
+            new UserEditing($user)
+        );
 
-        $results = Event::fire($event);
-
-        return implode("\n", array_filter($results));
+        return implode("\n", array_filter($responses, function ($response)
+        {
+            return ! is_null($response);
+        }));
     }
 
-    protected function updateValidator(NovaValidator $validator, User $user = null)
+    protected function updateValidator(Validator $validator, User $user = null)
     {
-        $event = new UpdateUserValidation($validator, $user);
-
-        Event::fire($event);
+        Event::fire(
+            new UpdateUserValidation($validator, $user)
+        );
     }
 }

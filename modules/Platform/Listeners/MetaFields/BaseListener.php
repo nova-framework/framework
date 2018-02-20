@@ -59,9 +59,13 @@ class BaseListener
             throw new BadMethodCallException('Invalid Listener namespace');
         }
 
-        $module = ($matches[1] == 'Modules') ? $matches[2] : null;
-
         $view = 'Partials/' .$matches[3] .'/' .$view;
+
+        if (($matches[1] == 'Modules') && ! empty($matches[2])) {
+            $module = $matches[2];
+        } else {
+            $module = null;
+        }
 
         return View::make($view, $data, $module);
     }

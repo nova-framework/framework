@@ -5,12 +5,12 @@ namespace Modules\Content\Models;
 use Nova\Database\ORM\Model;
 use Nova\Support\Str;
 
-use Modules\Content\Traits\HasMetaTrait;
+use Shared\Database\ORM\MetaField\HasMetaFieldsTrait;
 
 
 class Term extends Model
 {
-    use HasMetaTrait;
+    use HasMetaFieldsTrait;
 
     //
     protected $table = 'terms';

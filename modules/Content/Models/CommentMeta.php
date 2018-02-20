@@ -2,10 +2,10 @@
 
 namespace Modules\Content\Models;
 
-use Modules\Content\Models\PostMeta;
+use Shared\Database\ORM\MetaField\MetaField;
 
 
-class CommentMeta extends PostMeta
+class CommentMeta extends MetaField
 {
     /**
      * @var string
@@ -16,6 +16,11 @@ class CommentMeta extends PostMeta
      * @var string
      */
     protected $primaryKey = 'id';
+
+    /**
+     * @var array
+     */
+    protected $fillable = array('key', 'meta_value', 'comment_id');
 
 
     /**

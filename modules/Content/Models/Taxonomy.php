@@ -4,14 +4,15 @@ namespace Modules\Content\Models;
 
 use Nova\Database\ORM\Model;
 
+use Shared\Database\ORM\MetaField\HasMetaFieldsTrait;
+
 use Modules\Content\Models\Builder\TaxonomyBuilder;
 use Modules\Content\Models\TermMeta;
-use Modules\Content\Traits\HasMetaTrait;
 
 
 class Taxonomy extends Model
 {
-    use HasMetaTrait;
+    use HasMetaFieldsTrait;
 
     //
     protected $table = 'term_taxonomy';
@@ -77,16 +78,26 @@ class Taxonomy extends Model
     }
 
     /**
-     * @param \Illuminate\Database\Query\Builder $query
+     * @return TaxonomyBuilder
+     */
+    public function newQuery()
+    {
+        $query = parent::newQuery();
+
+        if (isset($this->taxonomy) && ! empty($this->taxonomy)) {
+            return $query->where('taxonomy', $this->taxonomy);
+        }
+
+        return $query;
+    }
+
+    /**
+     * @param \Nova\Database\Query\Builder $query
      * @return TaxonomyBuilder
      */
     public function newQueryBuilder($query)
     {
-        $builder = new TaxonomyBuilder($query);
-
-        return isset($this->taxonomy) && ! empty($this->taxonomy)
-            ? $builder->where('taxonomy', $this->taxonomy)
-            : $builder;
+        return new TaxonomyBuilder($query);
     }
 
     /**

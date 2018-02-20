@@ -7,18 +7,20 @@ use Nova\Support\Facades\Config;
 use Nova\Support\Arr;
 use Nova\Support\Str;
 
+use Shared\Database\ORM\MetaField\HasMetaFieldsTrait;
+
 use Modules\Content\Models\Builder\PostBuilder;
-use Modules\Content\Traits\AliasesTrait;
-use Modules\Content\Traits\HasMetaTrait;
 use Modules\Content\Traits\OrderedTrait;
 use Modules\Content\Traits\ShortcodesTrait;
+
+use Modules\Platform\Traits\AliasesTrait;
 
 use ErrorException;
 
 
 class Post extends Model
 {
-    use AliasesTrait, OrderedTrait, ShortcodesTrait, HasMetaTrait;
+    use HasMetaFieldsTrait, AliasesTrait, OrderedTrait, ShortcodesTrait;
 
     //
     protected $table = 'posts';
@@ -159,9 +161,13 @@ class Post extends Model
      */
     public function newQuery()
     {
-        return isset($this->postType)
-            ? parent::newQuery()->where('type', $this->postType)
-            : parent::newQuery();
+        $query = parent::newQuery();
+
+        if (isset($this->postType)) {
+            return $query->where('type', $this->postType);
+        }
+
+        return $query;
     }
 
     /**

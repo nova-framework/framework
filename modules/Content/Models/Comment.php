@@ -4,13 +4,14 @@ namespace Modules\Content\Models;
 
 use Nova\Database\ORM\Model;
 
+use Shared\Database\ORM\MetaField\HasMetaFieldsTrait;
+
 use Modules\Content\Models\Builder\CommentBuilder;
-use Modules\Content\Traits\HasMetaTrait;
 
 
 class Comment extends Model
 {
-    use HasMetaTrait;
+    use HasMetaFieldsTrait;
 
     /**
      * @var string
@@ -98,7 +99,7 @@ class Comment extends Model
     }
 
     /**
-     * @param \Illuminate\Database\Query\Builder $query
+     * @param \Nova\Database\Query\Builder $query
      * @return CommentBuilder
      */
     public function newQueryBuilder($query)

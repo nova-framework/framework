@@ -2,15 +2,20 @@
 
 namespace Modules\Content\Models;
 
-use Modules\Content\Models\PostMeta;
+use Shared\Database\ORM\MetaField\MetaField;
 
 
-class TermMeta extends PostMeta
+class TermMeta extends MetaField
 {
     /**
      * @var string
      */
     protected $table = 'terms_meta';
+
+    /**
+     * @var string
+     */
+    protected $primaryKey = 'id';
 
     /**
      * @var array

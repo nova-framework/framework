@@ -51,15 +51,11 @@
                 <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Field'); ?></th>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Value'); ?></th>
             </tr>
-            <?php foreach ($user->profile->fields as $field) { ?>
-            <?php if ($field->hidden === 1) continue; ?>
-            <?php if (! is_null($key = $user->meta->findItem($field->key))) { ?>
-            <?php $item = $user->meta->get($key); ?>
+            <?php foreach ($metaFields as $field => $data) { ?>
             <tr>
-                <th style="text-align: left; vertical-align: middle;"><?= $field->name; ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $item->render(); ?></td>
+                <th style="text-align: left; vertical-align: middle;"><?= $data['name']; ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $data['text']; ?></td>
             </tr>
-            <?php } ?>
             <?php } ?>
         </table>
     </div>
@@ -98,7 +94,7 @@
             <br>
             <h4><?= __d('platform', 'Profile'); ?></h4>
             <hr>
-            <?= $fields; ?>
+            <?= $metaEditor; ?>
             <div class="clearfix"></div>
             <br>
             <font color="#CC0000">*</font><?= __d('platform', 'Required field'); ?>

@@ -20,7 +20,7 @@ class EventServiceProvider extends ServiceProvider
         'Modules\Users\Events\MetaFields\UserEditing' => array(
             'Modules\Users\Listeners\MetaFields@edit',
         ),
-        'Modules\Users\Events\MetaFields\UserSaving' => array(
+        'Modules\Users\Events\MetaFields\UserSaved' => array(
             'Modules\Users\Listeners\MetaFields@save',
         ),
         'Modules\Users\Events\MetaFields\UserShowing' => array(

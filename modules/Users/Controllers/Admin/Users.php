@@ -18,9 +18,8 @@ use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\File;
 use Nova\Support\Facades\Redirect;
-use Nova\Support\Facades\Validator as ValidatorFactory;
+use Nova\Support\Facades\Validator;
 use Nova\Support\Arr;
-use Nova\Validation\Validator;
 
 use Modules\Platform\Controllers\Admin\BaseController;
 use Modules\Roles\Models\Role;
@@ -73,7 +72,7 @@ class Users extends BaseController
         );
 
         // Create a Validator instance.
-        $validator = ValidatorFactory::make($data, $rules, $messages, $attributes);
+        $validator = Validator::make($data, $rules, $messages, $attributes);
 
         // Add the custom Validation Rule commands.
         $validator->addExtension('valid_name', function($attribute, $value, $parameters)
@@ -395,6 +394,7 @@ class Users extends BaseController
     {
         $responses = Event::fire(new UserShowing($user));
 
+        //
         $result = array();
 
         foreach ($responses as $response) {

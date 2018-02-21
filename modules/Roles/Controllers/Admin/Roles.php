@@ -95,7 +95,7 @@ class Roles extends BaseController
         $validator = $this->validator($input);
 
         if($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator->errors());
+            return Redirect::back()->withInput()->withErrors($validator);
         }
 
         // Create a Role Model instance.
@@ -169,7 +169,7 @@ class Roles extends BaseController
         $validator = $this->validator($input, $id);
 
         if($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator->errors());
+            return Redirect::back()->withInput()->withErrors($validator);
         }
 
         // Update the Role Model instance.

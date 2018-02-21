@@ -141,7 +141,7 @@ class Users extends BaseController
         Event::fire(new UpdateUserValidation($validator, $user));
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator->errors());
+            return Redirect::back()->withInput()->withErrors($validator);
         }
 
         // Encrypt the given Password.
@@ -253,7 +253,7 @@ class Users extends BaseController
         Event::fire(new UpdateUserValidation($validator, $user));
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator->errors());
+            return Redirect::back()->withInput()->withErrors($validator);
         }
 
         // Update the User Model instance.
@@ -347,7 +347,7 @@ class Users extends BaseController
         $validator = Validator::make($input, $rules, $messages, $attributes);
 
         if($validator->fails()) {
-            return Redirect::back()->withErrors($validator->errors());
+            return Redirect::back()->withErrors($validator);
         }
 
         // Search the Records on Database.

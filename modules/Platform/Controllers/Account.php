@@ -135,7 +135,7 @@ class Account extends BaseController
 
         // Validate the Input.
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator->errors());
+            return Redirect::back()->withInput()->withErrors($validator);
         }
 
         if (isset($input['password'])) {

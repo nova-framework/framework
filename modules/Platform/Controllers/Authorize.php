@@ -156,7 +156,7 @@ class Authorize extends BaseController
         );
 
         if ($validator->fails()) {
-            return Redirect::back()->withErrors($validator->errors());
+            return Redirect::back()->withErrors($validator);
         }
 
         $token = LoginToken::uniqueToken();

@@ -103,7 +103,7 @@ class Registrar extends BaseController
         $validator = $this->validator($input, $request->ip());
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator->errors());
+            return Redirect::back()->withInput()->withErrors($validator);
         }
 
         // Encrypt the given Password.
@@ -183,7 +183,7 @@ class Registrar extends BaseController
         });
 
         if ($validator->fails()) {
-            return Redirect::back()->withErrors($validator->errors());
+            return Redirect::back()->withErrors($validator);
         }
 
         $email = $request->input('email');

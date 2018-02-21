@@ -62,12 +62,10 @@ class BaseListener
         $view = 'Partials/' .$matches[3] .'/' .$view;
 
         if (($matches[1] == 'Modules') && ! empty($matches[2])) {
-            $module = $matches[2];
-        } else {
-            $module = null;
+            $view = 'Modules/' .$matches[2] .'::' .$view;
         }
 
-        return View::make($view, $data, $module);
+        return View::make($view, $data);
     }
 
     /**

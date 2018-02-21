@@ -8,9 +8,6 @@
  *
  */
 
-use Modules\Attachments\Models\Attachment;
-
-use Carbon\Carbon;
 
 /**
  * Resolve the Forge commands from application.
@@ -19,33 +16,21 @@ Forge::resolveCommands(array(
     //'App\Console\Commands\MagicWand',
 ));
 
+
 /**
  * Add the Closure based commands.
  */
-Forge::command('attachment:clear-stalled', function ()
+Forge::command('hello', function ()
 {
-    $attachments = Attachment::where('attachable_id', 0)
-        ->where('created_at', '<', Carbon::parse('-3 hours'))
-        ->get();
+    $this->comment('Hello, World!');
 
-    foreach ($attachments as $attachment) {
-        $attachment->delete();
-    };
-
-    $this->info('The stalled Attachments was cleared!');
-
-})->describe('Clear all Attachments still not associated to an Attachable after 3 hours');
+})->describe('Display a Hello World message');
 
 
 /**
  * Schedule the Mailer Spool queue flushing.
  */
 Schedule::command('mailer:spool:send')->everyMinute();
-
-/**
- * Schedule the stalled Attachments clearing.
- */
-//Schedule::command('attachment:clear-stalled')->hourly();
 
 /**
  * Schedule the flushing of expired password reminders.

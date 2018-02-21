@@ -20,17 +20,36 @@ Forge::resolveCommands(array(
 /**
  * Add the Closure based commands.
  */
-Forge::command('hello', function ()
+Forge::command('queue:monitor-listener', function ()
 {
-    $this->comment('Hello, World!');
+    $runCommand = true;
 
-})->describe('Display a Hello World message');
+    if (file_exists($pidFile = storage_path('queue.pid'))) {
+        $pid = file_get_contents($pidFile);
+
+        $runCommand = empty(
+            exec("ps -p $pid --no-heading | awk '{print $1}'")
+        );
+    }
+
+    if ($runCommand) {
+        $command = PHP_BINARY .' ' .base_path('forge') .' queue:work --daemon --tries=3 >/dev/null & echo $!';
+
+        $number = exec($command);
+
+        file_put_contents($pidFile, $number);
+    }
+
+})->describe('Monitor the Queue Listener');
 
 
 /**
- * Schedule the restarting of Queue's Worker.
+ * Schedule the Queue Listener's Monitor.
  */
-Schedule::command('queue:work --daemon')->everyMinute()->withoutOverlapping();
+Schedule::command('queue:monitor-listener')->everyFiveMinutes();
+
+// Alternate method working also under Windows.
+//Schedule::command('queue:work --daemon')->everyFiveMinutes()->withoutOverlapping();
 
 /**
  * Schedule the flushing of expired password reminders.

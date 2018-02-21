@@ -28,9 +28,9 @@ Forge::command('hello', function ()
 
 
 /**
- * Schedule the Mailer Spool queue flushing.
+ * Schedule the restarting of Queue's Worker.
  */
-Schedule::command('mailer:spool:send')->everyMinute();
+Schedule::command('queue:work --daemon')->everyMinute()->withoutOverlapping();
 
 /**
  * Schedule the flushing of expired password reminders.

@@ -2,12 +2,16 @@
 
 namespace {{namespace}};
 
+use Nova\Bus\QueueableTrait;
+
 use Shared\Notifications\Messages\MailMessage;
 use Shared\Notifications\Notification;
 
 
 class {{className}} extends Notification
 {
+    use QueueableTrait;
+
 
     /**
      * Create a new {{className}} instance.

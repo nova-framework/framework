@@ -2,12 +2,17 @@
 
 namespace Modules\Platform\Notifications;
 
+use Nova\Bus\QueueableTrait;
+use Nova\Queue\ShouldQueueInterface;
+
 use Shared\Notifications\Messages\MailMessage;
 use Shared\Notifications\Notification;
 
 
-class Sample extends Notification
+class Sample extends Notification implements ShouldQueueInterface
 {
+    use QueueableTrait;
+
 
     /**
      * Get the notification's delivery channels.

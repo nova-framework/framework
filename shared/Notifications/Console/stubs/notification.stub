@@ -3,6 +3,7 @@
 namespace {{namespace}};
 
 use Nova\Bus\QueueableTrait;
+use Nova\Queue\ShouldQueueInterface;
 
 use Shared\Notifications\Messages\MailMessage;
 use Shared\Notifications\Notification;

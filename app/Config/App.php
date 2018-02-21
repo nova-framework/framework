@@ -116,6 +116,7 @@ return array(
      */
     'providers' => array(
         'Nova\Auth\AuthServiceProvider',
+        'Nova\Bus\BusServiceProvider',
         'Nova\Cache\CacheServiceProvider',
         'Nova\Routing\RoutingServiceProvider',
         'Nova\Cookie\CookieServiceProvider',

@@ -107,7 +107,7 @@ return array (
   'Site Settings' => 'Параметры сайта',
   'Site Skin' => 'Скин сайта',
   'Thanks for creating an Account with the {0}.' => 'Благодарим за создание учетной записи на {0}.',
-  'The :attribute field is invalid.' => 'Неверное поле :attribute',
+  'The :attribute field is a valid password.' => '',
   'The :attribute field is not a valid name.' => 'Неверное имя поля :attribute',
   'The :attribute field is not strong enough.' => 'Поле :attribute недостаточно сильное',
   'The From Field of any outgoing e-mails.' => 'Поле From любых исходящих сообщений электронной почты.',

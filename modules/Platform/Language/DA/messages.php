@@ -107,7 +107,7 @@ return array (
   'Site Settings' => '',
   'Site Skin' => '',
   'Thanks for creating an Account with the {0}.' => '',
-  'The :attribute field is invalid.' => '',
+  'The :attribute field is a valid password.' => '',
   'The :attribute field is not a valid name.' => '',
   'The :attribute field is not strong enough.' => '',
   'The From Field of any outgoing e-mails.' => '',

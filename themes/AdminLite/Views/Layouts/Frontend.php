@@ -92,7 +92,7 @@ $languages = Config::get('languages');
         <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
             <ul class="nav navbar-nav">
                 <?php foreach ($navbarLeftItems as $item) { ?>
-                    <?= View::fetch(''Themes/AdminLite::Partials/Frontend/NavbarItems', array('item' => $item)); ?>
+                    <?= View::fetch('Themes/AdminLite::Partials/Frontend/NavbarItems', array('item' => $item)); ?>
                 <?php } ?>
             </ul>
             <!-- Search Form -->
@@ -108,7 +108,7 @@ $languages = Config::get('languages');
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
                 <?php foreach ($navbarRightItems as $item) { ?>
-                    <?= View::fetch(''Themes/AdminLite::Partials/Frontend/NavbarItems', array('item' => $item)); ?>
+                    <?= View::fetch('Themes/AdminLite::Partials/Frontend/NavbarItems', array('item' => $item)); ?>
                 <?php } ?>
                 <li class="dropdown language-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">

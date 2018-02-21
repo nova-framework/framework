@@ -8,7 +8,7 @@
     </a>
     <ul class="treeview-menu">
     <?php foreach ($children as $child) { ?>
-        <?= View::partial('Partials/Backend/SidebarItems', 'AdminLite', array('item' => $child)); ?>
+        <?= View::fetch('Themes/AdminLite::Partials/Backend/SidebarItems', array('item' => $child)); ?>
     <?php } ?>
     </ul>
 </li>

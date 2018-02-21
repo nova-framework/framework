@@ -57,7 +57,7 @@ class BlockHandler extends Widget
             $content = $this->container->call(array($instance, 'render'), $parameters);
         }
 
-        return View::make('Widgets/Block', compact('block', 'content'), 'Content')->render();
+        return View::make('Modules/Content::Widgets/Block', compact('block', 'content'))->render();
     }
 
     protected function blockAllowsRendering()

@@ -40,7 +40,7 @@
 <div class="clearfix pull-left" style="margin: 0 20px 20px 0;"><img class="img-responsive img-thumbnail" src="<?= $thumbnail; ?>"></div>
 <?php } ?>
 <?php if (($post->status == 'password') && ! $userIsAdmin && ! Session::has('content-unlocked-post-' .$post->id)) { ?>
-<?= View::fetch('Partials/ProtectedContent', compact('post'), 'Content'); ?>
+<?= View::fetch('Modules/Content::Partials/ProtectedContent', compact('post')); ?>
 <?php } else { ?>
 <?= $post->getContent(); ?>
 <?php } ?>
@@ -72,7 +72,7 @@
 <div class="clearfix"></div>
 <br>
 
-<?= View::fetch('Partials/PostComments', compact('post'), 'Content'); ?>
+<?= View::fetch('Modules/Content::Partials/PostComments', compact('post')); ?>
 
 </div>
 

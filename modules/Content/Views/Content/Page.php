@@ -15,7 +15,7 @@
 <?php } ?>
 
 <?php if (($post->status == 'password') && ! $userIsAdmin && ! Session::has('content-unlocked-post-' .$post->id)) { ?>
-<?= View::fetch('Partials/ProtectedContent', compact('post'), 'Content'); ?>
+<?= View::fetch('Modules/Content::Partials/ProtectedContent', compact('post')); ?>
 <?php } else { ?>
 <?= $post->getContent(); ?>
 <?php } ?>

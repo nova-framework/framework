@@ -1,6 +1,6 @@
 <?php
 /**
- * Backend Default Layout
+ * Frontend Default Layout
  */
 
 $siteName = Config::get('app.name');
@@ -26,22 +26,20 @@ $languages = Config::get('languages');
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <?php
     Assets::css(array(
-        // Bootstrap 3.3.7
+        // Bootstrap 3.3.5
         vendor_url('bower_components/bootstrap/dist/css/bootstrap.min.css', 'almasaeed2010/adminlte'),
+        // Bootstrap XL
+        theme_url('css/bootstrap-xl-mod.min.css', 'AdminLite'),
         // Font Awesome
         vendor_url('bower_components/font-awesome/css/font-awesome.min.css', 'almasaeed2010/adminlte'),
         // Ionicons
         vendor_url('bower_components/Ionicons/css/ionicons.min.css', 'almasaeed2010/adminlte'),
-        // Select2
-        vendor_url('bower_components/select2/dist/css/select2.min.css', 'almasaeed2010/adminlte'),
         // iCheck
         vendor_url('plugins/iCheck/square/blue.css', 'almasaeed2010/adminlte'),
         // Theme style
-        vendor_url('dist/css/AdminLTE.min.css', 'almasaeed2010/adminlte'),
+        vendor_url('dist/css/AdminLTE.css', 'almasaeed2010/adminlte'),
         // AdminLTE Skins
         vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
-        // Bootstrap WYSIHTML5
-        vendor_url('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css', 'almasaeed2010/adminlte'),
         // Custom CSS
         theme_url('css/style.css', 'AdminLite'),
     ));
@@ -62,13 +60,13 @@ $languages = Config::get('languages');
 <?php
     //Add Controller specific JS files.
     Assets::js(array(
-        vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
-        resource_url('js/sprintf.min.js'),
-        resource_url('js/bootstrap-notify.min.js'),
-    ));
+            vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
+            resource_url('js/sprintf.min.js'),
+            resource_url('js/bootstrap-notify.min.js'),
+        )
+    );
 
     ?>
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -79,116 +77,105 @@ $languages = Config::get('languages');
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-
-<body class="hold-transition skin-<?= Config::get('app.color_scheme', 'blue'); ?> sidebar-mini">
+<body class="hold-transition skin-<?= Config::get('app.color_scheme', 'blue'); ?> layout-top-nav">
 <div class="wrapper">
-
-  <!-- Main Header -->
   <header class="main-header">
-
-    <!-- Logo -->
-    <a href="<?= site_url('admin/dashboard'); ?>" class="logo">
-      <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini">CP</span>
-      <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><?= __d('admin_lite', 'Control Panel'); ?></span>
-    </a>
-
-    <!-- Header Navbar -->
-    <nav class="navbar navbar-static-top" role="navigation">
-      <!-- Sidebar toggle button-->
-      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-        <span class="sr-only"><?= __d('admin_lite', 'Toggle navigation'); ?></span>
-      </a>
-      <!-- Navbar Right Menu -->
-      <div class="navbar-custom-menu">
-        <ul class="nav navbar-nav" style="margin-right: 10px;">
-          <?php foreach ($navbarItems as $item) { ?>
-            <?= View::partial('Partials/Backend/NavbarItems', 'AdminLite', array('item' => $item)); ?>
-          <?php } ?>
-          <li class="dropdown language-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class='fa fa-language'></i> <?= $langName; ?>
-            </a>
-            <ul class="dropdown-menu">
-            <?php foreach ($languages as $code => $info) { ?>
-              <li <?= ($code == $langCode) ? 'class="active"' : ''; ?>>
-                <a href='<?= site_url('language/' .$code); ?>' title='<?= $info['info']; ?>'><?= $info['name']; ?></a>
-              </li>
-            <?php } ?>
+    <nav class="navbar navbar-static-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a href="<?= site_url(); ?>" class="navbar-brand"><?= __d('admin_lite', 'Private Area'); ?></a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+            <i class="fa fa-bars"></i>
+          </button>
+        </div>
+        <!-- Navbar Left Menu -->
+        <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+            <ul class="nav navbar-nav">
+                <?php foreach ($navbarLeftItems as $item) { ?>
+                    <?= View::fetch(''Themes/AdminLite::Partials/Frontend/NavbarItems', array('item' => $item)); ?>
+                <?php } ?>
             </ul>
-          </li>
-          <!-- User Account Menu -->
-          <li class="dropdown user user-menu">
-            <!-- Menu Toggle Button -->
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <!-- The user image in the navbar-->
-              <img src="<?= $user->picture(); ?>" class="user-image" alt="User Image">
-              <!-- hidden-xs hides the username on small devices so only the image appears. -->
-              <span class="hidden-xs"><?= $user->username; ?></span>
-            </a>
-            <ul class="dropdown-menu">
-              <!-- The user image in the menu -->
-              <li class="user-header">
-                <img src="<?= $user->picture(); ?>" class="img-circle" alt="User Image">
-                <p>
-                  <?= $user->realname(); ?> - <?= implode(', ', $user->roles->lists('name')); ?>
-                  <?php $sinceDate = $user->created_at->formatLocalized(__d('admin_lite', '%d %b %Y, %R')); ?>
-                  <small><?= __d('admin_lite', 'Member since {0}', $sinceDate); ?></small>
-                </p>
-              </li>
-              <!-- Menu Footer-->
-              <li class="user-footer">
-                <div class="pull-left">
-                  <a href="<?= site_url('account'); ?>" class="btn btn-default btn-flat"><?= __d('admin_lite', 'Account'); ?></a>
+            <!-- Search Form -->
+            <?php if (isset($hasNavbarSearch) && ($hasNavbarSearch === true)) { ?>
+            <form class="navbar-form navbar-left" role="search" action="<?= site_url('search'); ?>" method="GET">
+                <div class="form-group">
+                    <input type="text" name="query" class="form-control" id="navbar-search-input" placeholder="<?= __d('admin_lite', 'Search...'); ?>">
                 </div>
-                <div class="pull-right">
-                  <a href="<?= site_url('logout'); ?>" class="btn btn-default btn-flat"
-                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <?= __d('admin_lite', 'Sign out'); ?>
-                  </a>
-                  <form id="logout-form" action="<?= site_url('logout'); ?>" method="POST" style="display: none;">
-                    <?= csrf_field(); ?>
-                  </form>
-                </div>
-              </li>
+            </form>
+             <?php } ?>
+        </div>
+        <!-- Navbar Right Menu -->
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+                <?php foreach ($navbarRightItems as $item) { ?>
+                    <?= View::fetch(''Themes/AdminLite::Partials/Frontend/NavbarItems', array('item' => $item)); ?>
+                <?php } ?>
+                <li class="dropdown language-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class='fa fa-language'></i> <?= $langName; ?>
+                    </a>
+                    <ul class="dropdown-menu">
+                    <?php foreach ($languages as $code => $info) { ?>
+                        <li <?= ($code == $langCode) ? 'class="active"' : ''; ?>>
+                            <a href='<?= site_url('language/' .$code); ?>' title='<?= $info['info']; ?>'><?= $info['name']; ?></a>
+                        </li>
+                    <?php } ?>
+                    </ul>
+                </li>
+                <!-- User Account Menu -->
+                <li class="dropdown user user-menu">
+                    <!-- Menu Toggle Button -->
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <!-- The user image in the navbar-->
+                        <img src="<?= $user->picture(); ?>" class="user-image" alt="User Image">
+                        <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                        <span class="hidden-xs"><?= $user->username; ?></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <!-- The user image in the menu -->
+                        <li class="user-header">
+                        <img src="<?= $user->picture(); ?>" class="img-circle" alt="User Image">
+
+                        <p>
+                            <?= $user->realname(); ?> - <?= implode(', ', $user->roles->lists('name')); ?>
+                            <?php $sinceDate = $user->created_at->formatLocalized(__d('admin_lite', '%d %b %Y, %R')); ?>
+                            <small><?= __d('admin_lite', 'Member since {0}', $sinceDate); ?></small>
+                        </p>
+                        </li>
+                        <!-- Menu Footer-->
+                        <li class="user-footer">
+                            <div class="pull-left">
+                                <a href="<?= site_url('account'); ?>" class="btn btn-default btn-flat"><?= __d('admin_lite', 'Account'); ?></a>
+                            </div>
+                            <div class="pull-right">
+                                <a href="<?= site_url('logout'); ?>" class="btn btn-default btn-flat"
+                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <?= __d('admin_lite', 'Sign out'); ?>
+                                </a>
+                                <form id="logout-form" action="<?= site_url('logout'); ?>" method="POST" style="display: none;">
+                                    <?= csrf_field(); ?>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
             </ul>
-          </li>
-        </ul>
+        </div>
+        <!-- /.navbar-custom-menu -->
       </div>
+      <!-- /.container-fluid -->
     </nav>
   </header>
-  <!-- Left side column. contains the logo and sidebar -->
-  <aside class="main-sidebar">
 
-    <!-- sidebar: style can be found in sidebar.less -->
-    <section class="sidebar">
-        <!-- search form -->
-        <form action="<?= site_url('admin/users/search'); ?>" method="GET" class="sidebar-form">
-            <div class="input-group">
-                <input type="text" name="query" class="form-control" placeholder="<?= __d('admin_lite', 'Search...'); ?>">
-                <span class="input-group-btn">
-                    <button type="submit" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
-                </span>
-            </div>
-        </form>
-        <!-- Sidebar Menu -->
-        <ul class="sidebar-menu" data-widget="tree">
-            <li class="header"><?= __d('admin_lite', 'ADMINISTRATION'); ?></li>
-            <?php foreach ($sidebarItems as $item) { ?>
-                <?= View::partial('Partials/Backend/SidebarItems', 'AdminLite', array('item' => $item)); ?>
-            <?php } ?>
-        </ul>
-        <!-- /.sidebar-menu -->
-    </section>
-    <!-- /.sidebar -->
-  </aside>
-
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <?= $content; ?>
-  </div>
-  <!-- /.content-wrapper -->
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <div class="container">
+            <!-- Main content -->
+            <section class="content">
+                <?= $content; ?>
+            </section>
+        </div>
+    </div>
 
   <!-- Main Footer -->
   <footer class="main-footer">
@@ -199,7 +186,6 @@ $languages = Config::get('languages');
     <!-- Default to the left -->
     <strong>Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.novaframework.com/" target="_blank"><b>Nova Framework <?= $version; ?> / Kernel <?= VERSION; ?></b></a> - </strong> All rights reserved.
   </footer>
-
 </div>
 <!-- ./wrapper -->
 
@@ -208,21 +194,10 @@ $languages = Config::get('languages');
 Assets::js(array(
     // Bootstrap 3.3.5
     vendor_url('bower_components/bootstrap/dist/js/bootstrap.min.js', 'almasaeed2010/adminlte'),
-    // SlimScroll
-    vendor_url('bower_components/jquery-slimscroll/jquery.slimscroll.min.js', 'almasaeed2010/adminlte'),
-    // FastClick
-    vendor_url('bower_components/fastclick/lib/fastclick.js', 'almasaeed2010/adminlte'),
-    // Select2
-    vendor_url('bower_components/select2/dist/js/select2.full.min.js', 'almasaeed2010/adminlte'),
-    vendor_url('bower_components/select2/dist/js/i18n/' .$langCode .'.js', 'almasaeed2010/adminlte'),
     // iCheck
     vendor_url('plugins/iCheck/icheck.min.js', 'almasaeed2010/adminlte'),
     // AdminLTE App
     vendor_url('dist/js/adminlte.min.js', 'almasaeed2010/adminlte'),
-
-    // Bootstrap WYSIHTML5
-    //vendor_url('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.js', 'almasaeed2010/adminlte'),
-    resource_url('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.js'),
 ));
 
 echo isset($js) ? $js : ''; // Place to pass data
@@ -232,12 +207,6 @@ echo isset($js) ? $js : ''; // Place to pass data
 <script>
 
 $(function () {
-    // Initialize the sidebar menu.
-    $('.sidebar-menu').tree();
-
-    //Initialize Select2 Elements
-    $(".select2").select2();
-
     $('input').iCheck({
         checkboxClass: 'icheckbox_square-blue',
         radioClass: 'iradio_square-blue',
@@ -272,6 +241,7 @@ $(function () {
 </script>
 
 <script>
+
 $(function () {
     var notifications = [];
 
@@ -419,11 +389,6 @@ $(function () {
 });
 
 </script>
-
-<!-- Optionally, you can add Slimscroll and FastClick plugins.
-     Both of these plugins are recommended to enhance the
-     user experience. Slimscroll is required when using the
-     fixed layout. -->
 
 <!-- DO NOT DELETE! - Profiler -->
 

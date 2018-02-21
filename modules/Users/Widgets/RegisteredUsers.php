@@ -24,6 +24,6 @@ class RegisteredUsers extends Widget
             'url'     => site_url('admin/users')
         );
 
-        return View::make('Widgets/DashboardStatBox', $data, 'Platform')->render();
+        return View::make('Modules/Platform::Widgets/DashboardStatBox', $data)->render();
     }
 }

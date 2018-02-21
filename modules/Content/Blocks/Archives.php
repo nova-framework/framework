@@ -33,6 +33,6 @@ class Archives extends Block
             });
         });
 
-        return View::make('Blocks/Archives', compact('items'), 'Content')->render();
+        return View::make('Modules/Content::Blocks/Archives', compact('items'))->render();
     }
 }

@@ -19,6 +19,6 @@ class Categories extends Block
             return Taxonomy::where('taxonomy', 'category')->where('count', '>', 0)->get();
         });
 
-        return View::make('Blocks/Categories', compact('categories'), 'Content')->render();
+        return View::make('Modules/Content::Blocks/Categories', compact('categories'))->render();
     }
 }

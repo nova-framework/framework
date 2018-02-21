@@ -39,7 +39,9 @@ class ThemeServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $namespace = Config::get('view.themes.namespace');
+        $namespace = trim(
+            Config::get('view.themes.namespace'), '\\'
+        );
 
         $themes = $this->getInstalledThemes();
 

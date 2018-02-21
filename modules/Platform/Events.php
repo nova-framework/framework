@@ -52,7 +52,7 @@ Event::listen('frontend.menu.right', function ()
             // Custom content
             'class'   => 'notifications-menu',
             'label'   => array('warning', 0),
-            'content' => View::fetch('Partials/NavbarNotifications', array(), 'Platform'),
+            'content' => View::fetch('Modules/Platform::Partials/NavbarNotifications'),
         ),
         array(
             'url'    => site_url('admin/dashboard'),
@@ -130,7 +130,7 @@ Event::listen('backend.menu.navbar', function ()
             // Custom content
             'class'   => 'notifications-menu',
             'label'   => array('warning', 0),
-            'content' => View::fetch('Partials/NavbarNotifications', array(), 'Platform'),
+            'content' => View::fetch('Modules/Platform::Partials/NavbarNotifications'),
         ),
         array(
             'url'    => site_url('dashboard'),

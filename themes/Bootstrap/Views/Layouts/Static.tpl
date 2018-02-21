@@ -25,7 +25,7 @@
     {{ $content; }}
 </div>
 
-@partial('Partials/Footer', 'Bootstrap')
+@include('Themes/Bootstrap::Partials/Footer')
 
 @assets('js', array(
     'https://code.jquery.com/jquery-1.12.4.min.js',

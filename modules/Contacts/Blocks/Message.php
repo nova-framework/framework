@@ -30,26 +30,26 @@ class Message extends Block
 
         $this->addShortcode('input', function (Shortcode $shortcode)
         {
-            return View::make('Shortcodes/Input', compact('shortcode'), 'Contacts');
+            return View::make('Modules/Contacts::Shortcodes/Input', compact('shortcode'));
         });
 
         $this->addShortcode('textarea', function (Shortcode $shortcode)
         {
-            return View::make('Shortcodes/Textarea', compact('shortcode'), 'Contacts');
+            return View::make('Modules/Contacts::Shortcodes/Textarea', compact('shortcode'));
         });
 
         $this->addShortcode('select', function (Shortcode $shortcode)
         {
-            return View::make('Shortcodes/Select', compact('shortcode'), 'Contacts');
+            return View::make('Modules/Contacts::Shortcodes/Select', compact('shortcode'));
         });
 
         $this->addShortcode('option', function (Shortcode $shortcode)
         {
-            return View::make('Shortcodes/Option', compact('shortcode'), 'Contacts');
+            return View::make('Modules/Contacts::Shortcodes/Option', compact('shortcode'));
         });
 
         $content = $this->stripShortcodes($contact->message);
 
-        return View::make('Blocks/Message', compact('path', 'content'), 'Contacts')->render();
+        return View::make('Modules/Contacts::Blocks/Message', compact('path', 'content'))->render();
     }
 }

@@ -12,7 +12,7 @@ foreach ($items as $item) {
 <li<?= isset($liClass) ? sprintf(' class="%s"', $liClass) : ''; ?>>
     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?= $item['title']; ?> <?= $caret ? '<span class="caret"></span>' : ''; ?></a>
     <ul class="dropdown-menu">
-        <?= View::fetch('Widgets/MainMenuItems', $data, 'Content'); ?>
+        <?= View::fetch('Modules/Content::Widgets/MainMenuItems', $data); ?>
     </ul>
 </li>
 <?php } else { ?>

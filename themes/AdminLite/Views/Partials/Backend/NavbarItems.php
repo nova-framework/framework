@@ -18,7 +18,7 @@
         <?= $item['content']; ?>
     <?php } else { ?>
     <?php foreach ($children as $child) { ?>
-        <?= View::partial('Partials/Frontend/NavbarItems', 'AdminLite', array('item' => $child)); ?>
+        <?= View::fetch('Themes/AdminLite::Partials/Frontend/NavbarItems', array('item' => $child)); ?>
     <?php } ?>
     <?php } ?>
     </ul>

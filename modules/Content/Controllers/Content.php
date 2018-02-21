@@ -32,7 +32,7 @@ class Content extends BaseController
      *
      * @var mixed
      */
-    protected $theme = 'Bootstrap';
+    protected $theme = 'Themes/Bootstrap';
 
     /**
      * The currently used Layout.

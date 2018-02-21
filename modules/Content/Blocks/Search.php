@@ -12,6 +12,6 @@ class Search extends Block
 
     public function render()
     {
-        return View::make('Blocks/Search', array(), 'Content')->render();
+        return View::make('Modules/Content::Blocks/Search')->render();
     }
 }

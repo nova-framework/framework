@@ -21,7 +21,7 @@
 <body>
 
 @section('header')
-    @partial('Partials/Navbar', 'Bootstrap')
+    @include('Themes/Bootstrap::Partials/Navbar')
 @show
 
 <div class="container">
@@ -35,7 +35,7 @@
 </div>
 
 @section('footer')
-    @partial('Partials/Footer', 'Bootstrap')
+    @include('Themes/Bootstrap::Partials/Footer')
 @show
 
 @assets('js', array(

@@ -712,5 +712,5 @@ $(function () {
 
 </section>
 
-<?= View::fetch('Partials/FileManager', array(), 'Content'); ?>
+<?= View::fetch('Modules/Content::Partials/FileManager'); ?>
 

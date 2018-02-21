@@ -119,7 +119,7 @@
     <div class="box-body" style="min-height: 550px;">
         <div class="dd">
             <?php $items = $menu->items->where('parent_id', 0); ?>
-            <?= View::fetch('Partials/MenuItemsNestable', array('menu' => $menu, 'items' => $items), 'Content'); ?>
+            <?= View::fetch('Modules/Content::Partials/MenuItemsNestable', array('menu' => $menu, 'items' => $items)); ?>
         </div>
     </div>
     <div class="box-footer">

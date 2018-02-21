@@ -8,8 +8,6 @@
 <?= View::fetch('Partials/Messages'); ?>
 
 <div class="row">
-    <?= View::fetch('Partials/Messages'); ?>
-
     <div style="margin-top: 50px" class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
         <div class="panel panel-primary" >
             <div class="panel-heading">

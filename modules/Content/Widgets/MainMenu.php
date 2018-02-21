@@ -34,7 +34,7 @@ class MainMenu extends Widget
 
         $data = compact('items', 'siteUrl', 'caret');
 
-        return View::make('Widgets/MainMenuItems', $data, 'Content')->render();
+        return View::make('Modules/Content::Widgets/MainMenuItems', $data)->render();
     }
 
     protected function handleMenuItems($items)

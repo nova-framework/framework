@@ -33,7 +33,7 @@ $items->sort(function ($a, $b)
         <?php $children = $item->children()->get(); ?>
 
         <?php if (! $children->isEmpty()) { ?>
-        <?= View::fetch('Partials/MenuItemsNestable', array('menu' => $menu, 'items' => $children), 'Content'); ?>
+        <?= View::fetch('Modules/Content::Partials/MenuItemsNestable', array('menu' => $menu, 'items' => $children)); ?>
         <?php } ?>
     </li>
     <?php } ?>

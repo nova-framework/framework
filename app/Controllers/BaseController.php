@@ -1,58 +1,44 @@
 <?php
-/**
- * Controller - base controller
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace App\Controllers;
 
-use Nova\Foundation\Auth\Access\AuthorizeRequestsTrait;
-use Nova\Foundation\Validation\ValidateRequestsTrait;
+use Nova\Foundation\Auth\Access\AuthorizesRequestsTrait;
+use Nova\Foundation\Validation\ValidatesRequestsTrait;
 use Nova\Routing\Controller;
-use Nova\Support\Contracts\RenderableInterface as Renderable;
+use Nova\Support\Contracts\RenderableInterface;
 use Nova\Support\Facades\App;
 use Nova\Support\Facades\Config;
+use Nova\Support\Facades\Language;
 use Nova\Support\Facades\View;
-use Nova\View\Layout;
-
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Nova\Support\Str;
 
 use BadMethodCallException;
 
 
-abstract class BaseController extends Controller
+class BaseController extends Controller
 {
-    use AuthorizeRequestsTrait, ValidateRequestsTrait;
+    use AuthorizesRequestsTrait, ValidatesRequestsTrait;
 
     /**
      * The currently called action.
      *
      * @var string
      */
-    private $action;
+    protected $action;
 
     /**
-     * The Module which hosts the Controller.
+     * The currently used Theme.
      *
      * @var string
      */
-    private $module = null;
+    protected $theme;
 
     /**
-     * The current Views path for Controller.
+     * The currently used Layout.
      *
      * @var string
      */
-    private $viewPath;
-
-    /**
-     * The View variables.
-     *
-     * @var array
-     */
-    private $viewData = array();
+    protected $layout = 'Default';
 
     /**
      * True when the auto-rendering is active.
@@ -69,44 +55,30 @@ abstract class BaseController extends Controller
     protected $autoLayout = true;
 
     /**
-     * The currently used Theme.
+     * The View path for views of this Controller.
      *
      * @var string
      */
-    protected $theme = null;
+    protected $viewPath;
 
     /**
-     * The currently used Layout.
+     * The View variables.
      *
-     * @var string
+     * @var array
      */
-    protected $layout = 'Default';
+    protected $viewData = array();
 
 
     /**
      * Method executed before any action.
      *
      * @return void
-     * @throws \BadMethodCallException
      */
     protected function initialize()
     {
-        if (! isset($this->theme)) {
-            $this->theme = Config::get('app.theme', 'Bootstrap');
-        }
-
-        // Transform the complete class name on a path like variable.
-        $classPath = str_replace('\\', '/', static::class);
-
-        // Check for a valid controller on App and its Modules.
-        if (preg_match('#^(App|Modules)(?:/(.+))?/Controllers/(.*)$#', $classPath, $matches) !== 1) {
-            throw new BadMethodCallException('Invalid Controller namespace');
-        }
-
-        $this->viewPath = $matches[3];
-
-        if (($matches[1] == 'Modules') && ! empty($module = $matches[2])) {
-            $this->module = $module;
+        // Setup the used Theme to default, if it is not already defined.
+        if (is_null($this->theme)) {
+            $this->theme = Config::get('app.theme', 'Themes/Bootstrap');
         }
     }
 
@@ -115,13 +87,13 @@ abstract class BaseController extends Controller
      *
      * @param string  $method
      * @param array   $params
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return mixed
      */
     public function callAction($method, array $parameters)
     {
         $this->action = $method;
 
-        // Initialize the Controller instance.
+        //
         $this->initialize();
 
         $response = call_user_func_array(array($this, $method), $parameters);
@@ -146,37 +118,53 @@ abstract class BaseController extends Controller
             $response = $this->createView();
         }
 
-        if (! $response instanceof Renderable) {
+        if (! $response instanceof RenderableInterface) {
             return $response;
         }
 
-        // The auto-rendering in a Layout of the returned View instance.
-        else if ($this->autoLayout() && ! empty($this->layout) && (! $response instanceof Layout)) {
-            return $this->createLayout()->with('content', $response);
+        // The response is a RenderableInterface implementation.
+        else if ($this->autoLayout() && ! empty($this->layout)) {
+            $view = $this->getLocalizedLayout();
+
+            return View::make($view, $this->viewData)->with('content', $response);
         }
 
         return $response;
     }
 
     /**
-     * Create a Layout instance.
+     * Gets a localized View name for the implicit Layout.
+     *
+     * @return string
+     */
+    protected function getLocalizedLayout()
+    {
+        if ('rtl' == Language::direction()) {
+            $layout = sprintf('RTL/%s', $this->layout);
+
+            if (View::exists($view = $this->getQualifiedLayout($layout))) {
+                return $view;
+            }
+        }
+
+        return $this->getQualifiedLayout();
+    }
+
+    /**
+     * Gets a qualified View name for the implicit or given Layout.
      *
      * @param  string|null  $layout
-     * @return \Nova\View\Layout
+     * @return string
      */
-    protected function createLayout($layout = null)
+    protected function getQualifiedLayout($layout = null)
     {
-        if (is_null($layout)) {
-            $layout = $this->getLayout();
+        $view = sprintf('Layouts/%s', $layout ?: $this->layout);
+
+        if (! empty($theme = $this->getTheme())) {
+            return sprintf('%s::%s', $theme, $view);
         }
 
-        if (! is_null($theme = $this->getTheme()) && ($theme !== false)) {
-            return View::createLayout($layout, $theme, $this->viewData);
-        }
-
-        $view = 'Layouts/' .$layout;
-
-        return View::make($view, $this->viewData);
+        return $view;
     }
 
     /**
@@ -192,12 +180,43 @@ abstract class BaseController extends Controller
             $view = ucfirst($this->action);
         }
 
-        $data = array_merge($this->viewData, $data);
+        // Compute the qualified View name.
+        $view = sprintf('%s/%s', $this->getViewPath(), $view);
 
-        // Compute the fully qualified View name.
-        $view = $this->viewPath .'/' .$view;
+        return View::make($view, array_merge($this->viewData, $data));
+    }
 
-        return View::make($view, $data, $this->module, $this->theme);
+    /**
+     * Gets a qualified View path.
+     *
+     * @return string
+     * @throws \BadMethodCallException
+     */
+    protected function getViewPath()
+    {
+        if (isset($this->viewPath)) {
+            return $this->viewPath;
+        }
+
+        $basePath = trim(str_replace('\\', '/', App::getNamespace()), '/');
+
+        $classPath = str_replace('\\', '/', static::class);
+
+        if (preg_match('#^(.+)/Controllers/(.*)$#', $classPath, $matches) === 1) {
+            $viewPath = $matches[2];
+
+            //
+            $namespace = $matches[1];
+
+            if ($namespace !== $basePath) {
+                // A Controller within a Plugin namespace.
+                $viewPath = $namespace .'::' .$viewPath;
+            }
+
+            return $this->viewPath = $viewPath;
+        }
+
+        throw new BadMethodCallException('Invalid controller namespace');
     }
 
     /**
@@ -217,7 +236,7 @@ abstract class BaseController extends Controller
             $data = array($one => $two);
         }
 
-        $this->viewData = array_merge($data, $this->viewData);
+        $this->viewData = $data + $this->viewData;
 
         return $this;
     }
@@ -257,53 +276,27 @@ abstract class BaseController extends Controller
     }
 
     /**
-     * Return the current called action.
-     *
-     * @return string
-     */
-    public function getAction()
-    {
-        return $this->action;
-    }
-
-    /**
-     * Return the current Theme name.
+     * Return the current Theme.
      *
      * @return string
      */
     public function getTheme()
     {
+        if (! isset($this->theme)) {
+            return $this->theme = Config::get('app.theme', 'Themes/Bootstrap');
+        }
+
         return $this->theme;
     }
 
     /**
-     * Return the current Layout name.
+     * Return the current Layout.
      *
      * @return string
      */
     public function getLayout()
     {
         return $this->layout;
-    }
-
-    /**
-     * Return the Controller's Module if any or null.
-     *
-     * @return string|null
-     */
-    public function getModule()
-    {
-        return $this->module;
-    }
-
-    /**
-     * Return the current Views path for Controller.
-     *
-     * @return string
-     */
-    public function getViewPath()
-    {
-        return $this->viewPath;
     }
 
     /**

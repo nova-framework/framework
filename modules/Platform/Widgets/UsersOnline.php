@@ -23,6 +23,6 @@ class UsersOnline extends Widget
 
         $users = User::with('roles')->activeSince($since)->paginate(25);
 
-        return View::make('Widgets/DashboardUsersOnline', compact('users'), 'Platform')->render();
+        return View::make('Modules/Platform::Widgets/DashboardUsersOnline', compact('users'))->render();
     }
 }

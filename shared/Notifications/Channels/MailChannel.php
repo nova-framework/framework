@@ -44,7 +44,7 @@ class MailChannel
 
         $mail = $notification->toMail($notifiable);
 
-        $parameters = array($mail->view, $mail->data(), function ($message) use ($notifiable, $notification, $mail)
+        $this->mailer->send($mail->view, $mail->data(), function ($message) use ($notifiable, $notification, $mail)
         {
             $recipients = empty($mail->to) ? $notifiable->routeNotificationFor('mail') : $mail->to;
 
@@ -82,9 +82,5 @@ class MailChannel
                 $message->setPriority($mail->priority);
             }
         });
-
-        $method = $mail->queued ? 'queue' : 'send';
-
-        call_user_func_array(array($this->mailer, $method), $parameters);
     }
 }

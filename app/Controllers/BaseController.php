@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use Nova\Foundation\Auth\Access\AuthorizesRequestsTrait;
+use Nova\Foundation\Bus\DispatchesJobsTrait;
 use Nova\Foundation\Validation\ValidatesRequestsTrait;
 use Nova\Routing\Controller;
 use Nova\Support\Contracts\RenderableInterface;
@@ -17,7 +18,7 @@ use BadMethodCallException;
 
 class BaseController extends Controller
 {
-    use AuthorizesRequestsTrait, ValidatesRequestsTrait;
+    use DispatchesJobsTrait, AuthorizesRequestsTrait, ValidatesRequestsTrait;
 
     /**
      * The currently called action.

@@ -126,6 +126,7 @@ return array(
         'Nova\Hashing\HashServiceProvider',
         'Nova\Mail\MailServiceProvider',
         'Nova\Pagination\PaginationServiceProvider',
+        'Nova\Queue\QueueServiceProvider',
         'Nova\Redis\RedisServiceProvider',
         'Nova\Session\SessionServiceProvider',
         'Nova\Language\LanguageServiceProvider',
@@ -151,6 +152,7 @@ return array(
         'Shared\DomPDF\ServiceProvider',
         'Shared\Html\HtmlServiceProvider',
         'Shared\Notifications\NotificationServiceProvider',
+        'Shared\Queue\QueueServiceProvider',
         'Shared\Routing\RoutingServiceProvider',
         'Shared\Widgets\WidgetServiceProvider',
 
@@ -182,6 +184,7 @@ return array(
         // The Support Facades.
         'App'           => 'Nova\Support\Facades\App',
         'Auth'          => 'Nova\Support\Facades\Auth',
+        'Bus'           => 'Nova\Support\Facades\Bus',
         'Cache'         => 'Nova\Support\Facades\Cache',
         'Config'        => 'Nova\Support\Facades\Config',
         'Cookie'        => 'Nova\Support\Facades\Cookie',
@@ -196,6 +199,7 @@ return array(
         'Language'      => 'Nova\Support\Facades\Language',
         'Mailer'        => 'Nova\Support\Facades\Mailer',
         'Paginator'     => 'Nova\Support\Facades\Paginator',
+        'Queue'         => 'Nova\Support\Facades\Queue',
         'Redirect'      => 'Nova\Support\Facades\Redirect',
         'Redis'         => 'Nova\Support\Facades\Redis',
         'Request'       => 'Nova\Support\Facades\Request',

@@ -25,7 +25,7 @@ class BaseController extends Controller
      *
      * @var bool
      */
-    protected $initialized = true;
+    private $initialized = true;
 
     /**
      * The currently called action.
@@ -286,15 +286,23 @@ class BaseController extends Controller
     }
 
     /**
+     * Return true when the Controller was initialized.
+     *
+     * @return bool
+     */
+    public function initialized()
+    {
+        return $this->initialized;
+    }
+
+    /**
      * Return the current Theme.
      *
      * @return string
      */
     public function getTheme()
     {
-        $this->initialized = true;
-
-        if (is_null($this->theme) && ! $this->initialized) {
+        if (is_null($this->theme) && ! $this->initialized()) {
             return $this->theme = Config::get('app.theme', 'Bootstrap');
         }
 

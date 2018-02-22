@@ -44,11 +44,12 @@ Forge::command('queue:monitor-listener', function ()
 
 
 /**
- * Schedule the Queue Listener's Monitor.
+ * Schedule the Queue execution.
  */
-Schedule::command('queue:monitor-listener')->everyFiveMinutes();
+Schedule::command('queue:batch --tries=3 --time-limit=60 --job-limit=100')->everyMinute()->withoutOverlapping();
 
-// Alternate method working also under Windows.
+//Schedule::command('queue:monitor-listener')->everyFiveMinutes();
+
 //Schedule::command('queue:work --daemon')->everyFiveMinutes()->withoutOverlapping();
 
 /**

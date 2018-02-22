@@ -20,7 +20,7 @@ Forge::resolveCommands(array(
 /**
  * Add the Closure based commands.
  */
-Forge::command('queue:monitor-listener', function ()
+Forge::command('queue:monitor', function ()
 {
     $runCommand = true;
 
@@ -40,15 +40,15 @@ Forge::command('queue:monitor-listener', function ()
         file_put_contents($pidFile, $number);
     }
 
-})->describe('Monitor the Queue Listener');
+})->describe('Monitor the Queue worker execution');
 
 
 /**
  * Schedule the Queue execution.
  */
-Schedule::command('queue:batch --tries=3 --time-limit=60 --job-limit=100')->everyMinute()->withoutOverlapping();
+Schedule::command('queue:monitor')->everyFiveMinutes();
 
-//Schedule::command('queue:monitor-listener')->everyFiveMinutes();
+//Schedule::command('queue:batch --tries=3 --time-limit=60 --job-limit=100')->everyMinute()->withoutOverlapping();
 
 //Schedule::command('queue:work --daemon')->everyFiveMinutes()->withoutOverlapping();
 

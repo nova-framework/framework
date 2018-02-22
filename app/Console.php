@@ -33,8 +33,6 @@ Forge::command('queue:monitor', function ()
     }
 
     if ($runCommand) {
-        //$command = PHP_BINARY .' ' .base_path('forge') .' queue:batch --tries=3 --time-limit=60 --job-limit=100 >/dev/null & echo $!';
-
         $command = PHP_BINARY .' ' .base_path('forge') .' queue:work --daemon --tries=3 >/dev/null & echo $!';
 
         // Execute the command and retrieve the PID.
@@ -43,7 +41,7 @@ Forge::command('queue:monitor', function ()
         file_put_contents($pidFile, $pid);
     }
 
-})->describe('Monitor the Queue worker execution');
+})->describe('Monitor the Queue Worker execution');
 
 
 /**
@@ -51,6 +49,7 @@ Forge::command('queue:monitor', function ()
  */
 //Schedule::command('queue:monitor')->everyMinute()->runInBackground();
 
+// To prevent long running cache expiries it is advised to match your cache cache expiry time with your task frequency.
 Schedule::command('queue:batch --tries=3 --time-limit=55 --job-limit=100')->everyMinute()->withoutOverlapping(1)->runInBackground();
 
 //Schedule::command('queue:work --daemon')->everyFiveMinutes()->withoutOverlapping(5)->runInBackground();

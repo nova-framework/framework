@@ -58,7 +58,7 @@ class BatchCommand extends WorkCommand
         // is to protect us against any memory leaks that will be in the scripts.
         $memory = $this->option('memory');
 
-        if (empty($connection = $this->argument('connection')) {
+        if (empty($connection = $this->argument('connection'))) {
             $connection = $this->container['config']['queue.default'];
         }
 

@@ -24,6 +24,7 @@ Forge::command('queue:monitor', function ()
 {
     $runCommand = true;
 
+    // We will prevend execution overlapping.
     if (file_exists($pidFile = storage_path('queue.pid'))) {
         $pid = file_get_contents($pidFile);
 

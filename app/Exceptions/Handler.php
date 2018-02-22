@@ -35,6 +35,9 @@ class Handler extends ExceptionHandler
         'Nova\Session\TokenMismatchException',
         'Nova\Validation\ValidationException',
         'Symfony\Component\HttpKernel\Exception\HttpException',
+
+        //
+        'Shared\Queue\StopBatchException',
     );
 
     /**

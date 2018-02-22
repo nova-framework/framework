@@ -55,6 +55,7 @@ Schedule::command('queue:monitor')->everyFiveMinutes();
 
 //Schedule::command('queue:work --daemon')->everyFiveMinutes()->withoutOverlapping();
 
+
 /**
  * Schedule the flushing of expired password reminders.
  */

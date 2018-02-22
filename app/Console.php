@@ -22,10 +22,9 @@ Forge::resolveCommands(array(
  */
 Forge::command('queue:monitor', function ()
 {
-    $runCommand = true;
-
-    // We will prevend execution overlapping.
-    if (file_exists($pidFile = storage_path('queue.pid'))) {
+    if (! file_exists($pidFile = storage_path('queue.pid'))) {
+        $runCommand = true;
+    } else {
         $pid = file_get_contents($pidFile);
 
         $runCommand = empty(
@@ -34,11 +33,14 @@ Forge::command('queue:monitor', function ()
     }
 
     if ($runCommand) {
+        //$command = PHP_BINARY .' ' .base_path('forge') .' queue:batch --tries=3 --time-limit=60 --job-limit=100 >/dev/null & echo $!';
+
         $command = PHP_BINARY .' ' .base_path('forge') .' queue:work --daemon --tries=3 >/dev/null & echo $!';
 
-        $number = exec($command);
+        // Execute the command and retrieve the PID.
+        $pid = exec($command);
 
-        file_put_contents($pidFile, $number);
+        file_put_contents($pidFile, $pid);
     }
 
 })->describe('Monitor the Queue worker execution');

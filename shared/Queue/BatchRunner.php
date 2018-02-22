@@ -77,19 +77,6 @@ class BatchRunner extends Worker
     }
 
     /**
-     * Stop the process if necessary.
-     *
-     * @param  WorkerOptions  $options
-     * @param  int  $lastRestart
-     */
-    protected function stopIfNecessary(WorkerOptions $options, $lastRestart)
-    {
-        parent::stopIfNecessary($options, $lastRestart);
-
-        $this->checkLimits();
-    }
-
-    /**
      * Sleep the script for a given number of seconds.
      *
      * @param  int   $seconds
@@ -134,7 +121,7 @@ class BatchRunner extends Worker
      */
     protected function isTimeLimit($timeLimit)
     {
-        return (microtime(true) - $this->startTime) > $timeLimit;
+        return ((microtime(true) - $this->startTime) > $timeLimit);
     }
 
     /**
@@ -146,7 +133,7 @@ class BatchRunner extends Worker
      */
     protected function isJobLimit($jobLimit)
     {
-        return $this->jobCount >= $jobLimit;
+        return ($this->jobCount >= $jobLimit);
     }
 
 }

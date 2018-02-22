@@ -54,7 +54,6 @@ class BatchCommand extends WorkCommand
         $this->listenForEvents();
 
         $queue = $this->option('queue');
-
         $delay = $this->option('delay');
 
         // The memory limit is the amount of memory we will allow the script to occupy
@@ -84,11 +83,16 @@ class BatchCommand extends WorkCommand
             $this->container['Nova\Foundation\Contracts\ExceptionHandlerInterface']
         );
 
-        $this->worker->setCache($this->container['cache']->driver());
+        $sleep = $this->option('sleep');
+        $tries = $this->option('tries');
+
+        $this->worker->setCache(
+            $this->container['cache']->driver()
+        );
 
         return $this->worker->batch(
-            $connection, $queue, $delay,$memory,
-            $this->option('sleep'), $this->option('tries'), $this->option('time-limit'), $this->option('job-limit')
+            $connection, $queue, $delay,$memory, $sleep, $tries,
+            $this->option('time-limit'), $this->option('job-limit')
         );
     }
 

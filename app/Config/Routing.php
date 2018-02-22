@@ -36,14 +36,6 @@ return array(
 
             // Bootstrap
             'twbs/bootstrap' => 'dist',
-
-            // elFinder
-            'studio-42/elfinder' => array(
-                'css',
-                'img',
-                'js',
-                'sounds'
-            ),
         ),
     ),
 );

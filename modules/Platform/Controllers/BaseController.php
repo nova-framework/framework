@@ -19,7 +19,7 @@ abstract class BaseController extends Controller
      *
      * @var string
      */
-    protected $theme = 'Themes/AdminLite';
+    protected $theme = 'AdminLite';
 
     /**
      * The currently used Layout.

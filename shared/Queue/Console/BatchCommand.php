@@ -50,6 +50,12 @@ class BatchCommand extends WorkCommand
             return $this->worker->sleep($sleep);
         }
 
+        // We'll listen to the processed and failed events so we can write information
+        // to the console as jobs are processed, which will let the developer watch
+        // which jobs are coming through a queue and be informed on its progress.
+
+        $this->listenForEvents();
+
         $queue = $this->option('queue');
         $delay = $this->option('delay');
 

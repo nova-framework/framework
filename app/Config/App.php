@@ -37,7 +37,7 @@ return array(
     /**
      * The default Theme.
      */
-    'theme' => 'Themes/Bootstrap',
+    'theme' => 'Bootstrap',
 
     /**
      * The Backend's Color Scheme.

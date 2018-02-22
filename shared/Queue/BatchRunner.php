@@ -2,12 +2,11 @@
 
 namespace Shared\Queue;
 
+use Nova\Queue\Job;
 use Nova\Queue\Worker;
 use Nova\Queue\WorkerOptions;
 
 use Shared\Queue\StopBatchException;
-
-use PDOException;
 
 
 class BatchRunner extends Worker
@@ -69,7 +68,7 @@ class BatchRunner extends Worker
      * @param  \Nova\Contracts\Queue\Job  $job
      * @return void
      */
-    protected function raiseAfterJobEvent($connectionName, $job)
+    protected function raiseAfterJobEvent($connectionName, Job $job)
     {
         $this->jobCount++;
 

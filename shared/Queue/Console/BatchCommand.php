@@ -42,16 +42,13 @@ class BatchCommand extends WorkCommand
      *
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         if ($this->downForMaintenance()) {
-            return $this->worker->sleep($this->option('sleep'));
-        }
+            $sleep = $this->option('sleep');
 
-        // We'll listen to the processed and failed events so we can write information
-        // to the console as jobs are processed, which will let the developer watch
-        // which jobs are coming through a queue and be informed on its progress.
-        $this->listenForEvents();
+            return $this->worker->sleep($sleep);
+        }
 
         $queue = $this->option('queue');
         $delay = $this->option('delay');
@@ -61,8 +58,9 @@ class BatchCommand extends WorkCommand
         // is to protect us against any memory leaks that will be in the scripts.
         $memory = $this->option('memory');
 
-        $connection = $this->argument('connection')
-                        ?: $this->container['config']['queue.default'];
+        if (empty($connection = $this->argument('connection')) {
+            $connection = $this->container['config']['queue.default'];
+        }
 
         $this->runWorker($connection, $queue, $delay, $memory);
     }
@@ -117,4 +115,5 @@ class BatchCommand extends WorkCommand
             array('job-limit',  null, InputOption::VALUE_OPTIONAL, 'The maximum number of Jobs that the batch should process', 100),
         );
     }
+
 }

@@ -108,15 +108,4 @@ class AsyncCommand extends Command
         );
     }
 
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return array(
-
-        );
-    }
 }

@@ -7,6 +7,8 @@ use Nova\Queue\WorkerOptions;
 
 use Shared\Queue\StopBatchException;
 
+use PDOException;
+
 
 class BatchRunner extends Worker
 {
@@ -96,6 +98,8 @@ class BatchRunner extends Worker
      */
     public function stop($status = 0)
     {
+        $this->events->fire('nova.queue.stopping');
+
         // Cleanly handle stopping a batch without resorting to killing the process
         throw new StopBatchException();
     }

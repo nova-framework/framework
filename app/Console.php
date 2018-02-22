@@ -51,9 +51,9 @@ Forge::command('queue:monitor', function ()
  */
 Schedule::command('queue:monitor')->everyFiveMinutes();
 
-//Schedule::command('queue:batch --tries=3 --time-limit=60 --job-limit=100')->everyMinute()->withoutOverlapping(1);
+//Schedule::command('queue:batch --tries=3 --time-limit=60 --job-limit=100')->everyMinute()->withoutOverlapping(1)->runInBackground();
 
-//Schedule::command('queue:work --daemon')->everyFiveMinutes()->withoutOverlapping();
+//Schedule::command('queue:work --daemon')->everyFiveMinutes()->withoutOverlapping()->runInBackground();
 
 
 /**

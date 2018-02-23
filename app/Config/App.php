@@ -133,6 +133,7 @@ return array(
         'Nova\Language\LanguageServiceProvider',
         'Nova\Validation\ValidationServiceProvider',
         'Nova\View\ViewServiceProvider',
+        'Nova\Broadcasting\BroadcastServiceProvider',
 
         // The Forge Providers.
         'Nova\Cache\ConsoleServiceProvider',

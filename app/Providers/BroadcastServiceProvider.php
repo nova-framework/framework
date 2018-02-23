@@ -23,14 +23,6 @@ class BroadcastServiceProvider extends ServiceProvider
             return Broadcast::authenticate($request);
         }));
 
-        $this->loadBroadcastChannels();
-    }
-
-    /**
-     * Load the Broadcast Channels.
-     */
-    protected function loadBroadcastChannels()
-    {
         require app_path('Routes/Channels.php');
     }
 }

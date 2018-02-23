@@ -163,6 +163,7 @@ return array(
         'App\Providers\AuthServiceProvider',
         'App\Providers\EventServiceProvider',
         'App\Providers\RouteServiceProvider',
+        'App\Providers\BroadcastServiceProvider',
         'App\Providers\ThemeServiceProvider',
     ),
 

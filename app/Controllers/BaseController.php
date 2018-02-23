@@ -191,7 +191,7 @@ class BaseController extends Controller
         }
 
         // Compute the qualified View name.
-        $view = sprintf('%s/%s', $this->getViewPath(), $view);
+        $view = sprintf('%s/%s', $this->resolveViewPath(), $view);
 
         return View::make($view, array_merge($this->viewData, $data));
     }
@@ -202,7 +202,7 @@ class BaseController extends Controller
      * @return string
      * @throws \BadMethodCallException
      */
-    protected function getViewPath()
+    protected function resolveViewPath()
     {
         if (isset($this->viewPath)) {
             return $this->viewPath;

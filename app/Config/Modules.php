@@ -24,7 +24,7 @@ return array(
     // Path to Cache
     //--------------------------------------------------------------------------
 
-    'cache' => STORAGE_PATH .'modules.php',
+    'cache' => STORAGE_PATH .'framework' .DS .'modules.php',
 
     //--------------------------------------------------------------------------
     // Registered Modules

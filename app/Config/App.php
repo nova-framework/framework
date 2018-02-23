@@ -170,7 +170,7 @@ return array(
     /**
      * The Service Providers Manifest path.
      */
-    'manifest' => BASEPATH .'storage',
+    'manifest' => BASEPATH .'storage' .DS .'framework',
 
     /**
      * The registered Class Aliases.

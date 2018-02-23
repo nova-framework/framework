@@ -2,6 +2,7 @@
 !cache/
 !emails/
 !files/
+!framework/
 !logs/
 !sessions/
 !spool/

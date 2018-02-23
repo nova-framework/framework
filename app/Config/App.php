@@ -185,6 +185,7 @@ return array(
         // The Support Facades.
         'App'           => 'Nova\Support\Facades\App',
         'Auth'          => 'Nova\Support\Facades\Auth',
+        'Broadcast'     => 'Nova\Support\Facades\Broadcast',
         'Bus'           => 'Nova\Support\Facades\Bus',
         'Cache'         => 'Nova\Support\Facades\Cache',
         'Config'        => 'Nova\Support\Facades\Config',

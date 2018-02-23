@@ -10,8 +10,11 @@ use Nova\Queue\ShouldQueueInterface;
 use Nova\Support\Collection;
 use Nova\Support\Manager;
 
+use Shared\Notifications\Channels\BroadcastChannel;
 use Shared\Notifications\Channels\DatabaseChannel;
 use Shared\Notifications\Channels\MailChannel;
+use Shared\Notifications\Events\NotificationSending;
+use Shared\Notifications\Events\NotificationSent;
 use Shared\Notifications\DispatcherInterface;
 use Shared\Notifications\SendQueuedNotifications;
 
@@ -105,7 +108,7 @@ class ChannelManager extends Manager implements DispatcherInterface
                 $response = $this->driver($channel)->send($notifiable, $notification);
 
                 $this->events->fire(
-                    'notification.sent', array($notifiable, $notification, $channel, $response)
+                    new NotificationSent($notifiable, $notification, $channel, $response)
                 );
             }
         }
@@ -122,7 +125,7 @@ class ChannelManager extends Manager implements DispatcherInterface
     protected function shouldSendNotification($notifiable, $notification, $channel)
     {
         $result = $this->events->until(
-            'notification.sending', array($notifiable, $notification, $channel)
+            new NotificationSending($notifiable, $notification, $channel)
         );
 
         return $result !== false;
@@ -201,6 +204,16 @@ class ChannelManager extends Manager implements DispatcherInterface
     protected function createDatabaseDriver()
     {
         return $this->app->make(DatabaseChannel::class);
+    }
+
+    /**
+     * Create an instance of the broadcast driver.
+     *
+     * @return \Shared\Notifications\Channels\BroadcastChannel
+     */
+    protected function createBroadcastDriver()
+    {
+        return $this->app->make(BroadcastChannel::class);
     }
 
     /**

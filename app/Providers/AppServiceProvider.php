@@ -44,7 +44,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $packages = $this->getInstalledPackages();
 
-        foreach ($packages as $package => $path) {
+        foreach ($packages as $package) {
             $namespace = str_replace('/', '\\', $package);
 
             $provider = sprintf('%s\\Providers\\PackageServiceProvider', $namespace);
@@ -67,7 +67,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         if (is_array($config) && isset($config['packages']) && is_array($config['packages'])) {
-            return $config['packages'];
+            return array_keys($config['packages']);
         }
 
         return array();

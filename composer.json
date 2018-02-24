@@ -21,11 +21,16 @@
     "repositories": [
         {
             "type": "git",
+            "url": "https://github.com/nova-framework/package-installer"
+        },
+        {
+            "type": "git",
             "url": "https://github.com/nova-framework/system"
         }
     ],
     "require": {
         "php": ">=5.6.0",
+        "nova-framework/package-installer": "*",
         "nova-framework/system": "^3.0",
         "almasaeed2010/adminlte": "^2.4",
         "twbs/bootstrap": "^3.3",
@@ -66,6 +71,9 @@
         ],
         "post-create-project-cmd": [
             "php forge key:generate"
+        ],
+        "post-autoload-dump": [
+            "Nova\\Composer\\Installer\\PackageInstaller::postAutoloadDump"
         ]
     },
     "prefer-stable": true,

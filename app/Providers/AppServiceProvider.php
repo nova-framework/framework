@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerInstalledPackages();
+        $this->registerPackages();
 
         //
     }
@@ -40,14 +40,14 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerInstalledPackages()
+    protected function registerPackages()
     {
         $packages = $this->getInstalledPackages();
 
         foreach ($packages as $package) {
             $namespace = str_replace('/', '\\', $package);
 
-            $provider = sprintf('%s\\Providers\\PackageServiceProvider', $namespace);
+            $provider = $namespace .'\\Providers\\PackageServiceProvider';
 
             if (class_exists($provider)) {
                 $this->app->register($provider);

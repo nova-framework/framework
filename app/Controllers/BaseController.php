@@ -21,13 +21,6 @@ class BaseController extends Controller
     use DispatchesJobsTrait, AuthorizesRequestsTrait, ValidatesRequestsTrait;
 
     /**
-     * True when the Controller was initialized.
-     *
-     * @var bool
-     */
-    private $initialized = true;
-
-    /**
      * The currently called action.
      *
      * @var string
@@ -84,8 +77,6 @@ class BaseController extends Controller
      */
     protected function initialize()
     {
-        $this->initialized = true;
-
         // Setup the used Theme to default, if it is not already defined.
         if (is_null($this->theme)) {
             $this->theme = Config::get('app.theme', 'Bootstrap');
@@ -93,9 +84,9 @@ class BaseController extends Controller
 
         $namespace = 'Themes/' .$this->theme;
 
-        Config::set('themes.namespace', $namespace);
-
         View::overrides($namespace);
+
+        Config::set('themes.current', $namespace);
     }
 
     /**
@@ -308,10 +299,6 @@ class BaseController extends Controller
      */
     public function getTheme()
     {
-        if (is_null($this->theme) && ! $this->initialized()) {
-            return $this->theme = Config::get('app.theme', 'Bootstrap');
-        }
-
         return $this->theme;
     }
 

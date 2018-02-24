@@ -95,7 +95,7 @@ class BaseController extends Controller
 
         Config::set('themes.namespace', $namespace);
 
-        View::setNamedTheme($namespace);
+        View::overrides($namespace);
     }
 
     /**

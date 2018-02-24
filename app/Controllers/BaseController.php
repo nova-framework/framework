@@ -84,7 +84,7 @@ class BaseController extends Controller
 
         $namespace = 'Themes/' .$this->theme;
 
-        View::overrides($namespace);
+        View::overridesFrom($namespace);
 
         Config::set('themes.current', $namespace);
     }

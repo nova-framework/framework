@@ -219,8 +219,6 @@ return array(
         'Module'        => 'Nova\Support\Facades\Module',
 
         // The Shared Facades.
-        'Form'          => 'Shared\Support\Facades\Form',
-        'HTML'          => 'Shared\Support\Facades\HTML',
         'PDF'           => 'Shared\Support\Facades\PDF',
         'Notification'  => 'Shared\Support\Facades\Notification',
         'Password'      => 'Shared\Support\Facades\Password',

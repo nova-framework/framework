@@ -152,7 +152,6 @@ return array(
         'Shared\Auth\ConsoleServiceProvider',
         'Shared\Database\Backup\ConsoleServiceProvider',
         'Shared\DomPDF\ServiceProvider',
-        'Shared\Html\HtmlServiceProvider',
         'Shared\Notifications\NotificationServiceProvider',
         'Shared\Queue\QueueServiceProvider',
         'Shared\Routing\RoutingServiceProvider',

@@ -90,6 +90,12 @@ class BaseController extends Controller
         if (is_null($this->theme)) {
             $this->theme = Config::get('app.theme', 'Bootstrap');
         }
+
+        $namespace = 'Themes/' .$this->theme;
+
+        Config::set('themes.namespace', $namespace);
+
+        View::setupTheme($namespace);
     }
 
     /**

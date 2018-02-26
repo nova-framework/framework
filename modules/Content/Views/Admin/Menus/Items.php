@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" href="<?= resource_url('css/jquery.nestable.css', 'Content'); ?>">
+<link rel="stylesheet" type="text/css" href="<?= resource_url('css/jquery.nestable.css', 'content'); ?>">
 
 <section class="content-header">
     <h1><?= __d('content', 'Manage the Menu: {0}', $menu->name); ?></h1>
@@ -131,7 +131,7 @@
 
 </form>
 
-<script type="text/javascript" src="<?= resource_url('js/jquery.nestable.js', 'Content'); ?>"></script>
+<script type="text/javascript" src="<?= resource_url('js/jquery.nestable.js', 'content'); ?>"></script>
 
 <script>
 

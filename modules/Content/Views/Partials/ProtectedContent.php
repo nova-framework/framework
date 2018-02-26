@@ -7,7 +7,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="center-block text-center">
-                        <img class="img-thumbnail img-circle" style="margin-bottom: 20px;" src="<?= resource_url('images/protected-content.jpg', 'Content'); ?>" alt="">
+                        <img class="img-thumbnail img-circle" style="margin-bottom: 20px;" src="<?= resource_url('images/protected-content.jpg', 'content'); ?>" alt="">
                         <form action="<?= site_url('content/' .$post->id); ?>" method="POST" role="form">
                             <div class="input-group" style="margin-bottom: 15px;">
                                 <span class="input-group-addon"><i class="fa fa-lock"></i></span>

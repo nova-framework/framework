@@ -1,5 +1,5 @@
-<link rel="stylesheet" type="text/css" href="<?= resource_url('css/jquery.nestable.css', 'Content'); ?>">
-<script type="text/javascript" src="<?= resource_url('js/jquery.nestable.js', 'Content'); ?>"></script>
+<link rel="stylesheet" type="text/css" href="<?= resource_url('css/jquery.nestable.css', 'content'); ?>">
+<script type="text/javascript" src="<?= resource_url('js/jquery.nestable.js', 'content'); ?>"></script>
 
 <section class="content-header">
     <h1><?= $title; ?></h1>

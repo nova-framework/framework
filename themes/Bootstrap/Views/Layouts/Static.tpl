@@ -9,8 +9,8 @@
         'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
         'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css',
         'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
-        theme_url('css/bootstrap-xl-mod.min.css', 'Bootstrap'),
-        theme_url('css/style.css', 'Bootstrap'),
+        theme_url('css/bootstrap-xl-mod.min.css', 'bootstrap'),
+        theme_url('css/style.css', 'bootstrap'),
     ))
 
 </head>

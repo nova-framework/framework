@@ -43,7 +43,7 @@ $languages = Config::get('languages');
         // Bootstrap WYSIHTML5
         vendor_url('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css', 'almasaeed2010/adminlte'),
         // Custom CSS
-        theme_url('css/style.css', 'AdminLite'),
+        theme_url('css/style.css', 'admin_lite'),
     ));
 
     echo isset($css) ? $css : ''; // Place to pass data

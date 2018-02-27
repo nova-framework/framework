@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Nova\Filesystem\FileNotFoundException;
 use Nova\Support\Arr;
+use Nova\Support\Str;
 use Nova\Support\ServiceProvider;
 
 
@@ -39,20 +40,22 @@ class PackageServiceProvider extends ServiceProvider
         foreach ($packages as $package) {
             $namespace = str_replace('/', '\\', $package);
 
-            // The main Service Provider from a package usually have a name like:
+            // The main Service Provider from a package should have a name like:
             // AcmeCorp\Pages\Providers\PackageServiceProvider
+            //
+            // If the provider class does not exists, we will look for alternative naming like:
+            // AcmeCorp\Pages\PageServiceProvider
 
             $provider = $namespace .'\\Providers\\PackageServiceProvider';
 
-            if (class_exists($provider)) {
-                //
-            }
+            if (! class_exists($provider)) {
+                list ($vendor, $package) = explode('/', $package);
 
-            // If it does not exists, we will look for an altenative class like:
-            // AcmeCorp\PagesServiceProvider
+                $provider = sprintf('%s\\%sServiceProvider', $namespace, Str::singular($package));
 
-            else if (! class_exists($provider = $namespace .'ServiceProvider')) {
-                continue;
+                if (! class_exists($provider)) {
+                    continue;
+                }
             }
 
             $this->app->register($provider);

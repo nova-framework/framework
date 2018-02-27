@@ -29,11 +29,7 @@ class ThemeServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the Application's Service Provider.
-     *
-     * This service provider is a convenient place to register your modules
-     * services in the IoC container. If you wish, you may make additional
-     * methods or service providers to keep the code more focused and granular.
+     * Register the Application's Themes.
      *
      * @return void
      */
@@ -47,6 +43,9 @@ class ThemeServiceProvider extends ServiceProvider
 
         $themes->each(function ($theme) use ($namespace)
         {
+            // The main Service Provider from a theme should have a name like:
+            // Themes\AdminLite\Providers\ThemeServiceProvider
+
             $provider = sprintf('%s\\%s\\Providers\\ThemeServiceProvider', $namespace, $theme);
 
             if (class_exists($provider)) {

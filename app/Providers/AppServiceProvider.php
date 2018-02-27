@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use Nova\Filesystem\FileNotFoundException;
 use Nova\Foundation\Support\Providers\AppServiceProvider as ServiceProvider;
 
 

@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use Nova\Filesystem\FileNotFoundException;
-use Nova\Foundation\Support\Providers\AppServiceProvider as ServiceProvider;
 use Nova\Support\Arr;
+use Nova\Support\ServiceProvider;
 
 
 class PackageServiceProvider extends ServiceProvider
@@ -14,7 +14,7 @@ class PackageServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $packagesPath = BASEPATH .'vendor' .DS .'nova-packages.php';
+    protected $configPath = BASEPATH .'vendor' .DS .'nova-packages.php';
 
 
     /**
@@ -37,18 +37,6 @@ class PackageServiceProvider extends ServiceProvider
      * @return void
      */
     public function register()
-    {
-        $this->registerPackages();
-
-        //
-    }
-
-    /**
-     * Register the Application's Packages.
-     *
-     * @return void
-     */
-    protected function registerPackages()
     {
         $packages = $this->getInstalledPackages();
 
@@ -78,7 +66,7 @@ class PackageServiceProvider extends ServiceProvider
     protected function getInstalledPackages()
     {
         try {
-            $config = $this->app['files']->getRequire($this->packagesPath);
+            $config = $this->app['files']->getRequire($this->configPath);
         }
         catch (FileNotFoundException $e) {
             $config = array();

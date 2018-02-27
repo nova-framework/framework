@@ -49,9 +49,9 @@ class PackageServiceProvider extends ServiceProvider
             $provider = $namespace .'\\Providers\\PackageServiceProvider';
 
             if (! class_exists($provider)) {
-                list ($vendor, $package) = explode('/', $package);
+                list (, $name) = explode('/', $package);
 
-                $provider = sprintf('%s\\%sServiceProvider', $namespace, Str::singular($package));
+                $provider = sprintf('%s\\%sServiceProvider', $namespace, Str::singular($name));
 
                 if (! class_exists($provider)) {
                     continue;

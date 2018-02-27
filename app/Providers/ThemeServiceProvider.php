@@ -43,7 +43,7 @@ class ThemeServiceProvider extends ServiceProvider
 
         $themes->each(function ($theme) use ($namespace)
         {
-            // The main Service Provider from a theme should have a name like:
+            // The main Service Provider from a theme should be named like:
             // Themes\AdminLite\Providers\ThemeServiceProvider
 
             $provider = sprintf('%s\\%s\\Providers\\ThemeServiceProvider', $namespace, $theme);

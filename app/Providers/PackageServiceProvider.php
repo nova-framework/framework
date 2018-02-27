@@ -40,10 +40,10 @@ class PackageServiceProvider extends ServiceProvider
         foreach ($packages as $package) {
             $namespace = str_replace('/', '\\', $package);
 
-            // The main Service Provider from a package should have a name like:
+            // The main Service Provider from a package should be named like:
             // AcmeCorp\Pages\Providers\PackageServiceProvider
             //
-            // If it does not exists, we will look for an alternative naming like:
+            // If it does not exists, we will look for a class with name like:
             // AcmeCorp\Pages\PageServiceProvider
 
             $provider = $namespace .'\\Providers\\PackageServiceProvider';

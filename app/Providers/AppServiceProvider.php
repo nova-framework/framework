@@ -30,46 +30,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerPackages();
-
         //
-    }
-
-    /**
-     * Register the Application's Packages.
-     *
-     * @return void
-     */
-    protected function registerPackages()
-    {
-        $packages = $this->getInstalledPackages();
-
-        foreach ($packages as $package) {
-            $namespace = str_replace('/', '\\', $package);
-
-            $provider = $namespace .'\\Providers\\PackageServiceProvider';
-
-            if (class_exists($provider)) {
-                $this->app->register($provider);
-            }
-        }
-    }
-
-    protected function getInstalledPackages()
-    {
-        $path = BASEPATH .'vendor' .DS .'nova-packages.php';
-
-        try {
-            $config = $this->app['files']->getRequire($path);
-        }
-        catch (FileNotFoundException $e) {
-            $config = array();
-        }
-
-        if (is_array($config) && isset($config['packages']) && is_array($config['packages'])) {
-            return array_keys($config['packages']);
-        }
-
-        return array();
     }
 }

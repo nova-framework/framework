@@ -43,7 +43,7 @@ class PackageServiceProvider extends ServiceProvider
             // The main Service Provider from a package should have a name like:
             // AcmeCorp\Pages\Providers\PackageServiceProvider
             //
-            // If the provider class does not exists, we will look for alternative naming like:
+            // If it does not exists, we will look for an alternative naming like:
             // AcmeCorp\Pages\PageServiceProvider
 
             $provider = $namespace .'\\Providers\\PackageServiceProvider';

@@ -159,11 +159,11 @@ return array(
 
         // The Application Providers.
         'App\Providers\AppServiceProvider',
+        'App\Providers\PackageServiceProvider',
         'App\Providers\AuthServiceProvider',
         'App\Providers\EventServiceProvider',
         'App\Providers\RouteServiceProvider',
         'App\Providers\BroadcastServiceProvider',
-        'App\Providers\PackageServiceProvider',
         'App\Providers\ThemeServiceProvider',
     ),
 

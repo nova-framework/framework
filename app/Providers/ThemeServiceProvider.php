@@ -19,16 +19,6 @@ class ThemeServiceProvider extends ServiceProvider
 
 
     /**
-     * Bootstrap the Application Events.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        //
-    }
-
-    /**
      * Register the Application's Themes.
      *
      * @return void

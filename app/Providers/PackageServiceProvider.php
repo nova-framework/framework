@@ -28,11 +28,7 @@ class PackageServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the Application's Service Provider.
-     *
-     * This service provider is a convenient place to register your modules
-     * services in the IoC container. If you wish, you may make additional
-     * methods or service providers to keep the code more focused and granular.
+     * Register the Application's Packages.
      *
      * @return void
      */

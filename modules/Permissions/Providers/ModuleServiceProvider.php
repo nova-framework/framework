@@ -2,7 +2,7 @@
 
 namespace Modules\Permissions\Providers;
 
-use Nova\Modules\Support\Providers\ModuleServiceProvider as ServiceProvider;
+use Nova\Module\Support\Providers\ModuleServiceProvider as ServiceProvider;
 
 
 class ModuleServiceProvider extends ServiceProvider

@@ -2,7 +2,7 @@
 
 namespace Shared\Notifications\Console;
 
-use Nova\Modules\Console\MakeCommand;
+use Nova\Module\Console\MakeCommand;
 
 use Symfony\Component\Console\Input\InputArgument;
 

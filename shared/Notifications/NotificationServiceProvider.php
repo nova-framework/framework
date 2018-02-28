@@ -7,6 +7,7 @@ use Nova\Support\ServiceProvider;
 use Shared\Notifications\Console\NotificationMakeCommand;
 use Shared\Notifications\Console\NotificationTableCommand;
 use Shared\Notifications\Console\ModuleNotificationMakeCommand;
+use Shared\Notifications\Console\PackageNotificationMakeCommand;
 use Shared\Notifications\DispatcherInterface;
 use Shared\Notifications\ChannelManager;
 
@@ -67,8 +68,13 @@ class NotificationServiceProvider extends ServiceProvider
             return new ModuleNotificationMakeCommand($app['files'], $app['modules']);
         });
 
+        $this->app->singleton('command.make.package.notification', function ($app)
+        {
+            return new PackageNotificationMakeCommand($app['files'], $app['packages']);
+        });
+
         $this->commands(
-            'command.notification.make', 'command.notification.table', 'command.make.module.notification'
+            'command.notification.make', 'command.notification.table', 'command.make.module.notification', 'command.make.package.notification'
         );
     }
 

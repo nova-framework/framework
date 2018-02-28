@@ -61,12 +61,10 @@ class PackageServiceProvider extends ServiceProvider
             $config = array();
         }
 
-        if (is_array($config) && ! empty($config)) {
+        if (is_array($config)) {
             $packages = Arr::get($config, 'packages', array());
 
-            if (is_array($packages) && ! empty($packages)) {
-                return array_keys($packages);
-            }
+            return array_keys($packages);
         }
 
         return array();

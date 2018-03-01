@@ -146,7 +146,6 @@ return array(
         'Nova\Routing\ConsoleServiceProvider',
         'Nova\Session\ConsoleServiceProvider',
         'Nova\View\ConsoleServiceProvider',
-        'Nova\Theme\ConsoleServiceProvider',
 
         // The Shared Providers.
         'Shared\Auth\Reminders\ReminderServiceProvider',

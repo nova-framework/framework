@@ -30,7 +30,7 @@ return array(
     // Registered Modules
     //--------------------------------------------------------------------------
 
-    'modules' => array(
+    'options' => array(
         'platform' => array(
             'name'     => 'Modules/Platform',
             'basename' => 'Platform',

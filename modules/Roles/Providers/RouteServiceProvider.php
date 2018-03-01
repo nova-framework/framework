@@ -3,7 +3,7 @@
 namespace Modules\Roles\Providers;
 
 use Nova\Routing\Router;
-use Nova\Module\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Nova\Package\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 
 class RouteServiceProvider extends ServiceProvider

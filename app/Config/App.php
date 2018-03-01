@@ -134,7 +134,6 @@ return array(
         'Nova\Language\LanguageServiceProvider',
         'Nova\Validation\ValidationServiceProvider',
         'Nova\View\ViewServiceProvider',
-        'Nova\Theme\ThemeServiceProvider',
         'Nova\Broadcasting\BroadcastServiceProvider',
 
         // The Forge Providers.

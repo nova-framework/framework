@@ -2,7 +2,7 @@
 
 namespace Themes\AdminLite\Providers;
 
-use Nova\Theme\Support\Providers\ThemeServiceProvider as ServiceProvider;
+use Nova\Package\Support\Providers\ThemeServiceProvider as ServiceProvider;
 
 
 class ThemeServiceProvider extends ServiceProvider
@@ -35,6 +35,8 @@ class ThemeServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        parent::register();
+
         //
     }
 

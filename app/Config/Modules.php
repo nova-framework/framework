@@ -21,10 +21,10 @@ return array(
     'namespace' => 'Modules\\',
 
     //--------------------------------------------------------------------------
-    // Path to Cache
+    // Path to Manifest
     //--------------------------------------------------------------------------
 
-    'cache' => STORAGE_PATH .'framework' .DS .'modules.php',
+    'manifest' => STORAGE_PATH .'framework' .DS .'modules.php',
 
     //--------------------------------------------------------------------------
     // Registered Modules

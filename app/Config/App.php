@@ -120,7 +120,7 @@ return array(
         'Nova\Cache\CacheServiceProvider',
         'Nova\Routing\RoutingServiceProvider',
         'Nova\Cookie\CookieServiceProvider',
-        'Nova\Module\ModuleServiceProvider',
+        //'Nova\Module\ModuleServiceProvider',
         'Nova\Package\PackageServiceProvider',
         'Nova\Database\DatabaseServiceProvider',
         'Nova\Encryption\EncryptionServiceProvider',
@@ -134,6 +134,7 @@ return array(
         'Nova\Language\LanguageServiceProvider',
         'Nova\Validation\ValidationServiceProvider',
         'Nova\View\ViewServiceProvider',
+        'Nova\Theme\ThemeServiceProvider',
         'Nova\Broadcasting\BroadcastServiceProvider',
 
         // The Forge Providers.
@@ -142,11 +143,11 @@ return array(
         'Nova\Foundation\Providers\ForgeServiceProvider',
         'Nova\Database\MigrationServiceProvider',
         'Nova\Database\SeedServiceProvider',
-        'Nova\Module\ConsoleServiceProvider',
         'Nova\Package\ConsoleServiceProvider',
         'Nova\Routing\ConsoleServiceProvider',
         'Nova\Session\ConsoleServiceProvider',
         'Nova\View\ConsoleServiceProvider',
+        'Nova\Theme\ConsoleServiceProvider',
 
         // The Shared Providers.
         'Shared\Auth\Reminders\ReminderServiceProvider',
@@ -164,7 +165,6 @@ return array(
         'App\Providers\EventServiceProvider',
         'App\Providers\RouteServiceProvider',
         'App\Providers\BroadcastServiceProvider',
-        'App\Providers\ThemeServiceProvider',
     ),
 
     /**

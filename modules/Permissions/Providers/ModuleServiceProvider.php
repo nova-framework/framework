@@ -2,7 +2,7 @@
 
 namespace Modules\Permissions\Providers;
 
-use Nova\Module\Support\Providers\ModuleServiceProvider as ServiceProvider;
+use Nova\Package\Support\Providers\ModuleServiceProvider as ServiceProvider;
 
 
 class ModuleServiceProvider extends ServiceProvider
@@ -29,7 +29,7 @@ class ModuleServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('Modules/Permissions', 'permissions', $path);
+        $this->package('Modules/Permissions', 'permissions', $path, 'module');
 
         // Bootstrap the Package.
         $path = $path .DS .'Bootstrap.php';

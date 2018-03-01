@@ -63,10 +63,12 @@ class NotificationServiceProvider extends ServiceProvider
             return new NotificationMakeCommand($app['files']);
         });
 
+        /*
         $this->app->singleton('command.make.module.notification', function ($app)
         {
             return new ModuleNotificationMakeCommand($app['files'], $app['modules']);
         });
+        */
 
         $this->app->singleton('command.make.package.notification', function ($app)
         {
@@ -74,7 +76,7 @@ class NotificationServiceProvider extends ServiceProvider
         });
 
         $this->commands(
-            'command.notification.make', 'command.notification.table', 'command.make.module.notification', 'command.make.package.notification'
+            'command.notification.make', 'command.notification.table', /*'command.make.module.notification',*/ 'command.make.package.notification'
         );
     }
 

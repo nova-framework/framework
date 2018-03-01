@@ -3,7 +3,7 @@
 namespace Modules\Content\Providers;
 
 use Nova\Http\Request;
-use Nova\Module\Support\Providers\ModuleServiceProvider as ServiceProvider;
+use Nova\Package\Support\Providers\ModuleServiceProvider as ServiceProvider;
 use Nova\Support\Facades\Cache;
 
 use Shared\Support\Facades\Widget;
@@ -35,7 +35,7 @@ class ModuleServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        //$this->package('Modules/Content', 'content', $path);
+        $this->package('Modules/Content', 'content', $path, 'module');
 
         // Bootstrap the Package.
         $path = $path .DS .'Bootstrap.php';

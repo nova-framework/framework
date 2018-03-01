@@ -2,7 +2,7 @@
 
 namespace Modules\Platform\Providers;
 
-use Nova\Module\Support\Providers\ModuleServiceProvider as ServiceProvider;
+use Nova\Package\Support\Providers\ModuleServiceProvider as ServiceProvider;
 
 
 class ModuleServiceProvider extends ServiceProvider
@@ -29,7 +29,7 @@ class ModuleServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('Modules/Platform', 'platform', $path);
+        $this->package('Modules/Platform', 'platform', $path, 'module');
 
         // Bootstrap the Module.
         $path = $path .DS .'Bootstrap.php';

@@ -36,7 +36,7 @@ Forge::command('queue:monitor', function ()
     }
 
     if ($runCommand) {
-        $command = sprintf('%s %s queue:work --daemon >/dev/null & echo $!', PHP_BINARY, base_path('forge'));
+        $command = sprintf('%s %s queue:work --daemon --tries=3 >/dev/null & echo $!', PHP_BINARY, base_path('forge'));
 
         $pid = exec($command);
 

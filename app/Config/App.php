@@ -135,6 +135,7 @@ return array(
         'Nova\Validation\ValidationServiceProvider',
         'Nova\View\ViewServiceProvider',
         'Nova\Broadcasting\BroadcastServiceProvider',
+        'Nova\Notifications\NotificationServiceProvider',
 
         // The Forge Providers.
         'Nova\Cache\ConsoleServiceProvider',
@@ -152,7 +153,6 @@ return array(
         'Shared\Auth\ConsoleServiceProvider',
         'Shared\Database\Backup\ConsoleServiceProvider',
         'Shared\DomPDF\ServiceProvider',
-        'Shared\Notifications\NotificationServiceProvider',
         'Shared\Queue\QueueServiceProvider',
         'Shared\Routing\RoutingServiceProvider',
         'Shared\Widgets\WidgetServiceProvider',
@@ -200,6 +200,7 @@ return array(
         'Input'         => 'Nova\Support\Facades\Input',
         'Language'      => 'Nova\Support\Facades\Language',
         'Mailer'        => 'Nova\Support\Facades\Mailer',
+        'Notification'  => 'Nova\Support\Facades\Notification',
         'Paginator'     => 'Nova\Support\Facades\Paginator',
         'Queue'         => 'Nova\Support\Facades\Queue',
         'Redirect'      => 'Nova\Support\Facades\Redirect',
@@ -219,7 +220,6 @@ return array(
 
         // The Shared Facades.
         'PDF'           => 'Shared\Support\Facades\PDF',
-        'Notification'  => 'Shared\Support\Facades\Notification',
         'Password'      => 'Shared\Support\Facades\Password',
         'Widget'        => 'Shared\Support\Facades\Widget',
 

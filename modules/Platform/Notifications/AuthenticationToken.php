@@ -2,8 +2,8 @@
 
 namespace Modules\Platform\Notifications;
 
-use Shared\Notifications\Notification;
-use Shared\Notifications\Messages\MailMessage;
+use Nova\Notifications\Notification;
+use Nova\Notifications\Messages\MailMessage;
 
 
 class AuthenticationToken extends Notification

@@ -5,8 +5,8 @@ namespace Modules\Platform\Notifications;
 use Nova\Bus\QueueableTrait;
 use Nova\Queue\ShouldQueueInterface;
 
-use Shared\Notifications\Messages\MailMessage;
-use Shared\Notifications\Notification;
+use Nova\Notifications\Messages\MailMessage;
+use Nova\Notifications\Notification;
 
 
 class Sample extends Notification implements ShouldQueueInterface
@@ -29,7 +29,7 @@ class Sample extends Notification implements ShouldQueueInterface
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Shared\Notifications\Messages\MailMessage
+     * @return \Nova\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
     {

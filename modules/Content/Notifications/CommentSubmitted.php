@@ -2,8 +2,8 @@
 
 namespace Modules\Content\Notifications;
 
-use Shared\Notifications\Messages\MailMessage;
-use Shared\Notifications\Notification;
+use Nova\Notifications\Messages\MailMessage;
+use Nova\Notifications\Notification;
 
 use Modules\Content\Models\Comment;
 use Modules\Content\Models\Post;
@@ -48,7 +48,7 @@ class CommentSubmitted extends Notification
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Shared\Notifications\Messages\MailMessage
+     * @return \Nova\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
     {

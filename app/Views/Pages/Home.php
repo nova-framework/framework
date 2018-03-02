@@ -68,7 +68,7 @@ if (Config::get('app.debug') !== true) {
             <li><i class='fa fa-close'></i> Your assets directory is NOT writable.</li>
         <?php endif; ?>
 
-        <?php if (is_writable(storage_path('framework/cache'))): ?>
+        <?php if (is_writable(storage_path('cache'))): ?>
             <li><i class='fa fa-check'></i> Your cache directory is writable.</li>
         <?php else: ?>
             <li><i class='fa fa-close'></i> Your cache directory is NOT writable.</li>
@@ -80,13 +80,13 @@ if (Config::get('app.debug') !== true) {
             <li><i class='fa fa-close'></i> Your logs directory is NOT writable.</li>
         <?php endif; ?>
 
-        <?php if (is_writable(storage_path('framework/sessions'))): ?>
+        <?php if (is_writable(storage_path('sessions'))): ?>
             <li><i class='fa fa-check'></i> Your sessions directory is writable.</li>
         <?php else: ?>
             <li><i class='fa fa-close'></i> Your sessions directory is NOT writable.</li>
         <?php endif; ?>
 
-        <?php if (is_writable(storage_path('framework/views'))): ?>
+        <?php if (is_writable(storage_path('views'))): ?>
             <li><i class='fa fa-check'></i> Your compiled views directory is writable.</li>
         <?php else: ?>
             <li><i class='fa fa-close'></i> Your compiled views directory is NOT writable.</li>

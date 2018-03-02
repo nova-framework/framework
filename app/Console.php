@@ -22,23 +22,26 @@ Forge::resolveCommands(array(
  */
 Forge::command('queue:monitor', function ()
 {
-    if (! file_exists($pidFile = storage_path('queue.pid'))) {
-        $runCommand = true;
-    } else {
-        $pid = file_get_contents($pidFile);
+    $runCommand = true;
 
-        $runCommand = empty(
-            exec("ps -p $pid --no-heading | awk '{print $1}'")
-        );
+    // Check if the Queue Worker is already running.
+    $path = storage_path('queue.pid');
+
+    if (is_readable($path) && ! empty($pid = file_get_contents($path))) {
+        $command = "ps -p {$pid} --no-heading | awk '{print $1}'";
+
+        if (! empty($result = exec($command))) {
+            $runCommand = false;
+        }
     }
 
     if ($runCommand) {
-        $command = PHP_BINARY .' ' .base_path('forge') .' queue:work --daemon --tries=3 >/dev/null & echo $!';
+        $command = sprintf('%s %s queue:work --daemon >/dev/null & echo $!', PHP_BINARY, base_path('forge'));
 
-        // Execute the command and retrieve the PID.
         $pid = exec($command);
 
-        file_put_contents($pidFile, $pid);
+        // Store the Queue Worker PID for later checking.
+        file_put_contents($path, $pid);
     }
 
 })->describe('Monitor the Queue Worker execution');
@@ -47,20 +50,20 @@ Forge::command('queue:monitor', function ()
 /**
  * Schedule the Queue execution.
  */
-//Schedule::command('queue:monitor')->everyMinute()->runInBackground();
+Schedule::command('queue:monitor')->everyMinute();
 
 // To prevent long running cache expiries it is advised to match your cache cache expiry time with your task frequency.
-Schedule::command('queue:batch --tries=3 --time-limit=175 --job-limit=300')->everyMinute()->withoutOverlapping(5)->runInBackground();
+//Schedule::command('queue:batch --tries=3 --time-limit=175 --job-limit=300')->everyMinute()->withoutOverlapping(3)->runInBackground();
 
-//Schedule::command('queue:work --daemon')->everyFiveMinutes()->withoutOverlapping(5)->runInBackground();
+//Schedule::command('queue:work --daemon')->everyFiveMinutes()->withoutOverlapping(15)->runInBackground();
 
 
 /**
  * Schedule the flushing of expired password reminders.
  */
-Schedule::command('auth:clear-reminders')->daily();
+Schedule::command('auth:clear-reminders')->daily()->runInBackground();
 
 /**
  * Schedule the Database Backup.
  */
-Schedule::command('db:backup')->dailyAt('4:30');
+Schedule::command('db:backup')->dailyAt('4:30')->runInBackground();

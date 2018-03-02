@@ -54,22 +54,34 @@ function phpGrep($q, $path) {
 }
 
 if (is_dir(BASEPATH .'modules')) {
-    $path = BASEPATH .'modules/*';
+    $path = str_replace('/', DS, BASEPATH .'modules/*');
 
-    $dirs = glob($path, GLOB_ONLYDIR);
+    $paths = glob($path, GLOB_ONLYDIR);
 
-    foreach($dirs as $module) {
-        $workPaths[] = str_replace('/', DS, 'modules/' .basename($module));
+    foreach($paths as $path) {
+        $workPaths[] = str_replace('/', DS, 'modules/' .basename($path));
     }
 }
 
 if (is_dir(BASEPATH .'themes')) {
-    $path = BASEPATH .'themes/*';
+    $path = str_replace('/', DS, BASEPATH .'themes/*');
 
-    $dirs = glob($path , GLOB_ONLYDIR);
+    $paths = glob($path , GLOB_ONLYDIR);
 
-    foreach($dirs as $theme) {
-        $workPaths[] = str_replace('/', DS, 'themes/' .basename($theme));
+    foreach($paths as $path) {
+        $workPaths[] = str_replace('/', DS, 'themes/' .basename($path));
+    }
+}
+
+if(is_dir(BASEPATH .'packages')) {
+    $path = str_replace('/', DS, BASEPATH .'packages/*');
+
+    $paths = glob($path , GLOB_ONLYDIR);
+
+    foreach($paths as $path) {
+        $package = basename($path);
+
+        $workPaths[] = str_replace('/', DS, 'packages/' .$package .'/src');
     }
 }
 

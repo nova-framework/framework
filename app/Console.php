@@ -36,7 +36,7 @@ Forge::command('queue:monitor', function ()
     }
 
     if ($runCommand) {
-        $command = sprintf('%s %s queue:work --daemon --tries=3 >/dev/null & echo $!', PHP_BINARY, base_path('forge'));
+        $command = sprintf('%s %s queue:work --daemon >/dev/null & echo $!', PHP_BINARY, base_path('forge'));
 
         $pid = exec($command);
 
@@ -53,9 +53,9 @@ Forge::command('queue:monitor', function ()
 Schedule::command('queue:monitor')->everyMinute();
 
 // To prevent long running cache expiries it is advised to match your cache cache expiry time with your task frequency.
-//Schedule::command('queue:batch --tries=3 --time-limit=175 --job-limit=300')->everyMinute()->withoutOverlapping(5)->runInBackground();
+//Schedule::command('queue:batch --time-limit=175 --job-limit=300')->everyMinute()->withoutOverlapping(5)->runInBackground();
 
-//Schedule::command('queue:work --daemon --tries=3')->everyMinute()->withoutOverlapping()->runInBackground();
+//Schedule::command('queue:work --daemon')->everyMinute()->withoutOverlapping()->runInBackground();
 
 
 /**

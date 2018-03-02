@@ -34,6 +34,6 @@ return array(
     |
     */
 
-    'compiled' => STORAGE_PATH .'framework' .DS .'views',
+    'compiled' => STORAGE_PATH .'views',
 
 );

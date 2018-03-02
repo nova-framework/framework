@@ -51,6 +51,7 @@ class BatchRunner extends Worker
         $this->jobLimit  = $jobLimit;
 
         $this->startTime = microtime(true);
+
         $this->jobCount  = 0;
 
         try {
@@ -99,7 +100,7 @@ class BatchRunner extends Worker
     {
         $this->events->fire('nova.queue.stopping');
 
-        // Cleanly handle stopping a batch without resorting to killing the process
+        // Cleanly handle stopping a batch without resorting to killing the process.
         throw new StopBatchException();
     }
 
@@ -124,7 +125,9 @@ class BatchRunner extends Worker
      */
     protected function isTimeLimit($timeLimit)
     {
-        return ((microtime(true) - $this->startTime) > $timeLimit);
+        $currentTime = microtime(true);
+
+        return (($currentTime - $this->startTime) > $timeLimit);
     }
 
     /**

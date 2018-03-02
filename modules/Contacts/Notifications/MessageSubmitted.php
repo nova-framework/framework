@@ -5,8 +5,8 @@ namespace Modules\Contacts\Notifications;
 use Nova\Support\Arr;
 use Nova\Support\Str;
 
-use Nova\Notifications\Messages\MailMessage;
-use Nova\Notifications\Notification;
+use Nova\Notification\Messages\MailMessage;
+use Nova\Notification\Notification;
 
 use Modules\Contacts\Models\Contact;
 use Modules\Contacts\Models\Message;
@@ -57,7 +57,7 @@ class MessageSubmitted extends Notification
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Nova\Notifications\Messages\MailMessage
+     * @return \Nova\Notification\Messages\MailMessage
      */
     public function toMail($notifiable)
     {

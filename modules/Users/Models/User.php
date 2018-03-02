@@ -11,7 +11,7 @@ use Nova\Support\Facades\Cache;
 use Shared\Auth\Reminders\RemindableTrait;
 use Shared\Auth\Reminders\RemindableInterface;
 use Shared\Database\ORM\MetaField\HasMetaFieldsTrait;
-use Nova\Notifications\NotifiableTrait;
+use Nova\Notification\NotifiableTrait;
 
 use Modules\Messages\Traits\HasMessagesTrait;
 use Modules\Platform\Traits\AliasesTrait;

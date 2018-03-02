@@ -4,8 +4,8 @@ namespace Modules\Platform\Notifications;
 
 use Nova\Support\Facades\Config;
 
-use Nova\Notifications\Notification;
-use Nova\Notifications\Messages\MailMessage;
+use Nova\Notification\Notification;
+use Nova\Notification\Messages\MailMessage;
 
 
 class AccountActivation extends Notification

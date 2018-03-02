@@ -135,7 +135,7 @@ return array(
         'Nova\Validation\ValidationServiceProvider',
         'Nova\View\ViewServiceProvider',
         'Nova\Broadcasting\BroadcastServiceProvider',
-        'Nova\Notifications\NotificationServiceProvider',
+        'Nova\Notification\NotificationServiceProvider',
 
         // The Forge Providers.
         'Nova\Cache\ConsoleServiceProvider',

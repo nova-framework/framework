@@ -6,7 +6,7 @@ use Nova\Http\Request;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Config;
 
-use Nova\Notifications\DatabaseNotification as Notification;
+use Nova\Notification\DatabaseNotification as Notification;
 
 use Closure;
 

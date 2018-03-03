@@ -34,7 +34,7 @@ if (function_exists('mb_internal_encoding')) {
 // Set The System Path
 //--------------------------------------------------------------------------
 
-define('SYSTEMDIR', BASEPATH .str_replace('/', DS, 'vendor/nova-framework/system/'));
+define('SYSPATH', BASEPATH .str_replace('/', DS, 'vendor/nova-framework/system/'));
 
 //--------------------------------------------------------------------------
 // Set The Storage Path

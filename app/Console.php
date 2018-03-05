@@ -50,10 +50,10 @@ Forge::command('queue:monitor', function ()
 /**
  * Schedule the Queue execution.
  */
-Schedule::command('queue:monitor')->everyMinute();
+//Schedule::command('queue:monitor')->everyMinute();
 
 // To prevent long running cache expiries it is advised to match your cache cache expiry time with your task frequency.
-//Schedule::command('queue:batch --time-limit=175 --job-limit=300 --tries=3')->everyMinute()->withoutOverlapping(5)->runInBackground();
+Schedule::command('queue:batch --time-limit=175 --job-limit=300 --tries=3')->everyMinute()->withoutOverlapping(5)->runInBackground();
 
 //Schedule::command('queue:work --daemon --tries=3')->everyMinute()->withoutOverlapping()->runInBackground();
 

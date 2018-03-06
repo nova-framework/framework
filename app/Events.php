@@ -28,21 +28,3 @@ Event::listen('router.matched', function ($route, Request $request)
 
     View::share('currentUri', $request->path());
 });
-
-
-// Add a Listener to the Event 'nova.queue.looping', to check the database connection.
-Event::listen('nova.queue.looping', function ($connection, $queue)
-{
-    if ($connection != 'database') {
-        return null;
-    }
-
-    try {
-        $count = DB::table('jobs')->count();
-    }
-    catch (Exception $e) {
-        $count = 0;
-    }
-
-    return ($count == 0) ? false : null;
-});

@@ -80,8 +80,7 @@ class BatchCommand extends WorkCommand
             "queue.connections.{$connection}.queue", 'default'
         );
 
-        // When a database queue is used, we will check first of a valid connection,
-        // to avoid spamming of the application logs when the operating system boot.
+        // When is used a database queue, we will check first for a valid connection.
 
         if (($connection == 'database') && ! $this->validDatabaseConnection()) {
             return;

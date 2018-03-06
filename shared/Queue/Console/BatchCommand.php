@@ -47,9 +47,9 @@ class BatchCommand extends WorkCommand
      */
     public function handle()
     {
-        if ($this->downForMaintenance()) {
-            $sleep = $this->option('sleep');
+        $sleep = $this->option('sleep');
 
+        if ($this->downForMaintenance()) {
             return $this->worker->sleep($sleep);
         }
 
@@ -83,7 +83,7 @@ class BatchCommand extends WorkCommand
         // When is used a database queue, we will check first for a valid connection.
 
         if (($connection == 'database') && ! $this->validDatabaseConnection()) {
-            return;
+            return $this->worker->sleep($sleep);
         }
 
         $this->runWorker($connection, $queue, $delay, $memory);

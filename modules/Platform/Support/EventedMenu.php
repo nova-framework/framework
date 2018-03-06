@@ -51,7 +51,7 @@ class EventedMenu
         $path = '';
 
         // Fire the Event and retrieve the results.
-        $results = Event::fire($name, array_merge(array($user, $url), $payload));
+        $results = Event::dispatch($name, array_merge(array($user, $url), $payload));
 
         // Process the Event results.
         $items = array();

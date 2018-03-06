@@ -138,7 +138,7 @@ class Users extends BaseController
         // Validate the Input data.
         $validator = $this->validator($input);
 
-        Event::fire(new UpdateUserValidation($validator, $user));
+        Event::dispatch(new UpdateUserValidation($validator, $user));
 
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withErrors($validator);
@@ -165,7 +165,7 @@ class Users extends BaseController
         ));
 
         // Update the other Meta / Custom Fields.
-        Event::fire(new UserSaved($user));
+        Event::dispatch(new UserSaved($user));
 
         return Redirect::to('admin/users')
             ->with('success', __d('users', 'The User <b>{0}</b> was successfully created.', $user->username));
@@ -250,7 +250,7 @@ class Users extends BaseController
         // Validate the Input data.
         $validator = $this->validator($input, $id);
 
-        Event::fire(new UpdateUserValidation($validator, $user));
+        Event::dispatch(new UpdateUserValidation($validator, $user));
 
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withErrors($validator);
@@ -275,7 +275,7 @@ class Users extends BaseController
         $user->roles()->sync($input['roles']);
 
         // Update the Meta / Custom Fields.
-        Event::fire(new UserSaved($user));
+        Event::dispatch(new UserSaved($user));
 
         // Invalidate the cached user roles and permissions.
         Cache::forget('user.roles.' .$id);
@@ -368,7 +368,7 @@ class Users extends BaseController
 
     protected function renderMetaFieldsForEditor(User $user = null)
     {
-        $responses = Event::fire(new UserEditing($user));
+        $responses = Event::dispatch(new UserEditing($user));
 
         return implode("\n", array_filter($responses, function ($response)
         {
@@ -378,7 +378,7 @@ class Users extends BaseController
 
     protected function fetchMetaFields(User $user = null)
     {
-        $responses = Event::fire(new UserShowing($user));
+        $responses = Event::dispatch(new UserShowing($user));
 
         //
         $result = array();

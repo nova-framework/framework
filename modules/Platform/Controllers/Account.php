@@ -91,7 +91,7 @@ class Account extends BaseController
         $user = Auth::user();
 
         // Handle the User's Meta Fields for displaying.
-        $responses = Event::fire(new UserShowing($user));
+        $responses = Event::dispatch(new UserShowing($user));
 
         //
         $fields = array();
@@ -103,7 +103,7 @@ class Account extends BaseController
         }
 
         // Handle the User's Meta Fields for editing.
-        $responses = Event::fire(new UserEditing($user));
+        $responses = Event::dispatch(new UserEditing($user));
 
         $html = implode("\n", array_filter($responses, function ($response)
         {
@@ -131,7 +131,7 @@ class Account extends BaseController
         // Create a Validator instance.
         $validator = $this->validator($input, $user);
 
-        Event::fire(new UpdateUserValidation($validator, $user));
+        Event::dispatch(new UpdateUserValidation($validator, $user));
 
         // Validate the Input.
         if ($validator->fails()) {
@@ -149,7 +149,7 @@ class Account extends BaseController
         $user->save();
 
         // Update the Meta / Custom Fields.
-        Event::fire(new UserSaved($user));
+        Event::dispatch(new UserSaved($user));
 
         //
         // Use a Redirect to avoid the reposting the data.

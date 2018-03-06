@@ -263,7 +263,7 @@ class Posts extends BaseController
         $creating = (bool) Arr::get($input, 'creating', 0);
 
         // Fire the starting event.
-        Event::fire('content.post.updating', array($post, $creating));
+        Event::dispatch('content.post.updating', array($post, $creating));
 
         //
         $type = $post->type;
@@ -404,7 +404,7 @@ class Posts extends BaseController
         ));
 
         // Fire the finishing event.
-        Event::fire('content.post.updated', array($post, $creating));
+        Event::dispatch('content.post.updated', array($post, $creating));
 
         // Invalidate the content caches.
         $this->clearContentCache();
@@ -432,7 +432,7 @@ class Posts extends BaseController
         $postType = PostType::make($post->type);
 
         // Fire the starting event.
-        Event::fire('content.post.deleting', array($post));
+        Event::dispatch('content.post.deleting', array($post));
 
         // Delete the Post.
         $taxonomies = $post->taxonomies;
@@ -447,7 +447,7 @@ class Posts extends BaseController
         $post->delete();
 
         // Fire the finishing event.
-        Event::fire('content.post.deleted', array($post));
+        Event::dispatch('content.post.deleted', array($post));
 
         // Invalidate the content caches.
         $this->clearContentCache();
@@ -710,7 +710,7 @@ class Posts extends BaseController
 
         $theme = Config::get('app.theme');
 
-        $results = Event::fire('content.editor.stylesheets.' .Str::snake($theme), array($theme));
+        $results = Event::dispatch('content.editor.stylesheets.' .Str::snake($theme), array($theme));
 
         foreach ($results as $result) {
             if (is_array($result) && ! empty($result)) {

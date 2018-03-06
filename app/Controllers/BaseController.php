@@ -42,13 +42,6 @@ class BaseController extends Controller
     protected $layout = 'Default';
 
     /**
-     * True when the auto-rendering is active.
-     *
-     * @var bool
-     */
-    protected $autoRender = true;
-
-    /**
      * True when the auto-layouting is active.
      *
      * @var bool
@@ -62,13 +55,6 @@ class BaseController extends Controller
      */
     protected $viewPath;
 
-    /**
-     * The View variables.
-     *
-     * @var array
-     */
-    protected $viewData = array();
-
 
     /**
      * Method executed before any action.
@@ -79,14 +65,16 @@ class BaseController extends Controller
     {
         // Setup the used Theme to default, if it is not already defined.
         if (is_null($this->theme)) {
-            $this->theme = Config::get('app.theme', 'Bootstrap');
+            $this->theme = Config::get('app.theme', 'Themes/Bootstrap');
         }
 
-        $namespace = 'Themes/' .$this->theme;
+        if (! Str::contains($theme = $this->theme, '/')) {
+            $theme = 'Themes/' .$theme;
+        }
 
-        View::overridesFrom($namespace);
+        View::overridesFrom($theme);
 
-        Config::set('themes.current', $namespace);
+        Config::set('themes.current', $theme);
     }
 
     /**
@@ -116,38 +104,31 @@ class BaseController extends Controller
      */
     protected function processResponse($response)
     {
-        if (! $this->autoRender()) {
-            return $response;
-        }
-
-        // The auto-rendering is active.
-        else if (is_null($response)) {
-            $response = $this->createView();
-        }
-
         if (! $response instanceof RenderableInterface) {
             return $response;
         }
 
         // The response is a RenderableInterface implementation.
         else if ($this->autoLayout() && ! empty($this->layout)) {
-            $view = $this->getLocalizedLayout();
+            $view = $this->resolveLayout();
 
-            return View::make($view, $this->viewData)->with('content', $response);
+            return View::make($view)->with('content', $response);
         }
 
         return $response;
     }
 
     /**
-     * Gets a localized View name for the implicit Layout.
+     * Gets a localized View name for the currently used Layout.
      *
      * @return string
      */
-    protected function getLocalizedLayout()
+    protected function resolveLayout()
     {
-        if ('rtl' == Language::direction()) {
-            $layout = sprintf('RTL/%s', $this->layout);
+        $direction = Language::direction();
+
+        if ($direction == 'rtl') {
+            $layout = 'RTL/' . $this->layout;
 
             if (View::exists($view = $this->getQualifiedLayout($layout))) {
                 return $view;
@@ -167,11 +148,16 @@ class BaseController extends Controller
     {
         $view = sprintf('Layouts/%s', $layout ?: $this->layout);
 
-        if (! empty($theme = $this->getTheme())) {
-            return sprintf('Themes/%s::%s', $theme, $view);
+        if (empty($theme = $this->getTheme())) {
+            return $view;
         }
 
-        return $view;
+        // A theme is specified for auto rendering.
+        else if (! Str::contains($theme, '/')) {
+            $theme = 'Themes/' .$theme;
+        }
+
+        return $theme .'::' .$view;
     }
 
     /**
@@ -187,10 +173,9 @@ class BaseController extends Controller
             $view = ucfirst($this->action);
         }
 
-        // Compute the qualified View name.
-        $view = sprintf('%s/%s', $this->resolveViewPath(), $view);
+        $view = $this->resolveViewPath().'/' .$view;
 
-        return View::make($view, array_merge($this->viewData, $data));
+        return View::make($view, $data);
     }
 
     /**
@@ -205,7 +190,9 @@ class BaseController extends Controller
             return $this->viewPath;
         }
 
-        $basePath = trim(str_replace('\\', '/', App::getNamespace()), '/');
+        $basePath = trim(
+            str_replace('\\', '/', App::getNamespace()), '/'
+        );
 
         $classPath = str_replace('\\', '/', static::class);
 
@@ -216,7 +203,7 @@ class BaseController extends Controller
             $namespace = $matches[1];
 
             if ($namespace !== $basePath) {
-                // A Controller within a Plugin namespace.
+                // A Controller within a Package namespace.
                 $viewPath = $namespace .'::' .$viewPath;
             }
 
@@ -224,45 +211,6 @@ class BaseController extends Controller
         }
 
         throw new BadMethodCallException('Invalid controller namespace');
-    }
-
-    /**
-     * Add a key / value pair to the view data.
-     *
-     * Bound data will be available to the view as variables.
-     *
-     * @param  string|array  $one
-     * @param  string|array  $two
-     * @return View
-     */
-    public function set($one, $two = null)
-    {
-        if (is_array($one)) {
-            $data = is_array($two) ? array_combine($one, $two) : $one;
-        } else {
-            $data = array($one => $two);
-        }
-
-        $this->viewData = $data + $this->viewData;
-
-        return $this;
-    }
-
-    /**
-     * Turns on or off Nova's conventional mode of auto-rendering.
-     *
-     * @param bool|null  $enable
-     * @return bool
-     */
-    public function autoRender($enable = null)
-    {
-        if (! is_null($enable)) {
-            $this->autoRender = (bool) $enable;
-
-            return $this;
-        }
-
-        return $this->autoRender;
     }
 
     /**
@@ -283,16 +231,6 @@ class BaseController extends Controller
     }
 
     /**
-     * Return true when the Controller was initialized.
-     *
-     * @return bool
-     */
-    public function initialized()
-    {
-        return $this->initialized;
-    }
-
-    /**
      * Return the current Theme.
      *
      * @return string
@@ -310,15 +248,5 @@ class BaseController extends Controller
     public function getLayout()
     {
         return $this->layout;
-    }
-
-    /**
-     * Return the current View data.
-     *
-     * @return string
-     */
-    public function getViewData()
-    {
-        return $this->viewData;
     }
 }

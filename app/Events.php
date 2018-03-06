@@ -34,7 +34,7 @@ Event::listen('router.matched', function ($route, Request $request)
 Event::listen('nova.queue.looping', function ($connection, $queue)
 {
     if ($connection != 'database') {
-        return;
+        return null;
     }
 
     try {
@@ -44,7 +44,5 @@ Event::listen('nova.queue.looping', function ($connection, $queue)
         $count = 0;
     }
 
-    if ($count == 0) {
-        return false;
-    }
+    return ($count == 0) ? false : null;
 });

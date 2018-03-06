@@ -13,7 +13,7 @@ use Nova\Http\Request;
 /** Define Events. */
 
 // Add a Listener to the Event 'router.matched', to process the global View variables.
-Event::listen('router.matched', function($route, Request $request)
+Event::listen('router.matched', function ($route, Request $request)
 {
     // Share the Application version.
     $path = BASEPATH .'VERSION.txt';
@@ -31,7 +31,7 @@ Event::listen('router.matched', function($route, Request $request)
 
 
 // Add a Listener to the Event 'nova.queue.looping', to check the database connection.
-Event::listen('nova.queue.looping', function($connection, $queue)
+Event::listen('nova.queue.looping', function ($connection, $queue)
 {
     if ($connection != 'database') {
         return;

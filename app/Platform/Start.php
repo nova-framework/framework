@@ -203,7 +203,7 @@ if (is_readable($path)) require $path;
 // Load The Environment Start Script
 //--------------------------------------------------------------------------
 
-$path = $app['path'] .DS .'Environment' .DS .ucfirst($env) .'.php';
+$path = $app['path'] .DS .'Platform' .DS .'Environment' .DS .ucfirst($env) .'.php';
 
 if (is_readable($path)) require $path;
 

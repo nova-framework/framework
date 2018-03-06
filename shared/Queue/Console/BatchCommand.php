@@ -3,13 +3,10 @@
 namespace Shared\Queue\Console;
 
 use Nova\Queue\Console\WorkCommand;
-use Nova\Support\Facades\DB;
 
 use Shared\Queue\BatchRunner;
 
 use Symfony\Component\Console\Input\InputOption;
-
-use Exception;
 
 
 class BatchCommand extends WorkCommand
@@ -80,30 +77,7 @@ class BatchCommand extends WorkCommand
             "queue.connections.{$connection}.queue", 'default'
         );
 
-        // When is used a database queue, we will check first for a valid connection.
-
-        if (($connection == 'database') && ! $this->validDatabaseConnection()) {
-            return $this->worker->sleep($sleep);
-        }
-
         $this->runWorker($connection, $queue, $delay, $memory);
-    }
-
-    /**
-     * Return true if has a valid database connection.
-     *
-     * @return bool
-     */
-    protected function validDatabaseConnection()
-    {
-        try {
-            DB::table('failed_jobs')->count();
-        }
-        catch (Exception $e) {
-            return false;
-        }
-
-        return true;
     }
 
     /**

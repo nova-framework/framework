@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exceptions;
+namespace App\Platform\Exceptions;
 
 use Nova\Auth\AuthenticationException;
 use Nova\Foundation\Exceptions\Handler as ExceptionHandler;

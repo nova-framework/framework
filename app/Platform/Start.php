@@ -98,7 +98,7 @@ $app->instance('app', $app);
 //--------------------------------------------------------------------------
 
 $app->singleton(
-    'Nova\Foundation\Contracts\ExceptionHandlerInterface', 'App\Exceptions\Handler'
+    'Nova\Foundation\Contracts\ExceptionHandlerInterface', 'App\Platform\Exceptions\Handler'
 );
 
 //--------------------------------------------------------------------------

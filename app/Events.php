@@ -39,12 +39,12 @@ Event::listen('nova.queue.looping', function($connection, $queue)
 
     try {
         $count = DB::table('jobs')->count();
-
-        if ($count == 0) {
-            return false;
-        }
     }
     catch (Exception $e) {
+        $count = 0;
+    }
+
+    if ($count == 0) {
         return false;
     }
 });

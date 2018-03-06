@@ -128,7 +128,7 @@ class BaseController extends Controller
         $direction = Language::direction();
 
         if ($direction == 'rtl') {
-            $layout = 'RTL/' . $this->layout;
+            $layout = 'RTL/' .$this->layout;
 
             if (View::exists($view = $this->getQualifiedLayout($layout))) {
                 return $view;

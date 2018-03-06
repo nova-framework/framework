@@ -33,10 +33,6 @@ Event::listen('router.matched', function($route, Request $request)
 // Add a Listener to the Event 'nova.queue.looping', to check the database connection.
 Event::listen('nova.queue.looping', function($connection, $queue)
 {
-    if ($connection != 'database') {
-        return;
-    }
-
     try {
         $count = DB::table('jobs')->count();
     }

@@ -58,16 +58,18 @@ trait ManagePermissionsTrait
      */
     public function deletePermissions($group)
     {
-        $updateRoles = Schema::hasTable('permission_role');
+        if (Schema::hasTable('permissions')) {
+            $updateRoles = Schema::hasTable('permission_role');
 
-        $permissions = Permission::where('group', $group)->get();
+            $permissions = Permission::where('group', $group)->get();
 
-        foreach ($permissions as $permission) {
-            if ($updateRoles) {
-                $permission->roles()->detach();
+            foreach ($permissions as $permission) {
+                if ($updateRoles) {
+                    $permission->roles()->detach();
+                }
+
+                $permission->delete();
             }
-
-            $permission->delete();
         }
 
         // Invalidate the cached system permissions.

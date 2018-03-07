@@ -42,7 +42,6 @@ class Contacts extends BaseController
             'email'       => $request->input('email', Config::get('app.email')),
             'description' => $request->input('description'),
             'path'        => $request->input('path'),
-            'message'     => $request->input('message'),
         ));
 
         return Redirect::to('admin/contacts')
@@ -93,7 +92,6 @@ class Contacts extends BaseController
         $contact->email       = $request->input('email', Config::get('app.email'));
         $contact->description = $request->input('description');
         $contact->path        = $request->input('path');
-        $contact->message     = $request->input('message');
 
         $contact->save();
 

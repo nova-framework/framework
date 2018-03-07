@@ -66,6 +66,7 @@
             "php forge package:optimize"
         ],
         "post-update-cmd": [
+            "php forge clear-compiled",
             "php forge optimize",
             "php forge package:optimize"
         ],

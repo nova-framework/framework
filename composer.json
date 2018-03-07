@@ -51,10 +51,10 @@
             "app/Database/Seeds"
         ],
         "psr-4": {
-            "App\\" : "app/",
-            "Modules\\" : "modules/",
-            "Themes\\" : "themes/",
-            "Shared\\" : "shared/"
+            "App\\": "app/",
+            "Modules\\": "modules/",
+            "Themes\\": "themes/",
+            "Shared\\": "shared/"
         },
         "files": [
             "shared/Support/helpers.php"

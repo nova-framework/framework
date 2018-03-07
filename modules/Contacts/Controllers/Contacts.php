@@ -8,6 +8,9 @@ use Nova\Support\Facades\App;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
+use Nova\Support\Arr;
+
+use Shared\Support\Facades\PDF;
 
 use Modules\Contacts\Models\Contact;
 use Modules\Contacts\Models\Message;
@@ -23,10 +26,14 @@ class Contacts extends BaseController
     protected function validator(array $data)
     {
         $rules = array(
-            'contact_author'        => 'required',
-            'contact_author_email'  => 'required|email',
-            'contact_author_url'    => 'sometimes|required|url',
-            'contact_content'       => 'required'
+            'contact_author'        => 'required|min:3|max:100',
+            'contact_author_email'  => 'required|min:3|max:100|email',
+            'contact_author_url'    => 'sometimes|min:3|max:100|required|url',
+            'contact_content'       => 'required|min:3|max:1000|valid_text'
+        );
+
+        $messages = array(
+            'valid_text' => __d('users', 'The :attribute field cannot contain HTML tags.'),
         );
 
         $attributes = array(
@@ -36,7 +43,15 @@ class Contacts extends BaseController
             'contact_content'      => __d('content', 'Message'),
         );
 
-        return Validator::make($data, $rules, array(), $attributes);
+        $validator = Validator::make($data, $rules, $messages, $attributes);
+
+        // Add the custom Validation Rule commands.
+        $validator->addExtension('valid_text', function($attribute, $value, $parameters)
+        {
+            return strip_tags($value) == $value;
+        });
+
+        return $validator;
     }
 
     public function store(Request $request)
@@ -72,7 +87,7 @@ class Contacts extends BaseController
             'contact_id'   => $contact->id,
             'author'       => $input['contact_author'],
             'author_email' => $input['contact_author_email'],
-            'author_url'   => $input['contact_author_url'],
+            'author_url'   => Arr::get($input, 'contact_author_url'),
             'author_ip'    => $request->ip(),
             'content'      => $input['contact_content'],
             'user_id'      => $userId,
@@ -86,9 +101,14 @@ class Contacts extends BaseController
         $user = User::where('email', $contact->email)->first();
 
         if (! is_null($user)) {
-            $user->notify(new MessageSubmittedNotification($message, $contact, $elements));
+            $user->notify(new MessageSubmittedNotification($message, $contact, $this->createPdf($message)));
         }
 
         return Redirect::back()->with('success', __d('contacts', 'Your message was successfully sent.'));
+    }
+
+    protected function createPdf(Message $message)
+    {
+        return PDF::loadView('Modules/Contacts::PDF/Message', compact('message'))->output();
     }
 }

@@ -20,14 +20,16 @@ class MessageSubmitted extends Notification
     protected $message;
 
     /**
-     * @var \Modules\Contacts\Models\Post
+     * @var \Modules\Contacts\Models\Contact
      */
     protected $contact;
 
     /**
-     * @var array
+     * The the rendered PDF content.
+     *
+     * @var mixed
      */
-    protected $elements;
+    protected $pdf;
 
 
     /**
@@ -35,11 +37,12 @@ class MessageSubmitted extends Notification
      *
      * @return void
      */
-    public function __construct(Message $message, Contact $contact, array $elements)
+    public function __construct(Message $message, Contact $contact, $pdf = null)
     {
-        $this->message  = $message;
-        $this->contact  = $contact;
-        $this->elements = $elements;
+        $this->message = $message;
+        $this->contact = $contact;
+
+        $this->pdf = $pdf;
     }
 
     /**
@@ -61,39 +64,34 @@ class MessageSubmitted extends Notification
      */
     public function toMail($notifiable)
     {
+        $content = nl2br(
+            e($this->message->content)
+        );
+
         $message = with(new MailMessage)
             ->subject(__d('contacts', 'New message received via {0}', $this->contact->name))
-            ->line(__d('contacts', 'A new message was received via {0}.', $this->contact->name));
+            ->line(__d('contacts', 'A new message was received via {0}.', $this->contact->name))
+            ->line('<hr>')
+            ->line(__d('contacts', '<b>Name:</b> {0}', e($this->message->author)))
+            ->line(__d('contacts', '<b>E-Mail Address:</b> {0}', e($this->message->author_email)))
+            ->line(__d('contacts', '<b>Website:</b> {0}', e($this->message->author_url ?: '-')))
+            ->line(__d('contacts', '<b>Remote IP:</b> {0}', $this->message->author_ip))
+            ->line('<b>' .__d('contacts', 'Message:') .'</b>')
+            ->line($content)
+            ->line('<hr>')
+            ->action(__d('contacts', 'View the Message'), url('admin/contacts', array($this->contact->id, 'messages', $this->message->id)))
+            ->line(__d('contacts', 'Thank you for using our application!'));
 
-        foreach ($this->message->meta as $meta) {
-            if (! Str::is('contact_*', $name = $meta->key) || ($name == 'contact_author_ip') || ($name == 'contact_path')) {
-                continue;
-            }
+        // Attach the Request information as PDF file.
+        if (isset($this->pdf)) {
+            $fileName = sprintf('message-%06d-%s.pdf', $this->message->id, $this->message->created_at->format('Hi_dmY'));
 
-            $value = $meta->value;
-
-            if ('select' == Arr::get($this->elements, $name .'.type')) {
-                $value = Arr::get($this->elements, $value, $value);
-            }
-
-            $label = Arr::get($this->elements, $name .'.label', __d('contacts', 'Unknown'));
-
-            $value = nl2br(e($value));
-
-            if (strlen($value) < 50) {
-                $message->line($label .': ' .$value);
-
-                continue;
-            }
-
-            $message->line($label .':');
-            $message->line($value);
-            $message->line('');
+            $message->attachData($this->pdf, $fileName, array(
+                'mime' => 'application/pdf',
+            ));
         }
 
-        return $message->action(__d('contacts', 'View the Message'), url('admin/contacts', array($this->contact->id, 'messages', $this->message->id)))
-            ->line('Thank you for using our application!')
-            ->queued();
+        return $message;
     }
 
     /**

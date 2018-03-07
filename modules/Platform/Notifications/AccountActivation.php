@@ -62,7 +62,6 @@ class AccountActivation extends Notification
             ->subject(__d('platform', 'Account Activation'))
             ->line(__d('platform', 'Thanks for creating an Account with the {0}.', Config::get('app.name')))
             ->action(__d('platform', 'Activate your Account'), url('register', array($this->hash, $this->token)))
-            ->line(__d('platform', 'If you did not made an account registration, no further action is required.'))
-            ->queued();
+            ->line(__d('platform', 'If you did not made an account registration, no further action is required.'));
     }
 }

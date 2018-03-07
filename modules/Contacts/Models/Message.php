@@ -2,7 +2,7 @@
 
 namespace Modules\Contacts\Models;
 
-use Modules\Content\Models\Post;
+use Nova\Database\ORM\Model as BaseModel;
 
 
 class Message extends BaseModel
@@ -10,7 +10,7 @@ class Message extends BaseModel
     /**
      * @var string
      */
-    protected $table = 'contacts';
+    protected $table = 'contact_messages';
 
     /**
      * @var string

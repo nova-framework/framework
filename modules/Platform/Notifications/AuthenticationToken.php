@@ -68,7 +68,6 @@ class AuthenticationToken extends Notification
             ->subject(__d('platform', 'Authentication Token'))
             ->line(__d('platform', 'You are receiving this email because we received an one-time login request for your account.'))
             ->action(__d('platform', 'Login'), url('authorize', array($this->hash, $this->timestamp, $this->token)))
-            ->line(__d('platform', 'If you did not request an one-time login, no further action is required.'))
-            ->queued();
+            ->line(__d('platform', 'If you did not request an one-time login, no further action is required.'));
     }
 }

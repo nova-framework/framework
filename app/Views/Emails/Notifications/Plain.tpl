@@ -1,5 +1,7 @@
 <?php
 
+$line = str_pad('', 60, '-');
+
 if (! empty($greeting)) {
     echo $greeting, "\n\n";
 } else {
@@ -7,7 +9,13 @@ if (! empty($greeting)) {
 }
 
 if (! empty($introLines)) {
-    echo implode("\n", $introLines), "\n\n";
+    $lines = array_map(function ($value) use ($line)
+    {
+        return strip_tags(str_replace(array('<hr>', '<br />'), array($line, "\n"), $value));
+
+    }, $introLines);
+
+    echo implode("\n", $lines), "\n\n";
 }
 
 if (isset($actionText)) {
@@ -15,7 +23,13 @@ if (isset($actionText)) {
 }
 
 if (! empty($outroLines)) {
-    echo implode("\n", $outroLines), "\n\n";
+    $lines = array_map(function ($value) use ($line)
+    {
+        return strip_tags(str_replace(array('<hr>', '<br />'), array($line, "\n"), $value));
+
+    }, $outroLines);
+
+    echo implode("\n", $lines), "\n\n";
 }
 
 echo __('Regards,'), "\n";

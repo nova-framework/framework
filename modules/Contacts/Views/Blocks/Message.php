@@ -1,7 +1,7 @@
 <h3><?= __d('contacts', 'Contact Form'); ?></h3>
 <hr>
 
-<form action="<?= site_url('contacts'); ?>" method="POST">
+<form action="<?= site_url('contacts'); ?>" method="POST" enctype="multipart/form-data">
 
 <div class="col-md-6 col-md-offset-1" style="margin-bottom: 50px;">
     <div class="form-group<?= $errors->has('contact_author') ? ' has-error' : ''; ?>">
@@ -55,16 +55,35 @@
         </span>
         <?php } ?>
     </div>
-    <?php $withCaptcha = ! Auth::check() && (Config::get('reCaptcha.active') === true); ?>
-    <?php if ($withCaptcha) { ?>
+    <div class="form-group<?= $errors->has('contact_attachment') ? ' has-error' : '' ?>">
+        <label class="control-label" for="contact_attachment">
+            <?= __d('contacts', 'Attachments'); ?>
+        </label>
+        <div class="input-group">
+            <label class="input-group-btn">
+                <span class="btn btn-default">
+                    <?= __d('contacts', 'Browse ...'); ?> <input type="file" name="contact_attachment[]" style="display: none;" multiple>
+                </span>
+            </label>
+            <input type="text" class="form-control" readonly>
+        </div>
+        <div class="clearfix"></div>
+        <?php if ($errors->has('contact_attachment')) { ?>
+        <span class="help-block">
+            <?= $errors->first('contact_attachment'); ?>
+        </span>
+        <?php } ?>
+    </div>
+    <?php $captchaEnabled = ! Auth::check() && (Config::get('reCaptcha.active') === true); ?>
+    <?php if ($captchaEnabled) { ?>
     <div style="width: 304px; margin: 0 auto; display: block;">
         <div id="captcha" style="width: 304px; height: 78px;"></div>
     </div>
     <div class="clearfix"></div>
     <hr style="margin-top: 15px; margin-bottom: 15px;">
     <?php } ?>
-    <div class="form-group">
-        <input type="submit" name="submit" class="btn btn-primary col-md-3 pull-right" value="<?= __d('contacts', 'Submit'); ?>" />
+    <div class="form-group" style="margin-top: 25px;">
+        <input type="submit" name="submit" class="btn btn-primary pull-right col-md-3" value="<?= __d('contacts', 'Submit'); ?>" />
     </div>
 </div>
 
@@ -76,7 +95,39 @@
 
 <div class="clear"></div>
 
-<?php if ($withCaptcha) { ?>
+<script type="text/javascript">
+
+$(function() {
+
+  // We can attach the `fileselect` event to all file inputs on the page
+  $(document).on('change', ':file', function() {
+    var input = $(this),
+        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+
+    input.trigger('fileselect', [numFiles, label]);
+  });
+
+  // We can watch for our custom `fileselect` event like this
+  $(document).ready( function() {
+      $(':file').on('fileselect', function(event, numFiles, label) {
+          var input = $(this).parents('.input-group').find(':text'),
+              log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+          if( input.length ) {
+              input.val(log);
+          } else {
+              if( log ) alert(log);
+          }
+
+      });
+  });
+
+});
+
+</script>
+
+<?php if ($captchaEnabled) { ?>
 
 <script type="text/javascript">
 
@@ -89,4 +140,3 @@ var captchaCallback = function() {
 <script src="//www.google.com/recaptcha/api.js?onload=captchaCallback&render=explicit&hl=<?= Language::code(); ?>" async defer></script>
 
 <?php } ?>
-

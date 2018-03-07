@@ -77,6 +77,10 @@ hr
             <td style="width: 35%;" class="field"><?= __d('contacts', 'Remote IP'); ?></td>
             <td style="width: 65%;"><?= $message->author_ip; ?></td>
         </tr>
+        <tr>
+            <td style="width: 35%;" class="field"><?= __d('contacts', 'Attachments'); ?></td>
+            <td style="width: 65%;"><?= $message->attachments->count(); ?></td>
+        </tr>
     </table>
 
     <h3><?= __d('contacts', 'Message Content'); ?></h3>

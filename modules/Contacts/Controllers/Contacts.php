@@ -12,6 +12,7 @@ use Nova\Support\Arr;
 
 use Shared\Support\Facades\PDF;
 
+use Modules\Contacts\Models\Attachment;
 use Modules\Contacts\Models\Contact;
 use Modules\Contacts\Models\Message;
 use Modules\Contacts\Notifications\MessageSubmitted as MessageSubmittedNotification;
@@ -29,7 +30,7 @@ class Contacts extends BaseController
             'contact_author'        => 'required|min:3|max:100',
             'contact_author_email'  => 'required|min:3|max:100|email',
             'contact_author_url'    => 'sometimes|min:3|max:100|required|url',
-            'contact_content'       => 'required|min:3|max:1000|valid_text'
+            'contact_content'       => 'required|min:3|max:1000|valid_text',
         );
 
         $messages = array(
@@ -42,6 +43,20 @@ class Contacts extends BaseController
             'contact_author_url'   => __d('content', 'Website'),
             'contact_content'      => __d('content', 'Message'),
         );
+
+        // Prepare the dynamic rules and attributes for attachments.
+        if (! empty($files = Arr::get($data, 'contact_attachment', array()))) {
+            $count = count($files) - 1;
+
+            foreach(range(0, $count) as $index) {
+                $key = 'contact_attachment.' .$index;
+
+                //
+                $rules[$key] = 'max:10240|mimes:zip,rar,pdf,png,jpg,jpeg,doc,docx';
+
+                $attributes[$key] = __d('content', 'Attachment');
+            }
+        }
 
         $validator = Validator::make($data, $rules, $messages, $attributes);
 
@@ -57,7 +72,7 @@ class Contacts extends BaseController
     public function store(Request $request)
     {
         $input = $request->only(
-            'contact_author', 'contact_author_email', 'contact_author_url', 'contact_content'
+            'contact_author', 'contact_author_email', 'contact_author_url', 'contact_content', 'contact_attachment'
         );
 
         if (empty($input['contact_author_url'])) {
@@ -66,6 +81,8 @@ class Contacts extends BaseController
 
         // Verify the submitted reCAPTCHA
         if (! Auth::check() && ! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {
+            unset($input['contact_attachment']); // We cannot send back an array of UploadedFile ...
+
             return Redirect::back()->withInput($input)->with('danger', __d('contacts', 'The reCaptcha verification failed.'));
         }
 
@@ -78,6 +95,8 @@ class Contacts extends BaseController
         $validator = $this->validator($input);
 
         if ($validator->fails()) {
+            unset($input['contact_attachment']); // We cannot send back an array of UploadedFile ...
+
             return Redirect::back()->withInput($input)->withErrors($validator);
         }
 
@@ -93,6 +112,16 @@ class Contacts extends BaseController
             'user_id'      => $userId,
             'path'         => $path,
         ));
+
+        if ($request->hasFile('contact_attachment')) {
+            $files = $request->file('contact_attachment');
+
+            foreach ($files as $file) {
+                $attachment = Attachment::createFromUploadedFile($file);
+
+                $message->attachments()->save($attachment);
+            }
+        }
 
         // Update the Contact's messages count.
         $contact->updateCount();

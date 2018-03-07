@@ -91,6 +91,18 @@ class MessageSubmitted extends Notification
             ));
         }
 
+        // Attach the Request's Attachments.
+        foreach ($this->message->attachments as $attachment) {
+            if (empty($path = $attachment->path)) {
+                continue;
+            }
+
+            $message->attach($path, array(
+                'as'   => $attachment->name,
+                'mime' => $attachment->type,
+            ));
+        }
+
         return $message;
     }
 

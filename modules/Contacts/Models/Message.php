@@ -24,9 +24,19 @@ class Message extends BaseModel
         'contact_id', 'author', 'author_email', 'author_ip', 'author_url', 'content', 'path', 'user_id'
     );
 
+    /**
+     * @var array
+     */
+    protected $with = array('attachments');
+
 
     public function contact()
     {
         return $this->belongsTo('Modules\Contacts\Models\Contact', 'contact_id');
+    }
+
+    public function attachments()
+    {
+        return $this->hasMany('Modules\Contacts\Models\Attachment', 'parent_id');
     }
 }

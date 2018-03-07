@@ -215,7 +215,7 @@ return array(
         'URL'           => 'Nova\Support\Facades\URL',
         'Template'      => 'Nova\Support\Facades\Template',
         'View'          => 'Nova\Support\Facades\View',
-        'Module'        => 'Nova\Support\Facades\Module',
+        'Package'       => 'Nova\Support\Facades\Package',
 
         // The Shared Facades.
         'PDF'           => 'Shared\Support\Facades\PDF',
@@ -223,7 +223,7 @@ return array(
         'Widget'        => 'Shared\Support\Facades\Widget',
 
         // The Forensics Console.
-        'Console'       => 'Nova\Forensics\Console',
+        'Console'       => 'Shared\Forensics\Console',
     ),
 
 );

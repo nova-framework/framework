@@ -63,11 +63,11 @@
     "scripts": {
         "post-install-cmd": [
             "php forge optimize",
-            "php forge module:optimize"
+            "php forge package:optimize"
         ],
         "post-update-cmd": [
             "php forge optimize",
-            "php forge module:optimize"
+            "php forge package:optimize"
         ],
         "post-create-project-cmd": [
             "php forge key:generate"

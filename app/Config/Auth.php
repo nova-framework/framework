@@ -77,7 +77,7 @@ return array(
     'providers' => array(
         'users' => array(
             'driver' => 'extended',
-            'model'  => 'Modules\Users\Models\User',
+            'model'  => 'App\Models\User',
         ),
     ),
 

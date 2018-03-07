@@ -1,10 +1,10 @@
 <?php
 
-namespace Shared\Database\ORM\MetaField;
+namespace Shared\MetaField\Models;
 
 use Nova\Database\ORM\Model as BaseModel;
 
-use Shared\Database\ORM\MetaField\Collection;
+use Shared\MetaField\Models\MetaCollection;
 
 use Exception;
 
@@ -60,6 +60,6 @@ abstract class MetaField extends BaseModel
      */
     public function newCollection(array $models = array())
     {
-        return new Collection($models);
+        return new MetaCollection($models);
     }
 }

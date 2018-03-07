@@ -4,7 +4,7 @@ namespace Modules\Content\Models;
 
 use Nova\Database\ORM\Model;
 
-use Shared\Database\ORM\MetaField\HasMetaFieldsTrait;
+use Shared\MetaField\HasMetaFieldsTrait;
 
 use Modules\Content\Models\CommentBuilder;
 
@@ -26,7 +26,9 @@ class Comment extends Model
     /**
      * @var array
      */
-    protected $fillable = array('post_id', 'author', 'author_email', 'author_url', 'author_ip', 'content', 'approved', 'user_id');
+    protected $fillable = array(
+        'post_id', 'author', 'author_email', 'author_url', 'author_ip', 'content', 'approved', 'user_id'
+    );
 
     /**
      * @var array

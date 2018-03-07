@@ -7,7 +7,7 @@ use Nova\Support\Facades\Config;
 use Nova\Support\Arr;
 use Nova\Support\Str;
 
-use Shared\Database\ORM\MetaField\HasMetaFieldsTrait;
+use Shared\MetaField\HasMetaFieldsTrait;
 
 use Modules\Content\Models\PostBuilder;
 use Modules\Content\Traits\OrderedTrait;

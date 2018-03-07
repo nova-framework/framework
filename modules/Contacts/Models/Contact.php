@@ -2,13 +2,20 @@
 
 namespace Modules\Contacts\Models;
 
-use Nova\Database\ORM\Model;
+use Nova\Database\ORM\Model as BaseModel;
 use Nova\Support\Str;
 
-class Contact extends Model
+
+class Contact extends BaseModel
 {
+    /**
+     * @var string
+     */
     protected $table = 'contacts';
 
+    /**
+     * @var string
+     */
     protected $primaryKey = 'id';
 
     /**
@@ -19,7 +26,7 @@ class Contact extends Model
 
     public function messages()
     {
-        return $this->hasMany('Modules\Contacts\Models\Message', 'parent_id');
+        return $this->hasMany('Modules\Contacts\Models\Message', 'contact_id');
     }
 
     public static function findByPath($path)

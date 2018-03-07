@@ -6,12 +6,12 @@ use Nova\Auth\UserTrait;
 use Nova\Auth\UserInterface;
 use Nova\Database\ORM\Model as BaseModel;
 use Nova\Foundation\Auth\Access\AuthorizableTrait;
+use Nova\Notification\NotifiableTrait;
 use Nova\Support\Facades\Cache;
 
 use Shared\Auth\Reminders\RemindableTrait;
 use Shared\Auth\Reminders\RemindableInterface;
-use Shared\Database\ORM\MetaField\HasMetaFieldsTrait;
-use Nova\Notification\NotifiableTrait;
+use Shared\MetaField\HasMetaFieldsTrait;
 
 use Modules\Messages\Traits\HasMessagesTrait;
 use Modules\Platform\Traits\AliasesTrait;

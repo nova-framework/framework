@@ -2,10 +2,10 @@
 
 namespace Modules\Content\Models;
 
-use Shared\Database\ORM\MetaField\MetaField;
+use Shared\MetaField\Models\MetaField as BaseModel;
 
 
-class CommentMeta extends MetaField
+class CommentMeta extends BaseModel
 {
     /**
      * @var string
@@ -20,7 +20,7 @@ class CommentMeta extends MetaField
     /**
      * @var array
      */
-    protected $fillable = array('key', 'meta_value', 'comment_id');
+    protected $fillable = array('key', 'value', 'comment_id');
 
 
     /**

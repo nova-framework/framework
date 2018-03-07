@@ -1,6 +1,6 @@
 <?php
 
-namespace Shared\Database\ORM\FileField;
+namespace Shared\FileField;
 
 use Nova\Database\ORM\Model;
 use Nova\Support\Facades\App;

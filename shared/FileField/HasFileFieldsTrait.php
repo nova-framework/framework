@@ -1,13 +1,13 @@
 <?php
 
-namespace Shared\Database\ORM\FileField;
+namespace Shared\FileField;
 
 use Nova\Database\ORM\Model;
 use Nova\Support\Facades\File;
 use Nova\Support\Facades\Log;
 use Nova\Support\Str;
 
-use Shared\Database\ORM\FileField\FileField;
+use Shared\FileField\FileField;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 

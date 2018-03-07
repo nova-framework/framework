@@ -5,7 +5,7 @@ namespace Modules\Content\Models;
 use Nova\Database\ORM\Model;
 use Nova\Support\Str;
 
-use Shared\Database\ORM\MetaField\HasMetaFieldsTrait;
+use Shared\MetaField\HasMetaFieldsTrait;
 
 
 class Term extends Model

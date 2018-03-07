@@ -78,7 +78,8 @@
         </span>
         <?php } ?>
     </div>
-    <?php if (! Auth::check() && (Config::get('reCaptcha.active') === true)) { ?>
+    <?php $withCaptcha = ! Auth::check() && (Config::get('reCaptcha.active') === true); ?>
+    <?php if ($withCaptcha) { ?>
     <div style="width: 304px; margin: 0 auto; display: block;">
         <div id="captcha" style="width: 304px; height: 78px;"></div>
     </div>
@@ -92,9 +93,7 @@
 
 </div>
 
-<?php } ?>
-
-<?php if (! Auth::check() && (Config::get('reCaptcha.active') === true)) { ?>
+<?php if ($withCaptcha) { ?>
 
 <script type="text/javascript">
 
@@ -105,5 +104,7 @@ var captchaCallback = function() {
 </script>
 
 <script src="//www.google.com/recaptcha/api.js?onload=captchaCallback&render=explicit&hl=<?= Language::code(); ?>" async defer></script>
+
+<?php } ?>
 
 <?php } ?>

@@ -8,7 +8,7 @@ use Nova\Support\Facades\View;
 use Modules\Contacts\Models\Contact;
 use Modules\Content\Blocks\Block;
 
-use ErrorException;
+use LogicException;
 
 
 class Message extends Block
@@ -19,7 +19,7 @@ class Message extends Block
         $path = Request::path();
 
         if (is_null($contact = Contact::findByPath($path))) {
-            throw new ErrorException('Contact not found');
+            throw new LogicException('Contact not found');
         }
 
         return View::make('Modules/Contacts::Blocks/Message', compact('contact', 'path'))->render();

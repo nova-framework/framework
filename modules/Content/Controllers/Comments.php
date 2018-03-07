@@ -40,7 +40,13 @@ class Comments extends BaseController
 
     public function store(Request $request, $id)
     {
-        $input = $request->all();
+        $input = $request->only(
+            'comment_author', 'comment_author_email', 'comment_author_url', 'comment_content'
+        );
+
+        if (empty($input['comment_author_url'])) {
+            unset($input['comment_author_url']);
+        }
 
         // Verify the submitted reCAPTCHA
         if (! Auth::check() && ! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {

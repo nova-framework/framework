@@ -2,10 +2,10 @@
 
 namespace Modules\Users\Models;
 
-use Shared\Database\ORM\MetaField\MetaField;
+use Shared\MetaField\Models\MetaField as BaseModel;
 
 
-class UserMeta extends MetaField
+class UserMeta extends BaseModel
 {
     /**
      * @var string

@@ -4,7 +4,7 @@ namespace Modules\Content\Models;
 
 use Nova\Database\ORM\Model;
 
-use Shared\Database\ORM\MetaField\MetaField;
+use Shared\MetaField\Models\MetaField as BaseModel;
 
 use Modules\Content\Models\Post;
 use Modules\Content\Models\Taxonomy;
@@ -12,7 +12,7 @@ use Modules\Content\Models\Taxonomy;
 use Exception;
 
 
-class PostMeta extends MetaField
+class PostMeta extends BaseModel
 {
     /**
      * @var string

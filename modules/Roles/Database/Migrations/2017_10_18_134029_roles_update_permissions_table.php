@@ -3,7 +3,7 @@
 use Nova\Database\Schema\Blueprint;
 use Nova\Database\Migrations\Migration;
 
-use Modules\Platform\Database\ManagePermissionsTrait;
+use Modules\Permissions\Traits\ManagePermissionsTrait;
 
 
 class RolesUpdatePermissionsTable extends Migration

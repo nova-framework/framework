@@ -5,7 +5,7 @@ namespace Modules\Roles\Database\Seeds;
 use Nova\Database\ORM\Model;
 use Nova\Database\Seeder;
 
-use Modules\Platform\Database\ManagePermissionsTrait;
+use Modules\Permissions\Traits\ManagePermissionsTrait;
 
 
 class PermissionsTableSeeder extends Seeder

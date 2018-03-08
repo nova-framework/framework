@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Platform\Database;
+namespace Modules\Permissions\Traits;
 
 use Nova\Database\QueryException;
 use Nova\Support\Facades\Cache;

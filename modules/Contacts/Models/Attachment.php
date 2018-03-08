@@ -113,13 +113,13 @@ class Attachment extends BaseModel
         }
 
         return static::create(array(
-            'parent_id' => 0,
-
-            //
             'name' => $name,
             'size' => $file->getSize(),
             'type' => $file->getClientMimeType(),
             'path' => $path,
+
+            // Will be updated later, when it will be attached to parent.
+            'parent_id' => 0,
         ));
     }
 }

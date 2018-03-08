@@ -39,11 +39,11 @@
             </tr>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Created At'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $contact->created_at->formatLocalized(__d('contacts', '%d %b %Y, %R')); ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $contact->created_at->formatLocalized($format = __d('contacts', '%d %b %Y, %R')); ?></td>
             </tr>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Updated At'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $contact->updated_at->formatLocalized(__d('contacts', '%d %b %Y, %R')); ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $contact->updated_at->formatLocalized($format); ?></td>
             <tr>
         </table>
     </div>

@@ -11,12 +11,6 @@ use Nova\Http\Request;
 
 
 /**
- * Setup the Module Middleware.
- */
-Route::pushMiddlewareToGroup('web', 'Modules\Platform\Middleware\MarkNotificationAsRead');
-
-
-/**
  * Role-based Authorization Middleware.
  */
 Route::middleware('role', function (Request $request, Closure $next, $role)

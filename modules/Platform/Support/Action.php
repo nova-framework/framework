@@ -35,10 +35,14 @@ class Action extends ActionHookDispatcher
             return;
         }
 
+        $count = count($arguments);
+
         foreach ($listeners as $listener) {
             $parameters = array();
 
-            for ($i = 0; $i < $listener['arguments']; $i++) {
+            $limit = min($count, $listener['arguments']);
+
+            for ($i = 0; $i < $limit; $i++) {
                 if (isset($arguments[$i])) {
                     $parameters[] = $arguments[$i];
                 }

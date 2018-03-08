@@ -38,10 +38,14 @@ class Filter extends ActionHookEvent
             return $value;
         }
 
+        $count = count($arguments);
+
         foreach ($listeners as $listener) {
             $parameters = array($value);
 
-            for ($i = 1; $i < $listener['arguments']; $i++) {
+            $limit = min($count, $listener['arguments']);
+
+            for ($i = 1; $i < $limit; $i++) {
                 if (isset($arguments[$i])) {
                     $parameters[] = $arguments[$i];
                 }

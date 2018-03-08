@@ -53,9 +53,9 @@ class Contacts extends BaseController
 
         // Prepare the dynamic rules and attributes for attachments.
         if (! empty($files = Arr::get($data, 'contact_attachment', array()))) {
-            $count = count($files) - 1;
+            $max = count($files) - 1;
 
-            foreach(range(0, $count) as $index) {
+            foreach(range(0, $max) as $index) {
                 $key = 'contact_attachment.' .$index;
 
                 //

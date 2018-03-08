@@ -33,7 +33,7 @@ class Contacts extends BaseController
             'contact_author_email'  => 'required|min:3|max:100|email',
             'contact_author_url'    => 'sometimes|min:3|max:100|required|url',
             'contact_content'       => 'required|min:3|max:1000|valid_text',
-            'contact_attachment'    => 'array|max:3',
+            'contact_attachment'    => 'array|max:5',
             'g-recaptcha-response'  => 'required|recaptcha'
         );
 

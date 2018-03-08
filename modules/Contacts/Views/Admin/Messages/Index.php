@@ -47,31 +47,28 @@
             </tr>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Path'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $message->contact_path; ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $message->path; ?></td>
             <tr>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Author IP'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $message->contact_author_ip; ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $message->author_ip; ?></td>
             <tr>
-            <?php
-            foreach ($message->meta as $meta) {
-                if (! Str::is('contact_*', $name = $meta->key) || ($name == 'contact_author_ip') || ($name == 'contact_path')) {
-                    continue;
-                }
-
-                $value = $meta->value;
-
-                if ('select' == Arr::get($elements, $name .'.type')) {
-                    $value = Arr::get($elements, $value, $value);
-                }
-
-                $label = Arr::get($elements, $name .'.label', __d('contacts', 'Unknown'));
-            ?>
             <tr>
-                <th style="text-align: left; vertical-align: middle;"><?= $label; ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= nl2br(e($value)); ?></td>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Author Name'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= e($message->author); ?></td>
             <tr>
-            <?php } ?>
+            <tr>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'E-mail Address'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= e($message->author_email); ?></td>
+            <tr>
+            <tr>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Website'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= e($message->author_url ?: '-'); ?></td>
+            <tr>
+            <tr>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Message'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= e($message->content); ?></td>
+            <tr>
         </table>
     </div>
 </div>

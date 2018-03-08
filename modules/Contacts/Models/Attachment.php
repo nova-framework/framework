@@ -56,7 +56,7 @@ class Attachment extends BaseModel
         static::saving(function (Model $model)
         {
             // Nothing to delete when the original path is empty.
-            if (empty($path = $model->getOriginal('path')) {
+            if (empty($path = $model->getOriginal('path'))) {
                 return;
             }
 

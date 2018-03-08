@@ -127,7 +127,7 @@ class Attachment extends BaseModel
             'type' => $file->getClientMimeType(),
             'path' => $path,
 
-            // Will be updated later, when it will be attached to parent.
+            // Will be updated later, when the model will be attached to parent.
             'parent_id' => 0,
         ));
     }

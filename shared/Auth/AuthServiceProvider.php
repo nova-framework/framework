@@ -8,7 +8,7 @@ use Shared\Auth\Console\RemindersTableCommand;
 use Nova\Support\ServiceProvider;
 
 
-class ConsoleServiceProvider extends ServiceProvider
+class AuthServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.

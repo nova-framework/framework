@@ -97,10 +97,6 @@ return array(
             'enabled'  => true,
             'order'    => 8004,
         ),
-        'chat' => array(
-            'enabled'  => true,
-            'order'    => 9001,
-        ),
         'messages' => array(
             'enabled'  => true,
             'order'    => 9001,

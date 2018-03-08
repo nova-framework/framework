@@ -24,6 +24,9 @@ class Contact extends BaseModel
     protected $fillable = array('name', 'email', 'description', 'path');
 
 
+    /**
+     * @return \Nova\Database\ORM\Relations\HasMany
+     */
     public function messages()
     {
         return $this->hasMany('Modules\Contacts\Models\Message', 'contact_id');

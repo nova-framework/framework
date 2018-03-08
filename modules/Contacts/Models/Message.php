@@ -30,13 +30,19 @@ class Message extends BaseModel
     protected $with = array('attachments');
 
 
+    /**
+     * @return \Nova\Database\ORM\Relations\BelongsTo
+     */
     public function contact()
     {
         return $this->belongsTo('Modules\Contacts\Models\Contact', 'contact_id');
     }
 
+    /**
+     * @return \Nova\Database\ORM\Relations\HasMany
+     */
     public function attachments()
     {
-        return $this->hasMany('Modules\Contacts\Models\Attachment', 'parent_id');
+        return $this->hasMany('Modules\Contacts\Models\Attachment', 'message_id');
     }
 }

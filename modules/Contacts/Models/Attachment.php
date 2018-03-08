@@ -39,9 +39,12 @@ class Attachment extends BaseModel
     protected static $path = STORAGE_PATH .'files' .DS .'contacts';
 
 
-    public function parent()
+    /**
+     * @return \Nova\Database\ORM\Relations\BelongsTo
+     */
+    public function message()
     {
-        return $this->belongsTo('Modules\Contacts\Models\Message', 'parent_id');
+        return $this->belongsTo('Modules\Contacts\Models\Message', 'message_id');
     }
 
     /**

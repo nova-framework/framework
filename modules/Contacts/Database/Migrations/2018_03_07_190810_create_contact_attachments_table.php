@@ -18,7 +18,7 @@ class CreateContactAttachmentsTable extends Migration
         {
             $table->increments('id');
 
-            $table->integer('parent_id')->unsigned()->index();
+            $table->integer('message_id')->unsigned()->index();
             $table->string('name');
             $table->integer('size')->unsigned();
             $table->string('type', 40)->nullable();

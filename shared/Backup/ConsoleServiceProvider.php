@@ -1,10 +1,10 @@
 <?php
 
-namespace Shared\Database\Backup;
+namespace Shared\Backup;
 
-use Shared\Database\Backup\Console\BackupCommand;
-use Shared\Database\Backup\Console\RestoreCommand;
-use Shared\Database\Backup\DatabaseBuilder;
+use Shared\Backup\Console\BackupCommand;
+use Shared\Backup\Console\RestoreCommand;
+use Shared\Backup\DatabaseBuilder;
 
 use Nova\Support\ServiceProvider;
 

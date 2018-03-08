@@ -1,10 +1,10 @@
 <?php
 
-namespace Shared\Database\Backup\Console;
+namespace Shared\Backup\Console;
 
 use Nova\Support\Facades\Config;
 
-use Shared\Database\Backup\Console\BaseCommand;
+use Shared\Backup\Console\BaseCommand;
 
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;

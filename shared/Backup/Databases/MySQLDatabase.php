@@ -1,10 +1,10 @@
 <?php
 
-namespace Shared\Database\Backup\Databases;
+namespace Shared\Backup\Databases;
 
 use Nova\Support\Facades\Config;
 
-use Shared\Database\Backup\Console;
+use Shared\Backup\Console;
 
 
 class MySQLDatabase implements DatabaseInterface

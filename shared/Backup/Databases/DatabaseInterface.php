@@ -1,6 +1,6 @@
 <?php
 
-namespace Shared\Database\Backup\Databases;
+namespace Shared\Backup\Databases;
 
 
 interface DatabaseInterface

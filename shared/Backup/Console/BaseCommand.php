@@ -1,12 +1,12 @@
 <?php
 
-namespace Shared\Database\Backup\Console;
+namespace Shared\Backup\Console;
 
 use Nova\Console\Command;
 use Nova\Support\Facades\Config;
 
-use Shared\Database\Backup\DatabaseBuilder;
-use Shared\Database\Backup\Console;
+use Shared\Backup\DatabaseBuilder;
+use Shared\Backup\Console;
 
 
 class BaseCommand extends Command

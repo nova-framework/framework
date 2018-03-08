@@ -1,8 +1,8 @@
 <?php
 
-namespace Shared\Database\Backup;
+namespace Shared\Backup;
 
-use Shared\Database\Backup\Console;
+use Shared\Backup\Console;
 
 use Exception;
 

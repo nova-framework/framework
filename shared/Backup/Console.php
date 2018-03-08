@@ -1,6 +1,6 @@
 <?php
 
-namespace Shared\Database\Backup;
+namespace Shared\Backup;
 
 use Symfony\Component\Process\Process;
 

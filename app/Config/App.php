@@ -150,7 +150,7 @@ return array(
         // The Shared Providers.
         'Shared\Auth\Reminders\ReminderServiceProvider',
         'Shared\Auth\ConsoleServiceProvider',
-        'Shared\Database\Backup\ConsoleServiceProvider',
+        'Shared\Backup\ConsoleServiceProvider',
         'Shared\DomPDF\ServiceProvider',
         'Shared\Queue\QueueServiceProvider',
         'Shared\Routing\RoutingServiceProvider',

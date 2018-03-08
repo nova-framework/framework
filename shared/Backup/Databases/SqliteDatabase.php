@@ -1,8 +1,8 @@
 <?php
 
-namespace Shared\Database\Backup\Databases;
+namespace Shared\Backup\Databases;
 
-use Shared\Database\Backup\Database\Console;
+use Shared\Backup\Database\Console;
 
 
 class SqliteDatabase implements DatabaseInterface

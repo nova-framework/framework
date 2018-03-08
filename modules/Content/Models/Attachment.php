@@ -38,10 +38,11 @@ class Attachment extends Post
         'type'        => 'mime_type',
         'description' => 'content',
         'caption'     => 'excerpt',
-        'alt'         => array(
-            'meta' => 'attachment_image_alt'
-        ),
+
+        //
+        'alt'         => array('meta' => 'attachment_image_alt'),
     );
+
 
     /**
      * Listen to ORM events.

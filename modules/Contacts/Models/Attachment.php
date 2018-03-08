@@ -53,6 +53,19 @@ class Attachment extends BaseModel
     {
         parent::boot();
 
+        static::saving(function (Model $model)
+        {
+            // Nothing to delete when the original path is empty.
+            if (empty($path = $model->getOriginal('path')) {
+                return;
+            }
+
+            // We will delete the previous file on path changes.
+            else if ($path != $model->getAttributeValue('path')) {
+                static::deleteFile($path);
+            }
+        });
+
         static::deleting(function (Model $model)
         {
             // Don't delete the file if you are doing a soft delete!
@@ -60,30 +73,26 @@ class Attachment extends BaseModel
                 return;
             }
 
-            // We have a valid file in the path?
+            // If there is a file path specified, we will delete it.
             else if (! empty($path = $model->getAttributeValue('path'))) {
-                $this->deleteFile($path);
+                static::deleteFile($path);
             }
         });
     }
 
     /**
-     * Delete the specified file.
+     * Delete the specified file with the errors logging.
      *
      * @param string $file
      * @return void
      */
-    protected function deleteFile($file)
+    protected static function deleteFile($file)
     {
         try {
             File::delete($file);
         }
-
-        // Catch all exceptions.
         catch (Exception $e) {
-            $message = $e->getMessage();
-
-            Log::error($message);
+            Log::error($e->getMessage());
         }
     }
 
@@ -93,7 +102,7 @@ class Attachment extends BaseModel
      * @param UploadedFile $file
      * @return \Modules\Contacts\Models\Attachment|null
      */
-    public static function createFromUploadedFile(UploadedFile $file)
+    public static function uploadFileAndCreate(UploadedFile $file)
     {
         if (! File::exists($path = static::$path)) {
             File::makeDirectory($path, 0755, true, true);

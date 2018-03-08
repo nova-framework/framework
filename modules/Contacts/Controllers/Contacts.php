@@ -139,7 +139,7 @@ class Contacts extends BaseController
             $files = $request->file('contact_attachment');
 
             foreach ($files as $file) {
-                $attachment = Attachment::createFromUploadedFile($file);
+                $attachment = Attachment::uploadFileAndCreate($file);
 
                 $message->attachments()->save($attachment);
             }

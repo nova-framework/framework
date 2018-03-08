@@ -61,7 +61,7 @@
         </label>
         <div class="input-group">
             <label class="input-group-btn">
-                <span class="btn btn-default">
+                <span class="btn btn-<?= $errors->has('contact_attachment') ? 'danger' : 'default' ?>">
                     <?= __d('contacts', 'Browse ...'); ?> <input type="file" name="contact_attachment[]" style="display: none;" multiple>
                 </span>
             </label>
@@ -81,6 +81,8 @@
     </div>
     <div class="clearfix"></div>
     <hr style="margin-top: 15px; margin-bottom: 15px;">
+    <?php } else { ?>
+    <input type="hidden" name="g-recaptcha-response" value="dummy" />
     <?php } ?>
     <div class="form-group" style="margin-top: 25px;">
         <input type="submit" name="submit" class="btn btn-primary pull-right col-md-3" value="<?= __d('contacts', 'Submit'); ?>" />
@@ -112,7 +114,7 @@ $(function() {
   $(document).ready( function() {
       $(':file').on('fileselect', function(event, numFiles, label) {
           var input = $(this).parents('.input-group').find(':text'),
-              log = numFiles > 1 ? numFiles + ' files selected' : label;
+              log = (numFiles > 1) ? numFiles + ' files selected' : label;
 
           if( input.length ) {
               input.val(log);

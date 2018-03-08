@@ -9,8 +9,10 @@ use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Arr;
+use Nova\Support\Str;
 
 use Shared\Support\Facades\PDF;
+use Shared\Support\ReCaptcha;
 
 use Modules\Contacts\Models\Attachment;
 use Modules\Contacts\Models\Contact;
@@ -24,24 +26,27 @@ use LogicException;
 class Contacts extends BaseController
 {
 
-    protected function validator(array $data)
+    protected function validator(array $data, $remoteIp)
     {
         $rules = array(
             'contact_author'        => 'required|min:3|max:100',
             'contact_author_email'  => 'required|min:3|max:100|email',
             'contact_author_url'    => 'sometimes|min:3|max:100|required|url',
             'contact_content'       => 'required|min:3|max:1000|valid_text',
+            'g-recaptcha-response'  => 'required|recaptcha'
         );
 
         $messages = array(
-            'valid_text' => __d('users', 'The :attribute field cannot contain HTML tags.'),
+            'recaptcha'  => __d('contacts', 'The reCaptcha verification failed.'),
+            'valid_text' => __d('contacts', 'The :attribute field cannot contain HTML tags.'),
         );
 
         $attributes = array(
-            'contact_author'       => __d('content', 'Name'),
-            'contact_author_email' => __d('content', 'Email Address'),
-            'contact_author_url'   => __d('content', 'Website'),
-            'contact_content'      => __d('content', 'Message'),
+            'contact_author'       => __d('contacts', 'Name'),
+            'contact_author_email' => __d('contacts', 'Email Address'),
+            'contact_author_url'   => __d('contacts', 'Website'),
+            'contact_content'      => __d('contacts', 'Message'),
+            'g-recaptcha-response' => __d('contacts', 'ReCaptcha'),
         );
 
         // Prepare the dynamic rules and attributes for attachments.
@@ -54,13 +59,18 @@ class Contacts extends BaseController
                 //
                 $rules[$key] = 'max:10240|mimes:zip,rar,pdf,png,jpg,jpeg,doc,docx';
 
-                $attributes[$key] = __d('content', 'Attachment');
+                $attributes[$key] = __d('contacts', 'Attachment');
             }
         }
 
         $validator = Validator::make($data, $rules, $messages, $attributes);
 
         // Add the custom Validation Rule commands.
+        $validator->addExtension('recaptcha', function($attribute, $value, $parameters) use ($remoteIp)
+        {
+            return ReCaptcha::check($value, $remoteIp);
+        });
+
         $validator->addExtension('valid_text', function($attribute, $value, $parameters)
         {
             return strip_tags($value) == $value;
@@ -71,19 +81,10 @@ class Contacts extends BaseController
 
     public function store(Request $request)
     {
-        $input = $request->only(
-            'contact_author', 'contact_author_email', 'contact_author_url', 'contact_content', 'contact_attachment'
-        );
+        $input = $request->all();
 
-        if (empty($input['contact_author_url'])) {
+        if (isset($input['contact_author_url']) && empty($input['contact_author_url'])) {
             unset($input['contact_author_url']);
-        }
-
-        // Verify the submitted reCAPTCHA
-        if (! Auth::check() && ! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {
-            unset($input['contact_attachment']); // We cannot send back an array of UploadedFile ...
-
-            return Redirect::back()->withInput($input)->with('danger', __d('contacts', 'The reCaptcha verification failed.'));
         }
 
         $path = $request->input('path');
@@ -92,12 +93,29 @@ class Contacts extends BaseController
             throw new LogicException('Contact not found.');
         }
 
-        $validator = $this->validator($input);
+        $validator = $this->validator($input, $request->ip());
 
         if ($validator->fails()) {
-            unset($input['contact_attachment']); // We cannot send back an array of UploadedFile ...
+            $errors = array();
 
-            return Redirect::back()->withInput($input)->withErrors($validator);
+            // There we will store the attachment(s) messages.
+            $messages = array();
+
+            foreach ($validator->messages()->getMessages() as $key => $value) {
+                if (! Str::startsWith($key, 'contact_attachment')) {
+                    $errors[$key] = $value;
+                } else {
+                    $messages = array_unique(array_merge($value, $messages));
+                }
+            }
+
+            if (! empty($messages)) {
+                $errors['contact_attachment'] = $messages;
+            }
+
+            return Redirect::back()
+                ->onlyInput('contact_author', 'contact_author_email', 'contact_author_url', 'contact_content')
+                ->withErrors($errors);
         }
 
         $userId = Auth::id() ?: 0;

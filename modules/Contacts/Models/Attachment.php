@@ -86,13 +86,13 @@ class Attachment extends BaseModel
     /**
      * Delete the specified file with the errors logging.
      *
-     * @param string $file
+     * @param string $path
      * @return void
      */
-    protected static function deleteFile($file)
+    protected static function deleteFile($path)
     {
         try {
-            File::delete($file);
+            File::delete($path);
         }
         catch (Exception $e) {
             Log::error($e->getMessage());
@@ -111,14 +111,11 @@ class Attachment extends BaseModel
             File::makeDirectory($path, 0755, true, true);
         }
 
-        $name = $file->getClientOriginalName();
+        $fileName = pathinfo($name = $file->getClientOriginalName(), PATHINFO_FILENAME);
 
-        $fileName = pathinfo($name, PATHINFO_FILENAME);
-
-        $extension = $file->guessClientExtension();
-
-        // Compute the uploaded file path.
-        $path = sprintf('%s/%s-%s.%s', $path, uniqid(), Str::slug($fileName), $extension);
+        $path = sprintf('%s/%s-%s.%s',
+            $path, uniqid(), Str::slug($fileName), $file->guessClientExtension()
+        );
 
         if (! File::put($path, fopen($file->getRealPath(), 'r+'))) {
             return null;

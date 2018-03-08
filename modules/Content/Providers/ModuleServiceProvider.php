@@ -2,7 +2,6 @@
 
 namespace Modules\Content\Providers;
 
-use Nova\Foundation\AliasLoader;
 use Nova\Http\Request;
 use Nova\Package\Support\Providers\ModuleServiceProvider as ServiceProvider;
 use Nova\Support\Facades\Cache;
@@ -64,12 +63,6 @@ class ModuleServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         $this->package('Modules/Content', 'content', $path);
-
-        // Register the aliases for facades.
-        $loader = AliasLoader::getInstance();
-
-        $loader->alias('Action', 'Modules\Content\Support\Facades\Action');
-        $loader->alias('Filter', 'Modules\Content\Support\Facades\Filter');
     }
 
     /**

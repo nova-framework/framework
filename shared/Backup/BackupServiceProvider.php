@@ -9,7 +9,7 @@ use Shared\Backup\DatabaseBuilder;
 use Nova\Support\ServiceProvider;
 
 
-class ConsoleServiceProvider extends ServiceProvider
+class BackupServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.

@@ -11,7 +11,7 @@ use Dompdf\Dompdf;
 use Exception;
 
 
-class ServiceProvider extends BaseServiceProvider
+class PdfServiceProvider extends BaseServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.

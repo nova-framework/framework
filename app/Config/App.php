@@ -150,8 +150,8 @@ return array(
         // The Shared Providers.
         'Shared\Auth\Reminders\ReminderServiceProvider',
         'Shared\Auth\ConsoleServiceProvider',
-        'Shared\Backup\ConsoleServiceProvider',
-        'Shared\DomPDF\ServiceProvider',
+        'Shared\Backup\BackupServiceProvider',
+        'Shared\DomPDF\PdfServiceProvider',
         'Shared\Queue\QueueServiceProvider',
         'Shared\Routing\RoutingServiceProvider',
         'Shared\Widgets\WidgetServiceProvider',

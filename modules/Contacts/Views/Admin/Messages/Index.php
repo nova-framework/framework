@@ -67,7 +67,7 @@
             <tr>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Message'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= e($message->content); ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= nl2br(e($message->content)); ?></td>
             <tr>
         </table>
     </div>

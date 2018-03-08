@@ -13,6 +13,10 @@
         theme_url('css/style.css', 'bootstrap'),
     ))
 
+    @assets('js', array(
+        resource_url('js/sprintf.min.js'),
+        'https://code.jquery.com/jquery-1.12.4.min.js',
+    ))
 </head>
 <body>
 
@@ -28,7 +32,6 @@
 @include('Themes/Bootstrap::Partials/Footer')
 
 @assets('js', array(
-    'https://code.jquery.com/jquery-1.12.4.min.js',
     'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'
 ))
 

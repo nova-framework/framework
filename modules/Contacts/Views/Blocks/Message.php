@@ -101,27 +101,38 @@
 
 $(function() {
 
-  // We can attach the `fileselect` event to all file inputs on the page
-  $(document).on('change', ':file', function() {
-    var input = $(this),
-        numFiles = input.get(0).files ? input.get(0).files.length : 1,
-        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+    // We can attach the `fileselect` event to all file inputs on the page
+    $(document).on('change', ':file', function() {
+        var input = $(this),
+            numFiles = input.get(0).files ? input.get(0).files.length : 1,
+            label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
 
-    input.trigger('fileselect', [numFiles, label]);
-  });
+        if (input.get(0).files) {
+            var items = [];
 
-  // We can watch for our custom `fileselect` event like this
-  $(document).ready( function() {
-      $(':file').on('fileselect', function(event, numFiles, label) {
-          var input = $(this).parents('.input-group').find(':text'),
-              log = (numFiles > 1) ? numFiles + ' files selected' : label;
+            var files = input.get(0).files;
 
-          if( input.length ) {
-              input.val(log);
-          } else {
-              if( log ) alert(log);
-          }
+            for (var i = 0, file; file = files[i]; i++) {
+                items.push(file.name);
+            }
 
+            label = items.join(', ');
+        }
+
+        input.trigger('fileselect', [numFiles, label]);
+    });
+
+    // We can watch for our custom `fileselect` event like this
+    $(document).ready( function() {
+        $(':file').on('fileselect', function(event, numFiles, label) {
+            var input = $(this).parents('.input-group').find(':text'),
+                log = (numFiles > 1) ? sprintf("<?= __d('contacts', '%d files selected'); ?>", numFiles) : label;
+
+            if (input.length) {
+                input.val(label);
+            } else {
+                if (log) alert(log);
+            }
       });
   });
 

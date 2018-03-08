@@ -104,7 +104,7 @@ class Contacts extends BaseController
             $messages = array();
 
             foreach ($validator->messages()->getMessages() as $key => $value) {
-                if (! Str::startsWith($key, 'contact_attachment')) {
+                if (! Str::startsWith($key, 'contact_attachment.')) {
                     $errors[$key] = $value;
                 } else {
                     $messages = array_unique(array_merge($value, $messages));
@@ -112,6 +112,8 @@ class Contacts extends BaseController
             }
 
             if (! empty($messages)) {
+                $messages = array_merge($messages, Arr::get($errors, 'contact_attachment', array()));
+
                 $errors['contact_attachment'] = $messages;
             }
 

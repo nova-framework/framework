@@ -33,6 +33,7 @@ class Contacts extends BaseController
             'contact_author_email'  => 'required|min:3|max:100|email',
             'contact_author_url'    => 'sometimes|min:3|max:100|required|url',
             'contact_content'       => 'required|min:3|max:1000|valid_text',
+            'contact_attachment'    => 'array|max:3',
             'g-recaptcha-response'  => 'required|recaptcha'
         );
 
@@ -46,6 +47,7 @@ class Contacts extends BaseController
             'contact_author_email' => __d('contacts', 'Email Address'),
             'contact_author_url'   => __d('contacts', 'Website'),
             'contact_content'      => __d('contacts', 'Message'),
+            'contact_attachment'   => __d('contacts', 'Attachments'),
             'g-recaptcha-response' => __d('contacts', 'ReCaptcha'),
         );
 

@@ -8,6 +8,8 @@
 | Here is where you can register all of the Events for the module.
 */
 
+use Modules\Contacts\Models\Contact;
+
 
 /**
  * Handle the Backend Menu Sidebar.
@@ -32,7 +34,7 @@ Event::listen('backend.menu.sidebar', function ()
 
             //
             'path'   => 'contacts.list',
-            //'can'    => 'lists:' .Contact::class,
+            'can'    => 'lists:' .Contact::class,
         ),
         array(
             'url'    => site_url('admin/contacts/create'),
@@ -42,7 +44,7 @@ Event::listen('backend.menu.sidebar', function ()
 
             //
             'path'   => 'contacts.create',
-            //'can'    => 'create:' .Contact::class,
+            'can'    => 'create:' .Contact::class,
         ),
     );
 });

@@ -2,8 +2,10 @@
 
 namespace Modules\Contacts\Controllers\Admin;
 
+use Nova\Auth\Access\AuthorizationException;
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Http\Request;
+use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 

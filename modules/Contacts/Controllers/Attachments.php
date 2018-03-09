@@ -25,7 +25,7 @@ class Attachments extends Controller
      *
      * @var string
      */
-    protected $filePath;
+    protected static $filePath = STORAGE_PATH .'files' .DS .'contacts' .DS .'attachments';
 
 
     /**
@@ -34,9 +34,6 @@ class Attachments extends Controller
     public function __construct(Container $container)
     {
         $this->container = $container;
-
-        //
-        $this->filePath = storage_path('files/contacts');
     }
 
     /**
@@ -53,7 +50,7 @@ class Attachments extends Controller
     {
         $disposition = ($method == 'download') ? 'attachment' : 'inline';
 
-        $path = $this->filePath .DS .$token .'-' .$fileName;
+        $path = static::$filePath .DS .$token .'-' .$fileName;
 
         try {
             $attachment = Attachment::with('message')->where('path', $path)->firstOrFail();

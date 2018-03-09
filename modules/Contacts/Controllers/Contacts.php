@@ -31,7 +31,7 @@ class Contacts extends BaseController
         $rules = array(
             'contact_author'        => 'required|min:3|max:100',
             'contact_author_email'  => 'required|min:3|max:100|email',
-            'contact_author_url'    => 'sometimes|min:3|max:100|required|url',
+            'contact_subject'       => 'required|min:3|max:100|valid_text',
             'contact_content'       => 'required|min:3|max:1000|valid_text',
             'contact_attachment'    => 'array|max:5',
             'g-recaptcha-response'  => 'required|recaptcha'
@@ -45,7 +45,7 @@ class Contacts extends BaseController
         $attributes = array(
             'contact_author'       => __d('contacts', 'Name'),
             'contact_author_email' => __d('contacts', 'Email Address'),
-            'contact_author_url'   => __d('contacts', 'Website'),
+            'contact_subject'      => __d('contacts', 'Subject'),
             'contact_content'      => __d('contacts', 'Message'),
             'contact_attachment'   => __d('contacts', 'Attachments'),
             'g-recaptcha-response' => __d('contacts', 'ReCaptcha'),
@@ -128,8 +128,8 @@ class Contacts extends BaseController
             'contact_id'   => $contact->id,
             'author'       => $input['contact_author'],
             'author_email' => $input['contact_author_email'],
-            'author_url'   => Arr::get($input, 'contact_author_url'),
             'author_ip'    => $request->ip(),
+            'subject'      => $input['contact_subject'],
             'content'      => $input['contact_content'],
             'user_id'      => $userId,
             'path'         => $path,

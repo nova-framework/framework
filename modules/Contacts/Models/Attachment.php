@@ -36,7 +36,7 @@ class Attachment extends BaseModel
      *
      * @var string
      */
-    protected static $path = STORAGE_PATH .'files' .DS .'contacts';
+    protected static $path = STORAGE_PATH .'files' .DS .'contacts' .DS .'attachments';
 
 
     /**

@@ -28,15 +28,15 @@
         </span>
         <?php } ?>
     </div>
-    <div class="form-group<?= $errors->has('contact_author_url') ? ' has-error' : ''; ?>">
-        <label class="control-label" for="contact_author_url">
-            <?= __d('contacts', 'Website'); ?>
+    <div class="form-group<?= $errors->has('contact_subject') ? ' has-error' : ''; ?>">
+        <label class="control-label" for="contact_subject">
+            <?= __d('contacts', 'Subject'); ?>
         </label>
-        <input type="text" class="form-control" name="contact_author_url" id="contact-form-author-url" value="<?= Input::old('contact_author_url'); ?>" placeholder="<?= __d('contacts', 'Website'); ?>" />
+        <input type="text" class="form-control" name="contact_subject" id="contact-form-subject" value="<?= Input::old('contact_subject'); ?>" placeholder="<?= __d('contacts', 'Subject'); ?>" />
         <div class="clearfix"></div>
-        <?php if ($errors->has('contact_author_url')) { ?>
+        <?php if ($errors->has('contact_subject')) { ?>
         <span class="help-block">
-            <?= $errors->first('contact_author_url'); ?>
+            <?= $errors->first('contact_subject'); ?>
         </span>
         <?php } ?>
     </div>

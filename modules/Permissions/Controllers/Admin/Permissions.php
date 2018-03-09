@@ -8,7 +8,7 @@ use Nova\Http\Request;
 use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Input;
-use Nova\Support\Facades\Module;
+use Nova\Support\Facades\Package;
 use Nova\Support\Facades\Redirect;
 
 use Modules\Permissions\Models\Permission;
@@ -26,7 +26,7 @@ class Permissions extends BaseController
             throw new AuthorizationException();
         }
 
-        $modules = Module::enabled();
+        $packages = Package::enabled();
 
         $permissions = Permission::with('roles')->get();
 
@@ -36,7 +36,7 @@ class Permissions extends BaseController
             ->shares('title', __d('permissions', 'Permissions'))
             ->with('permissions', $permissions)
             ->with('roles', $roles)
-            ->with('modules', $modules);
+            ->with('packages', $packages);
     }
 
     public function update(Request $request)

@@ -61,8 +61,8 @@
 
 </form>
 
-<?php foreach ($modules as $module) { ?>
-<?php $perms = $permissions->where('group', $module['slug']); ?>
+<?php foreach ($packages as $package) { ?>
+<?php $perms = $permissions->where('group', $package['slug']); ?>
 <?php if ($perms->isEmpty()) continue; ?>
 <?php $count = $roles->count(); ?>
 
@@ -70,7 +70,7 @@
 
 <div class="box box-widget">
     <div class="box-header">
-        <h3 class="box-title"><?= __d('permissions', 'Permissions registered by the <b>{0}</b> module', $module['basename']); ?></h3>
+        <h3 class="box-title"><?= __d('permissions', 'Permissions registered by the <b>{0}</b> package', $package['basename']); ?></h3>
     </div>
     <div class="box-body no-padding">
         <table id="left" class="table table-striped table-hover responsive">

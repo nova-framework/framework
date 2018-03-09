@@ -25,27 +25,29 @@
     <div class="box-body no-padding">
         <table id="left" class="table table-hover responsive">
             <tr class="bg-navy disabled">
-                <th style="text-align: center; vertical-align: middle;"><?= __d('contacts', 'Submitted On'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('contacts', 'ID'); ?></th>
                 <th style="text-align: center; vertical-align: middle;"><?= __d('contacts', 'Author'); ?></th>
-                <th style="text-align: center; vertical-align: middle;"><?= __d('contacts', 'E-mail Address'); ?></th>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Subject'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('contacts', 'Attachments'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('contacts', 'Submitted On'); ?></th>
                 <th style="text-align: right; vertical-align: middle;"><?= __d('contacts', 'Operations'); ?></th>
             </tr>
+            <?php foreach ($messages as $message) { ?>
+            <?php $deletables++; ?>
             <tr>
-                <?php foreach ($messages as $message) { ?>
-                <?php $deletables++; ?>
+                <td style="text-align: center; vertical-align: middle;" width="5%"><?= $message->id; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="30%"><?= e($message->author); ?> &lt;<?= e($message->author_email); ?>&gt;</td>
+                <td style="text-align: left; vertical-align: middle;" width="30%" title="<?= e($message->subject); ?>"><?= Str::limit(e($message->subject), 60); ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="10%"><?= $message->attachments->count(); ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="15%"><?= $message->created_at->formatLocalized(__d('contacts', '%d %b %Y, %R')); ?></td>
-                <td style="text-align: center; vertical-align: middle;" width="25%"><?= e($message->author); ?></td>
-                <td style="text-align: center; vertical-align: middle;" width="25%"><?= e($message->author_email); ?></td>
-                <td style="text-align: left; vertical-align: middle;" width="35%"><?= e($message->subject); ?></td>
-                <td style="text-align: right; vertical-align: middle;" width="10%">
+                <td style="text-align: right; vertical-align: middle;" width="15%">
                     <div class="btn-group" role="group" aria-label="...">
                         <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $message->id; ?>" title="<?= __d('contacts', 'Delete this Message'); ?>" role="button"><i class="fa fa-trash"></i></a>
                         <a class="btn btn-sm btn-success" href="<?= site_url('admin/contacts/' .$contact->id .'/messages/' .$message->id .'?offset=' .Input::get('offset', 1)); ?>" title="<?= __d('contacts', 'View this Message'); ?>" role="button"><i class="fa fa-search"></i></a>
                     </div>
                 </td>
-                <?php } ?>
-            <tr>
+            </tr>
+            <?php } ?>
         </table>
     </div>
 </div>

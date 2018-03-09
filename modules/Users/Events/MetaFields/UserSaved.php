@@ -4,12 +4,10 @@ namespace Modules\Users\Events\MetaFields;
 
 use Nova\Foundation\Events\DispatchableTrait;
 
-use App\Events\Event;
-
 use Modules\Users\Models\User;
 
 
-class UserSaved extends Event
+class UserSaved
 {
     use DispatchableTrait;
 

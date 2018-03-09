@@ -118,7 +118,7 @@ class Contacts extends BaseController
             }
 
             return Redirect::back()
-                ->onlyInput('contact_author', 'contact_author_email', 'contact_author_url', 'contact_content')
+                ->onlyInput('contact_author', 'contact_author_email', 'contact_author_url', 'contact_subject', 'contact_content')
                 ->withErrors($errors);
         }
 

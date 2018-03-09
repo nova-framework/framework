@@ -5,12 +5,10 @@ namespace Modules\Users\Events\MetaFields;
 use Nova\Foundation\Events\DispatchableTrait;
 use Nova\Validation\Validator;
 
-use App\Events\Event;
-
 use Modules\Users\Models\User;
 
 
-class UpdateUserValidation extends Event
+class UpdateUserValidation
 {
     use DispatchableTrait;
 

@@ -47,7 +47,7 @@ class Contact extends BaseModel
 
     protected function matches($path)
     {
-        if (empty($pattern = $this->path)) {
+        if (empty($pattern = $this->getAttribute('path'))) {
             $patterns = array('*');
         } else {
             $lines = explode("\n", str_replace('<front>', '/', $pattern));

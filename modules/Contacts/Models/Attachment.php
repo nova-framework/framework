@@ -28,7 +28,7 @@ class Attachment extends BaseModel
      * @var array
      */
     protected $fillable = array(
-        'parent_id', 'name', 'size', 'type', 'path'
+        'message_id', 'name', 'size', 'type', 'path'
     );
 
     /**
@@ -56,7 +56,7 @@ class Attachment extends BaseModel
     {
         parent::boot();
 
-        static::saving(function (Model $model)
+        static::saving(function (BaseModel $model)
         {
             // Nothing to delete when the original path is empty.
             if (empty($path = $model->getOriginal('path'))) {
@@ -69,7 +69,7 @@ class Attachment extends BaseModel
             }
         });
 
-        static::deleting(function (Model $model)
+        static::deleting(function (BaseModel $model)
         {
             // Don't delete the file if you are doing a soft delete!
             if (method_exists($model, 'restore') && ! $model->forceDeleting) {
@@ -128,7 +128,29 @@ class Attachment extends BaseModel
             'path' => $path,
 
             // Will be updated later, when the model will be attached to parent.
-            'parent_id' => 0,
+            'message_id' => 0,
         ));
+    }
+
+    public function url($download = false)
+    {
+        if (! empty($path = $this->getAttribute('path')) && File::exists($path)) {
+            list ($token, $fileName) = explode('-', basename($path), 2);
+
+            $method = $download ? 'download' : 'preview';
+
+            return site_url('contacts/' .$method .'/' .$token .'/' .$fileName);
+        }
+    }
+
+    public function previewable()
+    {
+        if (empty($type = $this->getAttribute('type'))) {
+            return false;
+        } else if (($type == 'application/pdf') || Str::is('image/*', $type)) {
+            return true;
+        }
+
+        return false;
     }
 }

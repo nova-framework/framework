@@ -14,6 +14,15 @@
 
 Route::post('contacts',  array('uses' => 'Contacts@store'));
 
+// The authentication protected File serving.
+Route::get('contacts/{method}/{token}/{filename}', array(
+    'middleware' => 'auth',
+    'uses'  => 'Attachments@serve',
+    'where' => array(
+        'method' => '(download|preview)',
+    ),
+));
+
 
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()

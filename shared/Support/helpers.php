@@ -64,3 +64,22 @@ if (! function_exists('do_action'))
         Action::fire($action, $parameters);
     }
 }
+
+if (! function_exists('human_size'))
+{
+    /**
+     * Returns the human readable size
+     *
+     * @param  numeric $bytes size number
+     * @param  numeric $decimals number of number
+     * @return string  returns the human readable size
+     */
+    function human_size($bytes, $decimals = 2)
+    {
+        $size = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
+
+        $factor = floor((strlen($bytes) - 1) / 3);
+
+        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
+    }
+}

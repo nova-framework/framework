@@ -25,35 +25,35 @@ class PermissionsTableSeeder extends Seeder
             // Contacts.
             array(
                 'name'  => 'View the Contacts List',
-                'slug'  => 'module.contacts.lists',
+                'slug'  => 'module.contacts.contacts.lists',
                 'group' => 'contacts',
 
                 'roles' => array(1, 2),
             ),
             array(
                 'name'  => 'View the Contacts',
-                'slug'  => 'module.contacts.view',
+                'slug'  => 'module.contacts.contacts.view',
                 'group' => 'contacts',
 
                 'roles' => array(1, 2),
             ),
             array(
                 'name'  => 'Create new Contacts',
-                'slug'  => 'module.contacts.create',
+                'slug'  => 'module.contacts.contacts.create',
                 'group' => 'contacts',
 
                 'roles' => array(1, 2),
             ),
             array(
                 'name'  => 'Update the Contacts',
-                'slug'  => 'module.contacts.update',
+                'slug'  => 'module.contacts.contacts.update',
                 'group' => 'contacts',
 
                 'roles' => array(1, 2),
             ),
             array(
                 'name'  => 'Delete Contacts',
-                'slug'  => 'module.contacts.delete',
+                'slug'  => 'module.contacts.contacts.delete',
                 'group' => 'contacts',
 
                 'roles' => array(1, 2),

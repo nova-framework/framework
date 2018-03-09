@@ -19,6 +19,11 @@ class Messages extends BaseController
 
     public function index($id)
     {
+        // Authorize the current User.
+        if (Gate::denies('lists', Message::class)) {
+            throw new AuthorizationException();
+        }
+
         try {
             $contact = Contact::findOrFail($id);
         }
@@ -52,6 +57,11 @@ class Messages extends BaseController
                 ->with('danger', __d('contacts', 'Message not found: #{0}', $id));
         }
 
+        // Authorize the current User.
+        if (Gate::denies('view', $message)) {
+            throw new AuthorizationException();
+        }
+
         return $this->createView()
             ->shares('title', __d('contacts', 'Show Message'))
             ->with(compact('contact', 'message'));
@@ -74,6 +84,11 @@ class Messages extends BaseController
                 ->with('danger', __d('contacts', 'Message not found: #{0}', $id));
         }
 
+        // Authorize the current User.
+        if (Gate::denies('delete', $message)) {
+            throw new AuthorizationException();
+        }
+
         // Delete the Message (and its attachments)
         $message->delete();
 
@@ -86,6 +101,11 @@ class Messages extends BaseController
 
     public function search(Request $request, $id)
     {
+        // Authorize the current User.
+        if (Gate::denies('lists', Message::class)) {
+            throw new AuthorizationException();
+        }
+
         $rules = array(
             'query' => 'required|valid_query'
         );

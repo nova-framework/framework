@@ -14,7 +14,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = array(
-        'Modules\Contacts\Models\SomeModel' => 'Modules\Contacts\Policies\ModelPolicy',
+        'Modules\Contacts\Models\Contact' => 'Modules\Contacts\Policies\ContactPolicy',
+        'Modules\Contacts\Models\Message' => 'Modules\Contacts\Policies\MessagePolicy',
     );
 
 

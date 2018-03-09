@@ -86,15 +86,8 @@ class Messages extends BaseController
 
     public function search(Request $request, $id)
     {
-        try {
-            $contact = Contact::findOrFail($id);
-        }
-        catch (ModelNotFoundException $e) {
-            return Redirect::back()->with('danger', __d('contacts', 'Contact not found: #{0}', $contactId));
-        }
-
         $rules = array(
-            'query' => 'required'
+            'query' => 'required|valid_query'
         );
 
         $attributes = array(
@@ -106,8 +99,23 @@ class Messages extends BaseController
 
         $validator = Validator::make($input, $rules, array(), $attributes);
 
+        // Add the custom Validation Rule commands.
+        $validator->addExtension('valid_query', function($attribute, $value, $parameters)
+        {
+            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){1,}$~u';
+
+            return (preg_match($pattern, $value) === 1);
+        });
+
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator);
+        }
+
+        try {
+            $contact = Contact::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->with('danger', __d('contacts', 'Contact not found: #{0}', $id));
         }
 
         // Search the Messages on Database.

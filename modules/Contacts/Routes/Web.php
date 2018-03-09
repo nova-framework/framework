@@ -12,7 +12,7 @@
 */
 
 
-Route::post('contacts',  array('uses' => 'Contacts@store'));
+Route::post('contacts',  array('uses' => 'Messages@store'));
 
 // The authentication protected File serving.
 Route::get('contacts/{method}/{token}/{filename}', array(

@@ -23,7 +23,7 @@ use Modules\Users\Models\User;
 use LogicException;
 
 
-class Contacts extends BaseController
+class Messages extends BaseController
 {
 
     protected function validator(array $data, $remoteIp)

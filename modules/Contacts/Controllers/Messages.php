@@ -2,10 +2,12 @@
 
 namespace Modules\Contacts\Controllers;
 
+use Nova\Auth\Access\AuthorizationException;
 use Nova\Http\Request;
 use Nova\Routing\Controller as BaseController;
 use Nova\Support\Facades\App;
 use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Arr;
@@ -83,6 +85,11 @@ class Messages extends BaseController
 
     public function store(Request $request)
     {
+        // Authorize the current User.
+        if (Gate::denies('create', Message::class)) {
+            throw new AuthorizationException();
+        }
+
         $input = $request->all();
 
         if (isset($input['contact_author_url']) && empty($input['contact_author_url'])) {

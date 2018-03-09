@@ -44,6 +44,11 @@ class MessagePolicy
      */
     public function create(User $authUser)
     {
+        if (is_null($authUser)) {
+            // The Guests are always allowed to create Contact Messages.
+            return true;
+        }
+
         return $authUser->hasPermission('module.contacts.messages.create');
     }
 

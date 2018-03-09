@@ -36,7 +36,7 @@ class Attachment extends BaseModel
      *
      * @var string
      */
-    protected static $path = STORAGE_PATH .'files' .DS .'contacts' .DS .'attachments';
+    const UPLOAD_PATH = STORAGE_PATH .'files' .DS .'contacts' .DS .'attachments';
 
 
     /**
@@ -107,7 +107,7 @@ class Attachment extends BaseModel
      */
     public static function uploadFileAndCreate(UploadedFile $file)
     {
-        if (! File::exists($path = static::$path)) {
+        if (! File::exists($path = static::UPLOAD_PATH)) {
             File::makeDirectory($path, 0755, true, true);
         }
 

@@ -74,12 +74,7 @@ class Messages extends BaseController
                 ->with('danger', __d('contacts', 'Message not found: #{0}', $id));
         }
 
-        // Delete the Message and its attachments.
-        $message->attachments->each(function ($attachment)
-        {
-            $attachment->delete();
-        });
-
+        // Delete the Message (and its attachments)
         $message->delete();
 
         // Update the Contact's messages count.

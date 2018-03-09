@@ -32,6 +32,24 @@ class Contact extends BaseModel
         return $this->hasMany('Modules\Contacts\Models\Message', 'contact_id');
     }
 
+    /**
+     * Listen to ORM events.
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function (Contact $model)
+        {
+            $model->load('messages');
+
+            $model->messages->each(function ($message)
+            {
+                $message->delete();
+            });
+        });
+    }
+
     public static function findByPath($path)
     {
         $contacts = static::all();

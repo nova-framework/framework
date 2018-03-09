@@ -45,4 +45,22 @@ class Message extends BaseModel
     {
         return $this->hasMany('Modules\Contacts\Models\Attachment', 'message_id');
     }
+
+    /**
+     * Listen to ORM events.
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function (Message $model)
+        {
+            $model->load('attachments');
+
+            $model->attachments->each(function ($attachment)
+            {
+                $attachment->delete();
+            });
+        });
+    }
 }

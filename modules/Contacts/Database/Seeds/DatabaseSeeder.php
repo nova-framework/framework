@@ -21,5 +21,6 @@ class DatabaseSeeder extends Seeder
         //
         $this->call('Modules\Contacts\Database\Seeds\ContactsTableSeeder');
         $this->call('Modules\Contacts\Database\Seeds\PostsTableSeeder');
+        $this->call('Modules\Contacts\Database\Seeds\PermissionsTableSeeder');
     }
 }

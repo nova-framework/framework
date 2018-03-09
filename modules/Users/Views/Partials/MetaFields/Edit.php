@@ -72,23 +72,3 @@ $(function() {
 });
 
 </script>
-
-<script>
-/*
-$('#file-browser-picture').click(function(e) {
-    e.preventDefault();
-
-    $('#picture').click();
-});
-
-$('#picture').change(function() {
-    var value = $(this).val();
-
-    $('#file-path-picture').val(value);
-});
-
-$('#file-path-picture').click(function() {
-    $('#file-browser-picture').click();
-});
-*/
-</script>

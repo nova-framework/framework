@@ -39,17 +39,12 @@ class RouteServiceProvider extends ServiceProvider
     {
         $router->group(array('prefix' => 'api', 'middleware' => 'api', 'namespace' => $this->namespace), function ($router)
         {
-            $this->loadRoutesFor('api');
+            require realpath(__DIR__ .'/../Routes/Api.php');
         });
 
         $router->group(array('middleware' => 'web', 'namespace' => $this->namespace), function ($router)
         {
-            $this->loadRoutesFor('web');
+            require realpath(__DIR__ .'/../Routes/Web.php');
         });
-    }
-
-    protected function loadRoutesFor($type)
-    {
-        require realpath(__DIR__ .'/../Routes') .DS .ucfirst($type) .'.php';
     }
 }

@@ -64,7 +64,7 @@
 <div class="col-md-4" style="padding-right: 0;">
 
 <?php $previewables = 0; ?>
-<div class="box box-primary attachments" style="min-height: 530px;">
+<div class="box box-primary attachments" style="min-height: 550px;">
     <div class="box-header">
         <h3 class="box-title"><?= __d('requests', 'Attachments'); ?></h3>
     </div>

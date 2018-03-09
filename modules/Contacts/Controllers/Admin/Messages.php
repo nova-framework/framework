@@ -3,7 +3,9 @@
 namespace Modules\Contacts\Controllers\Admin;
 
 use Nova\Database\ORM\ModelNotFoundException;
+use Nova\Http\Request;
 use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Validator;
 
 use Modules\Contacts\Models\Contact;
 use Modules\Contacts\Models\Message;
@@ -24,11 +26,13 @@ class Messages extends BaseController
             return Redirect::back()->with('danger', __d('contacts', 'Contact not found: #{0}', $id));
         }
 
-        $messages = $contact->messages()->orderBy('created_at', 'DESC')->paginate(10);
+        $messages = $contact->messages()->orderBy('created_at', 'DESC')->paginate(15);
 
         return $this->createView()
             ->shares('title', __d('contacts', 'Messages received by : {0}', $contact->name))
-            ->with(compact('contact', 'messages'));
+            ->with(compact('contact', 'messages'))
+            ->with('search', '')
+            ->with('searching', false);
     }
 
     public function show($contactId, $id)
@@ -83,5 +87,49 @@ class Messages extends BaseController
 
         return Redirect::to('admin/contacts/' .$contact->id .'/messages')
             ->with('success', __d('contacts', 'The Message was successfully deleted.'));
+    }
+
+    public function search(Request $request, $id)
+    {
+        try {
+            $contact = Contact::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->with('danger', __d('contacts', 'Contact not found: #{0}', $contactId));
+        }
+
+        $rules = array(
+            'query' => 'required'
+        );
+
+        $attributes = array(
+            'query' => __d('courses', 'Search Query'),
+        );
+
+        // Validate the Input data.
+        $input = $request->only('query');
+
+        $validator = Validator::make($input, $rules, array(), $attributes);
+
+        if ($validator->fails()) {
+            return Redirect::back()->withErrors($validator);
+        }
+
+        // Search the Messages on Database.
+        $search = $input['query'];
+
+        $messages = $contact->messages()->where(function ($query) use ($search)
+            {
+                $query->where('author', 'LIKE', '%' .$search .'%')
+                    ->orWhere('author_email', 'LIKE', '%' .$search .'%')
+                    ->orWhere('subject', 'LIKE', '%' .$search .'%')
+                    ->orWhere('content', 'LIKE', '%' .$search .'%');
+            })
+            ->orderBy('created_at', 'DESC')
+            ->paginate(15);
+
+        return $this->createView(compact('contact', 'messages', 'search'), 'Index')
+            ->shares('title', __d('contacts', 'Messages received by : {0}', $contact->name))
+            ->with('searching', true);
     }
 }

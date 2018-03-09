@@ -11,13 +11,31 @@
 
 <?= View::fetch('Partials/Messages'); ?>
 
+<?php if (! $searching) { ?>
+
+<div class="box box-default">
+    <div class="box-body">
+        <!-- search form -->
+        <form action="<?= site_url('admin/contacts/' .$contact->id .'/messages/search'); ?>" method="GET" class="">
+            <div class="input-group col-sm-3 col-sm-offset-9">
+                <input type="text" name="query" class="form-control" placeholder="<?= __d('students', 'Search Messages...'); ?>">
+                <span class="input-group-btn">
+                    <button type="submit" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
+                </span>
+            </div>
+        </form>
+    </div>
+</div>
+
+<?php } ?>
+
 <?php $deletables = 0; ?>
 
 <?php if (! $messages->isEmpty()) { ?>
 
-<div class="box box-default">
+<div class="box box-<?= $searching ? 'default' : 'widget' ?>">
     <div class="box-header">
-        <h3 class="box-title"><?= __d('contacts', 'Messages');; ?></h3>
+        <h3 class="box-title"><?= $searching ? __d('contacts', 'Searching the messages for "{0}"', e($search)) : __d('contacts', 'Messages'); ?></h3>
         <div class="box-tools">
         <?= $messages->links(); ?>
         </div>
@@ -68,7 +86,7 @@
 
 <?php } ?>
 
-<a class="btn btn-primary col-sm-2" href="<?= site_url('admin/contacts'); ?>"><?= __d('contacts', '<< Previous Page'); ?></a>
+<a class="btn btn-primary col-sm-2" href="<?= $searching ? site_url('admin/contacts/' .$contact->id .'/messages') : site_url('admin/contacts'); ?>"><?= __d('contacts', '<< Previous Page'); ?></a>
 
 <div class="clearfix"></div>
 <br>

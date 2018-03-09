@@ -38,6 +38,9 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
     // The Contact Messages.
     Route::get('contacts/{id}/messages', array('middleware' => 'auth', 'uses' => 'Messages@index'))->where('id', '\d+');
 
+    Route::get('contacts/{id}/messages/search', array('middleware' => 'auth', 'uses' => 'Messages@search'))
+        ->where('id', '\d+');
+
     Route::get('contacts/{cid}/messages/{mid}', array('middleware' => 'auth', 'uses' => 'Messages@show'))
         ->where('cid', '\d+')
         ->where('mid', '\d+');

@@ -85,7 +85,7 @@ class Messages extends BaseController
 
     public function store(Request $request)
     {
-        // Authorize the current User.
+        // Authorize the current User, if it is authenticated.
         if (Auth::check() && Gate::denies('create', Message::class)) {
             throw new AuthorizationException();
         }

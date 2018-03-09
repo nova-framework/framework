@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Platform\Support;
+namespace Shared\Hooks;
 
-use Modules\Platform\Support\ActionHookDispatcher;
+use Shared\Hooks\ActionHookDispatcher;
 
 
 class Action extends ActionHookDispatcher
@@ -13,7 +13,7 @@ class Action extends ActionHookDispatcher
      *
      * @return void
      */
-    public function run()
+    public function do()
     {
         $parameters = func_get_args();
 

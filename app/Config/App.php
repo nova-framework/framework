@@ -219,6 +219,8 @@ return array(
         'Package'       => 'Nova\Support\Facades\Package',
 
         // The Shared Facades.
+        'Action'        => 'Shared\Support\Facades\Action',
+        'Filter'        => 'Shared\Support\Facades\Filter',
         'PDF'           => 'Shared\Support\Facades\PDF',
         'Password'      => 'Shared\Support\Facades\Password',
         'Widget'        => 'Shared\Support\Facades\Widget',

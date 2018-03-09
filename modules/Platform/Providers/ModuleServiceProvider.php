@@ -51,10 +51,6 @@ class ModuleServiceProvider extends ServiceProvider
     {
         parent::register();
 
-        // Register the aliases for Facades.
-        $loader = AliasLoader::getInstance();
-
-        $loader->alias('Action', 'Modules\Platform\Support\Facades\Action');
-        $loader->alias('Filter', 'Modules\Platform\Support\Facades\Filter');
+        //
     }
 }

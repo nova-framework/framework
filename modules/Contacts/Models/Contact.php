@@ -37,24 +37,34 @@ class Contact extends BaseModel
         $contacts = static::all();
 
         foreach ($contacts as $contact) {
-            if (! empty($pattern = $contact->path)) {
-                $pattern = str_replace('<front>', '/', $pattern);
-            } else {
-                $pattern = '*';
-            }
-
-            $patterns = array_filter(
-                array_map('trim', explode("\n", $pattern)), 'is_not_empty'
-            );
-
-            foreach ($patterns as $pattern) {
-                if (Str::is($pattern, $path)) {
-                    return $contact;
-                }
+            if ($contact->matches($path)) {
+                return $contact;
             }
         }
 
         return $contacts->first();
+    }
+
+    protected function matches($path)
+    {
+        if (empty($pattern = $this->path)) {
+            $patterns = array('*');
+        } else {
+            $lines = explode("\n", str_replace('<front>', '/', $pattern));
+
+            $patterns = array_filter(array_map('trim', $lines), function ($value)
+            {
+                return ! empty($value);
+            });
+        }
+
+        foreach ($patterns as $pattern) {
+            if (Str::is($pattern, $path)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

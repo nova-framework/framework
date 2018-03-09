@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Platform\Support\Facades;
+namespace Shared\Support\Facades;
 
 use Nova\Support\Facades\Facade;
 
 
-class Filter extends Facade
+class Action extends Facade
 {
 
     /**
@@ -13,6 +13,6 @@ class Filter extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'Modules\Platform\Support\Filter';
+        return 'Shared\Platform\Action';
     }
 }

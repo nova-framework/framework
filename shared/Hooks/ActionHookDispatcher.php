@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Platform\Support;
+namespace Shared\Hooks;
 
 use Nova\Support\Facades\App;
 

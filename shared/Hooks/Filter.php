@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Platform\Support;
+namespace Shared\Hooks;
 
-use Modules\Platform\Support\ActionHookDispatcher;
+use Shared\Hooks\ActionHookDispatcher;
 
 
-class Filter extends ActionHookEvent
+class Filter extends ActionHookDispatcher
 {
 
     /**

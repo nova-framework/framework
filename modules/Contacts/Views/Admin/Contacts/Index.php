@@ -34,7 +34,7 @@
             <tr>
                 <td style="text-align: center; vertical-align: middle;" width="5%"><?= $contact->id; ?></td>
                 <td style="text-align: left; vertical-align: middle;" title="<?= $contact->description ?: __d('contacts', 'No description'); ?>" width="20%"><?= $contact->name; ?></td>
-                <td style="text-align: left; vertical-align: middle;" width="25%"><?= implode(', ', array_filter(array_map('trim', explode("\n", $contact->email)), 'is_not_empty')); ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="25%"><?= implode(', ', array_filter(array_map('trim', explode("\n", $contact->email)))); ?></td>
                 <td style="text-align: left; vertical-align: middle;" width="25%"><?= $contact->path ?: '*'; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="10%"><?= $contact->count; ?></td>
                 <td style="text-align: right; vertical-align: middle;" width="20%">

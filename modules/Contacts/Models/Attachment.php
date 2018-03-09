@@ -36,7 +36,7 @@ class Attachment extends BaseModel
      *
      * @var string
      */
-    const UPLOAD_PATH = STORAGE_PATH .'files' .DS .'contacts' .DS .'attachments';
+    const PATH = STORAGE_PATH .'files' .DS .'contacts' .DS .'attachments';
 
 
     /**
@@ -56,7 +56,7 @@ class Attachment extends BaseModel
     {
         parent::boot();
 
-        static::saving(function (BaseModel $model)
+        static::saving(function (Attachment $model)
         {
             // Nothing to delete when the original path is empty.
             if (empty($path = $model->getOriginal('path'))) {
@@ -69,7 +69,7 @@ class Attachment extends BaseModel
             }
         });
 
-        static::deleting(function (BaseModel $model)
+        static::deleting(function (Attachment $model)
         {
             // Don't delete the file if you are doing a soft delete!
             if (method_exists($model, 'restore') && ! $model->forceDeleting) {
@@ -107,7 +107,7 @@ class Attachment extends BaseModel
      */
     public static function uploadFileAndCreate(UploadedFile $file)
     {
-        if (! File::exists($path = static::UPLOAD_PATH)) {
+        if (! File::exists($path = static::PATH)) {
             File::makeDirectory($path, 0755, true, true);
         }
 

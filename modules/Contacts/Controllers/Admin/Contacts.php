@@ -54,7 +54,7 @@ class Contacts extends BaseController
             $contact = Contact::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->with('danger', __d('contacts', 'Contact not found: #{0}', $id));
+            return Redirect::to('admin/contacts')->with('danger', __d('contacts', 'Contact not found: #{0}', $id));
         }
 
         return $this->createView()
@@ -68,7 +68,7 @@ class Contacts extends BaseController
             $contact = Contact::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->with('danger', __d('contacts', 'Contact not found: #{0}', $id));
+            return Redirect::to('admin/contacts')->with('danger', __d('contacts', 'Contact not found: #{0}', $id));
         }
 
         return $this->createView()
@@ -82,7 +82,7 @@ class Contacts extends BaseController
             $contact = Contact::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->with('danger', __d('contacts', 'Contact not found: #{0}', $id));
+            return Redirect::to('admin/contacts')->with('danger', __d('contacts', 'Contact not found: #{0}', $id));
         }
 
         $name = $contact->name;
@@ -112,6 +112,6 @@ class Contacts extends BaseController
 
         $contact->delete();
 
-        return Redirect::back()->with('success', __d('contacts', 'The Contact was successfully deleted.'));
+        return Redirect::to('admin/contacts')->with('success', __d('contacts', 'The Contact was successfully deleted.'));
     }
 }

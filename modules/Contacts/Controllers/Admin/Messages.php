@@ -44,7 +44,8 @@ class Messages extends BaseController
             $message = Message::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->with('danger', __d('contacts', 'Message not found: #{0}', $id));
+            return Redirect::to('admin/contacts/' .$contact->id .'/messages')
+                ->with('danger', __d('contacts', 'Message not found: #{0}', $id));
         }
 
         return $this->createView()
@@ -65,17 +66,22 @@ class Messages extends BaseController
             $message = Message::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->with('danger', __d('contacts', 'Message not found: #{0}', $id));
+            return Redirect::to('admin/contacts/' .$contact->id .'/messages')
+                ->with('danger', __d('contacts', 'Message not found: #{0}', $id));
         }
 
-        // Delete the Message.
-        $message->attachments()->delete();
+        // Delete the Message and its attachments.
+        $message->attachments->each(function ($attachment)
+        {
+            $attachment->delete();
+        });
 
         $message->delete();
 
         // Update the Contact's messages count.
         $contact->updateCount();
 
-        return Redirect::back()->with('success', __d('contacts', 'The Message was successfully deleted.'));
+        return Redirect::to('admin/contacts/' .$contact->id .'/messages')
+            ->with('success', __d('contacts', 'The Message was successfully deleted.'));
     }
 }

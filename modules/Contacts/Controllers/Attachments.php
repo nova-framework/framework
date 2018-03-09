@@ -43,7 +43,7 @@ class Attachments extends Controller
     {
         $disposition = ($method == 'download') ? 'attachment' : 'inline';
 
-        $path = Attachment::UPLOAD_PATH .DS .$token .'-' .$fileName;
+        $path = Attachment::PATH .DS .$token .'-' .$fileName;
 
         try {
             $attachment = Attachment::with('message')->where('path', $path)->firstOrFail();

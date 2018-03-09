@@ -60,12 +60,12 @@
             <?= __d('contacts', 'Attachments'); ?>
         </label>
         <div class="input-group">
+            <input type="text" class="form-control" readonly>
             <label class="input-group-btn">
                 <span class="btn btn-<?= $errors->has('contact_attachment') ? 'danger' : 'default' ?>">
                     <?= __d('contacts', 'Browse ...'); ?> <input type="file" name="contact_attachment[]" style="display: none;" multiple>
                 </span>
             </label>
-            <input type="text" class="form-control" readonly>
         </div>
         <div class="clearfix"></div>
         <?php if ($errors->has('contact_attachment')) { ?>
@@ -85,7 +85,7 @@
     <input type="hidden" name="g-recaptcha-response" value="dummy" />
     <?php } ?>
     <div class="form-group" style="margin-top: 25px;">
-        <input type="submit" name="submit" class="btn btn-primary pull-right col-md-3" value="<?= __d('contacts', 'Submit'); ?>" />
+        <input type="submit" name="submit" class="btn btn-primary col-md-3" value="<?= __d('contacts', 'Submit'); ?>" />
     </div>
 </div>
 

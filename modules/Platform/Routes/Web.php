@@ -55,14 +55,7 @@ Route::post('register/status',  array('middleware' => 'guest', 'uses' => 'Regist
 Route::get( 'register/verify',  array('middleware' => 'guest', 'uses' => 'Registrar@verify'));
 Route::post('register/verify',  array('middleware' => 'guest', 'uses' => 'Registrar@verifyPost'));
 
-Route::get('register/{hash}/{token?}', array(
-    'middleware' => 'guest',
-
-    'uses'  => 'Registrar@tokenVerify',
-    'where' => array(
-        'time' => '(\d+)'
-    ),
-));
+Route::get('register/{hash}/{token?}', array('middleware' => 'guest', 'uses' => 'Registrar@tokenVerify'));
 
 // The User's Dashboard.
 Route::get('dashboard', array('middleware' => 'auth', 'uses' => 'Dashboard@index'));

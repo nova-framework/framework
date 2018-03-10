@@ -30,7 +30,7 @@
     </div>
     <div class="form-group<?= $errors->has('contact_subject') ? ' has-error' : ''; ?>">
         <label class="control-label" for="contact_subject">
-            <?= __d('contacts', 'Subject'); ?>
+            <?= __d('contacts', 'Subject'); ?> <span class="text-danger" title="<?= __d('contacts', 'Required field'); ?>">*</span>
         </label>
         <input type="text" class="form-control" name="contact_subject" id="contact-form-subject" value="<?= Input::old('contact_subject'); ?>" placeholder="<?= __d('contacts', 'Subject'); ?>" />
         <div class="clearfix"></div>

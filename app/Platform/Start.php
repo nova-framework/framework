@@ -137,30 +137,31 @@ $app->instance('config', $config = new ConfigRepository(
 
 $app->startExceptionHandling();
 
-if ($env != 'testing') ini_set('display_errors', 'Off');
+if ($env !== 'testing') {
+    ini_set('display_errors', 'Off');
+}
 
 //--------------------------------------------------------------------------
-// Set The Application Middleware
+// Register The Application Middleware
 //--------------------------------------------------------------------------
 
-$config = $app['config']['app'];
-
-//
-$middleware = $config['middleware'];
-
-$app->middleware($middleware);
+$app->middleware(
+    $config->get('app.middleware', array())
+);
 
 //--------------------------------------------------------------------------
 // Set The Default Timezone From Configuration
 //--------------------------------------------------------------------------
 
-date_default_timezone_set($config['timezone']);
+date_default_timezone_set(
+    $config->get('app.timezone', 'Europe/London')
+);
 
 //--------------------------------------------------------------------------
 // Register The Alias Loader
 //--------------------------------------------------------------------------
 
-$aliases = $config['aliases'];
+$aliases = $config->get('app.aliases', array());
 
 AliasLoader::getInstance($aliases)->register();
 
@@ -180,9 +181,9 @@ BinaryFileResponse::trustXSendfileTypeHeader();
 // Register The Core Service Providers
 //--------------------------------------------------------------------------
 
-$providers = $config['providers'];
-
-$app->getProviderRepository()->load($app, $providers);
+$app->getProviderRepository()->load(
+    $app, $config->get('app.providers', array())
+);
 
 //--------------------------------------------------------------------------
 // Register Booted Start Files

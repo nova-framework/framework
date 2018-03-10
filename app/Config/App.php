@@ -74,7 +74,7 @@ return array(
     |
     */
 
-    'log' => 'single',
+    'log' => 'daily',
 
     /**
      * The Application's Middleware stack.

@@ -37,12 +37,6 @@ if (function_exists('mb_internal_encoding')) {
 define('SYSPATH', BASEPATH .str_replace('/', DS, 'vendor/nova-framework/system/'));
 
 //--------------------------------------------------------------------------
-// Set The Storage Path
-//--------------------------------------------------------------------------
-
-define('STORAGE_PATH', BASEPATH .'storage' .DS);
-
-//--------------------------------------------------------------------------
 // Set The Framework Version
 //--------------------------------------------------------------------------
 
@@ -52,9 +46,7 @@ define('VERSION', Application::version());
 // Load Global Configuration
 //--------------------------------------------------------------------------
 
-$path = APPPATH .'Config.php';
-
-if (is_readable($path)) require $path;
+require APPPATH .'Config.php';
 
 //--------------------------------------------------------------------------
 // Create New Application
@@ -193,18 +185,18 @@ $app->booted(function() use ($app, $env)
 {
 
 //--------------------------------------------------------------------------
-// Load The Boootstrap Script
-//--------------------------------------------------------------------------
-
-$path = $app['path'] .DS .'Bootstrap.php';
-
-if (is_readable($path)) require $path;
-
-//--------------------------------------------------------------------------
 // Load The Environment Start Script
 //--------------------------------------------------------------------------
 
 $path = $app['path'] .DS .'Platform' .DS .'Environment' .DS .ucfirst($env) .'.php';
+
+if (is_readable($path)) require $path;
+
+//--------------------------------------------------------------------------
+// Load The Boootstrap Script
+//--------------------------------------------------------------------------
+
+$path = $app['path'] .DS .'Bootstrap.php';
 
 if (is_readable($path)) require $path;
 

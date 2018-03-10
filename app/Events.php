@@ -1,11 +1,9 @@
 <?php
+
 /**
  * Events - all standard Events are defined here.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- *
  */
+
 
 use Nova\Http\Request;
 

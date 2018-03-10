@@ -2,11 +2,11 @@
 
 return array (
   '%d %b %Y, %R' => '%d %b %Y, %R',
+  '%d files selected' => '',
   '<< Previous Page' => 'Предыдущая страница',
   'Account' => 'Аккаунт',
   'Are you sure you want to remove this User, the operation being irreversible?' => 'Вы действительно хотите удалить этого пользователя, операция является необратимой?',
-  'Browse' => '',
-  'Browse...' => '',
+  'Browse ...' => '',
   'Cancel' => 'Отмена',
   'Close' => 'Закрыть',
   'Confirm Password' => 'Подтвердить пароль',

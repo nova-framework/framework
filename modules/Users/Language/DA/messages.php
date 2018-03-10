@@ -2,11 +2,11 @@
 
 return array (
   '%d %b %Y, %R' => '',
+  '%d files selected' => '',
   '<< Previous Page' => '<< Sidste Side',
   'Account' => '',
   'Are you sure you want to remove this User, the operation being irreversible?' => '',
-  'Browse' => '',
-  'Browse...' => '',
+  'Browse ...' => '',
   'Cancel' => 'Fortryd',
   'Close' => '',
   'Confirm Password' => 'Bekræft kodeordet',

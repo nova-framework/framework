@@ -5,7 +5,7 @@ return array (
   'Dashboard' => 'Skrivebord',
   'Permission' => '',
   'Permissions' => '',
-  'Permissions registered by the <b>{0}</b> module' => '',
+  'Permissions registered by the <b>{0}</b> package' => '',
   'Permissions registered by the main <b>Application</b>' => '',
   'Platform' => '',
   'Registered Permissions' => '',

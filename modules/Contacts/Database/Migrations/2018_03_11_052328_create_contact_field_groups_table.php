@@ -22,7 +22,6 @@ class CreateContactFieldGroupsTable extends Migration
 
             $table->string('title', 255);
             $table->integer('order')->default(0);
-
             $table->tinyInteger('hide_title')->default(0);
 
             $table->integer('created_by')->unsigned()->nullable();

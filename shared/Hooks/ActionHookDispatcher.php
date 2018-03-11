@@ -48,13 +48,15 @@ abstract class ActionHookDispatcher
     }
 
     /**
-     * Fires a new action
+     * Remove a set of listeners from the dispatcher.
      *
-     * @param  string $action Name of action
-     * @param  array $args Arguments passed to the action
+     * @param  string  $hook
      * @return void
      */
-    abstract function fire($action, $args);
+    public function forget($hook)
+    {
+        unset($this->listeners[$hook], $this->sorted[$hook]);
+    }
 
     /**
      * Get the event that is currently firing.
@@ -65,6 +67,15 @@ abstract class ActionHookDispatcher
     {
         return last($this->firing);
     }
+
+    /**
+     * Fires a new action
+     *
+     * @param  string $action Name of action
+     * @param  array $args Arguments passed to the action
+     * @return void
+     */
+    abstract function fire($action, $args);
 
     /**
      * Gets a sorted list of all listeners

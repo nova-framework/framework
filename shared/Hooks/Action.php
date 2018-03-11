@@ -35,22 +35,16 @@ class Action extends ActionHookDispatcher
             return;
         }
 
-        $count = count($arguments);
+        $this->firing[] = $hook;
 
         foreach ($listeners as $listener) {
-            $parameters = array();
+            $parameters = array_slice($arguments, 0, (int) $listener['arguments']);
 
-            $limit = min($count, $listener['arguments']);
-
-            for ($i = 0; $i < $limit; $i++) {
-                if (isset($arguments[$i])) {
-                    $parameters[] = $arguments[$i];
-                }
-            }
-
-            $callback = $this->resolveCallback($listener['callback']);
-
-            call_user_func_array($callback, $parameters);
+            call_user_func_array(
+                $this->resolveCallback($listener['callback']), $parameters
+            );
         }
+
+        array_pop($this->firing);
     }
 }

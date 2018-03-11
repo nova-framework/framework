@@ -23,6 +23,13 @@ abstract class ActionHookDispatcher
      */
     protected $sorted = array();
 
+    /**
+     * The event firing stack.
+     *
+     * @var array
+     */
+    protected $firing = array();
+
 
     /**
      * Adds a listener
@@ -35,7 +42,7 @@ abstract class ActionHookDispatcher
      */
     public function listen($hook, $callback, $priority = 20, $arguments = 1)
     {
-        $this->listeners[$hook][$priority] = compact('callback', 'arguments');
+        $this->listeners[$hook][$priority][] = compact('callback', 'arguments');
 
         unset($this->sorted[$hook]);
     }
@@ -48,6 +55,16 @@ abstract class ActionHookDispatcher
      * @return void
      */
     abstract function fire($action, $args);
+
+    /**
+     * Get the event that is currently firing.
+     *
+     * @return string
+     */
+    public function firing()
+    {
+        return last($this->firing);
+    }
 
     /**
      * Gets a sorted list of all listeners
@@ -80,7 +97,9 @@ abstract class ActionHookDispatcher
                 return strnatcmp($param1, $param2);
             });
 
-            $this->sorted[$hook] = $this->listeners[$hook];
+            $this->sorted[$hook] = call_user_func_array(
+                'array_merge', $this->listeners[$hook]
+            );
         }
     }
 

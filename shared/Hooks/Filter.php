@@ -26,36 +26,32 @@ class Filter extends ActionHookDispatcher
      * Filters a value
      *
      * @param  string $action Name of filter
-     * @param  array $args Arguments passed to the filter
+     * @param  array $arguments Arguments passed to the filter
      * @return string Always returns the value
      */
     public function fire($action, array $arguments)
     {
-        // Get the value, the first argument is always the value.
-        $value = isset($arguments[0]) ? $arguments[0] : '';
+        $value = array_shift($arguments);
 
         if (empty($listeners = $this->getListeners($action))) {
             return $value;
         }
 
-        $count = count($arguments);
+        $this->firing[] = $hook;
 
         foreach ($listeners as $listener) {
-            $parameters = array($value);
+            $parameters = array_slice($arguments, 0, (int) $listener['arguments']);
 
-            $limit = min($count, $listener['arguments']);
-
-            for ($i = 1; $i < $limit; $i++) {
-                if (isset($arguments[$i])) {
-                    $parameters[] = $arguments[$i];
-                }
-            }
-
-            $callback = $this->resolveCallback($listener['callback']);
+            // Prepend the value to parameters.
+            array_unshift($parameters, $value);
 
             // Filter the value.
-            $value = call_user_func_array($callback, $parameters);
+            $value = call_user_func_array(
+                $this->resolveCallback($listener['callback']), $parameters
+            );
         }
+
+        array_pop($this->firing);
 
         return $value;
     }

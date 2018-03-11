@@ -32,9 +32,7 @@ class Filter extends HookDispatcher
             array_unshift($parameters, $value);
 
             // Filter the value.
-            $value = call_user_func_array(
-                $this->resolveCallback($listener['callback']), $parameters
-            );
+            $value = call_user_func_array($listener['callback'], $parameters);
         }
 
         array_pop($this->firing);

@@ -56,30 +56,37 @@ abstract class HookDispatcher
      */
     public function listen($hook, $callback, $priority = 20, $arguments = 1)
     {
-        $this->listeners[$hook][$priority][] = compact('callback', 'arguments');
+        if (! is_null($callback = $this->resolveCallback($callback))) {
+            $this->listeners[$hook][$priority][] = compact('callback', 'arguments');
 
-        unset($this->sorted[$hook]);
+            unset($this->sorted[$hook]);
+        }
     }
 
     /**
-     * Remove a set of listeners from the dispatcher.
+     * Resolve the given callback
      *
-     * @param  string  $hook
-     * @return void
+     * @param  mixed $callback Callback
+     * @return mixed A closure, an array if "class@method" or a string if "function_name"
      */
-    public function forget($hook)
+    protected function resolveCallback($callback)
     {
-        unset($this->listeners[$hook], $this->sorted[$hook]);
-    }
+        if (is_string($callback)) {
+            if (strpos($callback, '@') === false) {
+                return $callback;
+            }
 
-    /**
-     * Get the event that is currently firing.
-     *
-     * @return string
-     */
-    public function firing()
-    {
-        return last($this->firing);
+            list ($class, $method) = explode('@', $callback);
+
+            $instance = App::make('\\' . $class);
+
+            return array($instance, $method);
+        }
+
+        // The given callback is not a string.
+        else if (($callback instanceof Closure) || is_array($callback)) {
+            return $callback;
+        }
     }
 
     /**
@@ -129,30 +136,23 @@ abstract class HookDispatcher
     }
 
     /**
-     * Resolve the given callback
+     * Remove a set of listeners from the dispatcher.
      *
-     * @param  mixed $callback Callback
-     * @return mixed A closure, an array if "class@method" or a string if "function_name"
+     * @param  string  $hook
+     * @return void
      */
-    protected function resolveCallback($callback)
+    public function forget($hook)
     {
-        if (is_string($callback)) {
-            if (strpos($callback, '@') === false) {
-                return $callback;
-            }
+        unset($this->listeners[$hook], $this->sorted[$hook]);
+    }
 
-            list ($class, $method) = explode('@', $callback);
-
-            $instance = App::make('\\' . $class);
-
-            return array($instance, $method);
-        }
-
-        // The callback is not a string.
-        else if (($callback instanceof Closure) || is_array($callback)) {
-            return $callback;
-        }
-
-        return false;
+    /**
+     * Get the event that is currently firing.
+     *
+     * @return string
+     */
+    public function firing()
+    {
+        return last($this->firing);
     }
 }

@@ -31,7 +31,7 @@ class Filter extends ActionHookDispatcher
      */
     public function fire($action, array $arguments)
     {
-        $value = array_shift($arguments);
+        $value = array_shift($arguments); // The first argument is always the value.
 
         if (empty($listeners = $this->getListeners($action))) {
             return $value;

@@ -24,9 +24,10 @@ class Action extends HookDispatcher
         $this->firing[] = $action;
 
         foreach ($listeners as $listener) {
-            $parameters = array_slice($arguments, 0, (int) $listener['arguments']);
-
             $callback = $listener['callback'];
+
+            // Extract an exact number of parameters.
+            $parameters = array_slice($arguments, 0, (int) $listener['arguments']);
 
             call_user_func_array($callback, $parameters);
         }

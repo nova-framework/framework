@@ -2,10 +2,10 @@
 
 namespace Shared\Hooks;
 
-use Shared\Hooks\ActionHookDispatcher;
+use Shared\Hooks\HookDispatcher;
 
 
-class Filter extends ActionHookDispatcher
+class Filter extends HookDispatcher
 {
 
     /**

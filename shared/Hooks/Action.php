@@ -2,10 +2,10 @@
 
 namespace Shared\Hooks;
 
-use Shared\Hooks\ActionHookDispatcher;
+use Shared\Hooks\HookDispatcher;
 
 
-class Action extends ActionHookDispatcher
+class Action extends HookDispatcher
 {
 
     /**

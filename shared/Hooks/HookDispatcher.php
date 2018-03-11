@@ -7,7 +7,7 @@ use Nova\Support\Facades\App;
 use Closure;
 
 
-abstract class ActionHookDispatcher
+abstract class HookDispatcher
 {
 
     /**

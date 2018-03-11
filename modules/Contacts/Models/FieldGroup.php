@@ -22,6 +22,19 @@ class FieldGroup extends BaseModel
      */
     protected $fillable = array('title', 'order', 'hide_title');
 
+    /**
+     * @var array
+     */
+    protected $with = array('fieldItems');
+
+
+    /**
+     * @return \Nova\Database\ORM\Relations\BelongsTo
+     */
+    public function contact()
+    {
+        return $this->belongsTo('Modules\Contacts\Models\Contact', 'contact_id');
+    }
 
     /**
      * @return \Nova\Database\ORM\Relations\HasMany

@@ -23,6 +23,19 @@ class Contact extends BaseModel
      */
     protected $fillable = array('name', 'email', 'description', 'path');
 
+    /**
+     * @var array
+     */
+    protected $with = array('fieldGroups');
+
+
+    /**
+     * @return \Nova\Database\ORM\Relations\HasMany
+     */
+    public function fieldGroups()
+    {
+        return $this->hasMany('Modules\Contacts\Models\FieldGroup', 'contact_id');
+    }
 
     /**
      * @return \Nova\Database\ORM\Relations\HasMany

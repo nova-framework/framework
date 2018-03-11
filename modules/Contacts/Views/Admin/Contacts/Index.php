@@ -34,11 +34,14 @@
             <tr>
                 <td style="text-align: center; vertical-align: middle;" width="5%"><?= $contact->id; ?></td>
                 <td style="text-align: left; vertical-align: middle;" title="<?= $contact->description ?: __d('contacts', 'No description'); ?>" width="20%"><?= $contact->name; ?></td>
-                <td style="text-align: left; vertical-align: middle;" width="25%"><?= implode(', ', array_filter(array_map('trim', explode("\n", $contact->email)))); ?></td>
-                <td style="text-align: left; vertical-align: middle;" width="25%"><?= $contact->path ?: '*'; ?></td>
+                <?php $emails = implode(', ', array_filter(array_map('trim', explode("\n", $contact->email ?: '*')))); ?>
+                <td style="text-align: left; vertical-align: middle;" width="25%"><?= $emails; ?></td>
+                <?php $paths = implode(', ', array_filter(array_map('trim', explode("\n", $contact->path ?: '*')))); ?>
+                <td style="text-align: left; vertical-align: middle;" width="20%"><?= $paths; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="10%"><?= $contact->count; ?></td>
-                <td style="text-align: right; vertical-align: middle;" width="20%">
+                <td style="text-align: right; vertical-align: middle;" width="25%">
                     <a class="btn btn-sm btn-primary" href="<?= site_url('admin/contacts/' .$contact->id .'/messages'); ?>" title="<?= __d('contacts', 'View the Messages received by this Contact'); ?>" role="button"><i class="fa fa-envelope"></i></a>
+                    <a class="btn btn-sm bg-olive" href="<?= site_url('admin/contacts/' .$contact->id .'/field-groups'); ?>" title="<?= __d('contacts', 'Manage the Field Groups of this Contact'); ?>" role="button"><i class="fa fa-list"></i></a>
                     <div class="btn-group" role="group" aria-label="...">
                         <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $contact->id; ?>" title="<?= __d('contacts', 'Delete this Contact'); ?>" role="button"><i class="fa fa-remove"></i></a>
                         <a class="btn btn-sm btn-success" href="<?= site_url('admin/contacts/' .$contact->id .'/edit'); ?>" title="<?= __d('contacts', 'Edit this Contact'); ?>" role="button"><i class="fa fa-pencil"></i></a>

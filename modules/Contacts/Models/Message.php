@@ -27,7 +27,7 @@ class Message extends BaseModel
     /**
      * @var array
      */
-    protected $with = array('attachments');
+    protected $with = array('fields', 'attachments');
 
 
     /**

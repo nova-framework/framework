@@ -14,6 +14,8 @@ class CreateContactMessagesTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('contact_messages');
+
         Schema::create('contact_messages', function (Blueprint $table)
         {
             $table->increments('id');
@@ -28,6 +30,8 @@ class CreateContactMessagesTable extends Migration
             $table->string('path')->nullable();
 
             $table->timestamps();
+
+            $table->foreign('contact_id')->references('id')->on('contacts')->onDelete('cascade');
         });
     }
 

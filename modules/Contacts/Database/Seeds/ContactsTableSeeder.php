@@ -31,6 +31,9 @@ class ContactsTableSeeder extends Seeder
             'email'       => 'admin@novaframework.dev',
             'path'        => 'content/contact-us',
             'description' => 'The default site-wide Contact',
+
+            //
+            'created_by'  => 0,
         ));
     }
 }

@@ -14,6 +14,8 @@ class CreateContactAttachmentsTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('contact_attachments');
+
         Schema::create('contact_attachments', function (Blueprint $table)
         {
             $table->increments('id');
@@ -25,6 +27,8 @@ class CreateContactAttachmentsTable extends Migration
             $table->string('path');
 
             $table->timestamps();
+
+            $table->foreign('message_id')->references('id')->on('contact_messages')->onDelete('cascade');
         });
     }
 

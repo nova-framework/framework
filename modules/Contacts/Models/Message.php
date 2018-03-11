@@ -41,6 +41,14 @@ class Message extends BaseModel
     /**
      * @return \Nova\Database\ORM\Relations\HasMany
      */
+    public function fields()
+    {
+        return $this->hasMany('Modules\Contacts\Models\CustomField', 'message_id');
+    }
+
+    /**
+     * @return \Nova\Database\ORM\Relations\HasMany
+     */
     public function attachments()
     {
         return $this->hasMany('Modules\Contacts\Models\Attachment', 'message_id');

@@ -4,6 +4,7 @@ namespace Modules\Contacts\Database\Seeds;
 
 use Nova\Database\ORM\Model;
 use Nova\Database\Seeder;
+use Nova\Support\Facades\DB;
 
 
 class DatabaseSeeder extends Seeder
@@ -16,11 +17,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
         Model::unguard();
 
         //
         $this->call('Modules\Contacts\Database\Seeds\ContactsTableSeeder');
         $this->call('Modules\Contacts\Database\Seeds\PostsTableSeeder');
         $this->call('Modules\Contacts\Database\Seeds\PermissionsTableSeeder');
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

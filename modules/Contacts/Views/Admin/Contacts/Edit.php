@@ -18,7 +18,7 @@
         <h3 class="box-title"><?= __d('contacts', 'Create a new Contact'); ?></h3>
     </div>
     <div class="box-body">
-        <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
+        <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
 
         <div class="form-group">
             <label class="control-label" for="name"><?= __d('contacts', 'Name'); ?></label>
@@ -29,12 +29,12 @@
             <input name="email" id="email" type="text" class="form-control" value="<?= Input::old('email', $contact->email); ?>" placeholder="<?= __d('contacts', 'E-mail'); ?>">
         </div>
         <div class="form-group">
-            <label class="control-label" for="path"><?= __d('contacts', 'Paths'); ?></label>
-            <textarea name="path" id="path" class="form-control" rows="4" style="resize: none;" placeholder="<?= __d('contacts', 'Paths'); ?>"><?= Input::old('path', $contact->path); ?></textarea>
-        </div>
-        <div class="form-group">
             <label class="control-label" for="description"><?= __d('contacts', 'Description'); ?></label>
             <textarea name="description" id="description" class="form-control" rows="4" style="resize: none;" placeholder="<?= __d('contacts', 'Description'); ?>"><?= Input::old('description', $contact->description); ?></textarea>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="path"><?= __d('contacts', 'Paths'); ?></label>
+            <textarea name="path" id="path" class="form-control" rows="4" style="resize: none;" placeholder="<?= __d('contacts', 'Paths'); ?>"><?= Input::old('path', $contact->path); ?></textarea>
         </div>
 
         </div>

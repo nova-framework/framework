@@ -111,12 +111,7 @@ abstract class ActionHookDispatcher
      */
     protected function resolveCallback($callback)
     {
-        if (($callback instanceof Closure) || is_array($callback)) {
-            return $callback;
-        }
-
-        // If the callback is a string, we will try to resolve the class based ones.
-        else if (is_string($callback)) {
+        if (is_string($callback)) {
             if (strpos($callback, '@') === false) {
                 return $callback;
             }
@@ -126,6 +121,11 @@ abstract class ActionHookDispatcher
             $instance = App::make('\\' . $class);
 
             return array($instance, $method);
+        }
+
+        // The callback is not a string.
+        else if (($callback instanceof Closure) || is_array($callback)) {
+            return $callback;
         }
 
         return false;

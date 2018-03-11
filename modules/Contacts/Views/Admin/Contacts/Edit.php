@@ -25,12 +25,12 @@
             <input name="name" id="name" type="text" class="form-control" value="<?= Input::old('name', $contact->name); ?>" placeholder="<?= __d('contacts', 'Name'); ?>">
         </div>
         <div class="form-group">
-            <label class="control-label" for="email"><?= __d('contacts', 'E-mail'); ?></label>
-            <input name="email" id="email" type="text" class="form-control" value="<?= Input::old('email', $contact->email); ?>" placeholder="<?= __d('contacts', 'E-mail'); ?>">
-        </div>
-        <div class="form-group">
             <label class="control-label" for="description"><?= __d('contacts', 'Description'); ?></label>
             <textarea name="description" id="description" class="form-control" rows="4" style="resize: none;" placeholder="<?= __d('contacts', 'Description'); ?>"><?= Input::old('description', $contact->description); ?></textarea>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="email"><?= __d('contacts', 'E-mail'); ?></label>
+            <input name="email" id="email" type="text" class="form-control" value="<?= Input::old('email', $contact->email); ?>" placeholder="<?= __d('contacts', 'E-mail'); ?>">
         </div>
         <div class="form-group">
             <label class="control-label" for="path"><?= __d('contacts', 'Paths'); ?></label>

@@ -11,20 +11,6 @@ class Filter extends HookDispatcher
     /**
      * Filters a value
      *
-     * @return string Always returns the value
-     */
-    public function apply()
-    {
-        $parameters = func_get_args();
-
-        $action = array_shift($parameters);
-
-        return $this->fire($action, $parameters);
-    }
-
-    /**
-     * Filters a value
-     *
      * @param  string $action Name of filter
      * @param  array $arguments Arguments passed to the filter
      * @return string Always returns the value

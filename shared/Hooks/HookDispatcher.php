@@ -32,6 +32,20 @@ abstract class HookDispatcher
 
 
     /**
+     * Filters a value
+     *
+     * @return string Always returns the value
+     */
+    public function run()
+    {
+        $parameters = func_get_args();
+
+        $action = array_shift($parameters);
+
+        return $this->fire($action, $parameters);
+    }
+
+    /**
      * Adds a listener
      *
      * @param string $hook Hook name

@@ -9,20 +9,6 @@ class Action extends HookDispatcher
 {
 
     /**
-     * Run an action
-     *
-     * @return void
-     */
-    public function do()
-    {
-        $parameters = func_get_args();
-
-        $action = array_shift($parameters);
-
-        return $this->fire($action, $parameters);
-    }
-
-    /**
      * Fire an action
      *
      * @param  string  $action Name of action

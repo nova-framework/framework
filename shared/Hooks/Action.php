@@ -26,7 +26,9 @@ class Action extends HookDispatcher
         foreach ($listeners as $listener) {
             $parameters = array_slice($arguments, 0, (int) $listener['arguments']);
 
-            call_user_func_array($listener['callback'], $parameters);
+            $callback = $listener['callback'];
+
+            call_user_func_array($callback, $parameters);
         }
 
         array_pop($this->firing);

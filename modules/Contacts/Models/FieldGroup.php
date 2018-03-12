@@ -20,7 +20,7 @@ class FieldGroup extends BaseModel
     /**
      * @var array
      */
-    protected $fillable = array('title', 'order', 'hide_title');
+    protected $fillable = array('title', 'order', 'contact_id', 'created_by', 'updated_by');
 
     /**
      * @var array

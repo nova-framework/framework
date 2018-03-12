@@ -33,7 +33,7 @@ class ContactsTableSeeder extends Seeder
             'description' => 'The default site-wide Contact',
 
             //
-            'created_by'  => 0,
+            'created_by'  => 1,
         ));
     }
 }

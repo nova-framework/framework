@@ -24,6 +24,7 @@ class CreateContactFieldItemsTable extends Migration
             $table->string('title', 255);
             $table->string('slug', 255);
             $table->string('type', 100);
+            $table->string('rules', 255)->nullable();
             $table->integer('order')->default(0)->nullable();
             $table->text('options')->nullable();
 

@@ -55,18 +55,49 @@
             </div>
         </div>
     </div>
-    <div class="box-body <?= with($items = $group->fieldItems)->isEmpty() ? 'no-padding' : ''; ?>">
-    <?php if (! $items->isEmpty()) { ?>
-
-    <?php } else { ?>
+    <div class="box-body no-padding">
+        <?php $deletables = 0; ?>
+        <?php if (! $group->fieldItems->isEmpty()) { ?>
+        <table id="left" class="table table-striped table-hover responsive">
+            <tr class="bg-navy disabled">
+                <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'ID'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'Label'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'Name'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'Type'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'Order'); ?></th>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('roles', 'Rules'); ?></th>
+                <th style="text-align: right; vertical-align: middle;"><?= __d('roles', 'Operations'); ?></th>
+            </tr>
+            <?php foreach ($group->fieldItems as $item) { ?>
+            <tr>
+                <td style="text-align: center; vertical-align: middle;" width="5%"><?= $item->id; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="15%"><?= $item->title; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="10%"><?= $item->slug; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="10%"><?= $item->type; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="10%"><?= $item->order; ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="25%"><?= $item->rules ?: '-'; ?></td>
+                <td style="text-align: right; vertical-align: middle;" width="15%">
+                    <div class="btn-group" role="group" aria-label="...">
+                        <?php $deletables++; ?>
+                        <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $item->id; ?>" title="<?= __d('roles', 'Delete this Role'); ?>" role="button"><i class="fa fa-remove"></i></a>
+                        <a class="btn btn-sm btn-success" href="<?= site_url('admin/contacts/' .$group->id .'/field-items/' .$item->id .'/edit'); ?>" title="<?= __d('roles', 'Edit this Role'); ?>" role="button"><i class="fa fa-pencil"></i></a>
+                        <a class="btn btn-sm btn-warning" href="<?= site_url('admin/contacts/' .$group->id .'/field-items/' .$item->id); ?>" title="<?= __d('roles', 'Show the Details'); ?>" role="button"><i class="fa fa-search"></i></a>
+                    </div>
+                </td>
+            </tr>
+            <?php } ?>
+        </table>
+        <?php } else { ?>
         <div class="alert alert-warning" style="margin: 0 5px 5px;">
             <h4><i class="icon fa fa-warning"></i> <?= strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('contacts', 'No registered Fields'); ?></h4>
             <?= __d('contacts', 'There are no registered Fields for this Group.'); ?>
         </div>
-    <?php } ?>
+        <?php } ?>
     </div>
     <div class="box-footer">
-        <a class="btn btn-success col-sm-2 pull-right" href="#" data-toggle="modal" data-target="#modal-edit-field-dialog" data-groupid="<?= $group->id; ?>" data-id="0" data-title="<?= Input::old('field_title'); ?>" data-slug="<?= Input::old('field_slug'); ?>" data-type="<?= Input::old('field_type'); ?>" data-rules="<?= Input::old('field_rules'); ?>" data-order="<?= Input::old('field_order'); ?>" data-options="<?= Input::old('field_options'); ?>"><?= __d('contacts', 'Create a new Field Item'); ?></a>
+        <a class="btn btn-success col-sm-2 pull-right" href="<?= site_url('admin/contacts/' .$group->id .'/field-items/create'); ?>">
+            <?= __d('contacts', 'Create a new Field Item'); ?>
+        </a>
     </div>
 </div>
 
@@ -124,9 +155,9 @@
                     <div class="col-sm-3">
                         <select name="field_type" id="modal-edit-field-type" class="form-control select2" placeholder="" data-placeholder="<?= __d('contacts', 'Select a Type'); ?>" style="width: 100%;" autocomplete="off">
                             <option value="text"><?= __d('contacts', 'Text'); ?></option>
-                            <option value="email"><?= __d('contacts', 'Email'); ?></option>
                             <option value="password"><?= __d('contacts', 'Password'); ?></option>
                             <option value="textarea"><?= __d('contacts', 'Textarea'); ?></option>
+                            <option value="select"><?= __d('contacts', 'Select'); ?></option>
                             <option value="checkbox"><?= __d('contacts', 'Checkbox'); ?></option>
                             <option value="radio"><?= __d('contacts', 'Radio'); ?></option>
                             <option value="file"><?= __d('contacts', 'File'); ?></option>

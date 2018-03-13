@@ -38,6 +38,9 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
     Route::get( 'contacts/{id}/field-groups', array('middleware' => 'auth', 'uses' => 'FieldGroups@index'))->where('id', '\d+');
     Route::post('contacts/{id}/field-groups', array('middleware' => 'auth', 'uses' => 'FieldGroups@store'))->where('id', '\d+');
 
+    Route::get( 'contacts/{id}/field-items/create', array('middleware' => 'auth', 'uses' => 'FieldItems@create'))->where('id', '\d+');
+    Route::post('contacts/{id}/field-items',        array('middleware' => 'auth', 'uses' => 'FieldItems@store'))->where('id', '\d+');
+
     // The Contact Messages.
     Route::get('contacts/{id}/messages', array('middleware' => 'auth', 'uses' => 'Messages@index'))->where('id', '\d+');
 

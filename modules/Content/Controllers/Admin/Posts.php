@@ -406,6 +406,9 @@ class Posts extends BaseController
         // Fire the finishing event.
         Event::dispatch('content.post.updated', array($post, $creating));
 
+        // Update the edit lock.
+        $post->saveMeta('edit_lock', null);
+
         // Invalidate the content caches.
         $this->clearContentCache();
 

@@ -19,10 +19,8 @@ class CreateUserTokensTable extends Migration
             $table->increments('id');
             $table->string('email');
             $table->string('token', 100)->unique();
-
-            // Custom timestamps.
-            $table->timestamp('created_at')->default('0000-00-00 00:00:00');
-            $table->timestamp('updated_at')->default('0000-00-00 00:00:00');
+            
+            $table->timestamps();
         });
     }
 

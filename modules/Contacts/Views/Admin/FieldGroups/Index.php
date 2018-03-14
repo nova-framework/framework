@@ -163,7 +163,7 @@ $(function () {
         //
         $('#delete-field-group-id').val(id);
 
-        $('#modal-delete-group-form').attr('action', '<?= site_url("admin/contacts/field-groups"); ?>/' + id + '/destroy');
+        $('#modal-delete-group-form').attr('action', '<?= site_url("admin/contacts/{0}/field-groups", $contact->id); ?>/' + id + '/destroy');
     });
 });
 
@@ -197,7 +197,7 @@ $(function () {
 <script>
 
 $(function () {
-    $('#modal-delete-group-dialog').on('show.bs.modal', function (event) {
+    $('#modal-delete-item-dialog').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal
 
         var gid = button.data('group-id');
@@ -207,7 +207,7 @@ $(function () {
         //
         $('#delete-field-item-id').val(id);
 
-        $('#modal-delete-group-form').attr('action', '<?= site_url("admin/contacts/field-groups"); ?>/' + gid + '/items/' + id + '/destroy');
+        $('#modal-delete-item-form').attr('action', '<?= site_url("admin/contacts/field-groups"); ?>/' + gid + '/items/' + id + '/destroy');
     });
 });
 

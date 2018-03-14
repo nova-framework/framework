@@ -166,4 +166,43 @@ class FieldItems extends BaseController
         return Redirect::to($url)
             ->with('success', __d('contacts', 'The Field Item <b>{0}</b> was successfully created.', $item->title));
     }
+
+    public function destroy(Request $request, $groupId, $id)
+    {
+        try {
+            $group = FieldGroup::with('contact')->findOrFail($groupId);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::to('admin/contacts')->with('danger', __d('contacts', 'Field Group not found: #{0}', $groupId));
+        }
+
+        /*
+        // Authorize the current User for updating this Field Group instance.
+        if (Gate::denies('update', $group)) {
+            throw new AuthorizationException();
+        }
+        */
+
+        try {
+            $item = FieldItem::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::to('admin/contacts')->with('danger', __d('contacts', 'Field Item not found: #{0}', $id));
+        }
+
+        /*
+        // Authorize the current User for deleting this Field Item instance.
+        if (Gate::denies('delete', $item)) {
+            throw new AuthorizationException();
+        }
+        */
+
+        // Destroy the requested Field Item record.
+        $item->delete();
+
+        //
+        $url = site_url('admin/contacts/{0}/field-groups', $group->contact->id);
+
+        return Redirect::to($url)->with('success', __d('contacts', 'The Field Item was successfully deleted.'));
+    }
 }

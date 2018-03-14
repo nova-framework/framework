@@ -42,11 +42,11 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin', 'where' => $wher
     Route::post('contacts/{id}/destroy',  array('middleware' => 'auth', 'uses' => 'Contacts@destroy'));
 
     // The Field Groups and their Field Items.
-    Route::get( 'contacts/{id}/field-groups', array('middleware' => 'auth', 'uses' => 'FieldGroups@index'));
-    Route::post('contacts/{id}/field-groups', array('middleware' => 'auth', 'uses' => 'FieldGroups@store'));
+    Route::get( 'contacts/{cid}/field-groups', array('middleware' => 'auth', 'uses' => 'FieldGroups@index'));
+    Route::post('contacts/{cid}/field-groups', array('middleware' => 'auth', 'uses' => 'FieldGroups@store'));
 
-    Route::post('contacts/field-groups/{id}/update',  array('middleware' => 'auth', 'uses' => 'FieldGroups@update'));
-    Route::post('contacts/field-groups/{id}/destroy', array('middleware' => 'auth', 'uses' => 'FieldGroups@destroy'));
+    Route::post('contacts/{cid}/field-groups/{id}/update',  array('middleware' => 'auth', 'uses' => 'FieldGroups@update'));
+    Route::post('contacts/{cid}/field-groups/{id}/destroy', array('middleware' => 'auth', 'uses' => 'FieldGroups@destroy'));
 
     Route::get( 'contacts/field-groups/{gid}/items/create',       array('middleware' => 'auth', 'uses' => 'FieldItems@create'));
     Route::post('contacts/field-groups/{gid}/items',              array('middleware' => 'auth', 'uses' => 'FieldItems@store'));

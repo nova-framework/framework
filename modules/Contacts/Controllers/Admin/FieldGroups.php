@@ -108,7 +108,42 @@ class FieldGroups extends BaseController
             ->with('success', __d('contacts', 'The Field Group <b>{0}</b> was successfully created.', $title));
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, $contactId, $id)
     {
+        try {
+            $contact = Contact::findOrFail($contactId);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::to('admin/contacts')->with('danger', __d('contacts', 'Contact not found: #{0}', $contactId));
+        }
+
+        /*
+        // Authorize the current User for updating this Contact instance.
+        if (Gate::denies('update', $contact)) {
+            throw new AuthorizationException();
+        }
+        */
+
+        try {
+            $group = FieldGroup::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::to('admin/contacts')->with('danger', __d('contacts', 'Field Group not found: #{0}', $id));
+        }
+
+        /*
+        // Authorize the current User for deleting this Field Group instance.
+        if (Gate::denies('delete', $group)) {
+            throw new AuthorizationException();
+        }
+        */
+
+        // Destroy the requested Field Group record.
+        $group->delete();
+
+        //
+        $url = site_url('admin/contacts/{0}/field-groups', $contact->id);
+
+        return Redirect::to($url)->with('success', __d('contacts', 'The Field Group was successfully deleted.'));
     }
 }

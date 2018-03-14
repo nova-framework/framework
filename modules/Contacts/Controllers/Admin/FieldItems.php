@@ -23,9 +23,9 @@ class FieldItems extends BaseController
 
     protected function validator(array $data, FieldGroup $group, $id = null)
     {
-        $ignore = ! is_null($id) ? ':' .intval($id) : '';
-
         $types = array('text', 'password', 'textarea', 'select', 'checkbox', 'radio', 'file');
+
+        $ignore = ! is_null($id) ? ':' .intval($id) : '';
 
         // The Validation rules.
         $rules = array(
@@ -73,8 +73,8 @@ class FieldItems extends BaseController
         {
             $query = $group->fieldItems()->where('slug', $value);
 
-            if (! empty($parameters) && is_numeric($id = head($parameters)) && ((int) $id > 0)) {
-                $query->where('id', '!=', (int) $id);
+            if (! empty($parameters) && is_numeric($id = head($parameters))) {
+                $query->where('id', '!=', $id);
             }
 
             return ! $query->exists();

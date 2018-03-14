@@ -3,7 +3,7 @@
     <ol class="breadcrumb">
         <li><a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <?= __d('contacts', 'Dashboard'); ?></a></li>
         <li><a href="<?= site_url('admin/contacts'); ?>"><?= __d('contacts', 'Contacts'); ?></a></li>
-        <li><a href="<?= site_url('admin/contacts/' .$contact->id .'/field-groups'); ?>"><?= __d('contacts', 'Manage Fields : {0}', $contact->name); ?></a></li>
+        <li><a href="<?= site_url('admin/contacts/{0}/field-groups', $contact->id); ?>"><?= __d('contacts', 'Manage Fields : {0}', $contact->name); ?></a></li>
         <li><?= __d('contacts', 'Create Field Item'); ?></li>
     </ol>
 </section>
@@ -13,7 +13,7 @@
 
 <?= View::fetch('Partials/Messages'); ?>
 
-<form id="create-group-form" class="form-horizontal" action="<?= site_url('admin/contacts/' .$group->id .'/field-items'); ?>" method='POST' role="form">
+<form id="create-group-form" class="form-horizontal" action="<?= site_url('admin/contacts/field-groups/{0}/items/{1}', $group->id, $items->id); ?>" method='POST' role="form">
 
 <div class="box box-default">
     <div class="box-header with-border">
@@ -96,7 +96,7 @@
 
 </form>
 
-<a class="btn btn-primary col-sm-2" href="<?= site_url('admin/contacts/' .$contact->id .'/field-groups'); ?>"><?= __d('contacts', '<< Previous Page'); ?></a>
+<a class="btn btn-primary col-sm-2" href="<?= site_url('admin/contacts/{0}/field-groups', $contact->id); ?>"><?= __d('contacts', '<< Previous Page'); ?></a>
 
 <div class="clearfix"></div>
 <br>

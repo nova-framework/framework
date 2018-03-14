@@ -12,7 +12,7 @@
 
 <?= View::fetch('Partials/Messages'); ?>
 
-<form id="create-group-form" class="form-horizontal" action="<?= site_url('admin/contacts/' .$contact->id .'/field-groups'); ?>" method='POST' role="form">
+<form id="create-group-form" class="form-horizontal" action="<?= site_url('admin/contacts/{0}/field-groups', $contact->id); ?>" method='POST' role="form">
 
 <div class="box box-default">
     <div class="box-header with-border">
@@ -26,7 +26,7 @@
             </div>
             <label class="col-sm-1 control-label" for="title"><?= __d('contacts', 'Order'); ?></label>
             <div class="col-sm-1">
-                <input name="order" id="order" type="number" class="form-control" min="-100" max="100" value="<?= Input::old('order', 0); ?>">
+                <input name="order" id="order" type="number" class="form-control" min="-100" max="100" value="<?= Input::old('order', 0); ?>" style="padding: 6px 3px 6px 12px;">
             </div>
             <div class="col-sm-3" style="padding: 0;">
                 <input type="submit" name="submit"  class="btn btn-success col-sm-8 pull-right" value="<?= __d('contacts', 'Create a new Field Group'); ?>" />
@@ -42,21 +42,19 @@
 
 <?php if (! $contact->fieldGroups->isEmpty()) { ?>
 
-<?php foreach ($contact->fieldGroups as $group) { ?>
+<?php foreach ($contact->fieldGroups->sortBy('order') as $group) { ?>
 
 <div class="box box-default">
     <div class="box-header">
-        <h3 class="box-title"><?= __d('contacts', 'Field Group: <b>{0}</b>', $group->title); ?></h3>
+        <h3 class="box-title"><?= __d('contacts', 'Field Group : <b>{0}</b>', $group->title); ?></h3>
         <div class="box-tools">
             <div class="btn-group" role="group" aria-label="...">
-                <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-group-dialog" data-id="<?= $group->id; ?>" title="<?= __d('contacts', 'Delete this Fields Group'); ?>" role="button"><i class="fa fa-remove"></i></a>
+                <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-group-dialog" data-id="<?= $group->id; ?>" title="<?= __d('contacts', 'Delete this Fields Group'); ?>" role="button"><i class="fa fa-remove"></i> </a>
                 <a class="btn btn-sm btn-success" href="#" title="<?= __d('contacts', 'Edit this Fields Group'); ?>" role="button"><i class="fa fa-pencil"></i></a>
-                <a class="btn btn-sm btn-warning" href="#" title="<?= __d('contacts', 'View this Fields Group'); ?>" role="button"><i class="fa fa-search"></i></a>
             </div>
         </div>
     </div>
     <div class="box-body no-padding">
-        <?php $deletables = 0; ?>
         <?php if (! $group->fieldItems->isEmpty()) { ?>
         <table id="left" class="table table-striped table-hover responsive">
             <tr class="bg-navy disabled">
@@ -78,10 +76,9 @@
                 <td style="text-align: left; vertical-align: middle;" width="25%"><?= $item->rules ?: '-'; ?></td>
                 <td style="text-align: right; vertical-align: middle;" width="15%">
                     <div class="btn-group" role="group" aria-label="...">
-                        <?php $deletables++; ?>
-                        <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $item->id; ?>" title="<?= __d('roles', 'Delete this Role'); ?>" role="button"><i class="fa fa-remove"></i></a>
-                        <a class="btn btn-sm btn-success" href="<?= site_url('admin/contacts/' .$group->id .'/field-items/' .$item->id .'/edit'); ?>" title="<?= __d('roles', 'Edit this Role'); ?>" role="button"><i class="fa fa-pencil"></i></a>
-                        <a class="btn btn-sm btn-warning" href="<?= site_url('admin/contacts/' .$group->id .'/field-items/' .$item->id); ?>" title="<?= __d('roles', 'Show the Details'); ?>" role="button"><i class="fa fa-search"></i></a>
+                        <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-item-dialog" data-group-id="<?= $group->id; ?>" data-id="<?= $item->id; ?>" title="<?= __d('roles', 'Delete this Role'); ?>" role="button"><i class="fa fa-remove"></i></a>
+                        <a class="btn btn-sm btn-success" href="<?= site_url('admin/contacts/field-groups/{0}/items/{1}/edit', $group->id, $item->id); ?>" title="<?= __d('roles', 'Edit this Role'); ?>" role="button"><i class="fa fa-pencil"></i></a>
+                        <a class="btn btn-sm btn-warning" href="<?= site_url('admin/contacts/field-groups/{0}/items/{1}', $group->id, $item->id); ?>" title="<?= __d('roles', 'Show the Details'); ?>" role="button"><i class="fa fa-search"></i></a>
                     </div>
                 </td>
             </tr>
@@ -95,7 +92,10 @@
         <?php } ?>
     </div>
     <div class="box-footer">
-        <a class="btn btn-success col-sm-2 pull-right" href="<?= site_url('admin/contacts/' .$group->id .'/field-items/create'); ?>">
+        <div class="pull-left" style="padding: 7px 10px 0; 10px;">
+        <b class="text-muted"><?= __d('contacts', 'Group Order: {0}' , $group->order); ?></b>
+        </div>
+        <a class="btn btn-success col-sm-2 pull-right" href="<?= site_url('admin/contacts/field-groups/{0}/items/create', $group->id); ?>">
             <?= __d('contacts', 'Create a new Field Item'); ?>
         </a>
     </div>
@@ -127,10 +127,96 @@
 
 </section>
 
-<div class="modal modal-default" id="modal-edit-field-dialog" data-keyboard="false" data-backdrop="static">
+<div class="modal modal-default" id="modal-delete-group-dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-label="<?= __d('roles', 'Close'); ?>" data-dismiss="modal" class="close" type="button">
+                <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title"><?= __d('roles', 'Delete this Field Group?'); ?></h4>
+            </div>
+            <div class="modal-body">
+                <p><?= __d('roles', 'Are you sure you want to remove this Field Group, the operation being irreversible?'); ?></p>
+                <p><?= __d('roles', 'Please click the button <b>Delete</b> to proceed, or <b>Cancel</b> to abandon the operation.'); ?></p>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('roles', 'Cancel'); ?></button>
+                <form id="modal-delete-group-form" action="" method="POST">
+                    <input type="hidden" name="id" id="delete-field-group-id" value="0" />
+                    <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
+                    <input type="submit" name="button" class="btn btn btn-danger pull-right col-md-3" value="<?= __d('roles', 'Delete'); ?>">
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+
+<script>
+
+$(function () {
+    $('#modal-delete-group-dialog').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+
+        var id  = button.data('id');
+
+        //
+        $('#delete-field-group-id').val(id);
+
+        $('#modal-delete-group-form').attr('action', '<?= site_url("admin/contacts/field-groups"); ?>/' + id + '/destroy');
+    });
+});
+
+</script>
+
+<div class="modal modal-default" id="modal-delete-item-dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-label="<?= __d('roles', 'Close'); ?>" data-dismiss="modal" class="close" type="button">
+                <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title"><?= __d('roles', 'Delete this Field Item?'); ?></h4>
+            </div>
+            <div class="modal-body">
+                <p><?= __d('roles', 'Are you sure you want to remove this Field Item, the operation being irreversible?'); ?></p>
+                <p><?= __d('roles', 'Please click the button <b>Delete</b> to proceed, or <b>Cancel</b> to abandon the operation.'); ?></p>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('roles', 'Cancel'); ?></button>
+                <form id="modal-delete-item-form" action="" method="POST">
+                    <input type="hidden" name="id" id="delete-field-item-id" value="0" />
+                    <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
+                    <input type="submit" name="button" class="btn btn btn-danger pull-right col-md-3" value="<?= __d('roles', 'Delete'); ?>">
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+
+<script>
+
+$(function () {
+    $('#modal-delete-group-dialog').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+
+        var gid = button.data('group-id');
+
+        var id  = button.data('id');
+
+        //
+        $('#delete-field-item-id').val(id);
+
+        $('#modal-delete-group-form').attr('action', '<?= site_url("admin/contacts/field-groups"); ?>/' + gid + '/items/' + id + '/destroy');
+    });
+});
+
+</script>
+
+<div class="modal modal-default" id="modal-edit-dialog" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form id="modal-edit-field-form" class="form-horizontal" action="" method='POST' role="form">
+            <form id="modal-edit-form" class="form-horizontal" action="" method='POST' role="form">
 
             <div class="modal-header" style="padding: 10px;">
                 <button aria-label="<?= __d('records', 'Close'); ?>" data-dismiss="modal" class="close" type="button">
@@ -141,19 +227,19 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="field_title"><?= __d('contacts', 'Label'); ?> <font color="#CC0000">*</font></label>
                     <div class="col-sm-9">
-                        <input name="field_title" id="modal-edit-field-title" type="text" class="form-control" value="" placeholder="<?= __d('contacts', 'Label'); ?>">
+                        <input name="field_title" id="modal-edit-title" type="text" class="form-control" value="" placeholder="<?= __d('contacts', 'Label'); ?>">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="field_slug"><?= __d('contacts', 'Name'); ?> <font color="#CC0000">*</font></label>
                     <div class="col-sm-9">
-                        <input name="field_slug" id="modal-edit-field-slug" type="text" class="form-control" value="" placeholder="<?= __d('contacts', 'Name'); ?>">
+                        <input name="field_slug" id="modal-edit-slug" type="text" class="form-control" value="" placeholder="<?= __d('contacts', 'Name'); ?>">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="field_type"><?= __d('contacts', 'Type'); ?> <font color="#CC0000">*</font></label>
                     <div class="col-sm-3">
-                        <select name="field_type" id="modal-edit-field-type" class="form-control select2" placeholder="" data-placeholder="<?= __d('contacts', 'Select a Type'); ?>" style="width: 100%;" autocomplete="off">
+                        <select name="field_type" id="modal-edit-type" class="form-control select2" placeholder="" data-placeholder="<?= __d('contacts', 'Select a Type'); ?>" style="width: 100%;" autocomplete="off">
                             <option value="text"><?= __d('contacts', 'Text'); ?></option>
                             <option value="password"><?= __d('contacts', 'Password'); ?></option>
                             <option value="textarea"><?= __d('contacts', 'Textarea'); ?></option>
@@ -167,7 +253,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="field_default"><?= __d('contacts', 'Default Value'); ?></label>
                     <div class="col-sm-9">
-                        <input name="field_default" id="modal-edit-field-default" type="text" class="form-control" value="" placeholder="<?= __d('contacts', 'Default Value'); ?>">
+                        <input name="field_default" id="modal-edit-default" type="text" class="form-control" value="" placeholder="<?= __d('contacts', 'Default Value'); ?>">
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -181,13 +267,13 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="field_options"><?= __d('contacts', 'Options'); ?></label>
                     <div class="col-sm-9">
-                        <textarea name="field_options" id="modal-edit-field-options" class="form-control" style="resize: none;" rows="5" placeholder="<?= __d('contacts', 'Options'); ?>"></textarea>
+                        <textarea name="field_options" id="modal-edit-options" class="form-control" style="resize: none;" rows="5" placeholder="<?= __d('contacts', 'Options'); ?>"></textarea>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="field_rules"><?= __d('contacts', 'Rules'); ?></label>
                     <div class="col-sm-9">
-                        <input name="field_rules" id="modal-edit-field-rules" type="text" class="form-control" value="" placeholder="<?= __d('contacts', 'Validation Rules'); ?>">
+                        <input name="field_rules" id="modal-edit-rules" type="text" class="form-control" value="" placeholder="<?= __d('contacts', 'Validation Rules'); ?>">
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -212,14 +298,14 @@
 <script>
 
 $(function () {
-    $('#modal-edit-field-dialog').on('show.bs.modal', function (event) {
+    $('#modal-edit-dialog').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal
 
         var groupId = button.data('groupid');
 
         var id = button.data('id');
 
-        var action = '<?= site_url("admin/contacts/" .$contact->id .'/field-groups'); ?>/' + groupId + '/items';
+        var action = '<?= site_url("admin/contacts/{0}/field-groups", $contact->id); ?>/' + groupId + '/items';
 
         var title   = button.data('title');
         var slug    = button.data('slug');
@@ -228,14 +314,14 @@ $(function () {
         var order   = button.data('order');
         var options = button.data('options');
 
-        $('#modal-edit-field-title').val(title);
-        $('#modal-edit-field-slug').val(slug);
+        $('#modal-edit-title').val(title);
+        $('#modal-edit-slug').val(slug);
 
-        $('#modal-edit-field-type').val(type).trigger('change');
+        $('#modal-edit-type').val(type).trigger('change');
 
-        $('#modal-edit-field-rules').val(rules);
-        $('#modal-edit-field-order').val(order);
-        $('#modal-edit-field-options').val(options);
+        $('#modal-edit-rules').val(rules);
+        $('#modal-edit-order').val(order);
+        $('#modal-edit-options').val(options);
 
         if (isNaN(id = parseInt(id, 10))) {
             //
@@ -243,13 +329,13 @@ $(function () {
             // Adjust the dialog title.
             var title = sprintf("<?= __d('contacts', 'Edit the Custom Field <b>#%d</b>'); ?>", id);
 
-            $('.modal-edit-field-title').html(title);
+            $('.modal-edit-title').html(title);
 
             // Adjust the form action.
             action += '/' + id;
         }
 
-        $('#modal-edit-field-form').attr('action', action);
+        $('#modal-edit-form').attr('action', action);
     });
 
     $("#modal-edit-dialog").on('hidden.bs.modal', function () {

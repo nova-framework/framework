@@ -105,4 +105,8 @@ class FieldGroups extends BaseController
         return Redirect::to('admin/contacts/' .$contact->id .'/field-groups')
             ->with('success', __d('contacts', 'The Field Group <b>{0}</b> was successfully created.', $title));
     }
+
+    public function destroy(Request $request, $id)
+    {
+    }
 }

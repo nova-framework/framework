@@ -23,37 +23,41 @@ Route::get('contacts/{method}/{token}/{filename}', array(
     ),
 ));
 
+// The administration group's wheres.
+$wheres = array(
+    'id'  => '\d+',
+    'cid' => '\d+',
+    'gid' => '\d+'
+);
 
 // The Adminstration Routes.
-Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
+Route::group(array('prefix' => 'admin', 'namespace' => 'Admin', 'where' => $wheres), function ()
 {
     Route::get( 'contacts',               array('middleware' => 'auth', 'uses' => 'Contacts@index'));
     Route::get( 'contacts/create',        array('middleware' => 'auth', 'uses' => 'Contacts@create'));
     Route::post('contacts',               array('middleware' => 'auth', 'uses' => 'Contacts@store'));
-    Route::get( 'contacts/{id}',          array('middleware' => 'auth', 'uses' => 'Contacts@show'))->where('id', '\d+');
-    Route::get( 'contacts/{id}/edit',     array('middleware' => 'auth', 'uses' => 'Contacts@edit'))->where('id', '\d+');
-    Route::post('contacts/{id}',          array('middleware' => 'auth', 'uses' => 'Contacts@update'))->where('id', '\d+');
-    Route::post('contacts/{id}/destroy',  array('middleware' => 'auth', 'uses' => 'Contacts@destroy'))->where('id', '\d+');
+    Route::get( 'contacts/{id}',          array('middleware' => 'auth', 'uses' => 'Contacts@show'));
+    Route::get( 'contacts/{id}/edit',     array('middleware' => 'auth', 'uses' => 'Contacts@edit'));
+    Route::post('contacts/{id}',          array('middleware' => 'auth', 'uses' => 'Contacts@update'));
+    Route::post('contacts/{id}/destroy',  array('middleware' => 'auth', 'uses' => 'Contacts@destroy'));
 
-    Route::get( 'contacts/{id}/field-groups', array('middleware' => 'auth', 'uses' => 'FieldGroups@index'))->where('id', '\d+');
-    Route::post('contacts/{id}/field-groups', array('middleware' => 'auth', 'uses' => 'FieldGroups@store'))->where('id', '\d+');
+    // The Field Groups and their Field Items.
+    Route::get( 'contacts/{id}/field-groups', array('middleware' => 'auth', 'uses' => 'FieldGroups@index'));
+    Route::post('contacts/{id}/field-groups', array('middleware' => 'auth', 'uses' => 'FieldGroups@store'));
 
-    Route::get( 'contacts/{id}/field-items/create', array('middleware' => 'auth', 'uses' => 'FieldItems@create'))->where('id', '\d+');
-    Route::post('contacts/{id}/field-items',        array('middleware' => 'auth', 'uses' => 'FieldItems@store'))->where('id', '\d+');
+    Route::post('contacts/field-groups/{id}/update',  array('middleware' => 'auth', 'uses' => 'FieldGroups@update'));
+    Route::post('contacts/field-groups/{id}/destroy', array('middleware' => 'auth', 'uses' => 'FieldGroups@destroy'));
+
+    Route::get( 'contacts/field-groups/{gid}/items/create',       array('middleware' => 'auth', 'uses' => 'FieldItems@create'));
+    Route::post('contacts/field-groups/{gid}/items',              array('middleware' => 'auth', 'uses' => 'FieldItems@store'));
+    Route::get( 'contacts/field-groups/{gid}/items/{id}/edit',    array('middleware' => 'auth', 'uses' => 'FieldItems@edit'));
+    Route::post('contacts/field-groups/{gid}/items/{id}',         array('middleware' => 'auth', 'uses' => 'FieldItems@update'));
+    Route::post('contacts/field-groups/{gid}/items/{id}/destroy', array('middleware' => 'auth', 'uses' => 'FieldItems@destroy'));
 
     // The Contact Messages.
-    Route::get('contacts/{id}/messages', array('middleware' => 'auth', 'uses' => 'Messages@index'))->where('id', '\d+');
+    Route::get( 'contacts/{cid}/messages',        array('middleware' => 'auth', 'uses' => 'Messages@index'));
+    Route::get( 'contacts/{cid}/messages/search', array('middleware' => 'auth', 'uses' => 'Messages@search'));
 
-    Route::get('contacts/{id}/messages/search', array('middleware' => 'auth', 'uses' => 'Messages@search'))
-        ->where('id', '\d+');
-
-    Route::get('contacts/{cid}/messages/{mid}', array('middleware' => 'auth', 'uses' => 'Messages@show'))
-        ->where('cid', '\d+')
-        ->where('mid', '\d+');
-
-    Route::post('contacts/{contactId}/messages/{id}', array('middleware' => 'auth', 'uses' => 'Messages@destroy'))
-        ->where('contactId', '\d+')
-        ->where('id', '\d+');
-
-    Route::get( 'contacts/sample', array('middleware' => 'auth', 'uses' => 'Contacts@sample'));
+    Route::get( 'contacts/{cid}/messages/{id}',   array('middleware' => 'auth', 'uses' => 'Messages@show'));
+    Route::post('contacts/{cid}/messages/{id}',   array('middleware' => 'auth', 'uses' => 'Messages@destroy'));
 });

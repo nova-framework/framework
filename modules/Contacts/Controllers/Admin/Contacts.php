@@ -143,6 +143,7 @@ class Contacts extends BaseController
         // Destroy the requested Contact record.
         $contact->delete();
 
-        return Redirect::to('admin/contacts')->with('success', __d('contacts', 'The Contact was successfully deleted.'));
+        return Redirect::to('admin/contacts')
+            ->with('success', __d('contacts', 'The Contact was successfully deleted.'));
     }
 }

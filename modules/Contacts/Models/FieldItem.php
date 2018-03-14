@@ -30,4 +30,30 @@ class FieldItem extends BaseModel
     {
         return $this->belongsTo('Modules\Contacts\Models\FieldGroup', 'field_group_id');
     }
+
+    /**
+     * @return \Nova\Database\ORM\Relations\HasMany
+     */
+    public function fields()
+    {
+        return $this->hasMany('Modules\Contacts\Models\CustomField', 'field_item_id');
+    }
+
+    /**
+     * Listen to ORM events.
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function (FieldItem $model)
+        {
+            $model->load('fields');
+
+            $model->fields->each(function ($field)
+            {
+                $field->delete();
+            });
+        });
+    }
 }

@@ -43,4 +43,22 @@ class FieldGroup extends BaseModel
     {
         return $this->hasMany('Modules\Contacts\Models\FieldItem', 'field_group_id');
     }
+
+    /**
+     * Listen to ORM events.
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function (FieldGroup $model)
+        {
+            $model->load('fieldItems');
+
+            $model->fieldItems->each(function ($item)
+            {
+                $item->delete();
+            });
+        });
+    }
 }

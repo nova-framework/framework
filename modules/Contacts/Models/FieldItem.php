@@ -56,4 +56,32 @@ class FieldItem extends BaseModel
             });
         });
     }
+
+    /**
+     * @param  mixed  $value
+     * @return mixed
+     */
+    public function getOptionsAttribute($value)
+    {
+        if (is_string($value) && ! empty($value)) {
+            $data = json_decode($value, true);
+
+            return (json_last_error() === JSON_ERROR_NONE) ? $data : $value;
+        }
+
+        return $value;
+    }
+
+    /**
+     * @param  mixed  $value
+     * @return void
+     */
+    public function setOptionsAttribute($value)
+    {
+        if (is_array($value) || is_object($value)) {
+            $value = json_encode($value);
+        }
+
+        $this->attributes['value'] = $value;
+    }
 }

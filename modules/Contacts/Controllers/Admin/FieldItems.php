@@ -136,31 +136,31 @@ class FieldItems extends BaseController
 
         // Handle the Text and Password inputs.
         if (($type == 'text') || ($type == 'password')) {
-            $options = json_encode(array(
+            $options = array(
                 'default' => $input['field_default']
-            ));
+            );
         }
 
         // Handle the Textarea fields.
         else if ($type == 'textarea') {
-            $options = json_encode(array(
+            $options = array(
                 'rows' => $input['field_rows']
-            ));
+            );
         }
 
         // Handle the Select fields.
         else if ($type == 'select') {
-            $options = json_encode(array(
+            $options = array(
                 'default' => $input['field_default'],
                 'choices' => $input['field_choices']
-            ));
+            );
         }
 
         // Handle the Checkbox and Radio buttons.
         else if (($type == 'checkbox') || ($type == 'radio')) {
-            $options = json_encode(array(
+            $options = array(
                 'choices' => $input['field_choices']
-            ));
+            );
         }
 
         // Handle the File uploads.

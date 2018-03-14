@@ -82,6 +82,6 @@ class FieldItem extends BaseModel
             $value = json_encode($value);
         }
 
-        $this->attributes['value'] = $value;
+        $this->attributes['options'] = $value;
     }
 }

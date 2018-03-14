@@ -50,6 +50,7 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin', 'where' => $wher
 
     Route::get( 'contacts/field-groups/{gid}/items/create',       array('middleware' => 'auth', 'uses' => 'FieldItems@create'));
     Route::post('contacts/field-groups/{gid}/items',              array('middleware' => 'auth', 'uses' => 'FieldItems@store'));
+    Route::get( 'contacts/field-groups/{gid}/items/{id}',         array('middleware' => 'auth', 'uses' => 'FieldItems@show'));
     Route::get( 'contacts/field-groups/{gid}/items/{id}/edit',    array('middleware' => 'auth', 'uses' => 'FieldItems@edit'));
     Route::post('contacts/field-groups/{gid}/items/{id}',         array('middleware' => 'auth', 'uses' => 'FieldItems@update'));
     Route::post('contacts/field-groups/{gid}/items/{id}/destroy', array('middleware' => 'auth', 'uses' => 'FieldItems@destroy'));

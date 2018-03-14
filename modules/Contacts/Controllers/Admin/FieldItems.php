@@ -161,7 +161,9 @@ class FieldItems extends BaseController
             'field_group_id' => $group->id,
         ));
 
-        return Redirect::url('admin/contacts/{0}/field-groups', $group->contact->id)
+        $url = site_url('admin/contacts/{0}/field-groups', $group->contact->id);
+
+        return Redirect::to($url)
             ->with('success', __d('contacts', 'The Field Item <b>{0}</b> was successfully created.', $item->title));
     }
 }

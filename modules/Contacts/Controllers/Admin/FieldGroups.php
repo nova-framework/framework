@@ -102,7 +102,9 @@ class FieldGroups extends BaseController
             'created_by' => Auth::id(),
         ));
 
-        return Redirect::url('admin/contacts/{0}/field-groups', $contact->id)
+        $url = site_url('admin/contacts/{0}/field-groups', $contact->id);
+
+        return Redirect::to($url)
             ->with('success', __d('contacts', 'The Field Group <b>{0}</b> was successfully created.', $title));
     }
 

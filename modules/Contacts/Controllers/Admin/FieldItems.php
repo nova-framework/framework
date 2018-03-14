@@ -134,15 +134,37 @@ class FieldItems extends BaseController
 
         $type = $input['field_type'];
 
+        // Handle the Text and Password inputs.
         if (($type == 'text') || ($type == 'password')) {
-            $options = array('default' => $input['field_default']);
-        } else if ($type == 'textarea') {
-            $options = array('rows' => $input['field_rows']);
-        } else if ($type == 'select') {
-            $options = array('default' => $input['field_default'], 'choices' => $input['field_choices']);
-        } else if (($type == 'checkbox') || ($type == 'radio')) {
-            $options = array('choices' => $input['field_choices']);
-        } else if ($type == 'file') {
+            $options = json_encode(array(
+                'default' => $input['field_default']
+            ));
+        }
+
+        // Handle the Textarea fields.
+        else if ($type == 'textarea') {
+            $options = json_encode(array(
+                'rows' => $input['field_rows']
+            ));
+        }
+
+        // Handle the Select fields.
+        else if ($type == 'select') {
+            $options = json_encode(array(
+                'default' => $input['field_default'],
+                'choices' => $input['field_choices']
+            ));
+        }
+
+        // Handle the Checkbox and Radio buttons.
+        else if (($type == 'checkbox') || ($type == 'radio')) {
+            $options = json_encode(array(
+                'choices' => $input['field_choices']
+            ));
+        }
+
+        // Handle the File uploads.
+        else if ($type == 'file') {
             $options = null;
         }
 
@@ -153,11 +175,9 @@ class FieldItems extends BaseController
             'type'    => $input['field_type'],
             'order'   => $input['field_order'],
             'rules'   => $input['field_rules'],
+            'options' => $options,
 
-            //
-            'options' => is_array($options) ? json_encode($options) : null,
-
-            //
+            // Resolve the fieldGroup relationship.
             'field_group_id' => $group->id,
         ));
 

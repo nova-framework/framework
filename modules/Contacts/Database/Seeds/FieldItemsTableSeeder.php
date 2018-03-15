@@ -27,7 +27,7 @@ class FieldItemsTableSeeder extends Seeder
         $item = FieldItem::create(array(
             'id'          => 1,
             'title'       => 'Name',
-            'slug'        => 'name',
+            'name'        => 'author',
             'type'        => 'text',
             'order'       => 0,
             'rules'       => 'required|valid_name',
@@ -37,15 +37,13 @@ class FieldItemsTableSeeder extends Seeder
             ),
 
             'field_group_id' => 1,
-
-            //
-            'created_by'  => 1,
+            'created_by'     => 1,
         ));
 
         $item = FieldItem::create(array(
             'id'          => 2,
             'title'       => 'E-mail Address',
-            'slug'        => 'email',
+            'name'        => 'author_email',
             'type'        => 'text',
             'order'       => 1,
             'rules'       => 'required|email',
@@ -55,15 +53,13 @@ class FieldItemsTableSeeder extends Seeder
             ),
 
             'field_group_id' => 1,
-
-            //
-            'created_by'  => 1,
+            'created_by'     => 1,
         ));
 
         $item = FieldItem::create(array(
             'id'          => 3,
             'title'       => 'Website',
-            'slug'        => 'website',
+            'name'        => 'author_url',
             'type'        => 'text',
             'order'       => 2,
             'rules'       => 'sometimes|required|url',
@@ -73,43 +69,38 @@ class FieldItemsTableSeeder extends Seeder
             ),
 
             'field_group_id' => 1,
-
-            //
-            'created_by'  => 1,
+            'created_by'     => 1,
         ));
 
         $item = FieldItem::create(array(
             'id'          => 4,
             'title'       => 'Message',
-            'slug'        => 'message',
+            'name'        => 'message',
             'type'        => 'textarea',
             'order'       => 3,
             'rules'       => 'required|valid_text',
 
             'options'     => array(
-                'rows' => 5,
+                'rows' => 10,
             ),
 
             'field_group_id' => 1,
-
-            //
-            'created_by'  => 1,
+            'created_by'     => 1,
         ));
 
         $item = FieldItem::create(array(
             'id'          => 5,
             'title'       => 'Attachment',
-            'slug'        => 'attachment',
+            'name'        => 'attachment',
             'type'        => 'file',
             'order'       => 4,
             'rules'       => 'max:10240|mimes:zip,rar,pdf,png,jpg,jpeg,doc,docx',
 
             'options'     => null,
 
-            'field_group_id' => 1,
-
             //
-            'created_by'  => 1,
+            'field_group_id' => 1,
+            'created_by'     => 1,
         ));
     }
 }

@@ -22,7 +22,7 @@ class CreateContactFieldItemsTable extends Migration
 
             $table->integer('field_group_id')->unsigned();
             $table->string('title', 255);
-            $table->string('slug', 255);
+            $table->string('name', 255);
             $table->string('type', 100);
             $table->integer('order')->default(0)->nullable();
             $table->string('rules', 255)->nullable();

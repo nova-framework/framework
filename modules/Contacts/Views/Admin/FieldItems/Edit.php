@@ -31,7 +31,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="field_name"><?= __d('contacts', 'Name'); ?> <font color="#CC0000">*</font></label>
                     <div class="col-sm-9">
-                        <input name="field_name" id="field-name" type="text" class="form-control" value="<?= Input::old('field_name', $item->slug); ?>" placeholder="<?= __d('contacts', 'Name'); ?>">
+                        <input name="field_name" id="field-name" type="text" class="form-control" value="<?= Input::old('field_name', $item->name); ?>" placeholder="<?= __d('contacts', 'Name'); ?>">
                     </div>
                 </div>
                 <div class="form-group">

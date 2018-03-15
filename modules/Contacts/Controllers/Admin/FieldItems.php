@@ -72,7 +72,7 @@ class FieldItems extends BaseController
 
         $validator->addExtension('valid_name', function($attribute, $value, $parameters) use ($group)
         {
-            $query = $group->fieldItems()->where('slug', $value);
+            $query = $group->fieldItems()->where('name', $value);
 
             if (! empty($parameters) && is_numeric($id = head($parameters))) {
                 $query->where('id', '!=', $id);
@@ -177,7 +177,7 @@ class FieldItems extends BaseController
         // Create a Field Item Model instance.
         $item = FieldItem::create(array(
             'title'   => $input['field_title'],
-            'slug'    => $input['field_name'],
+            'name'    => $input['field_name'],
             'type'    => $input['field_type'],
             'order'   => $input['field_order'],
             'rules'   => $input['field_rules'],
@@ -378,7 +378,7 @@ class FieldItems extends BaseController
 
         // Update a Field Item Model instance.
         $item->title = $input['field_title'];
-        $item->slug  = $input['field_name'];
+        $item->name  = $input['field_name'];
         $item->type  = $input['field_type'];
         $item->order = $input['field_order'];
         $item->rules = $input['field_rules'];

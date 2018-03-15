@@ -70,7 +70,7 @@
             <tr>
                 <td style="text-align: center; vertical-align: middle;" width="5%"><?= $item->id; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="15%"><?= $item->title; ?></td>
-                <td style="text-align: center; vertical-align: middle;" width="10%"><?= $item->slug; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="10%"><?= $item->name; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="10%"><?= $item->type; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="10%"><?= $item->order; ?></td>
                 <td style="text-align: left; vertical-align: middle;" width="25%"><?= $item->rules ?: '-'; ?></td>

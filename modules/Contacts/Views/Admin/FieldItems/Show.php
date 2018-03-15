@@ -33,7 +33,7 @@
             </tr>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Name'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $item->slug; ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $item->name; ?></td>
             </tr>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Type'); ?></th>

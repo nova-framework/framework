@@ -1,79 +1,55 @@
-<h3><?= __d('contacts', 'Contact Form'); ?></h3>
-<hr>
-
 <form action="<?= site_url('contacts'); ?>" method="POST" enctype="multipart/form-data">
 
 <div class="col-md-6 col-md-offset-1" style="margin-bottom: 50px;">
-    <div class="form-group<?= $errors->has('contact_author') ? ' has-error' : ''; ?>">
+
+<?php foreach ($contact->fieldGroups->sortBy('order') as $group) { ?>
+    <h3><?= $group->title; ?></h3>
+    <hr>
+
+    <?php foreach ($group->fieldItems->sortBy('order') as $item) { ?>
+        <?php $type = $item->type; ?>
+        <?php $name = 'contact_' .$item->name; ?>
+        <?php $id = 'contact-form-' .str_replace('_', '-', $item->name); ?>
+        <?php $required = Str::contains($item->rules, 'required'); ?>
+        <?php $options = $item->options ?: array(); ?>
+
+    <div class="form-group<?= $errors->has($name) ? ' has-error' : ''; ?>">
         <label class="control-label" for="contact_author">
-            <?= __d('contacts', 'Name'); ?> <span class="text-danger" title="<?= __d('contacts', 'Required field'); ?>">*</span>
-        </label>
-        <input type="text" class="form-control" name="contact_author" id="contact-form-author" value="<?= Input::old('contact_author'); ?>" placeholder="<?= __d('contacts', 'Name'); ?>" />
-        <div class="clearfix"></div>
-        <?php if ($errors->has('contact_author')) { ?>
-        <span class="help-block">
-            <?= $errors->first('contact_author'); ?>
-        </span>
-        <?php } ?>
-    </div>
-    <div class="form-group<?= $errors->has('contact_author_email') ? ' has-error' : ''; ?>">
-        <label class="control-label" for="contact_author_email">
-            <?= __d('contacts', 'E-mail Address'); ?> <span class="text-danger" title="<?= __d('contacts', 'Required field'); ?>">*</span>
-        </label>
-        <input type="text" class="form-control" name="contact_author_email" id="contact-form-author-email" value="<?= Input::old('contact_author_email'); ?>" placeholder="<?= __d('contacts', 'E-mail Address'); ?>" />
-        <div class="clearfix"></div>
-        <?php if ($errors->has('contact_author_email')) { ?>
-        <span class="help-block">
-            <?= $errors->first('contact_author_email'); ?>
-        </span>
-        <?php } ?>
-    </div>
-    <div class="form-group<?= $errors->has('contact_subject') ? ' has-error' : ''; ?>">
-        <label class="control-label" for="contact_subject">
-            <?= __d('contacts', 'Subject'); ?> <span class="text-danger" title="<?= __d('contacts', 'Required field'); ?>">*</span>
-        </label>
-        <input type="text" class="form-control" name="contact_subject" id="contact-form-subject" value="<?= Input::old('contact_subject'); ?>" placeholder="<?= __d('contacts', 'Subject'); ?>" />
-        <div class="clearfix"></div>
-        <?php if ($errors->has('contact_subject')) { ?>
-        <span class="help-block">
-            <?= $errors->first('contact_subject'); ?>
-        </span>
-        <?php } ?>
-    </div>
-    <div class="form-group<?= $errors->has('contact_content') ? ' has-error' : '' ?>">
-        <label class="control-label" for="contact_content">
-            <?= __d('contacts', 'Message'); ?> <span class="text-danger" title="<?= __d('contacts', 'Required field'); ?>">*</span>
+            <?= $item->title; ?>
+            <?php if ($required) { ?>
+            <span class="text-danger" title="<?= __d('contacts', 'Required field'); ?>">*</span>
+            <?php } ?>
         </label>
         <div class="clearfix"></div>
+
+        <?php if ($type == 'text') { ?>
+        <input type="text" class="form-control" name="<?= $name; ?>" id="<?= $id; ?>" value="<?= Input::old($name, array_get($options, 'default')); ?>" placeholder="<?= $item->title; ?>" />
+        <?php } else if ($type == 'password') { ?>
+        <input type="password" class="form-control" name="<?= $name; ?>" id="<?= $id; ?>" value="<?= Input::old($name); ?>" placeholder="<?= $item->title; ?>" />
+        <?php } else if ($type == 'textarea') { ?>
         <div class="col-sm-12" style="padding: 0;">
-            <textarea name="contact_content" id="contact-form-content" rows="10" class="form-control" style="resize: none;" placeholder="<?= __d('contacts', 'Message'); ?>"><?= Input::old('contact_content'); ?></textarea>
+            <textarea name="<?= $name; ?>" id="<?= $id; ?>" rows="<?= array_get($options, 'rows', 10); ?>" class="form-control" style="resize: none;" placeholder="<?= $item->title; ?>"><?= Input::old($name); ?></textarea>
         </div>
-        <div class="clearfix"></div>
-        <?php if ($errors->has('contact_content')) { ?>
-        <span class="help-block">
-            <?= $errors->first('contact_content'); ?>
-        </span>
-        <?php } ?>
-    </div>
-    <div class="form-group<?= $errors->has('contact_attachment') ? ' has-error' : '' ?>">
-        <label class="control-label" for="contact_attachment">
-            <?= __d('contacts', 'Attachments'); ?>
-        </label>
+        <?php } else if ($type == 'file') { ?>
         <div class="input-group">
             <input type="text" class="form-control" readonly>
             <label class="input-group-btn">
-                <span class="btn btn-<?= $errors->has('contact_attachment') ? 'danger' : 'default' ?>">
-                    <?= __d('contacts', 'Browse ...'); ?> <input type="file" name="contact_attachment[]" style="display: none;" multiple>
+                <span class="btn btn-<?= $errors->has($name) ? 'danger' : 'default' ?>">
+                    <?= __d('contacts', 'Browse ...'); ?> <input type="file" name="<?= $name; ?>" style="display: none;">
                 </span>
             </label>
         </div>
-        <div class="clearfix"></div>
-        <?php if ($errors->has('contact_attachment')) { ?>
+        <?php } ?>
+        <?php if ($errors->has($name)) { ?>
         <span class="help-block">
-            <?= $errors->first('contact_attachment'); ?>
+            <?= $errors->first($name); ?>
         </span>
         <?php } ?>
     </div>
+
+    <?php } ?>
+<?php } ?>
+
     <?php $captchaEnabled = ! Auth::check() && (Config::get('reCaptcha.active') === true); ?>
     <?php if ($captchaEnabled) { ?>
     <div style="width: 304px; margin: 0 auto; display: block;">

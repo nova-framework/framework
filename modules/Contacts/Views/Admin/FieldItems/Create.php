@@ -72,7 +72,7 @@
                 <div class="form-group" id="rows-form-group" style="display: none;">
                     <label class="col-sm-3 control-label" for="field_rows"><?= __d('contacts', 'Rows'); ?></label>
                     <div class="col-sm-3">
-                        <input name="field_rows" id="field_rows" type="number" class="form-control" min="1" max="100" value="<?= Input::old('field_rows', 5); ?>" style="padding: 6px 3px 6px 12px;" autocomplete="off">
+                        <input name="field_rows" id="field_rows" type="number" class="form-control" min="1" max="100" value="<?= Input::old('field_rows', 10); ?>" style="padding: 6px 3px 6px 12px;" autocomplete="off">
                     </div>
                 </div>
                 <div class="form-group">

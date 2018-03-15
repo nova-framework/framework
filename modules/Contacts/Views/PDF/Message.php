@@ -107,12 +107,8 @@ foreach ($contact->fieldGroups as $group) {
 
         if (is_null($field)) {
             $value = '-';
-        } else if (is_null($value = $field->value)) {
-            $value = '-';
-        } else if (is_string($value)) {
-            $value = ! empty($value) ? $value : '-';
-        } else if (is_array($value)) {
-            $value = ! empty($value) ? implode(', ', $value) : '-';
+        } else {
+            $value = $field->getValueString();
         }
 
         if ($item->type == 'textarea') {

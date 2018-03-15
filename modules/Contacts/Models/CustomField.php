@@ -76,4 +76,20 @@ class CustomField extends BaseModel
 
         $this->attributes['value'] = $value;
     }
+
+    /**
+     * @return string
+     */
+    public function getValueString()
+    {
+        if (is_null($value = $this->value)) {
+            return '-';
+        } else if (is_string($value)) {
+            return ! empty($value) ? $value : '-';
+        } else if (is_array($value)) {
+            return ! empty($value) ? implode(', ', $value) : '-';
+        }
+
+        return (string) $value;
+    }
 }

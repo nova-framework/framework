@@ -31,9 +31,6 @@ class CreateContactsTable extends Migration
             $table->integer('updated_by')->unsigned()->nullable();
 
             $table->timestamps();
-
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

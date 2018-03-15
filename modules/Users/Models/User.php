@@ -46,8 +46,6 @@ class User extends BaseModel implements UserInterface, RemindableInterface
      * @var array
      */
     protected static $aliases = array(
-        'first_name' => array('meta' => 'first_name'),
-        'last_name'  => array('meta' => 'last_name'),
         'location'   => array('meta' => 'location'),
         'activated'  => array('meta' => 'activated'),
     );
@@ -67,23 +65,20 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     public function realname()
     {
-        return trim($this->meta->first_name .' ' .$this->meta->last_name);
+        return trim($this->first_name .' ' .$this->last_name);
     }
 
     public function picture()
     {
-        $picture = $this->meta->picture;
+        if (! empty($this->picture)) {
+            $path = 'assets/files/pictures/' .basename($this->picture);
 
-        $path = ! empty($picture) ? 'assets/files/pictures/' .basename($picture) : null;
+            if (! is_readable(BASEPATH .$path)) {
+                $path = 'assets/images/users/no-image.png';
+            }
 
-        if (! is_null($path) && is_readable(BASEPATH .$path)) {
-            // Nothing to do.
-        } else {
-            // Fallback to the default image.
-            $path = 'assets/images/users/no-image.png';
+            return site_url($path);
         }
-
-        return site_url($path);
     }
 
     /**

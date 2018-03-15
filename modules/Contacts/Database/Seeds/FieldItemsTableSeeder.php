@@ -33,7 +33,8 @@ class FieldItemsTableSeeder extends Seeder
             'rules'       => 'required|valid_name',
 
             'options'     => array(
-                'default' => '',
+                'placeholder' => '',
+                'default'     => '',
             ),
 
             'field_group_id' => 1,
@@ -49,7 +50,8 @@ class FieldItemsTableSeeder extends Seeder
             'rules'       => 'required|email',
 
             'options'     => array(
-                'default' => '',
+                'placeholder' => '',
+                'default'     => '',
             ),
 
             'field_group_id' => 1,
@@ -65,7 +67,8 @@ class FieldItemsTableSeeder extends Seeder
             'rules'       => 'sometimes|required|url',
 
             'options'     => array(
-                'default' => '',
+                'placeholder' => '',
+                'default'     => '',
             ),
 
             'field_group_id' => 1,
@@ -81,7 +84,8 @@ class FieldItemsTableSeeder extends Seeder
             'rules'       => 'required|valid_text',
 
             'options'     => array(
-                'rows' => 10,
+                'placeholder' => '',
+                'rows'        => 10,
             ),
 
             'field_group_id' => 1,

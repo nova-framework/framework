@@ -34,9 +34,6 @@ class CreateContactFieldItemsTable extends Migration
             $table->timestamps();
 
             //
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
-
             $table->foreign('field_group_id')->references('id')->on('contact_field_groups')->onDelete('cascade');
         });
     }

@@ -4,7 +4,7 @@ use Nova\Database\Schema\Blueprint;
 use Nova\Database\Migrations\Migration;
 
 
-class CreateContactFieldGroupsTable extends Migration
+class CreateUserFieldItemsTable extends Migration
 {
 
     /**
@@ -14,23 +14,24 @@ class CreateContactFieldGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('contact_field_groups');
+        Schema::dropIfExists('user_field_items');
 
-        Schema::create('contact_field_groups', function (Blueprint $table)
+        Schema::create('user_field_items', function (Blueprint $table)
         {
             $table->increments('id');
 
-            $table->integer('contact_id')->unsigned();
+            $table->integer('field_group_id')->unsigned();
             $table->string('title', 255);
-            $table->integer('order')->default(0);
+            $table->string('name', 255);
+            $table->string('type', 100);
+            $table->integer('order')->default(0)->nullable();
+            $table->string('rules', 255)->nullable();
+            $table->text('options')->nullable();
 
             $table->integer('created_by')->unsigned()->nullable();
             $table->integer('updated_by')->unsigned()->nullable();
 
             $table->timestamps();
-
-            //
-            $table->foreign('contact_id')->references('id')->on('contacts')->onDelete('cascade');
         });
     }
 
@@ -41,6 +42,6 @@ class CreateContactFieldGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contact_field_groups');
+        Schema::dropIfExists('user_field_items');
     }
 }

@@ -31,6 +31,9 @@ class UsersTableSeeder extends Seeder
             'username'       => 'admin',
             'password'       => Hash::make('admin'),
             'email'          => 'admin@novaframework.dev',
+            'first_name'     => 'Site',
+            'last_name'      => 'Administrator',
+            'picture'        => null,
             'remember_token' => '',
             'api_token'      => $this->uniqueToken(),
         ));
@@ -38,10 +41,7 @@ class UsersTableSeeder extends Seeder
         $user->roles()->attach(array(1));
 
         $user->createMeta(array(
-            'first_name'      => 'Site',
-            'last_name'       => 'Administrator',
             'location'        => 'Craiova, Romania',
-            'picture'         => null,
             'activated'       => 1,
             'activation_code' => null,
         ));
@@ -52,6 +52,9 @@ class UsersTableSeeder extends Seeder
             'username'       => 'marcus',
             'password'       => Hash::make('marcus'),
             'email'          => 'marcus@novaframework.dev',
+            'first_name'     => 'Marcus',
+            'last_name'      => 'Spears',
+            'picture'        => null,
             'remember_token' => '',
             'api_token'      => $this->uniqueToken(),
         ));
@@ -59,10 +62,7 @@ class UsersTableSeeder extends Seeder
         $user->roles()->attach(array(2));
 
         $user->createMeta(array(
-            'first_name'      => 'Marcus',
-            'last_name'       => 'Spears',
             'location'        => 'London, UK',
-            'picture'         => null,
             'activated'       => 1,
             'activation_code' => null,
         ));
@@ -73,6 +73,9 @@ class UsersTableSeeder extends Seeder
             'username'       => 'michael',
             'password'       => Hash::make('michael'),
             'email'          => 'michael@novaframework.dev',
+            'first_name'     => 'Michael',
+            'last_name'      => 'White',
+            'picture'        => null,
             'remember_token' => '',
             'api_token'      => $this->uniqueToken(),
         ));
@@ -80,10 +83,7 @@ class UsersTableSeeder extends Seeder
         $user->roles()->attach(array(3));
 
         $user->createMeta(array(
-            'first_name'      => 'Michael',
-            'last_name'       => 'White',
             'location'        => 'Rome, Italy',
-            'picture'         => null,
             'activated'       => 1,
             'activation_code' => null,
         ));
@@ -94,6 +94,9 @@ class UsersTableSeeder extends Seeder
             'username'       => 'john',
             'password'       => Hash::make('john'),
             'email'          => 'john@novaframework.dev',
+            'first_name'     => 'John',
+            'last_name'      => 'Kennedy',
+            'picture'        => null,
             'remember_token' => '',
             'api_token'      => $this->uniqueToken(),
         ));
@@ -101,10 +104,7 @@ class UsersTableSeeder extends Seeder
         $user->roles()->attach(array(4));
 
         $user->createMeta(array(
-            'first_name'      => 'John',
-            'last_name'       => 'Kennedy',
             'location'        => 'Moscow, Russia',
-            'picture'         => null,
             'activated'       => 1,
             'activation_code' => null,
         ));
@@ -115,6 +115,9 @@ class UsersTableSeeder extends Seeder
             'username'       => 'mark',
             'password'       => Hash::make('mark'),
             'email'          => 'mark@novaframework.dev',
+            'first_name'     => 'Mark',
+            'last_name'      => 'Black',
+            'picture'        => null,
             'remember_token' => '',
             'api_token'      => $this->uniqueToken(),
         ));
@@ -122,10 +125,7 @@ class UsersTableSeeder extends Seeder
         $user->roles()->attach(array(4));
 
         $user->createMeta(array(
-            'first_name'      => 'Mark',
-            'last_name'       => 'Black',
             'location'        => 'Paris, France',
-            'picture'         => null,
             'activated'       => 1,
             'activation_code' => null,
         ));

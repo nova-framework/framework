@@ -72,14 +72,49 @@ class MessageSubmitted extends Notification
             ->subject(__d('contacts', 'New message received via {0}', $this->contact->name))
             ->line(__d('contacts', 'A new message was received via {0}.', $this->contact->name))
             ->line('<hr>')
-            ->line(__d('contacts', '<b>Name:</b> {0}', e($this->message->author)))
-            ->line(__d('contacts', '<b>E-Mail Address:</b> {0}', e($this->message->author_email)))
-            ->line(__d('contacts', '<b>Remote IP:</b> {0}', $this->message->author_ip))
-            ->line(__d('contacts', '<b>Subject:</b> {0}', e($this->message->subject)))
-            ->line('<b>' .__d('contacts', 'Message:') .'</b>')
-            ->line($content)
-            ->line('<hr>')
-            ->action(__d('contacts', 'View the Message'), url('admin/contacts', array($this->contact->id, 'messages', $this->message->id)))
+            ->line(__d('contacts', '<b>Remote IP:</b> {0}', $this->message->remote_ip))
+            ->line('<hr>');
+
+        $contact = $this->message->contact;
+
+        $fields = $this->message->fields;
+
+        foreach ($contact->fieldGroups as $group) {
+            $items = $group->fieldItems->filter(function ($item)
+            {
+                return ($item->type != 'file');
+            });
+
+            if ($items->isEmpty()) {
+                continue;
+            }
+
+            $message->line($group->title)->line('<hr>');
+
+            foreach ($items as $item) {
+                $field = $fields->where('field_item_id', $item->id)->first();
+
+                if (is_null($field)) {
+                    $value = '-';
+                } else if (is_null($value = $field->value)) {
+                    $value = '-';
+                } else if (is_string($value)) {
+                    $value = ! empty($value) ? $value : '-';
+                } else if (is_array($value)) {
+                    $value = ! empty($value) ? implode(', ', $value) : '-';
+                }
+
+                if ($item->type == 'textarea') {
+                    $value = nl2br($value);
+
+                    $message->line('<b>' .$item->title .':</b>')->line(e($value));
+                }
+
+                $message->line('<b>' .$item->title .':</b> ' .e($value));
+            }
+        }
+
+        $message->action(__d('contacts', 'View the Message'), url('admin/contacts', array($this->contact->id, 'messages', $this->message->id)))
             ->line(__d('contacts', 'Thank you for using our application!'));
 
         // Attach the Request information as PDF file.

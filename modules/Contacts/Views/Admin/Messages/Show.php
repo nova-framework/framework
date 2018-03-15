@@ -37,21 +37,6 @@
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= $message->author_ip; ?></td>
             <tr>
             <tr>
-                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Author'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= e($message->author); ?></td>
-            <tr>
-            <tr>
-                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'E-mail Address'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= e($message->author_email); ?></td>
-            <tr>
-            <tr>
-                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Subject'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= e($message->subject); ?></td>
-            <tr>
-            <tr>
-                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Message'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= nl2br(e($message->content)); ?></td>
-            <tr>
         </table>
     </div>
     <div class="box-footer">

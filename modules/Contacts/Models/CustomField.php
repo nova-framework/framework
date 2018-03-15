@@ -4,6 +4,8 @@ namespace Modules\Contacts\Models;
 
 use Nova\Database\ORM\Model as BaseModel;
 
+use Modules\Contacts\Models\CustomFieldCollection;
+
 
 class CustomField extends BaseModel
 {
@@ -37,6 +39,15 @@ class CustomField extends BaseModel
     public function fieldItem()
     {
         return $this->belongsTo('Modules\Contacts\Models\FieldItem', 'field_item_id');
+    }
+
+    /**
+     * @param array $models
+     * @return MetaCollection
+     */
+    public function newCollection(array $models = array())
+    {
+        return new CustomFieldCollection($models);
     }
 
     /**

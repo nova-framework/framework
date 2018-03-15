@@ -7,6 +7,8 @@ use Nova\Support\Facades\File;
 use Nova\Support\Facades\Log;
 use Nova\Support\Str;
 
+use Modules\Contacts\Models\Message;
+
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Exception;
@@ -105,7 +107,7 @@ class Attachment extends BaseModel
      * @param UploadedFile $file
      * @return \Modules\Contacts\Models\Attachment|null
      */
-    public static function uploadFileAndCreate(UploadedFile $file)
+    public static function uploadFileAndCreate(UploadedFile $file, Message $message)
     {
         if (! File::exists($path = static::PATH)) {
             File::makeDirectory($path, 0755, true, true);
@@ -127,8 +129,8 @@ class Attachment extends BaseModel
             'type' => $file->getClientMimeType(),
             'path' => $path,
 
-            // Will be updated later, when the model will be attached to parent.
-            'message_id' => 0,
+            //
+            'message_id' => $message->id,
         ));
     }
 

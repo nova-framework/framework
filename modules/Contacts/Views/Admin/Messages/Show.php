@@ -12,7 +12,7 @@
 
 <?= View::fetch('Partials/Messages'); ?>
 
-<div class="col-md-8" style="padding: 0;">
+<div class="col-md-7" style="padding: 0;">
 
 <div class="box box-default message-box">
     <div class="box-header">
@@ -93,7 +93,7 @@ foreach ($contact->fieldGroups as $group) {
 
 </div>
 
-<div class="col-md-4" style="padding-right: 0;">
+<div class="col-md-5" style="padding-right: 0;">
 
 <?php $previewables = 0; ?>
 <div class="box box-primary attachments">

@@ -152,7 +152,7 @@ class Messages extends BaseController
 
                 $file = $request->file($name);
 
-                $attachment = Attachment::uploadFileAndCreate($file);
+                $attachment = Attachment::uploadFileAndCreate($file, $message);
 
                 $message->attachments()->save($attachment);
 

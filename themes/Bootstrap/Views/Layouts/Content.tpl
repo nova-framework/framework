@@ -11,6 +11,7 @@
         'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
         'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css',
         'https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css',
+        'https://cdn.jsdelivr.net/npm/icheck-bootstrap@2.0.4/icheck-bootstrap.min.css',
         resource_url('css/bootstrap-xl-mod.min.css'),
         resource_url('css/style.css'),
     ))

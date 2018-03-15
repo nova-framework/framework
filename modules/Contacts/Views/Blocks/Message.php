@@ -43,7 +43,10 @@
         <?php $choices = explode("\n", trim(array_get($options, 'choices'))); ?>
         <?php foreach($choices as $choice) { ?>
         <?php list ($value, $label) = explode(':', trim($choice)); ?>
-        <input type="checkbox" name="<?= $name; ?>[]" value="<?= $value = trim($value); ?>" <?= in_array($value, $checked) ? 'checked' : ''; ?>> <?= trim($label); ?><br>
+        <?php $checkId = $id .'-' .str_replace('_', '-', $value = trim($value)); ?>
+        <div class="checkbox icheck-primary">
+            <input type="checkbox" name="<?= $name; ?>[]" id="<?= $checkId; ?>" value="<?= $value; ?>" <?= in_array($value, $checked) ? 'checked' : ''; ?>> <label for="<?= $checkId; ?>"><?= trim($label); ?></label>
+        </div>
         <div class="clearfix"></div>
         <?php } ?>
         <?php } else if ($type == 'radio') { ?>
@@ -51,7 +54,10 @@
         <?php $choices = explode("\n", trim(array_get($options, 'choices'))); ?>
         <?php foreach($choices as $choice) { ?>
         <?php list ($value, $label) = explode(':', trim($choice)); ?>
-        <input type="radio" name="<?= $name; ?>" value="<?= $value = trim($value); ?>" <?= ($value == $checked) ? 'checked' : ''; ?>> <?= trim($label); ?><br>
+        <?php $checkId = $id .'-' .str_replace('_', '-', $value = trim($value)); ?>
+        <div class="radio icheck-primary">
+            <input type="radio" name="<?= $name; ?>" id="<?= $checkId; ?>" value="<?= $value; ?>" <?= ($value == $checked) ? 'checked' : ''; ?>> <label for="<?= $checkId; ?>"><?= trim($label); ?></label>
+        </div>
         <div class="clearfix"></div>
         <?php } ?>
         <?php } else if ($type == 'file') { ?>

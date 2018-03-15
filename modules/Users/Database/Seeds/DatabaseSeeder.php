@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
 
         // Call the seeders.
         $this->call('Modules\Users\Database\Seeds\UsersTableSeeder');
+        $this->call('Modules\Users\Database\Seeds\FieldItemsTableSeeder');
         $this->call('Modules\Users\Database\Seeds\PermissionsTableSeeder');
 
         // Enable the Foreign Key Checks.

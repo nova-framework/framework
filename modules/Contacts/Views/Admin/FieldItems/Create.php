@@ -75,6 +75,12 @@
                         <input name="field_rows" id="field_rows" type="number" class="form-control" min="1" max="100" value="<?= Input::old('field_rows', 10); ?>" style="padding: 6px 3px 6px 12px;" autocomplete="off">
                     </div>
                 </div>
+                <div class="form-group" id="placeholder-form-group" style="display: none;">
+                    <label class="col-sm-3 control-label" for="field_placeholder"><?= __d('contacts', 'Placeholder'); ?></label>
+                    <div class="col-sm-9">
+                        <input name="field_placeholder" id="field-placeholder" type="text" class="form-control" value="<?= Input::old('field_placeholder'); ?>" placeholder="<?= __d('contacts', 'Placeholder'); ?>">
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="field_rules"><?= __d('contacts', 'Rules'); ?></label>
                     <div class="col-sm-9">
@@ -110,31 +116,38 @@ function updateFormFields()
     var type = $('#field-type').val();
 
     //
+    var placeholder   = $('#placeholder-form-group');
     var input_choices = $('#choices-form-group');
     var default_value = $('#default-form-group');
     var textarea_rows = $('#rows-form-group');
 
     if (type == 'text') {
+        placeholder.show();
         input_choices.hide();
         default_value.show();
         textarea_rows.hide();
     } else if (type == 'password') {
+        placeholder.show();
         input_choices.hide();
         default_value.hide();
         textarea_rows.hide();
     } else if (type == 'textarea') {
+        placeholder.show();
         input_choices.hide();
         default_value.hide();
         textarea_rows.show();
     } else if (type == 'select') {
+        placeholder.show();
         input_choices.show();
         default_value.show();
         textarea_rows.hide();
     } else if ((type == 'checkbox') || (type == 'radio')) {
+        placeholder.hide();
         input_choices.show();
         default_value.hide();
         textarea_rows.hide();
     } else if (type == 'file') {
+        placeholder.hide();
         input_choices.hide();
         default_value.hide();
         textarea_rows.hide();

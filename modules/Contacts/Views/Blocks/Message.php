@@ -12,6 +12,7 @@
         <?php $id = 'contact-form-' .str_replace('_', '-', $item->name); ?>
         <?php $required = Str::contains($item->rules, 'required'); ?>
         <?php $options = $item->options ?: array(); ?>
+        <?php $placeholder = array_get($options, 'placeholder') ?: $item->title; ?>
 
     <div class="form-group<?= $errors->has($name) ? ' has-error' : ''; ?>">
         <label class="control-label" for="<?= $name; ?>">
@@ -23,15 +24,15 @@
         <div class="clearfix"></div>
 
         <?php if ($type == 'text') { ?>
-        <input type="text" class="form-control" name="<?= $name; ?>" id="<?= $id; ?>" value="<?= Input::old($name, array_get($options, 'default')); ?>" placeholder="<?= $item->title; ?>" />
+        <input type="text" class="form-control" name="<?= $name; ?>" id="<?= $id; ?>" value="<?= Input::old($name, array_get($options, 'default')); ?>" placeholder="<?= $placeholder; ?>" />
         <?php } else if ($type == 'password') { ?>
-        <input type="password" class="form-control" name="<?= $name; ?>" id="<?= $id; ?>" value="<?= Input::old($name); ?>" placeholder="<?= $item->title; ?>" />
+        <input type="password" class="form-control" name="<?= $name; ?>" id="<?= $id; ?>" value="<?= Input::old($name); ?>" placeholder="<?= $placeholder; ?>" />
         <?php } else if ($type == 'textarea') { ?>
-        <textarea name="<?= $name; ?>" id="<?= $id; ?>" rows="<?= array_get($options, 'rows', 10); ?>" class="form-control" style="resize: none;" placeholder="<?= $item->title; ?>"><?= Input::old($name); ?></textarea>
+        <textarea name="<?= $name; ?>" id="<?= $id; ?>" rows="<?= array_get($options, 'rows', 10); ?>" class="form-control" style="resize: none;" placeholder="<?= $placeholder; ?>"><?= Input::old($name); ?></textarea>
         <?php } else if ($type == 'select') { ?>
         <?php $selected = Input::old($name, array_get($options, 'default')); ?>
         <?php $choices = explode("\n", trim(array_get($options, 'choices'))); ?>
-        <select name="<?= $name; ?>" id="<?= $id; ?>" placeholder="" data-placeholder="<?= __d('requests', '- Choose an option -'); ?>" class="form-control select2">
+        <select name="<?= $name; ?>" id="<?= $id; ?>" placeholder="" data-placeholder="<?= array_get($options, 'placeholder') ?: __d('requests', '- Choose an option -'); ?>" class="form-control select2">
             <option></option>
             <?php foreach($choices as $choice) { ?>
             <?php list ($value, $label) = explode(':', trim($choice)); ?>

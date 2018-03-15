@@ -123,7 +123,9 @@ class FieldItems extends BaseController
         }
 
         $input = $request->only(
-            'field_title', 'field_name', 'field_type', 'field_order', 'field_rules', 'field_default', 'field_choices', 'field_rows', 'group_id'
+            'field_title', 'field_name', 'field_type', 'field_order', 'field_rules',
+            'field_placeholder', 'field_default', 'field_choices', 'field_rows',
+            'group_id'
         );
 
         // Validate the Input data.
@@ -138,27 +140,32 @@ class FieldItems extends BaseController
         // Handle the Text inputs.
         if ($type == 'text') {
             $options = array(
-                'default' => $input['field_default']
+                'placeholder' => $input['field_placeholder'],
+                'default'     => $input['field_default'],
             );
         }
 
         // Handle the Password inputs.
         else if ($type == 'password') {
-            $options = null;
+            $options = array(
+                'placeholder' => $input['field_placeholder'],
+            );
         }
 
         // Handle the Textarea fields.
         else if ($type == 'textarea') {
             $options = array(
-                'rows' => $input['field_rows']
+                'placeholder' => $input['field_placeholder'],
+                'rows'        => $input['field_rows'],
             );
         }
 
         // Handle the Select fields.
         else if ($type == 'select') {
             $options = array(
-                'default' => $input['field_default'],
-                'choices' => $input['field_choices']
+                'placeholder' => $input['field_placeholder'],
+                'default'     => $input['field_default'],
+                'choices'     => $input['field_choices']
             );
         }
 
@@ -171,7 +178,7 @@ class FieldItems extends BaseController
 
         // Handle the File uploads.
         else if ($type == 'file') {
-            $options = null;
+            $options = array();
         }
 
         // Create a Field Item Model instance.
@@ -256,29 +263,38 @@ class FieldItems extends BaseController
         }
         */
 
-        $default = null;
-        $choices = null;
-        $rows    = 5;
+        $placeholder = null;
+        $default     = null;
+        $choices     = null;
+        $rows        = 5;
 
         //
         $type = $item->type;
 
         $options = is_array($options = $item->options) ? $options : array();
 
-        // Handle for the Text and Password inputs.
+        // Handle for the Text inputs.
         if ($type == 'text') {
-            $default = Arr::get($options, 'default');
+            $placeholder = Arr::get($options, 'placeholder');
+            $default     = Arr::get($options, 'default');
+        }
+
+        // Handle for the Password inputs.
+        else if ($type == 'password') {
+            $placeholder = Arr::get($options, 'placeholder');
         }
 
         // Handle for the Textarea fields.
         else if ($type == 'textarea') {
-            $rows = Arr::get($options, 'rows', 5);
+            $placeholder = Arr::get($options, 'placeholder');
+            $rows        = Arr::get($options, 'rows', 5);
         }
 
         // Handle for the Select fields.
         else if ($type == 'select') {
-            $default = Arr::get($options, 'default');
-            $choices = Arr::get($options, 'choices');
+            $placeholder = Arr::get($options, 'placeholder');
+            $default     = Arr::get($options, 'default');
+            $choices     = Arr::get($options, 'choices');
         }
 
         // Handle for the Checkbox and Radio buttons.
@@ -294,7 +310,7 @@ class FieldItems extends BaseController
         return $this->createView()
             ->shares('title', __d('contacts', 'Edit Field Item'))
             ->with('contact', $group->contact)
-            ->with(compact('group', 'item', 'default', 'rows', 'choices'));
+            ->with(compact('group', 'item', 'placeholder', 'default', 'rows', 'choices'));
     }
 
     public function update(Request $request, $groupId, $id)
@@ -323,7 +339,9 @@ class FieldItems extends BaseController
         */
 
         $input = $request->only(
-            'field_title', 'field_name', 'field_type', 'field_order', 'field_rules', 'field_default', 'field_choices', 'field_rows', 'group_id'
+            'field_title', 'field_name', 'field_type', 'field_order', 'field_rules',
+            'field_placeholder', 'field_default', 'field_choices', 'field_rows',
+            'group_id'
         );
 
         // Validate the Input data.
@@ -338,27 +356,32 @@ class FieldItems extends BaseController
         // Handle the Text  inputs.
         if ($type == 'text') {
             $options = array(
-                'default' => $input['field_default']
+                'placeholder' => $input['field_placeholder'],
+                'default'    => $input['field_default']
             );
         }
 
         // Handle the Password inputs.
-        else if ($type == 'text') {
-            $options = null;
+        else if ($type == 'password') {
+            $options = array(
+                'placeholder' => $input['field_placeholder'],
+            );
         }
 
         // Handle the Textarea fields.
         else if ($type == 'textarea') {
             $options = array(
-                'rows' => $input['field_rows']
+                'placeholder' => $input['field_placeholder'],
+                'rows'       => $input['field_rows']
             );
         }
 
         // Handle the Select fields.
         else if ($type == 'select') {
             $options = array(
-                'default' => $input['field_default'],
-                'choices' => $input['field_choices']
+                'placeholder' => $input['field_placeholder'],
+                'default'    => $input['field_default'],
+                'choices'    => $input['field_choices']
             );
         }
 
@@ -371,7 +394,7 @@ class FieldItems extends BaseController
 
         // Handle the File uploads.
         else if ($type == 'file') {
-            $options = null;
+            $options = array();
         }
 
         $title = $item->title;

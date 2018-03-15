@@ -41,7 +41,7 @@ class Message extends BaseModel
      */
     public function fields()
     {
-        return $this->hasMany('Modules\Contacts\Models\CustomField', 'message_id');
+        return $this->hasMany('Modules\Contacts\Models\Field', 'message_id');
     }
 
     /**

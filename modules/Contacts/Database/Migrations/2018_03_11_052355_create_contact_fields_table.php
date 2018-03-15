@@ -4,7 +4,7 @@ use Nova\Database\Schema\Blueprint;
 use Nova\Database\Migrations\Migration;
 
 
-class CreateContactCustomFieldsTable extends Migration
+class CreateContactFieldsTable extends Migration
 {
 
     /**
@@ -14,9 +14,9 @@ class CreateContactCustomFieldsTable extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('contact_custom_fields');
+        Schema::dropIfExists('contact_fields');
 
-        Schema::create('contact_custom_fields', function (Blueprint $table)
+        Schema::create('contact_fields', function (Blueprint $table)
         {
             $table->increments('id');
 
@@ -40,6 +40,6 @@ class CreateContactCustomFieldsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contact_custom_fields');
+        Schema::dropIfExists('contact_fields');
     }
 }

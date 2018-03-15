@@ -18,7 +18,7 @@ use Shared\Support\ReCaptcha;
 
 use Modules\Contacts\Models\Attachment;
 use Modules\Contacts\Models\Contact;
-use Modules\Contacts\Models\CustomField;
+use Modules\Contacts\Models\Field;
 use Modules\Contacts\Models\Message;
 use Modules\Contacts\Notifications\MessageSubmitted as MessageSubmittedNotification;
 use Modules\Users\Models\User;
@@ -162,7 +162,7 @@ class Messages extends BaseController
                 $value = $request->input($name);
             }
 
-            $field = CustomField::create(array(
+            $field = Field::create(array(
                 'name'  => $item->name,
                 'type'  => $item->type,
                 'value' => $value,

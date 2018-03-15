@@ -5,7 +5,7 @@ namespace Modules\Contacts\Models;
 use Nova\Database\ORM\Collection as BaseCollection;
 
 
-class CustomFieldCollection extends BaseCollection
+class FieldCollection extends BaseCollection
 {
 
     /**

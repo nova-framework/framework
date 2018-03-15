@@ -36,7 +36,7 @@ class FieldItem extends BaseModel
      */
     public function fields()
     {
-        return $this->hasMany('Modules\Contacts\Models\CustomField', 'field_item_id');
+        return $this->hasMany('Modules\Contacts\Models\Field', 'field_item_id');
     }
 
     /**

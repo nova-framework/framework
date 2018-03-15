@@ -4,15 +4,15 @@ namespace Modules\Contacts\Models;
 
 use Nova\Database\ORM\Model as BaseModel;
 
-use Modules\Contacts\Models\CustomFieldCollection;
+use Modules\Contacts\Models\FieldCollection;
 
 
-class CustomField extends BaseModel
+class Field extends BaseModel
 {
     /**
      * @var string
      */
-    protected $table = 'contact_custom_fields';
+    protected $table = 'contact_fields';
 
     /**
      * @var string
@@ -47,7 +47,7 @@ class CustomField extends BaseModel
      */
     public function newCollection(array $models = array())
     {
-        return new CustomFieldCollection($models);
+        return new FieldCollection($models);
     }
 
     /**

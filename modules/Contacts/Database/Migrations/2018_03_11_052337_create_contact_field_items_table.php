@@ -28,7 +28,14 @@ class CreateContactFieldItemsTable extends Migration
             $table->string('rules', 255)->nullable();
             $table->text('options')->nullable();
 
+            $table->integer('created_by')->unsigned()->nullable();
+            $table->integer('updated_by')->unsigned()->nullable();
+
             $table->timestamps();
+
+            //
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
 
             $table->foreign('field_group_id')->references('id')->on('contact_field_groups')->onDelete('cascade');
         });

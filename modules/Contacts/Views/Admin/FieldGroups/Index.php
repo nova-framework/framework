@@ -50,7 +50,7 @@
         <div class="box-tools">
             <div class="btn-group" role="group" aria-label="...">
                 <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-group-dialog" data-id="<?= $group->id; ?>" title="<?= __d('contacts', 'Delete this Fields Group'); ?>" role="button"><i class="fa fa-remove"></i> </a>
-                <a class="btn btn-sm btn-success" href="#" title="<?= __d('contacts', 'Edit this Fields Group'); ?>" role="button"><i class="fa fa-pencil"></i></a>
+                <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-edit-group-dialog" data-id="<?= $group->id; ?>" data-title="<?= $group->title; ?>" data-order="<?= $group->order; ?>" title="<?= __d('contacts', 'Edit this Fields Group'); ?>" role="button"><i class="fa fa-pencil"></i></a>
             </div>
         </div>
     </div>
@@ -143,6 +143,7 @@
                 <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('roles', 'Cancel'); ?></button>
                 <form id="modal-delete-group-form" action="" method="POST">
                     <input type="hidden" name="id" id="delete-field-group-id" value="0" />
+                    <input type="hidden" name="contact_id" value="<?= $contact->id; ?>" />
                     <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
                     <input type="submit" name="button" class="btn btn btn-danger pull-right col-md-3" value="<?= __d('roles', 'Delete'); ?>">
                 </form>
@@ -185,6 +186,7 @@ $(function () {
                 <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('roles', 'Cancel'); ?></button>
                 <form id="modal-delete-item-form" action="" method="POST">
                     <input type="hidden" name="id" id="delete-field-item-id" value="0" />
+                    <input type="hidden" name="contact_id" value="<?= $contact->id; ?>" />
                     <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
                     <input type="submit" name="button" class="btn btn btn-danger pull-right col-md-3" value="<?= __d('roles', 'Delete'); ?>">
                 </form>
@@ -213,7 +215,7 @@ $(function () {
 
 </script>
 
-<div class="modal modal-default" id="modal-edit-dialog" data-keyboard="false" data-backdrop="static">
+<div class="modal modal-default" id="modal-edit-group-dialog" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form id="modal-edit-form" class="form-horizontal" action="" method='POST' role="form">
@@ -221,59 +223,19 @@ $(function () {
             <div class="modal-header" style="padding: 10px;">
                 <button aria-label="<?= __d('records', 'Close'); ?>" data-dismiss="modal" class="close" type="button">
                 <span aria-hidden="true">×</span></button>
-                <h4 class="modal-edit-title" style="margin: 0;"><?= __d('records', 'Create a new Custom Field'); ?></h4>
+                <h4 class="modal-edit-title" style="margin: 0;"><?= __d('records', 'Edit a Field Group'); ?></h4>
             </div>
             <div class="modal-body">
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="field_title"><?= __d('contacts', 'Label'); ?> <font color="#CC0000">*</font></label>
                     <div class="col-sm-9">
-                        <input name="field_title" id="modal-edit-title" type="text" class="form-control" value="" placeholder="<?= __d('contacts', 'Label'); ?>">
+                        <input name="title" id="modal-edit-group-title" type="text" class="form-control" value="" placeholder="<?= __d('contacts', 'Label'); ?>">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label" for="field_slug"><?= __d('contacts', 'Name'); ?> <font color="#CC0000">*</font></label>
-                    <div class="col-sm-9">
-                        <input name="field_slug" id="modal-edit-slug" type="text" class="form-control" value="" placeholder="<?= __d('contacts', 'Name'); ?>">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label" for="field_type"><?= __d('contacts', 'Type'); ?> <font color="#CC0000">*</font></label>
-                    <div class="col-sm-3">
-                        <select name="field_type" id="modal-edit-type" class="form-control select2" placeholder="" data-placeholder="<?= __d('contacts', 'Select a Type'); ?>" style="width: 100%;" autocomplete="off">
-                            <option value="text"><?= __d('contacts', 'Text'); ?></option>
-                            <option value="password"><?= __d('contacts', 'Password'); ?></option>
-                            <option value="textarea"><?= __d('contacts', 'Textarea'); ?></option>
-                            <option value="select"><?= __d('contacts', 'Select'); ?></option>
-                            <option value="checkbox"><?= __d('contacts', 'Checkbox'); ?></option>
-                            <option value="radio"><?= __d('contacts', 'Radio'); ?></option>
-                            <option value="file"><?= __d('contacts', 'File'); ?></option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label" for="field_default"><?= __d('contacts', 'Default Value'); ?></label>
-                    <div class="col-sm-9">
-                        <input name="field_default" id="modal-edit-default" type="text" class="form-control" value="" placeholder="<?= __d('contacts', 'Default Value'); ?>">
-                    </div>
-                </div>
-                <div class="clearfix"></div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="order"><?= __d('contacts', 'Order'); ?> <font color="#CC0000">*</font></label>
                     <div class="col-sm-2">
-                        <input name="order" id="modal-edit-order" type="number" class="form-control" min="0" max="1000" value="1" autocomplete="off">
-                    </div>
-                </div>
-                <div class="clearfix"></div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label" for="field_options"><?= __d('contacts', 'Options'); ?></label>
-                    <div class="col-sm-9">
-                        <textarea name="field_options" id="modal-edit-options" class="form-control" style="resize: none;" rows="5" placeholder="<?= __d('contacts', 'Options'); ?>"></textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label" for="field_rules"><?= __d('contacts', 'Rules'); ?></label>
-                    <div class="col-sm-9">
-                        <input name="field_rules" id="modal-edit-rules" type="text" class="form-control" value="" placeholder="<?= __d('contacts', 'Validation Rules'); ?>">
+                        <input name="order" id="modal-edit-group-order" type="number" class="form-control" min="0" max="1000" value="1" style="padding: 6px 3px 6px 12px;" autocomplete="off">
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -281,7 +243,8 @@ $(function () {
                 <font color="#CC0000">*</font><?= __d('contacts', 'Required field'); ?>
             </div>
             <div class="modal-footer">
-                <input type="hidden" name="id" id="edit-record-id" value="0" />
+                <input type="hidden" name="id" id="modal-edit-group-id" value="0" />
+                <input type="hidden" name="contact_id" value="<?= $contact->id; ?>" />
                 <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
                 <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('contacts', 'Cancel'); ?></button>
                 <input type="submit" name="button" class="btn btn btn-success pull-right col-md-3" value="<?= __d('contacts', 'Save'); ?>">
@@ -298,47 +261,31 @@ $(function () {
 <script>
 
 $(function () {
-    $('#modal-edit-dialog').on('show.bs.modal', function (event) {
+    $('#modal-edit-group-dialog').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal
-
-        var groupId = button.data('groupid');
 
         var id = button.data('id');
 
-        var action = '<?= site_url("admin/contacts/{0}/field-groups", $contact->id); ?>/' + groupId + '/items';
+        var title = button.data('title');
+        var order = button.data('order');
 
-        var title   = button.data('title');
-        var slug    = button.data('slug');
-        var type    = button.data('type');
-        var rules   = button.data('rules');
-        var order   = button.data('order');
-        var options = button.data('options');
+        $('#modal-edit-group-title').val(title);
+        $('#modal-edit-group-order').val(order);
 
-        $('#modal-edit-title').val(title);
-        $('#modal-edit-slug').val(slug);
+        $('#modal-edit-group-id').val(id);
 
-        $('#modal-edit-type').val(type).trigger('change');
+        // Adjust the dialog title.
+        var title = sprintf("<?= __d('contacts', 'Edit the Field Group : #%d'); ?>", id);
 
-        $('#modal-edit-rules').val(rules);
-        $('#modal-edit-order').val(order);
-        $('#modal-edit-options').val(options);
+        $('.modal-edit-title').html(title);
 
-        if (isNaN(id = parseInt(id, 10))) {
-            //
-        } else if (id > 0) {
-            // Adjust the dialog title.
-            var title = sprintf("<?= __d('contacts', 'Edit the Custom Field <b>#%d</b>'); ?>", id);
-
-            $('.modal-edit-title').html(title);
-
-            // Adjust the form action.
-            action += '/' + id;
-        }
+        // Adjust the form action.
+        var action = '<?= site_url("admin/contacts/{0}/field-groups", $contact->id); ?>/' + id + '/update';
 
         $('#modal-edit-form').attr('action', action);
     });
 
-    $("#modal-edit-dialog").on('hidden.bs.modal', function () {
+    $("#modal-edit-group-dialog").on('hidden.bs.modal', function () {
         $('.modal-edit-iframe').attr('action', '');
     });
 });

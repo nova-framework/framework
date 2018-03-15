@@ -202,13 +202,6 @@ class FieldItems extends BaseController
             return Redirect::to('admin/contacts')->with('danger', __d('contacts', 'Field Group not found: #{0}', $groupId));
         }
 
-        /*
-        // Authorize the current User.
-        if (Gate::denies('update', $group)) {
-            throw new AuthorizationException();
-        }
-        */
-
         try {
             $item = FieldItem::findOrFail($id);
         }
@@ -220,7 +213,7 @@ class FieldItems extends BaseController
 
         /*
         // Authorize the current User.
-        if (Gate::denies('update', $item)) {
+        if (Gate::denies('view', $item)) {
             throw new AuthorizationException();
         }
         */
@@ -246,13 +239,6 @@ class FieldItems extends BaseController
         catch (ModelNotFoundException $e) {
             return Redirect::to('admin/contacts')->with('danger', __d('contacts', 'Field Group not found: #{0}', $groupId));
         }
-
-        /*
-        // Authorize the current User.
-        if (Gate::denies('update', $group)) {
-            throw new AuthorizationException();
-        }
-        */
 
         try {
             $item = FieldItem::findOrFail($id);
@@ -319,13 +305,6 @@ class FieldItems extends BaseController
         catch (ModelNotFoundException $e) {
             return Redirect::to('admin/contacts')->with('danger', __d('contacts', 'Field Group not found: #{0}', $groupId));
         }
-
-        /*
-        // Authorize the current User.
-        if (Gate::denies('update', $group)) {
-            throw new AuthorizationException();
-        }
-        */
 
         try {
             $item = FieldItem::findOrFail($id);
@@ -423,13 +402,6 @@ class FieldItems extends BaseController
         catch (ModelNotFoundException $e) {
             return Redirect::to('admin/contacts')->with('danger', __d('contacts', 'Field Group not found: #{0}', $groupId));
         }
-
-        /*
-        // Authorize the current User for updating this Field Group instance.
-        if (Gate::denies('update', $group)) {
-            throw new AuthorizationException();
-        }
-        */
 
         try {
             $item = FieldItem::findOrFail($id);

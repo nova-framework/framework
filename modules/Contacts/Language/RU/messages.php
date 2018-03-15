@@ -65,6 +65,7 @@ return array (
         <a class="btn btn-success col-sm-2 pull-right" href="<?= site_url(\'admin/contacts/field-groups/{0}/items/create' => '',
   'Group Title' => '',
   'ID' => 'ID',
+  'Information' => '',
   'Label' => '',
   'Manage Fields : {0}' => '',
   'Manage the Field Groups' => '',

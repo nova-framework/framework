@@ -16,7 +16,7 @@
 
 <div class="box box-default message-box">
     <div class="box-header">
-        <h3 class="box-title"><?= __d('contacts', 'Message Information'); ?></h3>
+        <h3 class="box-title"><?= __d('contacts', 'Information'); ?></h3>
     </div>
     <div class="box-body no-padding">
         <table id="left" class="table table-hover responsive">

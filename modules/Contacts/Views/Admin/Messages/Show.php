@@ -96,12 +96,13 @@ foreach ($contact->fieldGroups as $group) {
 <div class="col-md-5" style="padding-right: 0;">
 
 <?php $previewables = 0; ?>
+<?php $attachments = $message->attachments; ?>
+
 <div class="box box-primary attachments">
-    <div class="box-header">
+    <div class="box-header <?= $attachments->isEmpty() ? 'with-border' : ''; ?>">
         <h3 class="box-title"><?= __d('requests', 'Attachments'); ?></h3>
     </div>
-    <div class="box-body no-padding">
-        <?php $attachments = $message->attachments; ?>
+    <div class="box-body <?= ! $attachments->isEmpty() ? 'no-padding' : ''; ?>">
         <?php if (! $attachments->isEmpty()) { ?>
         <table id="files-table" class="table table-striped table-hover responsive">
             <tr class="bg-navy disabled">
@@ -126,9 +127,8 @@ foreach ($contact->fieldGroups as $group) {
             <?php } ?>
         </table>
         <?php } else { ?>
-        <div class="alert alert-info" style="margin: 0 5px 5px;">
-            <h4><i class="icon fa fa-info-circle"></i> <?= strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('users', 'No attachments'); ?></h4>
-            <?= __d('users', 'This message has no attached files.'); ?>
+        <div class="text-center" style="padding-top: 25px; padding-bottom: 25px;">
+            <b class="text-muted"><?= __d('users', 'This message has no attached files.'); ?></b>
         </div>
         <?php } ?>
     </div>

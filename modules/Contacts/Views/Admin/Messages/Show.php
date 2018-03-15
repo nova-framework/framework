@@ -16,9 +16,9 @@
 
 <div class="box box-default message-box">
     <div class="box-header">
-        <h3 class="box-title"><?= __d('contacts', 'Message'); ?></h3>
+        <h3 class="box-title"><?= __d('contacts', 'Message Information'); ?></h3>
     </div>
-    <div class="box-body no-padding" style="min-height: 450px;">
+    <div class="box-body no-padding">
         <table id="left" class="table table-hover responsive">
             <tr class="bg-navy disabled">
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Field'); ?></th>
@@ -34,7 +34,7 @@
             <tr>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Remote IP'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $message->author_ip; ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $message->remote_ip; ?></td>
             <tr>
             <tr>
         </table>
@@ -44,12 +44,60 @@
     </div>
 </div>
 
+<?php
+foreach ($contact->fieldGroups as $group) {
+    $items = $group->fieldItems->filter(function ($item)
+    {
+        return ($item->type != 'file');
+    });
+
+    if ($items->isEmpty()) {
+        continue;
+    }
+?>
+
+<div class="box box-default message-box">
+    <div class="box-header">
+        <h3 class="box-title"><?= $group->title; ?></h3>
+    </div>
+    <div class="box-body no-padding">
+        <table id="left" class="table table-hover responsive">
+            <tr class="bg-navy disabled">
+                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Field'); ?></th>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Value'); ?></th>
+            </tr>
+
+<?php
+            foreach ($items as $item) {
+                $field = $message->fields->where('field_item_id', $item->id)->first();
+
+                if (is_null($field)) {
+                    $value = '-';
+                } else {
+                    $value = $field->getValueString();
+                }
+
+                if ($item->type == 'textarea') {
+                    $value = nl2br($value);
+                }
+?>
+            <tr>
+                <th style="text-align: left; vertical-align: middle;"><?= $item->title; ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $value; ?></td>
+            <tr>
+            <?php } ?>
+        </table>
+    </div>
+</div>
+
+<?php } ?>
+
 </div>
 
 <div class="col-md-4" style="padding-right: 0;">
 
 <?php $previewables = 0; ?>
-<div class="box box-primary attachments" style="min-height: 550px;">
+<div class="box box-primary attachments">
     <div class="box-header">
         <h3 class="box-title"><?= __d('requests', 'Attachments'); ?></h3>
     </div>
@@ -120,18 +168,6 @@
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-
-$(function () {
-    $('.attachments').css({
-        'min-height': function () {
-            return (4 + $('.message-box').height()) + 'px';
-        }
-    });
-});
-
-</script>
 
 <?php if ($previewables > 0) { ?>
 

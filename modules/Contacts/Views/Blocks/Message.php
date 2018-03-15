@@ -8,7 +8,7 @@
 
     <?php foreach ($group->fieldItems->sortBy('order') as $item) { ?>
         <?php $type = $item->type; ?>
-        <?php $name = 'contact_' .$item->name; ?>
+        <?php $name = 'contact_' .str_replace('-', '_', $item->name); ?>
         <?php $id = 'contact-form-' .str_replace('_', '-', $item->name); ?>
         <?php $required = Str::contains($item->rules, 'required'); ?>
         <?php $options = $item->options ?: array(); ?>

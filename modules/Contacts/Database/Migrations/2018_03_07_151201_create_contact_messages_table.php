@@ -21,11 +21,7 @@ class CreateContactMessagesTable extends Migration
             $table->increments('id');
 
             $table->integer('contact_id')->unsigned()->index();
-            $table->string('author')->nullable();
-            $table->string('author_email')->nullable();
-            $table->string('author_ip')->nullable();
-            $table->string('subject')->nullable();
-            $table->text('content')->nullable();
+            $table->string('remote_ip')->nullable();
             $table->integer('user_id')->unsigned()->default(0)->index();
             $table->string('path')->nullable();
 

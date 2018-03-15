@@ -54,10 +54,12 @@ class Attachments extends Controller
             return Response::make('File Not Found', 404);
         }
 
+        /*
         // Authorize the current User.
         if (Gate::denies('view', $attachment->message)) {
             throw new AuthorizationException();
         }
+        */
 
         // Get the Assets Distpatcher instance.
         $dispatcher = $this->container->make('assets.dispatcher');

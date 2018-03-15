@@ -63,7 +63,12 @@ class Message extends BaseModel
 
         static::deleting(function (Message $model)
         {
-            $model->load('attachments');
+            $model->load('fields', 'attachments');
+
+            $model->fields->each(function ($field)
+            {
+                $field->delete();
+            });
 
             $model->attachments->each(function ($attachment)
             {

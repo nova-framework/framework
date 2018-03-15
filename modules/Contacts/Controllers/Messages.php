@@ -134,27 +134,32 @@ class Messages extends BaseController
         $userId = Auth::id() ?: 0;
 
         $message = Message::create(array(
-            'contact_id'   => $contact->id,
-            'author_ip'    => $request->ip(),
-            'user_id'      => $userId,
-            'path'         => $path,
+            'path'       => $path,
+            'remote_ip'  => $request->ip(),
+            'user_id'    => $userId,
+
+            // Resolve the relationships.
+            'contact_id' => $contact->id,
         ));
 
         foreach ($contact->fieldItems as $item) {
             $name = 'contact_' .str_replace('-', '_', $item->name);
 
             if ($item->type == 'file') {
-                // For the uploaded files we will need a special processing.
-
-                if ($request->hasFile($name)) {
-                    $file = $request->file($name);
-
-                    $field = CustomField::uploadFileAndCreate($file, $item);
-
-                    $message->fields()->save($field);
+                if (! $request->hasFile($name)) {
+                    continue;
                 }
 
-                continue;
+                $file = $request->file($name);
+
+                $attachment = Attachment::uploadFileAndCreate($file);
+
+                $message->attachments()->save($attachment);
+
+                // We will store in the custom field the attachment's ID.
+                $value = $attachment->id;
+            } else {
+                $value = $request->input($name);
             }
 
             $field = CustomField::create(array(
@@ -162,7 +167,7 @@ class Messages extends BaseController
                 'type' => $item->type,
 
                 //
-                'value' => $request->input($name),
+                'value' => $value,
 
                 // Resolve the relationships.
                 'field_item_id' => $item->id,

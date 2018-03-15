@@ -163,10 +163,8 @@ class Messages extends BaseController
             }
 
             $field = CustomField::create(array(
-                'name' => $item->name,
-                'type' => $item->type,
-
-                //
+                'name'  => $item->name,
+                'type'  => $item->type,
                 'value' => $value,
 
                 // Resolve the relationships.

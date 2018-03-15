@@ -30,6 +30,16 @@
         <div class="col-sm-12" style="padding: 0;">
             <textarea name="<?= $name; ?>" id="<?= $id; ?>" rows="<?= array_get($options, 'rows', 10); ?>" class="form-control" style="resize: none;" placeholder="<?= $item->title; ?>"><?= Input::old($name); ?></textarea>
         </div>
+        <?php } else if ($type == 'select') { ?>
+        <?php $selected = Input::old($name, array_get($options, 'default')); ?>
+        <?php $choices = explode("\n", trim(array_get($options, 'choices'))); ?>
+        <select name="<?= $name; ?>" id="<?= $id; ?>" placeholder="" data-placeholder="<?= __d('requests', '- Choose a {0} -', $name); ?>" class="form-control select2">
+            <option></option>
+            <?php foreach($choices as $choice) { ?>
+            <?php list ($value, $label) = explode(':', trim($choice)); ?>
+            <option value="<?= $value = trim($value); ?>" <?= ($selected == $value) ? 'selected="selected"' : ''; ?>><?= trim($label); ?></option>
+            <?php } ?>
+        </select>
         <?php } else if ($type == 'file') { ?>
         <div class="input-group">
             <input type="text" class="form-control" readonly>

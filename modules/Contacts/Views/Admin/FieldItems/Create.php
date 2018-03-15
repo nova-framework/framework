@@ -114,9 +114,13 @@ function updateFormFields()
     var default_value = $('#default-form-group');
     var textarea_rows = $('#rows-form-group');
 
-    if ((type == 'text') || (type == 'password')) {
+    if (type == 'text') {
         input_choices.hide();
         default_value.show();
+        textarea_rows.hide();
+    } else if (type == 'password') {
+        input_choices.hide();
+        default_value.hide();
         textarea_rows.hide();
     } else if (type == 'textarea') {
         input_choices.hide();

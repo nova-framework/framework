@@ -118,7 +118,7 @@ function updateFormFields()
         input_choices.hide();
         default_value.show();
         textarea_rows.hide();
-    if (type == 'password') {
+    } else if (type == 'password') {
         input_choices.hide();
         default_value.hide();
         textarea_rows.hide();

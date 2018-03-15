@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ Language::code() }}">
+<html lang="{{ $code = Language::code() }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +9,8 @@
         vendor_url('dist/css/bootstrap.min.css', 'twbs/bootstrap'),
         vendor_url('dist/css/bootstrap-theme.min.css', 'twbs/bootstrap'),
         'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css',
         resource_url('css/bootstrap-xl-mod.min.css'),
         resource_url('css/style.css'),
     ))
@@ -39,8 +41,18 @@
     @include('Themes/Bootstrap::Partials/Footer')
 @show
 
+<script>
+
+$(function () {
+    //Initialize Select2 Elements
+    $(".select2").select2();
+});
+</script>
+
 @assets('js', array(
     vendor_url('dist/js/bootstrap.min.js', 'twbs/bootstrap'),
+    'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/i18n/' .$code .'.js',
 ))
 
 <!-- DO NOT DELETE! - Profiler -->

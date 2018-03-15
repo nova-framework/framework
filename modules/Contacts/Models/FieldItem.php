@@ -20,7 +20,7 @@ class FieldItem extends BaseModel
     /**
      * @var array
      */
-    protected $fillable = array('title', 'slug', 'type', 'order', 'rules', 'options', 'field_group_id');
+    protected $fillable = array('title', 'name', 'type', 'order', 'rules', 'options', 'field_group_id');
 
 
     /**

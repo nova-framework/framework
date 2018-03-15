@@ -14,7 +14,7 @@
         <?php $options = $item->options ?: array(); ?>
 
     <div class="form-group<?= $errors->has($name) ? ' has-error' : ''; ?>">
-        <label class="control-label" for="contact_author">
+        <label class="control-label" for="<?= $name; ?>">
             <?= $item->title; ?>
             <?php if ($required) { ?>
             <span class="text-danger" title="<?= __d('contacts', 'Required field'); ?>">*</span>
@@ -27,19 +27,33 @@
         <?php } else if ($type == 'password') { ?>
         <input type="password" class="form-control" name="<?= $name; ?>" id="<?= $id; ?>" value="<?= Input::old($name); ?>" placeholder="<?= $item->title; ?>" />
         <?php } else if ($type == 'textarea') { ?>
-        <div class="col-sm-12" style="padding: 0;">
-            <textarea name="<?= $name; ?>" id="<?= $id; ?>" rows="<?= array_get($options, 'rows', 10); ?>" class="form-control" style="resize: none;" placeholder="<?= $item->title; ?>"><?= Input::old($name); ?></textarea>
-        </div>
+        <textarea name="<?= $name; ?>" id="<?= $id; ?>" rows="<?= array_get($options, 'rows', 10); ?>" class="form-control" style="resize: none;" placeholder="<?= $item->title; ?>"><?= Input::old($name); ?></textarea>
         <?php } else if ($type == 'select') { ?>
         <?php $selected = Input::old($name, array_get($options, 'default')); ?>
         <?php $choices = explode("\n", trim(array_get($options, 'choices'))); ?>
-        <select name="<?= $name; ?>" id="<?= $id; ?>" placeholder="" data-placeholder="<?= __d('requests', '- Choose a {0} -', $item->title); ?>" class="form-control select2">
+        <select name="<?= $name; ?>" id="<?= $id; ?>" placeholder="" data-placeholder="<?= __d('requests', '- Choose an option -'); ?>" class="form-control select2">
             <option></option>
             <?php foreach($choices as $choice) { ?>
             <?php list ($value, $label) = explode(':', trim($choice)); ?>
-            <option value="<?= $value = trim($value); ?>" <?= ($selected == $value) ? 'selected="selected"' : ''; ?>><?= trim($label); ?></option>
+            <option value="<?= $value = trim($value); ?>" <?= ($value == $selected) ? 'selected="selected"' : ''; ?>><?= trim($label); ?></option>
             <?php } ?>
         </select>
+        <?php } else if ($type == 'checkbox') { ?>
+        <?php $checked = Input::old($name, array()); ?>
+        <?php $choices = explode("\n", trim(array_get($options, 'choices'))); ?>
+        <?php foreach($choices as $choice) { ?>
+        <?php list ($value, $label) = explode(':', trim($choice)); ?>
+        <input type="checkbox" name="<?= $name; ?>[]" value="<?= $value = trim($value); ?>" <?= in_array($value, $checked) ? 'checked' : ''; ?>> <?= trim($label); ?><br>
+        <div class="clearfix"></div>
+        <?php } ?>
+        <?php } else if ($type == 'radio') { ?>
+        <?php $checked = Input::old($name); ?>
+        <?php $choices = explode("\n", trim(array_get($options, 'choices'))); ?>
+        <?php foreach($choices as $choice) { ?>
+        <?php list ($value, $label) = explode(':', trim($choice)); ?>
+        <input type="radio" name="<?= $name; ?>" value="<?= $value = trim($value); ?>" <?= ($value == $checked) ? 'checked' : ''; ?>> <?= trim($label); ?><br>
+        <div class="clearfix"></div>
+        <?php } ?>
         <?php } else if ($type == 'file') { ?>
         <div class="input-group">
             <input type="text" class="form-control" readonly>

@@ -138,7 +138,7 @@ return array (
   'There are no registered Contacts.' => '',
   'There are no registered Field Groups for this Contact.' => '',
   'There are no registered Fields for this Group.' => '',
-  'This request has no attached files.' => '',
+  'This message has no attached files.' => '',
   'Title' => '',
   'Type' => '',
   'Updated At' => '',

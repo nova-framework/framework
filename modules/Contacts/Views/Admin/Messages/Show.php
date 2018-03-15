@@ -129,7 +129,7 @@ foreach ($contact->fieldGroups as $group) {
         <?php } else { ?>
         <div class="alert alert-info" style="margin: 0 5px 5px;">
             <h4><i class="icon fa fa-info-circle"></i> <?= strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('users', 'No attachments'); ?></h4>
-            <?= __d('users', 'This request has no attached files.'); ?>
+            <?= __d('users', 'This message has no attached files.'); ?>
         </div>
         <?php } ?>
     </div>

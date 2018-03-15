@@ -94,6 +94,8 @@ foreach ($contact->fieldGroups as $group) {
         continue;
     }
 ?>
+    <div class="page-break"></div>
+
     <h3><?= $group->title; ?></h3>
 
     <table class="table">

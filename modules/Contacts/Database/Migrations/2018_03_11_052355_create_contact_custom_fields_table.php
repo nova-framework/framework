@@ -23,7 +23,7 @@ class CreateContactCustomFieldsTable extends Migration
             $table->integer('message_id')->unsigned();
             $table->integer('field_item_id')->unsigned();
             $table->string('type', 255);
-            $table->string('slug', 255);
+            $table->string('name', 255);
             $table->text('value')->nullable();
 
             $table->timestamps();

@@ -18,9 +18,12 @@ use Shared\Support\ReCaptcha;
 
 use Modules\Contacts\Models\Attachment;
 use Modules\Contacts\Models\Contact;
+use Modules\Contacts\Models\CustomField;
 use Modules\Contacts\Models\Message;
 use Modules\Contacts\Notifications\MessageSubmitted as MessageSubmittedNotification;
 use Modules\Users\Models\User;
+
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use LogicException;
 
@@ -28,51 +31,75 @@ use LogicException;
 class Messages extends BaseController
 {
 
-    protected function validator(array $data, $remoteIp)
+    protected function validator(Contact $contact, Request $request)
     {
         $rules = array(
-            'contact_author'        => 'required|min:3|max:100',
-            'contact_author_email'  => 'required|min:3|max:100|email',
-            'contact_subject'       => 'required|min:3|max:100|valid_text',
-            'contact_content'       => 'required|min:3|max:1000|valid_text',
-            'contact_attachment'    => 'array|max:5',
             'g-recaptcha-response'  => 'required|recaptcha'
         );
 
         $messages = array(
             'recaptcha'  => __d('contacts', 'The reCaptcha verification failed.'),
+            'valid_name' => __d('contacts', 'The :attribute field is not a valid name.'),
             'valid_text' => __d('contacts', 'The :attribute field cannot contain HTML tags.'),
         );
 
         $attributes = array(
-            'contact_author'       => __d('contacts', 'Name'),
-            'contact_author_email' => __d('contacts', 'Email Address'),
-            'contact_subject'      => __d('contacts', 'Subject'),
-            'contact_content'      => __d('contacts', 'Message'),
-            'contact_attachment'   => __d('contacts', 'Attachments'),
             'g-recaptcha-response' => __d('contacts', 'ReCaptcha'),
         );
 
-        // Prepare the dynamic rules and attributes for attachments.
-        if (! empty($files = Arr::get($data, 'contact_attachment', array()))) {
-            $max = count($files) - 1;
+        $data = $request->all();
 
-            foreach(range(0, $max) as $index) {
-                $key = 'contact_attachment.' .$index;
-
-                //
-                $rules[$key] = 'max:10240|mimes:zip,rar,pdf,png,jpg,jpeg,doc,docx';
-
-                $attributes[$key] = __d('contacts', 'Attachment');
+        // Prepare the dynamic rules and attributes for Field Items.
+        foreach ($contact->fieldItems as $item) {
+            if (empty($rule = $item->rule)) {
+                continue;
             }
+
+            $key = 'contact_' .str_replace('-', '_', $item->name);
+
+            if (isset($input[$key]) && empty($input[$key]) && Str::contains($rule, 'sometimes')) {
+                unset($data[$key]);
+            }
+
+            if ($item->type == 'checkbox') {
+                $options = $item->options ?: array();
+
+                $choices = explode("\n", trim(array_get($item->options, 'choices')));
+
+                if (count ($choices) > 1) {
+                    $max = count($choices) - 1;
+
+                    foreach (range(0, $max) as $index) {
+                        $name = $key .'.' .$index;
+
+                        //
+                        $rules[$name] = $rule;
+
+                        $attributes[$name] = $item->title;
+                    }
+
+                    $rule = Str::contains($rule, 'required') ? 'required|array' : 'array';
+                }
+            }
+
+            $rules[$key] = $rule;
+
+            $attributes[$key] = $item->title;
         }
 
         $validator = Validator::make($data, $rules, $messages, $attributes);
 
         // Add the custom Validation Rule commands.
-        $validator->addExtension('recaptcha', function($attribute, $value, $parameters) use ($remoteIp)
+        $validator->addExtension('recaptcha', function($attribute, $value, $parameters) use ($request)
         {
-            return ReCaptcha::check($value, $remoteIp);
+            return ReCaptcha::check($value, $request->ip());
+        });
+
+        $validator->addExtension('valid_name', function($attribute, $value, $parameters)
+        {
+            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){1,}$~u';
+
+            return (preg_match($pattern, $value) === 1);
         });
 
         $validator->addExtension('valid_text', function($attribute, $value, $parameters)
@@ -92,64 +119,55 @@ class Messages extends BaseController
 
         $input = $request->all();
 
-        if (isset($input['contact_author_url']) && empty($input['contact_author_url'])) {
-            unset($input['contact_author_url']);
-        }
-
         $path = $request->input('path');
 
         if (is_null($contact = Contact::findByPath($path))) {
             throw new LogicException('Contact not found.');
         }
 
-        $validator = $this->validator($input, $request->ip());
+        $validator = $this->validator($contact, $request);
 
         if ($validator->fails()) {
-            $errors = array();
-
-            // There we will store the attachment(s) messages.
-            $messages = array();
-
-            foreach ($validator->messages()->getMessages() as $key => $value) {
-                if (! Str::startsWith($key, 'contact_attachment.')) {
-                    $errors[$key] = $value;
-                } else {
-                    $messages = array_unique(array_merge($value, $messages));
-                }
-            }
-
-            if (! empty($messages)) {
-                $messages = array_merge($messages, Arr::get($errors, 'contact_attachment', array()));
-
-                $errors['contact_attachment'] = $messages;
-            }
-
-            return Redirect::back()
-                ->onlyInput('contact_author', 'contact_author_email', 'contact_author_url', 'contact_subject', 'contact_content')
-                ->withErrors($errors);
+            return Redirect::back()->withInput()->withErrors($validator);
         }
 
         $userId = Auth::id() ?: 0;
 
         $message = Message::create(array(
             'contact_id'   => $contact->id,
-            'author'       => $input['contact_author'],
-            'author_email' => $input['contact_author_email'],
             'author_ip'    => $request->ip(),
-            'subject'      => $input['contact_subject'],
-            'content'      => $input['contact_content'],
             'user_id'      => $userId,
             'path'         => $path,
         ));
 
-        if ($request->hasFile('contact_attachment')) {
-            $files = $request->file('contact_attachment');
+        foreach ($contact->fieldItems as $item) {
+            $name = 'contact_' .str_replace('-', '_', $item->name);
 
-            foreach ($files as $file) {
-                $attachment = Attachment::uploadFileAndCreate($file);
+            if ($item->type == 'file') {
+                // For the uploaded files we will need a special processing.
 
-                $message->attachments()->save($attachment);
+                if ($request->hasFile($name)) {
+                    $file = $request->file($name);
+
+                    $field = CustomField::uploadFileAndCreate($file, $item);
+
+                    $message->fields()->save($field);
+                }
+
+                continue;
             }
+
+            $field = CustomField::create(array(
+                'name' => $item->name,
+                'type' => $item->type,
+
+                //
+                'value' => $request->input($name),
+
+                // Resolve the relationships.
+                'field_item_id' => $item->id,
+                'message_id'    => $message->id,
+            ));
         }
 
         // Update the Contact's messages count.

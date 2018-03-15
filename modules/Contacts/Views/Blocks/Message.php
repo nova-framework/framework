@@ -39,13 +39,13 @@
             <?php } ?>
         </select>
         <?php } else if ($type == 'checkbox') { ?>
-        <?php $checked = Input::old($name, array()); ?>
         <?php $choices = explode("\n", trim(array_get($options, 'choices'))); ?>
+        <?php $checked = (array) Input::old($name, array()); ?>
         <?php foreach($choices as $choice) { ?>
         <?php list ($value, $label) = explode(':', trim($choice)); ?>
         <?php $checkId = $id .'-' .str_replace('_', '-', $value = trim($value)); ?>
         <div class="checkbox icheck-primary">
-            <input type="checkbox" name="<?= $name; ?>[]" id="<?= $checkId; ?>" value="<?= $value; ?>" <?= in_array($value, $checked) ? 'checked' : ''; ?>> <label for="<?= $checkId; ?>"><?= trim($label); ?></label>
+            <input type="checkbox" name="<?= $name .((count($choices) > 1) ? '[]' : ''); ?>" id="<?= $checkId; ?>" value="<?= $value; ?>" <?= in_array($value, $checked) ? 'checked' : ''; ?>> <label for="<?= $checkId; ?>"><?= trim($label); ?></label>
         </div>
         <div class="clearfix"></div>
         <?php } ?>

@@ -53,7 +53,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="order"><?= __d('contacts', 'Order'); ?> <font color="#CC0000">*</font></label>
                     <div class="col-sm-3">
-                        <input name="field_order" id="field-order" type="number" class="form-control" min="0" max="1000" value="<?= Input::old('field_order', 1); ?>" style="padding: 6px 3px 6px 12px;" autocomplete="off">
+                        <input name="field_order" id="field-order" type="number" class="form-control" min="0" max="1000" value="<?= Input::old('field_order', 0); ?>" style="padding: 6px 3px 6px 12px;" autocomplete="off">
                     </div>
                 </div>
                 <div class="clearfix"></div>

@@ -6,7 +6,6 @@ use Nova\Database\ORM\Model;
 use Nova\Database\Seeder;
 
 use Modules\Contacts\Models\Contact;
-use Modules\Content\Models\Taxonomy;
 
 
 class ContactsTableSeeder extends Seeder

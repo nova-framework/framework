@@ -25,18 +25,17 @@
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Value'); ?></th>
             </tr>
             <tr>
-                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Submitted On'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $message->created_at->formatLocalized(__d('contacts', '%d %b %Y, %R')); ?></td>
-            <tr>
-            <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Site Path'); ?></th>
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= $message->path; ?></td>
-            <tr>
+            </tr>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Remote IP'); ?></th>
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= $message->remote_ip; ?></td>
+            </tr>
             <tr>
-            <tr>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Submitted On'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $message->created_at->formatLocalized(__d('contacts', '%d %b %Y, %R')); ?></td>
+            </tr>
         </table>
     </div>
     <div class="box-footer">
@@ -84,7 +83,7 @@ foreach ($contact->fieldGroups as $group) {
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= $item->title; ?></th>
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= $value; ?></td>
-            <tr>
+            </tr>
             <?php } ?>
         </table>
     </div>

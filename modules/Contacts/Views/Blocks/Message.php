@@ -33,7 +33,7 @@
         <?php } else if ($type == 'select') { ?>
         <?php $selected = Input::old($name, array_get($options, 'default')); ?>
         <?php $choices = explode("\n", trim(array_get($options, 'choices'))); ?>
-        <select name="<?= $name; ?>" id="<?= $id; ?>" placeholder="" data-placeholder="<?= __d('requests', '- Choose a {0} -', $name); ?>" class="form-control select2">
+        <select name="<?= $name; ?>" id="<?= $id; ?>" placeholder="" data-placeholder="<?= __d('requests', '- Choose a {0} -', $item->title); ?>" class="form-control select2">
             <option></option>
             <?php foreach($choices as $choice) { ?>
             <?php list ($value, $label) = explode(':', trim($choice)); ?>

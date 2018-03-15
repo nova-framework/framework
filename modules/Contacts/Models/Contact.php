@@ -38,6 +38,14 @@ class Contact extends BaseModel
     }
 
     /**
+     * @return \Nova\Database\ORM\Relations\HasManyThrough
+     */
+    public function fieldItems()
+    {
+        return $this->hasManyThrough('Modules\Contacts\Models\FieldItem', 'Modules\Contacts\Models\FieldGroup', 'contact_id', 'field_group_id');
+    }
+
+    /**
      * @return \Nova\Database\ORM\Relations\HasMany
      */
     public function messages()

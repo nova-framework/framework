@@ -33,7 +33,7 @@ class UsersTableSeeder extends Seeder
             'email'          => 'admin@novaframework.dev',
             'first_name'     => 'Site',
             'last_name'      => 'Administrator',
-            'picture'        => null,
+            'image'          => null,
             'remember_token' => '',
             'api_token'      => $this->uniqueToken(),
         ));
@@ -54,7 +54,7 @@ class UsersTableSeeder extends Seeder
             'email'          => 'marcus@novaframework.dev',
             'first_name'     => 'Marcus',
             'last_name'      => 'Spears',
-            'picture'        => null,
+            'image'          => null,
             'remember_token' => '',
             'api_token'      => $this->uniqueToken(),
         ));
@@ -75,7 +75,7 @@ class UsersTableSeeder extends Seeder
             'email'          => 'michael@novaframework.dev',
             'first_name'     => 'Michael',
             'last_name'      => 'White',
-            'picture'        => null,
+            'image'          => null,
             'remember_token' => '',
             'api_token'      => $this->uniqueToken(),
         ));
@@ -96,7 +96,7 @@ class UsersTableSeeder extends Seeder
             'email'          => 'john@novaframework.dev',
             'first_name'     => 'John',
             'last_name'      => 'Kennedy',
-            'picture'        => null,
+            'image'          => null,
             'remember_token' => '',
             'api_token'      => $this->uniqueToken(),
         ));
@@ -117,7 +117,7 @@ class UsersTableSeeder extends Seeder
             'email'          => 'mark@novaframework.dev',
             'first_name'     => 'Mark',
             'last_name'      => 'Black',
-            'picture'        => null,
+            'image'          => null,
             'remember_token' => '',
             'api_token'      => $this->uniqueToken(),
         ));

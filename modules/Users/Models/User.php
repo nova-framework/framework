@@ -11,6 +11,7 @@ use Nova\Support\Facades\Cache;
 
 use Shared\Auth\Reminders\RemindableTrait;
 use Shared\Auth\Reminders\RemindableInterface;
+use Shared\FileField\HasFileFieldsTrait;
 use Shared\MetaField\HasMetaFieldsTrait;
 
 use Modules\Messages\Traits\HasMessagesTrait;
@@ -20,7 +21,7 @@ use Modules\Platform\Traits\HasActivitiesTrait;
 
 class User extends BaseModel implements UserInterface, RemindableInterface
 {
-    use UserTrait, RemindableTrait, AuthorizableTrait, AliasesTrait, HasMetaFieldsTrait, HasActivitiesTrait, HasMessagesTrait, NotifiableTrait;
+    use UserTrait, RemindableTrait, AuthorizableTrait, AliasesTrait, HasFileFieldsTrait, HasMetaFieldsTrait, HasActivitiesTrait, HasMessagesTrait, NotifiableTrait;
 
     //
     protected $table = 'users';
@@ -45,9 +46,19 @@ class User extends BaseModel implements UserInterface, RemindableInterface
     /**
      * @var array
      */
+    public $files = array(
+        'image' => array(
+            'path'        => BASEPATH .'assets/images/users/:unique_id-:file_name',
+            'defaultPath' => BASEPATH .'assets/images/users/no-image.png',
+        ),
+    );
+
+    /**
+     * @var array
+     */
     protected static $aliases = array(
-        'location'   => array('meta' => 'location'),
-        'activated'  => array('meta' => 'activated'),
+        'location'  => array('meta' => 'location'),
+        'activated' => array('meta' => 'activated'),
     );
 
     // ACL caches.
@@ -70,15 +81,9 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     public function picture()
     {
-        if (! empty($this->picture)) {
-            $path = 'assets/files/pictures/' .basename($this->picture);
+        $path = 'assets/images/users/' .basename((string) $this->getAttribute('image'));
 
-            if (! is_readable(BASEPATH .$path)) {
-                $path = 'assets/images/users/no-image.png';
-            }
-
-            return site_url($path);
-        }
+        return site_url($path);
     }
 
     /**

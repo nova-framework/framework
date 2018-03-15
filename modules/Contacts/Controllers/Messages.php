@@ -188,8 +188,8 @@ class Messages extends BaseController
         return Redirect::back()->with('success', __d('contacts', 'Your message was successfully sent.'));
     }
 
-    protected function createPdf(Message $message)
+    protected function createPdf(Message $message, Contact $contact)
     {
-        return PDF::loadView('Modules/Contacts::PDF/Message', compact('message'))->output();
+        return PDF::loadView('Modules/Contacts::PDF/Message', compact('contact', 'message'))->output();
     }
 }

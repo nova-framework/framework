@@ -75,7 +75,7 @@ hr
         </tr>
         <tr>
             <td style="width: 35%;" class="field"><?= __d('contacts', 'Remote IP'); ?></td>
-            <td style="width: 65%;"><?= $message->author_ip; ?></td>
+            <td style="width: 65%;"><?= $message->remote_ip; ?></td>
         </tr>
         <tr>
             <td style="width: 35%;" class="field"><?= __d('contacts', 'Attachments'); ?></td>
@@ -83,30 +83,49 @@ hr
         </tr>
     </table>
 
-    <h3><?= __d('contacts', 'Message Content'); ?></h3>
+<?php
+foreach ($contact->fieldGroups as $group) {
+    $items = $group->fieldItems->filter(function ($item)
+    {
+        return ($item->type != 'file');
+    });
+
+    if ($items->isEmpty()) {
+        continue;
+    }
+?>
+    <h3><?= $group->title; ?></h3>
 
     <table class="table">
         <tr>
             <th style="width: 35%;"><?= __d('contacts', 'Field'); ?></th>
             <th style="width: 65%; text-align: left;"><?= __d('contacts', 'Value'); ?></th>
         </tr>
+<?php
+    foreach ($items as $item) {
+        $field = $fields->where('field_item_id', $item->id)->first();
+
+        if (is_null($field)) {
+            $value = '-';
+        } else if (is_null($value = $field->value)) {
+            $value = '-';
+        } else if (is_string($value)) {
+            $value = ! empty($value) ? $value : '-';
+        } else if (is_array($value)) {
+            $value = ! empty($value) ? implode(', ', $value) : '-';
+        }
+
+        if ($item->type == 'textarea') {
+            $value = nl2br($value);
+        }
+?>
         <tr>
-            <td style="width: 35%;" class="field"><?= __d('contacts', 'Author'); ?></td>
-            <td style="width: 65%;"><?= e($message->author); ?></td>
+            <td style="width: 35%;" class="field"><?= $item->title; ?></td>
+            <td style="width: 65%;"><?= $value; ?></td>
         </tr>
-        <tr>
-            <td style="width: 35%;" class="field"><?= __d('contacts', 'E-mail'); ?></td>
-            <td style="width: 65%;"><?= e($message->author_email); ?></td>
-        </tr>
-        <tr>
-            <td style="width: 35%;" class="field"><?= __d('contacts', 'Website'); ?></td>
-            <td style="width: 65%;"><?= e($message->author_url ?: '-'); ?></td>
-        </tr>
-        <tr>
-            <td style="width: 35%;" class="field"><?= __d('contacts', 'Message'); ?></td>
-            <td style="width: 65%;"><?= nl2br(e($message->content)); ?></td>
-        </tr>
+    <?php } ?>
     </table>
+<?php } ?>
 
 </body>
 </html>

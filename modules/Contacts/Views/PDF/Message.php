@@ -103,7 +103,7 @@ foreach ($contact->fieldGroups as $group) {
         </tr>
 <?php
     foreach ($items as $item) {
-        $field = $fields->where('field_item_id', $item->id)->first();
+        $field = $message->fields->where('field_item_id', $item->id)->first();
 
         if (is_null($field)) {
             $value = '-';

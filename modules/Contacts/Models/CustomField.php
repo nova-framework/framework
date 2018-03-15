@@ -46,7 +46,7 @@ class CustomField extends BaseModel
     public function getValueAttribute($value)
     {
         try {
-            $result = unserialize($value);
+            $result = @unserialize($value);
 
             if (($result === false) && ($value !== false)) {
                 return $value;

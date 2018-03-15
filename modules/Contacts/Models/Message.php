@@ -20,9 +20,7 @@ class Message extends BaseModel
     /**
      * @var array
      */
-    protected $fillable = array(
-        'contact_id', 'author', 'author_email', 'author_ip', 'subject', 'content', 'path', 'user_id'
-    );
+    protected $fillable = array('contact_id', 'remote_ip', 'path', 'user_id');
 
     /**
      * @var array

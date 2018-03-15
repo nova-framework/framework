@@ -182,7 +182,7 @@ class Messages extends BaseController
         $user = User::where('email', $contact->email)->first();
 
         if (! is_null($user)) {
-            $user->notify(new MessageSubmittedNotification($message, $contact, $this->createPdf($message)));
+            $user->notify(new MessageSubmittedNotification($message, $contact, $this->createPdf($message, $contact)));
         }
 
         return Redirect::back()->with('success', __d('contacts', 'Your message was successfully sent.'));

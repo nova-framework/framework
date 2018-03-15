@@ -71,9 +71,9 @@ class MessageSubmitted extends Notification
         $message = with(new MailMessage)
             ->subject(__d('contacts', 'New message received via {0}', $this->contact->name))
             ->line(__d('contacts', 'A new message was received via {0}.', $this->contact->name))
-            ->line('<hr>')
             ->line(__d('contacts', '<b>Remote IP:</b> {0}', $this->message->remote_ip))
-            ->line('<hr>');
+            ->line('')
+            ->line('');
 
         $contact = $this->message->contact;
 
@@ -89,7 +89,7 @@ class MessageSubmitted extends Notification
                 continue;
             }
 
-            $message->line($group->title)->line('<hr>');
+            $message->line('<h2>' .$group->title .'</h2>')->line('<hr>');
 
             foreach ($items as $item) {
                 $field = $fields->where('field_item_id', $item->id)->first();
@@ -107,14 +107,15 @@ class MessageSubmitted extends Notification
                 if ($item->type == 'textarea') {
                     $value = nl2br($value);
 
-                    $message->line('<b>' .$item->title .':</b>')->line(e($value));
+                    $message->line('<b>' .$item->title .':</b>')->line(e($value))->line('');
+                } else {
+                    $message->line('<b>' .$item->title .':</b> ' .e($value));
                 }
-
-                $message->line('<b>' .$item->title .':</b> ' .e($value));
             }
         }
 
-        $message->action(__d('contacts', 'View the Message'), url('admin/contacts', array($this->contact->id, 'messages', $this->message->id)))
+        $message->line('<hr>')
+            ->action(__d('contacts', 'View the Message'), url('admin/contacts', array($this->contact->id, 'messages', $this->message->id)))
             ->line(__d('contacts', 'Thank you for using our application!'));
 
         // Attach the Request information as PDF file.

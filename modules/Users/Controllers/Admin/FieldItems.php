@@ -25,7 +25,7 @@ class FieldItems extends BaseController
     {
         $types = array('text', 'password', 'textarea', 'select', 'checkbox', 'radio');
 
-        $ignore = ! is_null($id) ? ':' .intval($id) : '';
+        $ignore = ! is_null($id) ? ',' .intval($id) : '';
 
         // The Validation rules.
         $rules = array(

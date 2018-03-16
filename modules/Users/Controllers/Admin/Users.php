@@ -20,16 +20,14 @@ use Nova\Support\Facades\File;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Arr;
+use Nova\Support\Collection;
+use Nova\Support\Str;
 
 use Modules\Platform\Controllers\Admin\BaseController;
 use Modules\Roles\Models\Role;
-use Modules\Users\Models\Profile;
+use Modules\Users\Models\Field;
+use Modules\Users\Models\FieldItem;
 use Modules\Users\Models\User;
-
-use Modules\Users\Events\MetaFields\UpdateUserValidation;
-use Modules\Users\Events\MetaFields\UserEditing;
-use Modules\Users\Events\MetaFields\UserSaved;
-use Modules\Users\Events\MetaFields\UserShowing;
 
 use Carbon\Carbon;
 
@@ -37,7 +35,7 @@ use Carbon\Carbon;
 class Users extends BaseController
 {
 
-    protected function validator(array $data, $id = null)
+    protected function validator(array $data, Collection $items, $id = null)
     {
         if (! is_null($id)) {
             $ignore = ',' .intval($id);
@@ -55,6 +53,8 @@ class Users extends BaseController
             'roles'                 => 'required|array|exists:roles,id',
             'password'              => $required .'|confirmed|strong_password',
             'password_confirmation' => $required .'|same:password',
+            'first_name'            => 'required|valid_name',
+            'last_name'             => 'required|valid_name',
             'email'                 => 'required|min:5|max:100|email',
         );
 
@@ -68,8 +68,48 @@ class Users extends BaseController
             'role'                  => __d('users', 'Role'),
             'password'              => __d('users', 'Password'),
             'password_confirmation' => __d('users', 'Password confirmation'),
+            'first_name'            => __d('users', 'First Name'),
+            'last_name'             => __d('users', 'Last Name'),
             'email'                 => __d('users', 'E-mail'),
         );
+
+        // Prepare the dynamic rules and attributes for Field Items.
+        foreach ($items as $item) {
+            if (empty($rule = $item->rule)) {
+                continue;
+            }
+
+            $key = str_replace('-', '_', $item->name);
+
+            if (isset($data[$key]) && empty($data[$key]) && Str::contains($rule, 'sometimes')) {
+                unset($data[$key]);
+            }
+
+            if ($item->type == 'checkbox') {
+                $options = $item->options ?: array();
+
+                $count = count(explode("\n", trim(
+                    Arr::get($options, 'choices')
+                )));
+
+                if ($count > 1) {
+                    foreach (range(0, $count - 1) as $index) {
+                        $name = $key .'.' .$index;
+
+                        //
+                        $rules[$name] = $rule;
+
+                        $attributes[$name] = $item->title;
+                    }
+
+                    $rule = Str::contains($rule, 'required') ? 'required|array' : 'array';
+                }
+            }
+
+            $rules[$key] = $rule;
+
+            $attributes[$key] = $item->title;
+        }
 
         // Create a Validator instance.
         $validator = Validator::make($data, $rules, $messages, $attributes);
@@ -114,16 +154,14 @@ class Users extends BaseController
             throw new AuthorizationException();
         }
 
-        // Get all available User Roles.
         $roles = Role::all();
 
-        // Handle the User's Meta Fields.
-        $fields = $this->renderMetaFieldsForEditor();
+        $items = FieldItem::orderBy('order', 'asc')->get();
 
         return $this->createView()
             ->shares('title', __d('users', 'Create User'))
             ->with('roles', $roles)
-            ->with('fields', $fields);
+            ->with('items', $items);
     }
 
     public function store(Request $request)
@@ -135,10 +173,10 @@ class Users extends BaseController
             throw new AuthorizationException();
         }
 
-        // Validate the Input data.
-        $validator = $this->validator($input);
+        $items = FieldItem::all();
 
-        Event::dispatch(new UpdateUserValidation($validator, $user));
+        // Validate the Input data.
+        $validator = $this->validator($input, $items);
 
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withErrors($validator);
@@ -151,6 +189,8 @@ class Users extends BaseController
         $user = User::create(array(
             'username'   => $input['username'],
             'password'   => $password,
+            'first_name' => $input['first_name'],
+            'last_name'  => $input['last_name'],
             'email'      => $input['email'],
         ));
 
@@ -159,13 +199,24 @@ class Users extends BaseController
 
         // Handle the meta fields associated to User Picture and its activation.
         $user->saveMeta(array(
-            'picture'         => null,
             'activated'       => 1,
             'activation_code' => null,
         ));
 
-        // Update the other Meta / Custom Fields.
-        Event::dispatch(new UserSaved($user));
+        // Update the Custom Fields.
+        foreach ($items as $item) {
+            $value = Arr::get($input, $name = $item->name);
+
+            $field = Field::create(array(
+                'name'  => $name,
+                'type'  => $item->type,
+                'value' => $value,
+
+                // Resolve the relationships.
+                'field_item_id' => $item->id,
+                'user_id'       => $user->id,
+            ));
+        }
 
         return Redirect::to('admin/users')
             ->with('success', __d('users', 'The User <b>{0}</b> was successfully created.', $user->username));
@@ -208,16 +259,14 @@ class Users extends BaseController
             throw new AuthorizationException();
         }
 
-        // Get all available User Roles.
         $roles = Role::all();
 
-        // Handle the User's Meta Fields.
-        $fields = $this->renderMetaFieldsForEditor($user);
+        $items = FieldItem::orderBy('order', 'asc')->get();
 
         return $this->createView()
             ->shares('title', __d('users', 'Edit User'))
             ->with('roles', $roles)
-            ->with('fields', $fields)
+            ->with('items', $items)
             ->with('user', $user);
     }
 
@@ -231,7 +280,7 @@ class Users extends BaseController
 
         // Get the User Model instance.
         try {
-            $user = User::findOrFail($id);
+            $user = User::with('fields', 'meta')->findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
             // There is no User with this ID.
@@ -243,10 +292,10 @@ class Users extends BaseController
             throw new AuthorizationException();
         }
 
-        // Validate the Input data.
-        $validator = $this->validator($input, $id);
+        $items = FieldItem::all();
 
-        Event::dispatch(new UpdateUserValidation($validator, $user));
+        // Validate the Input data.
+        $validator = $this->validator($input, $items, $id);
 
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withErrors($validator);
@@ -256,8 +305,10 @@ class Users extends BaseController
         $username = $user->username;
 
         //
-        $user->username = $input['username'];
-        $user->email    = $input['email'];
+        $user->username   = $input['username'];
+        $user->first_name = $input['first_name'];
+        $user->last_name  = $input['last_name'];
+        $user->email      = $input['email'];
 
         if(isset($input['password'])) {
             // Encrypt and add the given Password.
@@ -270,8 +321,32 @@ class Users extends BaseController
         // Sync the Roles.
         $user->roles()->sync($input['roles']);
 
-        // Update the Meta / Custom Fields.
-        Event::dispatch(new UserSaved($user));
+        // Update the Custom Fields.
+        $fields = $user->fields;
+
+        foreach ($items as $item) {
+            $value = Arr::get($input, $name = $item->name);
+
+            $field = $fields->where('name', $name)->first();
+
+            if (! is_null($field)) {
+                $field->value = $value;
+
+                $field->save();
+
+                continue;
+            }
+
+            $field = Field::create(array(
+                'name'  => $name,
+                'type'  => $item->type,
+                'value' => $value,
+
+                // Resolve the relationships.
+                'field_item_id' => $item->id,
+                'user_id'       => $user->id,
+            ));
+        }
 
         // Invalidate the cached user roles and permissions.
         Cache::forget('user.roles.' .$id);
@@ -360,31 +435,5 @@ class Users extends BaseController
             ->shares('title', __d('users', 'Searching Users for: {0}', $search))
             ->with('search', $search)
             ->with('users', $users);
-    }
-
-    protected function renderMetaFieldsForEditor(User $user = null)
-    {
-        $responses = Event::dispatch(new UserEditing($user));
-
-        return implode("\n", array_filter($responses, function ($response)
-        {
-            return ! is_null($response);
-        }));
-    }
-
-    protected function fetchMetaFields(User $user = null)
-    {
-        $responses = Event::dispatch(new UserShowing($user));
-
-        //
-        $result = array();
-
-        foreach ($responses as $response) {
-            if (is_array($response) && ! empty($response)) {
-                $result = array_merge($result, $response);
-            }
-        }
-
-        return $result;
     }
 }

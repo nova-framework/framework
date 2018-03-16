@@ -52,6 +52,18 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-sm-4 control-label" for="first_name"><?= __d('users', 'First Name'); ?> <font color="#CC0000">*</font></label>
+                <div class="col-sm-8">
+                    <input name="first_name" id="first-name" type="text" class="form-control" value="<?= Input::old('first_name', $user->first_name); ?>" placeholder="<?= __d('users', 'First Name'); ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="last_name"><?= __d('users', 'First Name'); ?> <font color="#CC0000">*</font></label>
+                <div class="col-sm-8">
+                    <input name="last_name" id="last-name" type="text" class="form-control" value="<?= Input::old('last_name', $user->last_name); ?>" placeholder="<?= __d('users', 'First Name'); ?>">
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-sm-4 control-label" for="email"><?= __d('users', 'E-mail'); ?> <font color="#CC0000">*</font></label>
                 <div class="col-sm-8">
                     <input name="email" id="email" type="text" class="form-control" value="<?= Input::old('email', $user->email); ?>" placeholder="<?= __d('users', 'E-mail'); ?>">
@@ -61,7 +73,70 @@
             <h4><?= __d('users', 'Profile'); ?></h4>
             <hr>
 
-<?= $fields; ?>
+            <?php foreach ($items as $item) { ?>
+            <?php $type = $item->type; ?>
+            <?php $name = str_replace('-', '_', $item->name); ?>
+            <?php $id  = str_replace('_', '-', $item->name); ?>
+            <?php $required = Str::contains($item->rules, 'required'); ?>
+            <?php $options = $item->options ?: array(); ?>
+            <?php $placeholder = array_get($options, 'placeholder') ?: $item->title; ?>
+            <?php $field = $user->fields->where('name', $item->name)->first(); ?>
+            <?php $value = ! is_null($field) ? $field->value : null; ?>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="<?= $name; ?>">
+                    <?= $item->title; ?>
+                    <?php if ($required) { ?>
+                    <span class="text-danger" title="<?= __d('contacts', 'Required field'); ?>">*</span>
+                    <?php } ?>
+                </label>
+                <div class="col-sm-8">
+
+                <?php if ($type == 'text') { ?>
+                    <input type="text" class="form-control" name="<?= $name; ?>" id="<?= $id; ?>" value="<?= Input::old($name, $value); ?>" placeholder="<?= $placeholder; ?>" />
+                <?php } else if ($type == 'password') { ?>
+                    <input type="password" class="form-control" name="<?= $name; ?>" id="<?= $id; ?>" value="<?= Input::old($name); ?>" placeholder="<?= $placeholder; ?>" />
+                <?php } else if ($type == 'textarea') { ?>
+                    <textarea name="<?= $name; ?>" id="<?= $id; ?>" rows="<?= array_get($options, 'rows', 10); ?>" class="form-control" style="resize: none;" placeholder="<?= $placeholder; ?>"><?= Input::old($name, $value); ?></textarea>
+                <?php } else if ($type == 'select') { ?>
+                    <select name="<?= $name; ?>" id="<?= $id; ?>" placeholder="" data-placeholder="<?= array_get($options, 'placeholder') ?: __d('requests', '- Choose an option -'); ?>" class="form-control select2">
+                        <option></option>
+                        <?php $selected = Input::old($name, $value); ?>
+                        <?php $choices = explode("\n", trim(array_get($options, 'choices'))); ?>
+                        <?php foreach($choices as $choice) { ?>
+                        <?php list ($value, $label) = explode(':', trim($choice)); ?>
+                        <option value="<?= $value = trim($value); ?>" <?= ($value == $selected) ? 'selected="selected"' : ''; ?>><?= trim($label); ?></option>
+                        <?php } ?>
+                    </select>
+                <?php } else if ($type == 'checkbox') { ?>
+                    <?php $choices = explode("\n", trim(array_get($options, 'choices'))); ?>
+                    <?php $multiple = (count($choices) > 1); ?>
+                    <?php $checked = (array) Input::old($name, $multiple ? (array) $value : $value); ?>
+                    <?php foreach($choices as $choice) { ?>
+                    <?php list ($value, $label) = explode(':', trim($choice)); ?>
+                    <?php $checkId = $id .'-' .str_replace('_', '-', $value = trim($value)); ?>
+                    <div class="checkbox icheck-primary">
+                        <input type="checkbox" name="<?= $name; ?><?= $multiple ? '[]' : ''; ?>" id="<?= $checkId; ?>" value="<?= $value; ?>" <?= in_array($value, $checked) ? 'checked' : ''; ?>> <label for="<?= $checkId; ?>"><?= trim($label); ?></label>
+                    </div>
+                    <div class="clearfix"></div>
+                    <?php } ?>
+                <?php } else if ($type == 'radio') { ?>
+                    <?php $checked = Input::old($name, $value); ?>
+                    <?php $choices = explode("\n", trim(array_get($options, 'choices'))); ?>
+                    <?php foreach($choices as $choice) { ?>
+                    <?php list ($value, $label) = explode(':', trim($choice)); ?>
+                    <?php $checkId = $id .'-' .str_replace('_', '-', $value = trim($value)); ?>
+                    <div class="radio icheck-primary">
+                        <input type="radio" name="<?= $name; ?>" id="<?= $checkId; ?>" value="<?= $value; ?>" <?= ($value == $checked) ? 'checked' : ''; ?>> <label for="<?= $checkId; ?>"><?= trim($label); ?></label>
+                    </div>
+                    <div class="clearfix"></div>
+                    <?php } ?>
+                <?php } ?>
+
+                </div>
+            </div>
+
+            <?php } ?>
 
             <div class="clearfix"></div>
             <br>

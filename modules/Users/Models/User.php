@@ -95,6 +95,29 @@ class User extends BaseModel implements UserInterface, RemindableInterface
     }
 
     /**
+     * Listen to ORM events.
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function (User $model)
+        {
+            $model->load('fields', 'meta');
+
+            $model->fields->each(function ($field)
+            {
+                $field->delete();
+            });
+
+            $model->meta->each(function ($item)
+            {
+                $item->delete();
+            });
+        });
+    }
+
+    /**
      * Roles and Permissions (ACL)
      */
 

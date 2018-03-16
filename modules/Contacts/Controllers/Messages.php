@@ -57,19 +57,19 @@ class Messages extends BaseController
 
             $key = 'contact_' .str_replace('-', '_', $item->name);
 
-            if (isset($input[$key]) && empty($input[$key]) && Str::contains($rule, 'sometimes')) {
+            if (isset($data[$key]) && empty($data[$key]) && Str::contains($rule, 'sometimes')) {
                 unset($data[$key]);
             }
 
             if ($item->type == 'checkbox') {
                 $options = $item->options ?: array();
 
-                $choices = explode("\n", trim(array_get($item->options, 'choices')));
+                $count = count(explode("\n", trim(
+                    Arr::get($options, 'choices')
+                )));
 
-                if (count ($choices) > 1) {
-                    $max = count($choices) - 1;
-
-                    foreach (range(0, $max) as $index) {
+                if ($count > 1) {
+                    foreach (range(0, $count - 1) as $index) {
                         $name = $key .'.' .$index;
 
                         //

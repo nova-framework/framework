@@ -164,6 +164,9 @@ class FieldItems extends BaseController
             'order'   => $input['field_order'],
             'rules'   => $input['field_rules'],
             'options' => $options,
+
+            //
+            'created_by' => Auth::id(),
         ));
 
         return Redirect::to('admin/users/fields')
@@ -341,6 +344,8 @@ class FieldItems extends BaseController
         $item->rules = $input['field_rules'];
 
         $item->options = $options;
+
+        $item->updated_by = Auth::id();
 
         $item->save();
 

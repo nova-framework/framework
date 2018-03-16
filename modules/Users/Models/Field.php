@@ -22,7 +22,7 @@ class Field extends BaseModel
     /**
      * @var array
      */
-    protected $fillable = array('message_id', 'field_item_id', 'type', 'name', 'value');
+    protected $fillable = array('user_id', 'field_item_id', 'type', 'name', 'value');
 
 
     /**

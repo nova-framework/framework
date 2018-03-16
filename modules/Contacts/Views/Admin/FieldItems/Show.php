@@ -4,7 +4,7 @@
         <li><a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <?= __d('contacts', 'Dashboard'); ?></a></li>
         <li><a href="<?= site_url('admin/contacts'); ?>"><?= __d('contacts', 'Contacts'); ?></a></li>
         <li><a href="<?= site_url('admin/contacts/{0}/field-groups', $contact->id); ?>"><?= __d('contacts', 'Manage Fields : {0}', $contact->name); ?></a></li>
-        <li><?= __d('contacts', 'SAhow Field Item'); ?></li>
+        <li><?= __d('contacts', 'Show Field Item'); ?></li>
     </ol>
 </section>
 
@@ -62,11 +62,11 @@
             <?php } ?>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Created At'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $item->created_at->formatLocalized(__d('contacts', '%d %b %Y, %R')); ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $item->created_at->formatLocalized($format = __d('contacts', '%d %b %Y, %R')); ?></td>
             </tr>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Updated At'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $item->updated_at->formatLocalized(__d('contacts', '%d %b %Y, %R')); ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $item->updated_at->formatLocalized($format); ?></td>
             <tr>
         </table>
     </div>

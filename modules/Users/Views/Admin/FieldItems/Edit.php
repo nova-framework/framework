@@ -1,10 +1,10 @@
 <section class="content-header">
     <h1><?= $title; ?></h1>
     <ol class="breadcrumb">
-        <li><a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <?= __d('contacts', 'Dashboard'); ?></a></li>
-        <li><a href="<?= site_url('admin/contacts'); ?>"><?= __d('contacts', 'Contacts'); ?></a></li>
-        <li><a href="<?= site_url('admin/contacts/{0}/field-groups', $contact->id); ?>"><?= __d('contacts', 'Manage Fields : {0}', $contact->name); ?></a></li>
-        <li><?= __d('contacts', 'Edit Field Item'); ?></li>
+        <li><a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <?= __d('users', 'Dashboard'); ?></a></li>
+        <li><a href="<?= site_url('admin/users'); ?>"><?= __d('users', 'Users'); ?></a></li>
+        <li><a href="<?= site_url('admin/users/fields'); ?>"><?= __d('users', 'Custom Fields'); ?></a></li>
+        <li><?= __d('users', 'Edit Field'); ?></li>
     </ol>
 </section>
 
@@ -13,83 +13,82 @@
 
 <?= View::fetch('Partials/Messages'); ?>
 
-<form id="create-group-form" class="form-horizontal" action="<?= site_url('admin/contacts/field-groups/{0}/items/{1}', $group->id, $item->id); ?>" method='POST' role="form">
+<form id="create-group-form" class="form-horizontal" action="<?= site_url('admin/users/fields/{0}', $item->id); ?>" method='POST' role="form">
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('contacts', 'Edit a Field Item'); ?></h3>
+        <h3 class="box-title"><?= __d('users', 'Edit a Field'); ?></h3>
     </div>
     <div class="box-body">
         <div class="form-group clearfix" style="margin: 0;">
             <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2" style="padding-bottom: 0;">
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="field_title"><?= __d('contacts', 'Label'); ?> <font color="#CC0000">*</font></label>
+                    <label class="col-sm-3 control-label" for="field_title"><?= __d('users', 'Label'); ?> <font color="#CC0000">*</font></label>
                     <div class="col-sm-9">
-                        <input name="field_title" id="field-title" type="text" class="form-control" value="<?= Input::old('field_title', $item->title); ?>" placeholder="<?= __d('contacts', 'Label'); ?>">
+                        <input name="field_title" id="field-title" type="text" class="form-control" value="<?= Input::old('field_title', $item->title); ?>" placeholder="<?= __d('users', 'Label'); ?>">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="field_name"><?= __d('contacts', 'Name'); ?> <font color="#CC0000">*</font></label>
+                    <label class="col-sm-3 control-label" for="field_name"><?= __d('users', 'Name'); ?> <font color="#CC0000">*</font></label>
                     <div class="col-sm-9">
-                        <input name="field_name" id="field-name" type="text" class="form-control" value="<?= Input::old('field_name', $item->name); ?>" placeholder="<?= __d('contacts', 'Name'); ?>">
+                        <input name="field_name" id="field-name" type="text" class="form-control" value="<?= Input::old('field_name', $item->name); ?>" placeholder="<?= __d('users', 'Name'); ?>">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="field_type"><?= __d('contacts', 'Type'); ?> <font color="#CC0000">*</font></label>
+                    <label class="col-sm-3 control-label" for="field_type"><?= __d('users', 'Type'); ?> <font color="#CC0000">*</font></label>
                     <div class="col-sm-3">
                         <?php $type = Input::old('field_type', $item->type); ?>
-                        <select name="field_type" id="field-type" class="form-control select2" placeholder="" data-placeholder="<?= __d('contacts', 'Select a Type'); ?>" style="width: 100%;" autocomplete="off">
-                            <option value="text"     <?= ($type == 'text'     ? 'selected="selected"' : '') ?>><?= __d('contacts', 'Text'); ?></option>
-                            <option value="password" <?= ($type == 'password' ? 'selected="selected"' : '') ?>><?= __d('contacts', 'Password'); ?></option>
-                            <option value="textarea" <?= ($type == 'textarea' ? 'selected="selected"' : '') ?>><?= __d('contacts', 'Textarea'); ?></option>
-                            <option value="select"   <?= ($type == 'select'   ? 'selected="selected"' : '') ?>><?= __d('contacts', 'Select'); ?></option>
-                            <option value="checkbox" <?= ($type == 'checkbox' ? 'selected="selected"' : '') ?>><?= __d('contacts', 'Checkbox'); ?></option>
-                            <option value="radio"    <?= ($type == 'radio'    ? 'selected="selected"' : '') ?>><?= __d('contacts', 'Radio'); ?></option>
-                            <option value="file"     <?= ($type == 'file'     ? 'selected="selected"' : '') ?>><?= __d('contacts', 'File'); ?></option>
+                        <select name="field_type" id="field-type" class="form-control select2" placeholder="" data-placeholder="<?= __d('users', 'Select a Type'); ?>" style="width: 100%;" autocomplete="off">
+                            <option value="text"     <?= ($type == 'text'     ? 'selected="selected"' : '') ?>><?= __d('users', 'Text'); ?></option>
+                            <option value="password" <?= ($type == 'password' ? 'selected="selected"' : '') ?>><?= __d('users', 'Password'); ?></option>
+                            <option value="textarea" <?= ($type == 'textarea' ? 'selected="selected"' : '') ?>><?= __d('users', 'Textarea'); ?></option>
+                            <option value="select"   <?= ($type == 'select'   ? 'selected="selected"' : '') ?>><?= __d('users', 'Select'); ?></option>
+                            <option value="checkbox" <?= ($type == 'checkbox' ? 'selected="selected"' : '') ?>><?= __d('users', 'Checkbox'); ?></option>
+                            <option value="radio"    <?= ($type == 'radio'    ? 'selected="selected"' : '') ?>><?= __d('users', 'Radio'); ?></option>
                         </select>
                     </div>
                 </div>
                 <div class="clearfix"></div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="order"><?= __d('contacts', 'Order'); ?> <font color="#CC0000">*</font></label>
+                    <label class="col-sm-3 control-label" for="order"><?= __d('users', 'Order'); ?> <font color="#CC0000">*</font></label>
                     <div class="col-sm-3">
                         <input name="field_order" id="field-order" type="number" class="form-control" min="0" max="1000" value="<?= Input::old('field_order', $item->order); ?>" style="padding: 6px 3px 6px 12px;" autocomplete="off">
                     </div>
                 </div>
                 <div class="clearfix"></div>
                 <div class="form-group" id="choices-form-group" style="display: none;">
-                    <label class="col-sm-3 control-label" for="field_choices"><?= __d('contacts', 'Choices'); ?></label>
+                    <label class="col-sm-3 control-label" for="field_choices"><?= __d('users', 'Choices'); ?></label>
                     <div class="col-sm-9">
-                        <textarea name="field_choices" id="field-choices" class="form-control" style="resize: none;" rows="5" placeholder="<?= __d('contacts', 'Choices'); ?>"><?= Input::old('field_choices', $choices); ?></textarea>
+                        <textarea name="field_choices" id="field-choices" class="form-control" style="resize: none;" rows="5" placeholder="<?= __d('users', 'Choices'); ?>"><?= Input::old('field_choices', $choices); ?></textarea>
                     </div>
                 </div>
                 <div class="form-group" id="default-form-group" style="display: none;">
-                    <label class="col-sm-3 control-label" for="field_default"><?= __d('contacts', 'Default'); ?></label>
+                    <label class="col-sm-3 control-label" for="field_default"><?= __d('users', 'Default'); ?></label>
                     <div class="col-sm-9">
-                        <input name="field_default" id="field-default" type="text" class="form-control" value="<?= Input::old('field_default', $default); ?>" placeholder="<?= __d('contacts', 'Default'); ?>">
+                        <input name="field_default" id="field-default" type="text" class="form-control" value="<?= Input::old('field_default', $default); ?>" placeholder="<?= __d('users', 'Default'); ?>">
                     </div>
                 </div>
                 <div class="form-group" id="rows-form-group" style="display: none;">
-                    <label class="col-sm-3 control-label" for="field_rows"><?= __d('contacts', 'Rows'); ?></label>
+                    <label class="col-sm-3 control-label" for="field_rows"><?= __d('users', 'Rows'); ?></label>
                     <div class="col-sm-3">
                         <input name="field_rows" id="field_rows" type="number" class="form-control" min="1" max="100" value="<?= Input::old('field_rows', $rows); ?>" style="padding: 6px 3px 6px 12px;" autocomplete="off">
                     </div>
                 </div>
                 <div class="form-group" id="placeholder-form-group" style="display: none;">
-                    <label class="col-sm-3 control-label" for="field_placeholder"><?= __d('contacts', 'Placeholder'); ?></label>
+                    <label class="col-sm-3 control-label" for="field_placeholder"><?= __d('users', 'Placeholder'); ?></label>
                     <div class="col-sm-9">
-                        <input name="field_placeholder" id="field-placeholder" type="text" class="form-control" value="<?= Input::old('field_placeholder', $placeholder); ?>" placeholder="<?= __d('contacts', 'Placeholder'); ?>">
+                        <input name="field_placeholder" id="field-placeholder" type="text" class="form-control" value="<?= Input::old('field_placeholder', $placeholder); ?>" placeholder="<?= __d('users', 'Placeholder'); ?>">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="field_rules"><?= __d('contacts', 'Rules'); ?></label>
+                    <label class="col-sm-3 control-label" for="field_rules"><?= __d('users', 'Rules'); ?></label>
                     <div class="col-sm-9">
-                        <input name="field_rules" id="field-rules" type="text" class="form-control" value="<?= Input::old('field_rules', $item->rules); ?>" placeholder="<?= __d('contacts', 'Rules'); ?>">
+                        <input name="field_rules" id="field-rules" type="text" class="form-control" value="<?= Input::old('field_rules', $item->rules); ?>" placeholder="<?= __d('users', 'Rules'); ?>">
                     </div>
                 </div>
             </div>
             <div class="clearfix"></div>
-            <font color="#CC0000">*</font><?= __d('contacts', 'Required field'); ?>
+            <font color="#CC0000">*</font><?= __d('users', 'Required field'); ?>
         </div>
     </div>
     <div class="box-footer">
@@ -98,11 +97,10 @@
 </div>
 
 <input type="hidden" name="_token"   value="<?= csrf_token(); ?>" />
-<input type="hidden" name="group_id" value="<?= $group->id; ?>" />
 
 </form>
 
-<a class="btn btn-primary col-sm-2" href="<?= site_url('admin/contacts/{0}/field-groups', $contact->id); ?>"><?= __d('contacts', '<< Previous Page'); ?></a>
+<a class="btn btn-primary col-sm-2" href="<?= site_url('admin/users/fields'); ?>"><?= __d('users', '<< Previous Page'); ?></a>
 
 <div class="clearfix"></div>
 <br>
@@ -144,11 +142,6 @@ function updateFormFields()
     } else if ((type == 'checkbox') || (type == 'radio')) {
         placeholder.hide();
         input_choices.show();
-        default_value.hide();
-        textarea_rows.hide();
-    } else if (type == 'file') {
-        placeholder.hide();
-        input_choices.hide();
         default_value.hide();
         textarea_rows.hide();
     }

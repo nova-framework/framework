@@ -322,14 +322,10 @@ class Users extends BaseController
         $user->roles()->sync($input['roles']);
 
         // Update the Custom Fields.
-        $fields = $user->fields;
-
         foreach ($items as $item) {
             $value = Arr::get($input, $name = $item->name);
 
-            $field = $fields->where('name', $name)->first();
-
-            if (! is_null($field)) {
+            if (! is_null($field = $user->fields->findBy('name', $name))) {
                 $field->value = $value;
 
                 $field->save();

@@ -22,7 +22,7 @@ use Modules\Platform\Controllers\Admin\BaseController;
 class FieldItems extends BaseController
 {
 
-    protected function validator(array $data, FieldGroup $group, $id = null)
+    protected function validator(array $data, Contact $contact, $id = null)
     {
         $types = array('text', 'password', 'textarea', 'select', 'checkbox', 'radio', 'file');
 
@@ -70,12 +70,12 @@ class FieldItems extends BaseController
             return in_array($value, $types);
         });
 
-        $validator->addExtension('valid_name', function($attribute, $value, $parameters) use ($group)
+        $validator->addExtension('valid_name', function($attribute, $value, $parameters) use ($contact)
         {
-            $query = $group->fieldItems()->where('name', $value);
+            $query = $contact->fieldItems()->where('name', $value);
 
             if (! empty($parameters) && is_numeric($id = head($parameters))) {
-                $query->where('id', '!=', $id);
+                $query->where('id', '!=', (int) $id);
             }
 
             return ! $query->exists();
@@ -129,7 +129,7 @@ class FieldItems extends BaseController
         );
 
         // Validate the Input data.
-        $validator = $this->validator($input, $group);
+        $validator = $this->validator($input, $group->contact);
 
         if ($validator->fails()) {
             return Redirect::back()->withInput($input)->withErrors($validator);
@@ -345,7 +345,7 @@ class FieldItems extends BaseController
         );
 
         // Validate the Input data.
-        $validator = $this->validator($input, $group, $id);
+        $validator = $this->validator($input, $group->contact, $id);
 
         if ($validator->fails()) {
             return Redirect::back()->withInput($input)->withErrors($validator);

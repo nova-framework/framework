@@ -3,10 +3,26 @@
 namespace Modules\Users\Models;
 
 use Nova\Database\ORM\Collection as BaseCollection;
+use Nova\Support\Arr;
 
 
 class FieldCollection extends BaseCollection
 {
+
+    /**
+     * Find a model in the collection by specified atttribute.
+     *
+     * @param  string  $attribute
+     * @param  mixed  $value
+     * @return \Modules\Users\Models\Field
+     */
+    public function findBy($attribute, $value)
+    {
+        return Arr::first($this->items, function($key, $model) use ($attribute, $value)
+        {
+            return $model->getAttribute($attribute) == $value;
+        });
+    }
 
     /**
      * @param string $name

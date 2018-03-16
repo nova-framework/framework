@@ -39,10 +39,6 @@
                 <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Type'); ?></th>
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= Str::title($type = $item->type); ?></td>
             </tr>
-            <tr>
-                <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Rules'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $item->rules; ?></td>
-            </tr>
             <?php if (($type == 'select') || ($type == 'checkbox') || ($type == 'radio')) { ?>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Choices'); ?></th>
@@ -60,6 +56,16 @@
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= array_get($options, 'default') ?: '-'; ?></td>
             </tr>
             <?php } ?>
+            <?php if (($type == 'text') || ($type == 'password') || ($type == 'select')) { ?>
+            <tr>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Placeholder'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= array_get($options, 'placeholder') ?: '-'; ?></td>
+            </tr>
+            <?php } ?>
+            <tr>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Rules'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $item->rules; ?></td>
+            </tr>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Created At'); ?></th>
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= $item->created_at->formatLocalized($format = __d('users', '%d %b %Y, %R')); ?></td>

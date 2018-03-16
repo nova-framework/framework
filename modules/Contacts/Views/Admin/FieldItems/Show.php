@@ -60,6 +60,12 @@
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= array_get($options, 'default') ?: '-'; ?></td>
             </tr>
             <?php } ?>
+            <?php if (($type == 'text') || ($type == 'password') || ($type == 'select')) { ?>
+            <tr>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Placeholder'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= array_get($options, 'placeholder') ?: '-'; ?></td>
+            </tr>
+            <?php } ?>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Created At'); ?></th>
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= $item->created_at->formatLocalized($format = __d('contacts', '%d %b %Y, %R')); ?></td>

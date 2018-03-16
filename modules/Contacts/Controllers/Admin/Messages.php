@@ -143,12 +143,9 @@ class Messages extends BaseController
         // Search the Messages on Database.
         $search = $input['query'];
 
-        $messages = $contact->messages()->where(function ($query) use ($search)
+        $messages = $contact->messages()->whereHas('fields', function ($query) use ($search)
             {
-                $query->where('author', 'LIKE', '%' .$search .'%')
-                    ->orWhere('author_email', 'LIKE', '%' .$search .'%')
-                    ->orWhere('subject', 'LIKE', '%' .$search .'%')
-                    ->orWhere('content', 'LIKE', '%' .$search .'%');
+                $query->where('value', 'LIKE', '%' .$search .'%');
             })
             ->orderBy('created_at', 'DESC')
             ->paginate(15);

@@ -37,8 +37,7 @@ class FieldItemsTableSeeder extends Seeder
                 'default'     => '',
             ),
 
-            'field_group_id' => 1,
-            'created_by'     => 1,
+            'created_by' => 1,
         ));
     }
 }

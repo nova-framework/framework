@@ -94,7 +94,7 @@ class FieldItems extends BaseController
             ->shares('title', __d('contacts', 'Create Field'));
     }
 
-    public function store(Request $request, $id)
+    public function store(Request $request)
     {
         /*
         // Authorize the current User.
@@ -164,9 +164,6 @@ class FieldItems extends BaseController
             'order'   => $input['field_order'],
             'rules'   => $input['field_rules'],
             'options' => $options,
-
-            // Resolve the fieldGroup relationship.
-            'field_group_id' => $group->id,
         ));
 
         return Redirect::to('admin/users/fields')

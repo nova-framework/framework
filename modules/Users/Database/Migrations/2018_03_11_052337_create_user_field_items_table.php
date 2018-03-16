@@ -20,7 +20,6 @@ class CreateUserFieldItemsTable extends Migration
         {
             $table->increments('id');
 
-            $table->integer('field_group_id')->unsigned();
             $table->string('title', 255);
             $table->string('name', 255);
             $table->string('type', 100);

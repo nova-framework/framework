@@ -187,12 +187,8 @@ class Users extends BaseController
             throw new AuthorizationException();
         }
 
-        // Handle the User's Meta Fields.
-        $fields = $this->fetchMetaFields($user);
-
         return $this->createView()
             ->shares('title', __d('users', 'Show User'))
-            ->with('fields', $fields)
             ->with('user', $user);
     }
 

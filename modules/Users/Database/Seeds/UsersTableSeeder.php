@@ -41,7 +41,6 @@ class UsersTableSeeder extends Seeder
         $user->roles()->attach(array(1));
 
         $user->createMeta(array(
-            'location'        => 'Craiova, Romania',
             'activated'       => 1,
             'activation_code' => null,
         ));
@@ -62,7 +61,6 @@ class UsersTableSeeder extends Seeder
         $user->roles()->attach(array(2));
 
         $user->createMeta(array(
-            'location'        => 'London, UK',
             'activated'       => 1,
             'activation_code' => null,
         ));
@@ -83,7 +81,6 @@ class UsersTableSeeder extends Seeder
         $user->roles()->attach(array(3));
 
         $user->createMeta(array(
-            'location'        => 'Rome, Italy',
             'activated'       => 1,
             'activation_code' => null,
         ));
@@ -104,7 +101,6 @@ class UsersTableSeeder extends Seeder
         $user->roles()->attach(array(4));
 
         $user->createMeta(array(
-            'location'        => 'Moscow, Russia',
             'activated'       => 1,
             'activation_code' => null,
         ));
@@ -125,7 +121,6 @@ class UsersTableSeeder extends Seeder
         $user->roles()->attach(array(4));
 
         $user->createMeta(array(
-            'location'        => 'Paris, France',
             'activated'       => 1,
             'activation_code' => null,
         ));

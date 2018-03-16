@@ -35,6 +35,14 @@
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= implode(', ', $user->roles->lists('name')); ?></td>
             </tr>
             <tr>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'First Name'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->first_name; ?></td>
+            </tr>
+            <tr>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Last Name'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->last_name; ?></td>
+            </tr>
+            <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'E-mail'); ?></th>
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->email; ?></td>
             </tr>
@@ -50,6 +58,8 @@
     </div>
 </div>
 
+<?php if (! $user->fields->isEmpty()) { ?>
+
 <div class="box box-widget">
     <div class="box-header">
         <h3 class="box-title"><?= __d('users', 'User Profile'); ?></h3>
@@ -60,15 +70,17 @@
                 <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Field'); ?></th>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Value'); ?></th>
             </tr>
-            <?php foreach ($fields as $field => $data) { ?>
+            <?php foreach ($user->fields as $field) { ?>
             <tr>
-                <th style="text-align: left; vertical-align: middle;"><?= $data['name']; ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $data['text']; ?></td>
+                <th style="text-align: left; vertical-align: middle;"><?= $field->fieldItem->title; ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= is_array($value = $field->value) ? implode(', ', $value) : $value; ?></td>
             </tr>
             <?php } ?>
         </table>
     </div>
 </div>
+
+<?php } ?>
 
 <a class="btn btn-primary col-sm-2" href="<?= site_url('admin/users'); ?>"><?= __d('users', '<< Previous Page'); ?></a>
 

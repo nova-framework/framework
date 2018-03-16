@@ -41,7 +41,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
     /**
      * @var array
      */
-    protected $with = array('meta');
+    protected $with = array('fields', 'meta');
 
     /**
      * @var array
@@ -65,6 +65,14 @@ class User extends BaseModel implements UserInterface, RemindableInterface
     protected $cachedRoles;
     protected $cachedPermissions;
 
+
+    /**
+     * @return \Nova\Database\ORM\Relations\HasMany
+     */
+    public function fields()
+    {
+        return $this->hasMany('Modules\Users\Models\Field', 'user_id');
+    }
 
     /**
      * @return \Nova\Database\ORM\Relations\HasMany

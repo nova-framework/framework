@@ -144,11 +144,10 @@ class Messages extends BaseController
         $search = $input['query'];
 
         $messages = $contact->messages()->whereHas('fields', function ($query) use ($search)
-            {
-                $query->where('value', 'LIKE', '%' .$search .'%');
-            })
-            ->orderBy('created_at', 'DESC')
-            ->paginate(15);
+        {
+            $query->where('value', 'LIKE', '%' .$search .'%');
+
+        })->orderBy('created_at', 'DESC')->paginate(15);
 
         return $this->createView(compact('contact', 'messages', 'search'), 'Index')
             ->shares('title', __d('contacts', 'Messages received by : {0}', $contact->name))

@@ -357,7 +357,7 @@ class FieldItems extends BaseController
         if ($type == 'text') {
             $options = array(
                 'placeholder' => $input['field_placeholder'],
-                'default'    => $input['field_default']
+                'default'     => $input['field_default']
             );
         }
 
@@ -372,7 +372,7 @@ class FieldItems extends BaseController
         else if ($type == 'textarea') {
             $options = array(
                 'placeholder' => $input['field_placeholder'],
-                'rows'       => $input['field_rows']
+                'rows'        => $input['field_rows']
             );
         }
 
@@ -380,8 +380,8 @@ class FieldItems extends BaseController
         else if ($type == 'select') {
             $options = array(
                 'placeholder' => $input['field_placeholder'],
-                'default'    => $input['field_default'],
-                'choices'    => $input['field_choices']
+                'default'     => $input['field_default'],
+                'choices'     => $input['field_choices']
             );
         }
 

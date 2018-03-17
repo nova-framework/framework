@@ -70,12 +70,19 @@
                 <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Field'); ?></th>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Value'); ?></th>
             </tr>
-            <?php foreach ($user->fields as $field) { ?>
+<?php
+foreach ($user->fields as $field) {
+    $name = $field->fieldItem->title;
+
+    if (! empty($value = $field->getValueString()) && ($field->type == 'textarea')) {
+        $value = nl2br($value);
+    }
+?>
             <tr>
-                <th style="text-align: left; vertical-align: middle;"><?= $field->fieldItem->title; ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= is_array($value = $field->value) ? implode(', ', $value) : $value; ?></td>
+                <th style="text-align: left; vertical-align: middle;"><?= $name; ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $value; ?></td>
             </tr>
-            <?php } ?>
+<?php } ?>
         </table>
     </div>
 </div>

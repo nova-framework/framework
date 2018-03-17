@@ -51,10 +51,17 @@
                 <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Field'); ?></th>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Value'); ?></th>
             </tr>
-            <?php foreach ($metaFields as $field => $data) { ?>
+<?php
+foreach ($user->fields as $field) {
+    $name = $field->fieldItem->title;
+
+    if (! empty($value = $field->getValueString()) && ($field->type == 'textarea')) {
+        $value = nl2br($value);
+    }
+?>
             <tr>
-                <th style="text-align: left; vertical-align: middle;"><?= $data['name']; ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $data['text']; ?></td>
+                <th style="text-align: left; vertical-align: middle;"><?= $name; ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $value ?: '-'; ?></td>
             </tr>
             <?php } ?>
         </table>
@@ -94,7 +101,7 @@
             <br>
             <h4><?= __d('platform', 'Profile'); ?></h4>
             <hr>
-            <?= $metaEditor; ?>
+
             <div class="clearfix"></div>
             <br>
             <font color="#CC0000">*</font><?= __d('platform', 'Required field'); ?>

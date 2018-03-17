@@ -23,7 +23,7 @@ class FieldItems extends BaseController
 
     protected function validator(array $data, $id = null)
     {
-        $types = array('text', 'password', 'textarea', 'select', 'checkbox', 'radio');
+        $types = array('text', 'textarea', 'select', 'checkbox', 'radio');
 
         $ignore = ! is_null($id) ? ',' .intval($id) : '';
 
@@ -125,13 +125,6 @@ class FieldItems extends BaseController
             );
         }
 
-        // Handle the Password inputs.
-        else if ($type == 'password') {
-            $options = array(
-                'placeholder' => $input['field_placeholder'],
-            );
-        }
-
         // Handle the Textarea fields.
         else if ($type == 'textarea') {
             $options = array(
@@ -163,6 +156,7 @@ class FieldItems extends BaseController
             'type'    => $input['field_type'],
             'order'   => $input['field_order'],
             'rules'   => $input['field_rules'],
+
             'options' => $options,
 
             //
@@ -235,11 +229,6 @@ class FieldItems extends BaseController
             $default     = Arr::get($options, 'default');
         }
 
-        // Handle for the Password inputs.
-        else if ($type == 'password') {
-            $placeholder = Arr::get($options, 'placeholder');
-        }
-
         // Handle for the Textarea fields.
         else if ($type == 'textarea') {
             $placeholder = Arr::get($options, 'placeholder');
@@ -299,14 +288,7 @@ class FieldItems extends BaseController
         if ($type == 'text') {
             $options = array(
                 'placeholder' => $input['field_placeholder'],
-                'default'    => $input['field_default']
-            );
-        }
-
-        // Handle the Password inputs.
-        else if ($type == 'password') {
-            $options = array(
-                'placeholder' => $input['field_placeholder'],
+                'default'     => $input['field_default']
             );
         }
 
@@ -314,7 +296,7 @@ class FieldItems extends BaseController
         else if ($type == 'textarea') {
             $options = array(
                 'placeholder' => $input['field_placeholder'],
-                'rows'       => $input['field_rows']
+                'rows'        => $input['field_rows']
             );
         }
 
@@ -322,8 +304,8 @@ class FieldItems extends BaseController
         else if ($type == 'select') {
             $options = array(
                 'placeholder' => $input['field_placeholder'],
-                'default'    => $input['field_default'],
-                'choices'    => $input['field_choices']
+                'default'     => $input['field_default'],
+                'choices'     => $input['field_choices']
             );
         }
 

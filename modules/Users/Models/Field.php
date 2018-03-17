@@ -3,6 +3,8 @@
 namespace Modules\Users\Models;
 
 use Nova\Database\ORM\Model as BaseModel;
+use Nova\Support\Arr;
+use Nova\Support\Str;
 
 use Modules\Users\Models\FieldCollection;
 
@@ -93,14 +95,42 @@ class Field extends BaseModel
      */
     public function getValueString()
     {
-        if (is_null($value = $this->value)) {
-            return '-';
-        } else if (is_string($value)) {
-            return ! empty($value) ? $value : '-';
-        } else if (is_array($value)) {
-            return ! empty($value) ? implode(', ', $value) : '-';
+        $type = $this->getAttribute('type');
+
+        $value = $this->getAttribute('value');
+
+        if (($type == 'text') || ($type == 'textarea')) {
+            return $value;
         }
 
-        return (string) $value;
+        // Only the types with choices will be processed further.
+        else if (($type != 'select') && ($type != 'checkbox') && ($type != 'radio')) {
+            return;
+        }
+
+        $options = (array) $this->fieldItem->getAttribute('options');
+
+        $values = is_array($value) ? $value : array($value);
+
+        $labels = array_filter(array_map(function ($choice) use ($values)
+        {
+            if (! Str::contains($choice, ':')) {
+                return;
+            }
+
+            list ($value, $label) = array_map('trim', explode(':', $choice));
+
+            if (in_array($value, $values)) {
+                return $label;
+            }
+        },
+        explode("\n", Arr::get($options, 'choices'))), function ($label)
+        {
+            return ! empty($label);
+        });
+
+        if (! empty($labels)) {
+            return implode(', ', $labels);
+        }
     }
 }

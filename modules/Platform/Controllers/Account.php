@@ -20,12 +20,6 @@ use Nova\Support\Facades\View;
 use Nova\Support\Arr;
 
 use Modules\Platform\Controllers\BaseController;
-
-use Modules\Users\Events\MetaFields\UpdateUserValidation;
-use Modules\Users\Events\MetaFields\UserEditing;
-use Modules\Users\Events\MetaFields\UserSaved;
-use Modules\Users\Events\MetaFields\UserShowing;
-
 use Modules\Users\Models\User;
 
 
@@ -90,31 +84,9 @@ class Account extends BaseController
     {
         $user = Auth::user();
 
-        // Handle the User's Meta Fields for displaying.
-        $responses = Event::dispatch(new UserShowing($user));
-
-        //
-        $fields = array();
-
-        foreach ($responses as $response) {
-            if (is_array($response) && ! empty($response)) {
-                $fields = array_merge($fields, $response);
-            }
-        }
-
-        // Handle the User's Meta Fields for editing.
-        $responses = Event::dispatch(new UserEditing($user));
-
-        $html = implode("\n", array_filter($responses, function ($response)
-        {
-            return ! is_null($response);
-        }));
-
         return $this->createView()
             ->shares('title',  __d('users', 'Account'))
-            ->with('user', $user)
-            ->with('metaFields', $fields)
-            ->with('metaEditor', $html);
+            ->with('user', $user);
     }
 
     public function update(Request $request)
@@ -131,8 +103,6 @@ class Account extends BaseController
         // Create a Validator instance.
         $validator = $this->validator($input, $user);
 
-        Event::dispatch(new UpdateUserValidation($validator, $user));
-
         // Validate the Input.
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withErrors($validator);
@@ -147,9 +117,6 @@ class Account extends BaseController
 
         // Save the User Model instance.
         $user->save();
-
-        // Update the Meta / Custom Fields.
-        Event::dispatch(new UserSaved($user));
 
         //
         // Use a Redirect to avoid the reposting the data.

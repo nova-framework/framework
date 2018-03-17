@@ -40,7 +40,6 @@
                         <?php $type = Input::old('field_type'); ?>
                         <select name="field_type" id="field-type" class="form-control select2" placeholder="" data-placeholder="<?= __d('users', 'Select a Type'); ?>" style="width: 100%;" autocomplete="off">
                             <option value="text"     <?= ($type == 'text'     ? 'selected="selected"' : '') ?>><?= __d('users', 'Text'); ?></option>
-                            <option value="password" <?= ($type == 'password' ? 'selected="selected"' : '') ?>><?= __d('users', 'Password'); ?></option>
                             <option value="textarea" <?= ($type == 'textarea' ? 'selected="selected"' : '') ?>><?= __d('users', 'Textarea'); ?></option>
                             <option value="select"   <?= ($type == 'select'   ? 'selected="selected"' : '') ?>><?= __d('users', 'Select'); ?></option>
                             <option value="checkbox" <?= ($type == 'checkbox' ? 'selected="selected"' : '') ?>><?= __d('users', 'Checkbox'); ?></option>
@@ -123,11 +122,6 @@ function updateFormFields()
         placeholder.show();
         input_choices.hide();
         default_value.show();
-        textarea_rows.hide();
-    } else if (type == 'password') {
-        placeholder.show();
-        input_choices.hide();
-        default_value.hide();
         textarea_rows.hide();
     } else if (type == 'textarea') {
         placeholder.show();

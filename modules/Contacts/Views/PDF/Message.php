@@ -107,13 +107,13 @@ foreach ($contact->fieldGroups as $group) {
     foreach ($items as $item) {
         $field = $message->fields->where('field_item_id', $item->id)->first();
 
-        if (is_null($field)) {
-            $value = '-';
-        } else {
+        if (! is_null($field)) {
             $value = $field->getValueString();
+        } else {
+            $value = '-';
         }
 
-        if ($item->type == 'textarea') {
+        if (($value !== '-') && ($item->type == 'textarea')) {
             $value = nl2br($value);
         }
 ?>

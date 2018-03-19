@@ -32,7 +32,7 @@ return array(
     /**
      * Website Name.
      */
-    'name' => 'Nova 3.0',
+    'name' => 'Nova 4.0',
 
     /**
      * The default Theme.

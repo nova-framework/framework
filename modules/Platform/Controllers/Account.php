@@ -85,7 +85,11 @@ class Account extends BaseController
                         $attributes[$name] = $item->title;
                     }
 
-                    $rule = Str::contains($rule, 'required') ? 'required|array' : 'array';
+                    if (Str::contains($rule, 'required')) {
+                        $rule = 'required|array';
+                    } else {
+                        $rule = 'array';
+                    }
                 }
             }
 

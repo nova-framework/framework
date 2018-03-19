@@ -14,7 +14,7 @@
 use Nova\Http\Request;
 
 
-$router->get('user', array('middleware' => 'auth:api', function (Request $request)
+Route::get('user', array('middleware' => 'auth:api', function (Request $request)
 {
     return $request->user();
 }));

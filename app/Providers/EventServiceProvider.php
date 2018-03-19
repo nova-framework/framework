@@ -19,4 +19,20 @@ class EventServiceProvider extends ServiceProvider
         ),
     );
 
+
+    /**
+     * Register any other events for your application.
+     *
+     * @param  \Nova\Events\Dispatcher  $events
+     * @return void
+     */
+    public function boot(Dispatcher $events)
+    {
+        parent::boot($events);
+
+        //
+        $path = app_path('Events.php');
+
+        $this->loadEventsFrom($path);
+    }
 }

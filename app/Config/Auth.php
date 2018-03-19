@@ -3,22 +3,26 @@
  * Auth configuration
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 4.0
+ * @version 3.0
  */
 
 
 return array(
     /*
     |--------------------------------------------------------------------------
-    | Default Authentication Guard
+    | Authentication Defaults
     |--------------------------------------------------------------------------
     |
-    | This option controls the default authentication "guard". You may change
-    | this default as required, but it's a perfect start for most applications.
+    | This option controls the default authentication "guard" and password
+    | reset options for your application. You may change these defaults
+    | as required, but they're a perfect start for most applications.
     |
     */
 
-    'default' => 'web',
+    'defaults' => array(
+        'guard'    => 'web',
+        'reminder' => 'users',
+    ),
 
     /*
     |--------------------------------------------------------------------------
@@ -44,7 +48,7 @@ return array(
 
             'paths' => array(
                 'authorize' => 'login',
-                'dashboard' => 'admin/dashboard',
+                'dashboard' => 'dashboard',
             ),
         ),
         'api' => array(
@@ -73,8 +77,35 @@ return array(
     'providers' => array(
         'users' => array(
             'driver' => 'extended',
-            'model'  => 'Backend\Models\User',
+            'model'  => 'Modules\Users\Models\User',
         ),
     ),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Resetting Passwords
+    |--------------------------------------------------------------------------
+    |
+    | Here you may set the options for resetting passwords including the view
+    | that is your password reset e-mail. You may also set the name of the
+    | table that maintains all of the reset tokens for your application.
+    |
+    | You may specify multiple password reset configurations if you have more
+    | than one user table or model in the application and you want to have
+    | separate password reset settings based on the specific user types.
+    |
+    | The expire time is the number of minutes that the reset token should be
+    | considered valid. This security feature keeps tokens short-lived so
+    | they have less time to be guessed. You may change this as needed.
+    |
+    */
+
+    'reminders' => array(
+        'users' => array(
+            'provider' => 'users',
+            'email'    => 'Emails/Auth/Reminder',
+            'table'    => 'password_reminders',
+            'expire'   => 60,
+        ),
+    ),
 );

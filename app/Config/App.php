@@ -1,153 +1,64 @@
 <?php
 /**
- * Application Configuration.
+ * Application Configuration
  *
+ * @author David Carr - dave@daveismyname.com
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 4.0
+ * @version 3.0
  */
 
 
 return array(
+    /**
+     * Debug Mode
+     */
+    'debug' => true, // When enabled the actual PHP errors will be shown.
 
-    /*
-    |--------------------------------------------------------------------------
-    | Application Debug Mode
-    |--------------------------------------------------------------------------
-    |
-    | When your application is in debug mode, detailed error messages with
-    | stack traces will be shown on every error that occurs within your
-    | application. If disabled, a simple generic error page is shown.
-    |
-    */
-
-    'debug' => true,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Base Site URL
-    |--------------------------------------------------------------------------
-    |
-    | URL to your Nova root. Typically this will be your base URL,
-    | WITH a trailing slash:
-    |
-    |   http://example.com/
-    |
-    | WARNING: You MUST set this value!
-    |
-    */
-
+    /**
+     * The Website URL.
+     */
     'url' => 'http://www.novaframework.dev/',
 
-   /*
-    |--------------------------------------------------------------------------
-    | The Administrator's E-mail Address
-    |--------------------------------------------------------------------------
-    |
-    | The e-mail address for your application's administrator.
-    |
+    /**
+    * The Administrator's E-mail Address.
     */
-
     'email' => 'admin@novaframework.dev',
 
-    /*
-    |--------------------------------------------------------------------------
-    | The Website Path
-    |--------------------------------------------------------------------------
-    |
-    */
-
+    /**
+     * The Website Path.
+     */
     'path' => '/',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Application Name
-    |--------------------------------------------------------------------------
-    |
-    | This value is the name of your application. This value is used when the
-    | framework needs to place the application's name in a notification or
-    | any other location as required by the application.
-    |
-    */
+    /**
+     * Website Name.
+     */
+    'name' => 'Nova 3.0',
 
-    'name' => 'Nova 4.0',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default Theme
-    |--------------------------------------------------------------------------
-    |
-    | Used for the applications default theme.
-    |
-    */
-
+    /**
+     * The default Theme.
+     */
     'theme' => 'Bootstrap',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Application Backend Colour Scheme
-    |--------------------------------------------------------------------------
-    |
-    | Used for the applications Backend AdminLTE template.
-    |
-    | Options:
-    | - blue
-    | - blue-light
-    | - black
-    | - black-light
-    | - purple
-    | - purple-light
-    | - yellow
-    | - yellow-light
-    | - red
-    | - red-light
-    | - green
-    | - green-light
-    |
-    */
-
+    /**
+     * The Backend's Color Scheme.
+     */
     'color_scheme' => 'blue',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Application Locale Configuration
-    |--------------------------------------------------------------------------
-    |
-    | The application locale determines the default locale that will be used
-    | by the translation service provider. You are free to set this value
-    | to any of the locales which will be supported by the application.
-    |
-    */
-
+    /**
+     * The default locale that will be used by the translation.
+     */
     'locale' => 'en',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Application Timezone
-    |--------------------------------------------------------------------------
-    |
-    | Here you may specify the default timezone for your application, which
-    | will be used by the PHP date and date-time functions. We have gone
-    | ahead and set this to a sensible default for you out of the box.
-    |
-    | http://www.php.net/manual/en/timezones.php
-    |
-    */
-
+    /**
+     * The default Timezone for your website.
+     * http://www.php.net/manual/en/timezones.php
+     */
     'timezone' => 'Europe/London',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Encryption Key
-    |--------------------------------------------------------------------------
-    |
-    | This key is used by the encrypter service and should be set
-    | to a random, 32 character string, otherwise these encrypted strings
-    | will not be safe. Please do this before deploying an application!
-    |
-    | This page can be used to generate key - http://novaframework.com/token-generator
-    |
-    */
-
+    /**
+     * The Encryption Key.
+     * This page can be used to generate key - http://novaframework.com/token-generator
+     */
     'key' => 'SomeRandomStringThere_1234567890',
 
     /*
@@ -163,99 +74,109 @@ return array(
     |
     */
 
-    'log' => 'single',
+    'log' => 'daily',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Cross Site Request Forgery (CSRF)
-    |--------------------------------------------------------------------------
-    |
-    | Enables a CSRF cookie token to be set. When set to TRUE, token will be
-    | checked on a submitted form. If you are accepting user data, it is strongly
-    | recommended CSRF protection be enabled.
-    |
-    */
+    /**
+     * The Application's Middleware stack.
+     */
+    'middleware' => array(
+        'Nova\Foundation\Http\Middleware\CheckForMaintenanceMode',
+        'Nova\Routing\Middleware\DispatchAssetFiles',
+    ),
 
-    'csrf' => true,
+    /**
+     * The Application's route Middleware Groups.
+     */
+    'middlewareGroups' => array(
+        'web' => array(
+            'Shared\Forensics\Middleware\HandleProfiling',
+            'App\Middleware\EncryptCookies',
+            'Nova\Cookie\Middleware\AddQueuedCookiesToResponse',
+            'Nova\Session\Middleware\StartSession',
+            'Nova\Foundation\Http\Middleware\SetupLanguage',
+            'Nova\View\Middleware\ShareErrorsFromSession',
+            'App\Middleware\VerifyCsrfToken',
+            'App\Middleware\MarkNotificationAsRead',
+        ),
+        'api' => array(
+            'throttle:60,1',
+        )
+    ),
 
-    /*
-    |--------------------------------------------------------------------------
-    | Autoloaded Service Providers
-    |--------------------------------------------------------------------------
-    |
-    | The service providers listed here will be automatically loaded on the
-    | request to your application. Feel free to add your own services to
-    | this array to grant expanded functionality to your applications.
-    |
-    */
+    /**
+     * The Application's route Middleware.
+     */
+    'routeMiddleware' => array(
+        'auth'     => 'Nova\Auth\Middleware\Authenticate',
+        'guest'    => 'App\Middleware\RedirectIfAuthenticated',
+        'throttle' => 'Nova\Routing\Middleware\ThrottleRequests',
+    ),
 
+    /**
+     * The registered Service Providers.
+     */
     'providers' => array(
-        // The Framework Providers.
-        'Nova\Plugins\PluginServiceProvider',
         'Nova\Auth\AuthServiceProvider',
         'Nova\Bus\BusServiceProvider',
         'Nova\Cache\CacheServiceProvider',
+        'Nova\Routing\RoutingServiceProvider',
         'Nova\Cookie\CookieServiceProvider',
+        //'Nova\Module\ModuleServiceProvider',
+        'Nova\Package\PackageServiceProvider',
         'Nova\Database\DatabaseServiceProvider',
         'Nova\Encryption\EncryptionServiceProvider',
         'Nova\Filesystem\FilesystemServiceProvider',
-        'Nova\Foundation\Providers\FoundationServiceProvider',
         'Nova\Hashing\HashServiceProvider',
-        'Nova\Language\LanguageServiceProvider',
         'Nova\Mail\MailServiceProvider',
         'Nova\Pagination\PaginationServiceProvider',
         'Nova\Queue\QueueServiceProvider',
         'Nova\Redis\RedisServiceProvider',
         'Nova\Session\SessionServiceProvider',
+        'Nova\Language\LanguageServiceProvider',
         'Nova\Validation\ValidationServiceProvider',
         'Nova\View\ViewServiceProvider',
         'Nova\Broadcasting\BroadcastServiceProvider',
+        'Nova\Notification\NotificationServiceProvider',
 
-        // The Forge/Console Providers.
-        'Nova\Foundation\Providers\ForgeServiceProvider',
-        'Nova\Foundation\Providers\ConsoleSupportServiceProvider',
+        // The Forge Providers.
         'Nova\Cache\ConsoleServiceProvider',
+        'Nova\Foundation\Providers\ConsoleSupportServiceProvider',
+        'Nova\Foundation\Providers\ForgeServiceProvider',
         'Nova\Database\MigrationServiceProvider',
         'Nova\Database\SeedServiceProvider',
-        'Nova\Plugins\ConsoleServiceProvider',
+        'Nova\Package\ConsoleServiceProvider',
         'Nova\Routing\ConsoleServiceProvider',
         'Nova\Session\ConsoleServiceProvider',
+
+        // The Shared Providers.
+        'Shared\Auth\Reminders\ReminderServiceProvider',
+        'Shared\Auth\AuthServiceProvider',
+        'Shared\Backup\BackupServiceProvider',
+        'Shared\DomPDF\PdfServiceProvider',
+        'Shared\Queue\QueueServiceProvider',
+        'Shared\Routing\RoutingServiceProvider',
+        'Shared\Widgets\WidgetServiceProvider',
 
         // The Application Providers.
         'App\Providers\AppServiceProvider',
         'App\Providers\AuthServiceProvider',
-        'App\Providers\BroadcastServiceProvider',
         'App\Providers\EventServiceProvider',
         'App\Providers\RouteServiceProvider',
+        'App\Providers\BroadcastServiceProvider',
     ),
 
-    /*
-    |--------------------------------------------------------------------------
-    | Service Provider Manifest
-    |--------------------------------------------------------------------------
-    |
-    | The service provider manifest is used by Nova to lazy load service
-    | providers which are not needed for each request, as well to keep a
-    | list of all of the services. Here, you may set its storage spot.
-    |
-    */
+    /**
+     * The Service Providers Manifest path.
+     */
+    'manifest' => BASEPATH .'storage',
 
-    'manifest' => STORAGE_PATH,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Class Aliases
-    |--------------------------------------------------------------------------
-    |
-    | This array of class aliases will be registered when this application
-    | is started. However, feel free to register as many as you wish as
-    | the aliases are "lazy" loaded so they don't hinder performance.
-    |
-    */
-
+    /**
+     * The registered Class Aliases.
+     */
     'aliases' => array(
         // The Support Classes.
         'Arr'           => 'Nova\Support\Arr',
+        'Assets'        => 'Nova\Support\Assets',
         'Str'           => 'Nova\Support\Str',
 
         // The Database Seeder.
@@ -263,7 +184,6 @@ return array(
 
         // The Support Facades.
         'App'           => 'Nova\Support\Facades\App',
-        'Forge'         => 'Nova\Support\Facades\Forge',
         'Auth'          => 'Nova\Support\Facades\Auth',
         'Broadcast'     => 'Nova\Support\Facades\Broadcast',
         'Bus'           => 'Nova\Support\Facades\Bus',
@@ -274,11 +194,13 @@ return array(
         'DB'            => 'Nova\Support\Facades\DB',
         'Event'         => 'Nova\Support\Facades\Event',
         'File'          => 'Nova\Support\Facades\File',
+        'Forge'         => 'Nova\Support\Facades\Forge',
         'Gate'          => 'Nova\Support\Facades\Gate',
         'Hash'          => 'Nova\Support\Facades\Hash',
         'Input'         => 'Nova\Support\Facades\Input',
         'Language'      => 'Nova\Support\Facades\Language',
-        'Mail'          => 'Nova\Support\Facades\Mail',
+        'Mailer'        => 'Nova\Support\Facades\Mailer',
+        'Notification'  => 'Nova\Support\Facades\Notification',
         'Paginator'     => 'Nova\Support\Facades\Paginator',
         'Queue'         => 'Nova\Support\Facades\Queue',
         'Redirect'      => 'Nova\Support\Facades\Redirect',
@@ -286,16 +208,25 @@ return array(
         'Request'       => 'Nova\Support\Facades\Request',
         'Response'      => 'Nova\Support\Facades\Response',
         'Route'         => 'Nova\Support\Facades\Route',
+        'Schedule'      => 'Nova\Support\Facades\Schedule',
         'Schema'        => 'Nova\Support\Facades\Schema',
-        'Section'       => 'Nova\Support\Facades\Section',
         'Session'       => 'Nova\Support\Facades\Session',
         'Validator'     => 'Nova\Support\Facades\Validator',
         'Log'           => 'Nova\Support\Facades\Log',
         'URL'           => 'Nova\Support\Facades\URL',
-        'View'          => 'Nova\Support\Facades\View',
-        'Widget'        => 'Nova\Support\Facades\Widget',
         'Template'      => 'Nova\Support\Facades\Template',
-        'Plugin'        => 'Nova\Support\Facades\Plugin',
+        'View'          => 'Nova\Support\Facades\View',
+        'Package'       => 'Nova\Support\Facades\Package',
+
+        // The Shared Facades.
+        'Action'        => 'Shared\Support\Facades\Action',
+        'Filter'        => 'Shared\Support\Facades\Filter',
+        'PDF'           => 'Shared\Support\Facades\PDF',
+        'Password'      => 'Shared\Support\Facades\Password',
+        'Widget'        => 'Shared\Support\Facades\Widget',
+
+        // The Forensics Console.
+        'Console'       => 'Shared\Forensics\Console',
     ),
 
 );

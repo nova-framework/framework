@@ -1,8 +1,17 @@
 <?php
 
 return array (
+  'Bad Request' => '',
+  'Be right back.' => '',
+  'Forbidden' => '',
+  'Go to our home page and navigate to the content in question.' => '',
+  'Hello!' => '',
+  'If you spelled the URL manually, double check the spelling.' => '',
+  'If you\'re having trouble clicking the "{0}" button, copy and paste the URL below into your web browser:' => '',
   'Internal Server Error' => '',
   'Method not allowed' => '',
+  'Referrer: {0}' => '',
+  'Regards,' => '',
   'Service unavailable' => '',
   'Something has gone wrong on the Web Server.' => '',
   'The :attribute and :other must be different.' => '',
@@ -48,9 +57,12 @@ return array (
   'The :attribute must contain :size items.' => '',
   'The :attribute must have at least :min items.' => '',
   'The :attribute must have between :min and :max items.' => '',
+  'The page you are looking for can not be found.' => '',
   'The selected :attribute is invalid.' => '',
   'This could be the result of an invalid Page request.' => '',
-  'This site is temporarily unavailable.' => '',
+  'This could be the result of the page being removed, the name being changed or the page being temporarily unavailable.' => '',
+  'Troubleshooting' => '',
   'Unauthorized' => '',
   'Validation Token has expired. Please try again!' => '',
+  'Whoops!' => '',
 );

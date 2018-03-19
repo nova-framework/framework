@@ -1,65 +1,30 @@
 <?php
 /**
- * Database Configuration.
+ * Database configuration
  *
+ * @author David Carr - dave@daveismyname.com
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 4.0
+ * @version 3.0
  */
 
 
 return array(
-
-    /*
-    |--------------------------------------------------------------------------
-    | PDO Fetch Style
-    |--------------------------------------------------------------------------
-    |
-    | By default, database results will be returned as instances of the PHP
-    | stdClass object; however, you may desire to retrieve records in an
-    | array format for simplicity. Here you can tweak the fetch style.
-    |
-    */
-
+    // The PDO Fetch Style.
     'fetch' => PDO::FETCH_CLASS,
 
-    /*
-    |--------------------------------------------------------------------------
-    | Default Database Connection Name
-    |--------------------------------------------------------------------------
-    |
-    | Here you may specify which of the database connections below you wish
-    | to use as your default connection for all database work. Of course
-    | you may use many connections at once using the Database library.
-    |
-    */
-
+    // The Default Database Connection Name.
     'default' => 'mysql',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Database Connections
-    |--------------------------------------------------------------------------
-    |
-    | Here are each of the database connections setup for your application.
-    | Of course, examples of configuring each database platform that is
-    | supported by Nova is shown below to make development simple.
-    |
-    |
-    | All database work in Nova is done through the PHP PDO facilities
-    | so make sure you have the driver for your particular database of
-    | choice installed on your machine before you begin development.
-    |
-    */
-
+    // The Database Connections.
     'connections' => array(
         'sqlite' => array(
             'driver'    => 'sqlite',
-            'database'  => STORAGE_PATH .'database.sqlite',
+            'database'  => BASEPATH .'storage' .DS .'database.sqlite',
             'prefix'    => '',
         ),
         'mysql' => array(
             'driver'    => 'mysql',
-            'host'      => 'localhost',
+            'hostname'  => 'localhost',
             'database'  => 'nova',
             'username'  => 'nova',
             'password'  => 'password',
@@ -79,37 +44,21 @@ return array(
         ),
     ),
 
-    /*
-    |--------------------------------------------------------------------------
-    | Migration Repository Table
-    |--------------------------------------------------------------------------
-    |
-    | This table keeps track of all the migrations that have already run for
-    | your application. Using this information, we can determine which of
-    | the migrations on disk haven't actually been run in the database.
-    |
-    */
-
+    // Migration Repository Table
     'migrations' => 'migrations',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Redis Databases
-    |--------------------------------------------------------------------------
-    |
-    | Redis is an open source, fast, and advanced key-value store that also
-    | provides a richer set of commands than a typical key-value systems
-    | such as APC or Memcached. Nova makes it easy to dig right in.
-    |
-    */
+    // Database Backup
+    'backup' => array(
+        // The path where database dumps are stored.
+        'path'  => APPPATH .'Database' .DS .'Backup',
 
-    'redis' => array(
-        'cluster' => false,
-
-        'default' => array(
-            'host'        => '127.0.0.1',
-            'port'        => 6379,
-            'database'    => 0,
+        // The paths to the MySQL tools used by Forge.
+        'mysql' => array(
+            'dumpCommandPath'    => '/usr/bin/mysqldump',
+            'restoreCommandPath' => '/usr/bin/mysql',
         ),
+
+        // Whether or not the dump file is compressed.
+        'compress' => true,
     ),
 );

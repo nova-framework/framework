@@ -20,7 +20,7 @@
 <h3><strong><?= $post->title; ?></strong></h3>
 <hr style="margin-bottom: 10px;">
 <?php $format = __d('content', '%d %b %Y'); ?>
-<div class="pull-left"><?= __d('content', '{0}, by <b>{1}</b>', $post->updated_at->formatLocalized($format), $post->author->realname()); ?></div>
+<div class="pull-left"><?= __d('content', '{0}, by <b>{1}</b>', $post->updated_at->formatLocalized($format), $post->author->realname); ?></div>
 
 <?php $categories = $post->taxonomies->where('taxonomy', 'category'); ?>
 <?php if (! $categories->isEmpty()) { ?>

@@ -23,10 +23,10 @@
             <!-- Status -->
             <div class="media" style="margin-top: 5px;">
                 <div class="pull-left">
-                    <img class="img-thumbnail" style="height: 75px; width: 75px" src="<?= $message->sender->picture(); ?>" alt="<?= $message->sender->realname(); ?>" class="media-object">
+                    <img class="img-thumbnail" style="height: 75px; width: 75px" src="<?= $message->sender->picture(); ?>" alt="<?= $message->sender->realname; ?>" class="media-object">
                 </div>
                 <div class="media-body">
-                    <h4 class="media-heading"><?= $message->sender->realname(); ?></h4>
+                    <h4 class="media-heading"><?= $message->sender->realname; ?></h4>
                     <p><?= e($message->body); ?></p>
                     <ul class="list-inline text-muted">
                         <li><?= $message->created_at->diffForHumans(); ?></li>
@@ -39,10 +39,10 @@
             <hr style="margin: 0;">
             <div class="media comment-block" style="margin-top: 10px;">
                 <a class="pull-left" href="<?= site_url('user/' .$reply->sender->username); ?>">
-                    <img class="img-thumbnail" style="height: 75px; width: 75px" src="<?= $reply->sender->picture(); ?>" alt="<?= $reply->sender->realname(); ?>" class="media-object">
+                    <img class="img-thumbnail" style="height: 75px; width: 75px" src="<?= $reply->sender->picture(); ?>" alt="<?= $reply->sender->realname; ?>" class="media-object">
                 </a>
                 <div class="media-body">
-                    <h4 class="media-heading"><?= $reply->sender->realname(); ?></h4>
+                    <h4 class="media-heading"><?= $reply->sender->realname; ?></h4>
                     <p><?= e($reply->body); ?></p>
                     <ul class="list-inline text-muted">
                         <li><?= $reply->created_at->diffForHumans(); ?></li>

@@ -22,7 +22,7 @@
             <tr>
                 <td style="text-align: center; vertical-align: middle;" width='5%'><?= $user->id; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width='20%'><?= $user->username; ?></td>
-                <td style="text-align: center; vertical-align: middle;" width='25%'><?= $user->realname(); ?></td>
+                <td style="text-align: center; vertical-align: middle;" width='25%'><?= $user->realname; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width='20%'><?= $user->email; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width='15%'><?= implode(', ', $user->roles->lists('name')); ?></td>
                 <td style="text-align: right; vertical-align: middle;" width='15%'>

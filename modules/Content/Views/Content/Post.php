@@ -18,7 +18,7 @@
 <?php $thumbnail = isset($post->thumbnail) && isset($post->thumbnail->attachment) ? site_url('content/media/serve/' .$post->thumbnail->attachment->name) .'?s=270' : ''; ?>
 
 <?php $format = __d('content', '%B %d, %Y'); ?>
-<div class="pull-left"><?= __d('content', '{0} by <b>{1}</b>', $post->updated_at->formatLocalized($format), $post->author->realname()); ?></div>
+<div class="pull-left"><?= __d('content', '{0} by <b>{1}</b>', $post->updated_at->formatLocalized($format), $post->author->realname); ?></div>
 
 <?php $categories = $post->taxonomies->where('taxonomy', 'category'); ?>
 <?php if (! $categories->isEmpty()) { ?>

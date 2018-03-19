@@ -67,7 +67,6 @@
             <div class="clearfix"></div>
             <h4><?= __d('users', 'Profile'); ?></h4>
             <hr>
-
             <?php foreach ($items as $item) { ?>
             <?php $type = $item->type; ?>
             <?php $name = str_replace('-', '_', $item->name); ?>

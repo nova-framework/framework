@@ -4,6 +4,7 @@ return array (
   '%d %b %Y, %H:%M' => '',
   '%d %b %Y, %R' => '',
   '%d files selected' => '',
+  '- Choose an option -' => '',
   '<b>{0}</b>, you have successfully logged in.' => '<b>{0}</b>, du er logget ind.',
   'Account' => '',
   'Account Activation' => '',

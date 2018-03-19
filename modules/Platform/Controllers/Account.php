@@ -18,8 +18,10 @@ use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 use Nova\Support\Arr;
+use Nova\Support\Collection;
 
 use Modules\Platform\Controllers\BaseController;
+use Modules\Users\Models\FieldItem;
 use Modules\Users\Models\User;
 
 
@@ -33,7 +35,7 @@ class Account extends BaseController
     protected $layout = 'Frontend';
 
 
-    protected function validator(array $data, User $user)
+    protected function validator(array $data, User $user, Collection $items)
     {
         // Prepare the Validation Rules, Messages and Attributes.
         $rules = array(
@@ -53,6 +55,44 @@ class Account extends BaseController
             'password'              => __d('users', 'New Password'),
             'password_confirmation' => __d('users', 'Password Confirmation'),
         );
+
+        // Prepare the dynamic rules and attributes for Field Items.
+        foreach ($items as $item) {
+            if (empty($rule = $item->rule)) {
+                continue;
+            }
+
+            $key = str_replace('-', '_', $item->name);
+
+            if (isset($data[$key]) && empty($data[$key]) && Str::contains($rule, 'sometimes')) {
+                unset($data[$key]);
+            }
+
+            if ($item->type == 'checkbox') {
+                $options = $item->options ?: array();
+
+                $count = count(explode("\n", trim(
+                    Arr::get($options, 'choices')
+                )));
+
+                if ($count > 1) {
+                    foreach (range(0, $count - 1) as $index) {
+                        $name = $key .'.' .$index;
+
+                        //
+                        $rules[$name] = $rule;
+
+                        $attributes[$name] = $item->title;
+                    }
+
+                    $rule = Str::contains($rule, 'required') ? 'required|array' : 'array';
+                }
+            }
+
+            $rules[$key] = $rule;
+
+            $attributes[$key] = $item->title;
+        }
 
         // Create a Validator instance.
         $validator = Validator::make($data, $rules, $messages, $attributes);
@@ -84,14 +124,18 @@ class Account extends BaseController
     {
         $user = Auth::user();
 
+        $items = FieldItem::all();
+
         return $this->createView()
             ->shares('title',  __d('users', 'Account'))
-            ->with('user', $user);
+            ->with(compact('user', 'items'));
     }
 
     public function update(Request $request)
     {
         $user = Auth::user();
+
+        $items = FieldItem::orderBy('order', 'asc')->get();
 
         // Retrieve the Input data.
         $input = $request->all();
@@ -101,7 +145,7 @@ class Account extends BaseController
         }
 
         // Create a Validator instance.
-        $validator = $this->validator($input, $user);
+        $validator = $this->validator($input, $user, $items);
 
         // Validate the Input.
         if ($validator->fails()) {

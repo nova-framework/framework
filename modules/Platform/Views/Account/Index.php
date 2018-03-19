@@ -26,12 +26,16 @@
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->username; ?></td>
             </tr>
             <tr>
-                <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'E-mail'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->email; ?></td>
-            </tr>
-            <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'Roles'); ?></th>
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= implode(', ', $user->roles->lists('name')); ?></td>
+            </tr>
+            <tr>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'Name and Surname'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->realname ?: '-'; ?></td>
+            </tr>
+            <tr>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'E-mail'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->email; ?></td>
             </tr>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'Created At'); ?></th>
@@ -40,6 +44,8 @@
         </table>
     </div>
 </div>
+
+<?php if (! $user->fields->isEmpty()) { ?>
 
 <div class="box box-widget">
     <div class="box-header">
@@ -61,12 +67,47 @@ foreach ($user->fields as $field) {
 ?>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= $name; ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $value ?: '-'; ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $value; ?></td>
             </tr>
-            <?php } ?>
+<?php } ?>
         </table>
     </div>
 </div>
+
+<?php } ?>
+
+<form action="<?= site_url('account/picture'); ?>" class="form-horizontal" method='POST' enctype="multipart/form-data" role="form">
+
+<div  class="box box-widget">
+    <div class="box-header with-border">
+        <h3 class="box-title"><?= __d('platform', 'Profile Picture'); ?></h3>
+    </div>
+    <div class="box-body">
+        <div class="col-md-4 no-padding">
+            <img src="<?= $user->picture(); ?>" class="img-thumbnail img-responsive" alt="Profile Image" style="margin-bottom: 0; max-height: 200px; width:auto;">
+        </div>
+        <div class="col-md-8">
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="image"><?= __d('platform', 'Profile Picture (to change)'); ?></label>
+                <div class="input-group">
+                    <input type="text" class="form-control" readonly>
+                    <label class="input-group-btn">
+                        <span class="btn btn-primary">
+                            <?= __d('contacts', 'Browse ...'); ?> <input type="file" name="image" style="display: none;">
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box-footer">
+        <input type="submit" name="submit" class="btn btn-success col-sm-2 pull-right" value="<?= __d('platform', 'Update'); ?>">
+    </div>
+</div>
+
+<?= csrf_field(); ?>
+
+</form>
 
 <form action="<?= site_url('account'); ?>" class="form-horizontal" method='POST' enctype="multipart/form-data" role="form">
 
@@ -117,3 +158,47 @@ foreach ($user->fields as $field) {
 </form>
 
 </section>
+
+<script type="text/javascript">
+
+$(function() {
+
+    // We can attach the `fileselect` event to all file inputs on the page
+    $(document).on('change', ':file', function() {
+        var input = $(this),
+            numFiles = input.get(0).files ? input.get(0).files.length : 1,
+            label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+
+        if (input.get(0).files) {
+            var items = [];
+
+            var files = input.get(0).files;
+
+            for (var i = 0, file; file = files[i]; i++) {
+                items.push(file.name);
+            }
+
+            label = items.join(', ');
+        }
+
+        input.trigger('fileselect', [numFiles, label]);
+    });
+
+    // We can watch for our custom `fileselect` event like this
+    $(document).ready( function() {
+        $(':file').on('fileselect', function(event, numFiles, label) {
+            var input = $(this).parents('.input-group').find(':text'),
+                log = (numFiles > 1) ? sprintf("<?= __d('contacts', '%d files selected'); ?>", numFiles) : label;
+
+            if (input.length) {
+                input.val(label);
+            } else {
+                if (log) alert(log);
+            }
+      });
+  });
+
+});
+
+</script>
+

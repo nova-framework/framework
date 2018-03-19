@@ -35,12 +35,8 @@
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= implode(', ', $user->roles->lists('name')); ?></td>
             </tr>
             <tr>
-                <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'First Name'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->first_name; ?></td>
-            </tr>
-            <tr>
-                <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Last Name'); ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->last_name; ?></td>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Name and Surname'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->realname; ?></td>
             </tr>
             <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'E-mail'); ?></th>

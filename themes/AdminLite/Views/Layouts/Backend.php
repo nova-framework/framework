@@ -132,7 +132,7 @@ $languages = Config::get('languages');
               <li class="user-header">
                 <img src="<?= $user->picture(); ?>" class="img-circle" alt="User Image">
                 <p>
-                  <?= $user->realname(); ?> - <?= implode(', ', $user->roles->lists('name')); ?>
+                  <?= $user->realname; ?> - <?= implode(', ', $user->roles->lists('name')); ?>
                   <?php $sinceDate = $user->created_at->formatLocalized(__d('admin_lite', '%d %b %Y, %R')); ?>
                   <small><?= __d('admin_lite', 'Member since {0}', $sinceDate); ?></small>
                 </p>

@@ -82,11 +82,6 @@ class User extends BaseModel implements UserInterface, RemindableInterface
         return $this->hasMany('Modules\Users\Models\UserMeta', 'user_id');
     }
 
-    public function realname()
-    {
-        return trim($this->first_name .' ' .$this->last_name);
-    }
-
     public function picture()
     {
         $path = 'assets/images/users/' .basename((string) $this->getAttribute('image'));

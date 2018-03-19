@@ -53,8 +53,7 @@ class Users extends BaseController
             'roles'                 => 'required|array|exists:roles,id',
             'password'              => $required .'|confirmed|strong_password',
             'password_confirmation' => $required .'|same:password',
-            'first_name'            => 'required|valid_name',
-            'last_name'             => 'required|valid_name',
+            'realname'              => 'required|valid_name',
             'email'                 => 'required|min:5|max:100|email',
         );
 
@@ -68,8 +67,7 @@ class Users extends BaseController
             'role'                  => __d('users', 'Role'),
             'password'              => __d('users', 'Password'),
             'password_confirmation' => __d('users', 'Password confirmation'),
-            'first_name'            => __d('users', 'First Name'),
-            'last_name'             => __d('users', 'Last Name'),
+            'realname'              => __d('users', 'Name and Surname'),
             'email'                 => __d('users', 'E-mail'),
         );
 
@@ -117,7 +115,7 @@ class Users extends BaseController
         // Add the custom Validation Rule commands.
         $validator->addExtension('valid_name', function($attribute, $value, $parameters)
         {
-            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){1,}$~u';
+            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){2,}$~u';
 
             return (preg_match($pattern, $value) === 1);
         });
@@ -187,11 +185,10 @@ class Users extends BaseController
 
         // Create a User Model instance.
         $user = User::create(array(
-            'username'   => $input['username'],
-            'password'   => $password,
-            'first_name' => $input['first_name'],
-            'last_name'  => $input['last_name'],
-            'email'      => $input['email'],
+            'username' => $input['username'],
+            'password' => $password,
+            'realname' => $input['realname'],
+            'email'    => $input['email'],
         ));
 
         // Attach the Roles.
@@ -305,10 +302,9 @@ class Users extends BaseController
         $username = $user->username;
 
         //
-        $user->username   = $input['username'];
-        $user->first_name = $input['first_name'];
-        $user->last_name  = $input['last_name'];
-        $user->email      = $input['email'];
+        $user->username = $input['username'];
+        $user->realname = $input['realname'];
+        $user->email    = $input['email'];
 
         if(isset($input['password'])) {
             // Encrypt and add the given Password.
@@ -422,6 +418,7 @@ class Users extends BaseController
 
         $users = User::where('username', 'LIKE', '%' .$search .'%')
             ->orWhere('email', 'LIKE', '%' .$search .'%')
+            ->orWhere('realname', 'LIKE', '%' .$search .'%')
             ->paginate(15);
 
         // Prepare the Query for displaying.

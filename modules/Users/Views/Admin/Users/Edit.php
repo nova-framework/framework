@@ -52,15 +52,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="first_name"><?= __d('users', 'First Name'); ?> <font color="#CC0000">*</font></label>
+                <label class="col-sm-4 control-label" for="realname"><?= __d('users', 'Name and Surname'); ?> <font color="#CC0000">*</font></label>
                 <div class="col-sm-8">
-                    <input name="first_name" id="first-name" type="text" class="form-control" value="<?= Input::old('first_name', $user->first_name); ?>" placeholder="<?= __d('users', 'First Name'); ?>">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label" for="last_name"><?= __d('users', 'First Name'); ?> <font color="#CC0000">*</font></label>
-                <div class="col-sm-8">
-                    <input name="last_name" id="last-name" type="text" class="form-control" value="<?= Input::old('last_name', $user->last_name); ?>" placeholder="<?= __d('users', 'First Name'); ?>">
+                    <input name="realname" id="first-name" type="text" class="form-control" value="<?= Input::old('realname', $user->realname); ?>" placeholder="<?= __d('users', 'Name and Surname'); ?>">
                 </div>
             </div>
             <div class="form-group">

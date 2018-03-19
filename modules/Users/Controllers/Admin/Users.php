@@ -85,12 +85,18 @@ class Users extends BaseController
                 unset($data[$key]);
             }
 
-            if ($item->type == 'checkbox') {
-                $options = $item->options ?: array();
+            $options = $item->options ?: array();
 
-                $count = count(explode("\n", trim(
+            if ($item->type == 'checkbox') {
+                $choices = array_filter(explode("\n", trim(
                     Arr::get($options, 'choices')
-                )));
+
+                )), function ($value)
+                {
+                    return ! empty($value);
+                });
+
+                $count = count($choices);
 
                 if ($count > 1) {
                     foreach (range(0, $count - 1) as $index) {

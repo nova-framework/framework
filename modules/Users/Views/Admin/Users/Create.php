@@ -67,7 +67,7 @@
             <div class="clearfix"></div>
             <h4><?= __d('users', 'Profile'); ?></h4>
             <hr>
-            <?= View::fetch('Modules/Users::Partials/FieldsEditor', compact('items')); ?>
+            <?= View::fetch('Modules/Users::Partials/Fields/Edit', compact('items')); ?>
 
             <div class="clearfix"></div>
             <div class="form-group">

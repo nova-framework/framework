@@ -45,36 +45,7 @@
     </div>
 </div>
 
-<?php if (! $user->fields->isEmpty()) { ?>
-
-<div class="box box-widget">
-    <div class="box-header">
-        <h3 class="box-title"><?= __d('users', 'User Profile'); ?></h3>
-    </div>
-    <div class="box-body no-padding">
-        <table id="left" class="table table-hover responsive">
-            <tr class="bg-navy disabled">
-                <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Field'); ?></th>
-                <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Value'); ?></th>
-            </tr>
-<?php
-foreach ($user->fields as $field) {
-    $name = $field->fieldItem->title;
-
-    if (! empty($value = $field->getValueString()) && ($field->type == 'textarea')) {
-        $value = nl2br($value);
-    }
-?>
-            <tr>
-                <th style="text-align: left; vertical-align: middle;"><?= $name; ?></th>
-                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $value; ?></td>
-            </tr>
-<?php } ?>
-        </table>
-    </div>
-</div>
-
-<?php } ?>
+<?= View::fetch('Modules/Users::Partials/Fields/Show', compact('user')); ?>
 
 <form action="<?= site_url('account/picture'); ?>" class="form-horizontal" method='POST' enctype="multipart/form-data" role="form">
 
@@ -142,7 +113,7 @@ foreach ($user->fields as $field) {
             <br>
             <h4><?= __d('platform', 'Profile'); ?></h4>
             <hr>
-            <?= View::fetch('Modules/Users::Partials/FieldsEditor', compact('user', 'items')); ?>
+            <?= View::fetch('Modules/Users::Partials/Fields/Edit', compact('user', 'items')); ?>
 
             <div class="clearfix"></div>
             <br>

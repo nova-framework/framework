@@ -7,6 +7,7 @@ use Nova\Foundation\Support\Providers\AppServiceProvider as ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
+
     /**
      * Bootstrap the Application Events.
      *

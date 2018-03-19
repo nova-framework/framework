@@ -19,7 +19,7 @@ return array(
     'connections' => array(
         'sqlite' => array(
             'driver'    => 'sqlite',
-            'database'  => APPDIR .'Storage' .DS .'database.sqlite',
+            'database'  => BASEPATH .'storage' .DS .'database.sqlite',
             'prefix'    => '',
         ),
         'mysql' => array(
@@ -50,7 +50,7 @@ return array(
     // Database Backup
     'backup' => array(
         // The path where database dumps are stored.
-        'path'  => APPDIR .'Database' .DS .'Backup',
+        'path'  => APPPATH .'Database' .DS .'Backup',
 
         // The paths to the MySQL tools used by Forge.
         'mysql' => array(

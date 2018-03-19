@@ -1,51 +1,38 @@
 <?php
-/**
- * Controller - base controller
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace App\Controllers;
 
-use Nova\Foundation\Auth\Access\AuthorizeRequestsTrait;
-use Nova\Foundation\Validation\ValidateRequestsTrait;
+use Nova\Foundation\Auth\Access\AuthorizesRequestsTrait;
+use Nova\Foundation\Bus\DispatchesJobsTrait;
+use Nova\Foundation\Validation\ValidatesRequestsTrait;
 use Nova\Routing\Controller;
-use Nova\Support\Contracts\RenderableInterface as Renderable;
+use Nova\Support\Contracts\RenderableInterface;
 use Nova\Support\Facades\App;
 use Nova\Support\Facades\Config;
+use Nova\Support\Facades\Language;
 use Nova\Support\Facades\View;
-use Nova\View\Layout;
-
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Nova\Support\Str;
 
 use BadMethodCallException;
 
 
-abstract class BaseController extends Controller
+class BaseController extends Controller
 {
-    use AuthorizeRequestsTrait, ValidateRequestsTrait;
+    use DispatchesJobsTrait, AuthorizesRequestsTrait, ValidatesRequestsTrait;
 
     /**
      * The currently called action.
      *
      * @var string
      */
-    private $action;
-
-    /**
-     * The View path (and module name) for views of this Controller.
-     *
-     * @var array
-     */
-    protected $viewInfo;
+    protected $action;
 
     /**
      * The currently used Theme.
      *
      * @var string
      */
-    protected $theme = null;
+    protected $theme;
 
     /**
      * The currently used Layout.
@@ -53,6 +40,20 @@ abstract class BaseController extends Controller
      * @var string
      */
     protected $layout = 'Default';
+
+    /**
+     * True when the auto-layouting is active.
+     *
+     * @var bool
+     */
+    protected $autoLayout = true;
+
+    /**
+     * The View path for views of this Controller.
+     *
+     * @var string
+     */
+    protected $viewPath;
 
 
     /**
@@ -62,9 +63,18 @@ abstract class BaseController extends Controller
      */
     protected function initialize()
     {
-        if (! isset($this->theme)) {
-            return $this->theme = Config::get('app.theme', 'Bootstrap');
+        // Setup the used Theme to default, if it is not already defined.
+        if (is_null($this->theme)) {
+            $this->theme = Config::get('app.theme', 'Themes/Bootstrap');
         }
+
+        if (! Str::contains($theme = $this->theme, '/')) {
+            $theme = 'Themes/' .$theme;
+        }
+
+        View::overridesFrom($theme);
+
+        Config::set('themes.current', $theme);
     }
 
     /**
@@ -72,7 +82,7 @@ abstract class BaseController extends Controller
      *
      * @param string  $method
      * @param array   $params
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return mixed
      */
     public function callAction($method, array $parameters)
     {
@@ -94,37 +104,60 @@ abstract class BaseController extends Controller
      */
     protected function processResponse($response)
     {
-        if (! $response instanceof Renderable) {
+        if (! $response instanceof RenderableInterface) {
             return $response;
         }
 
-        // The auto-rendering in a Layout of the returned View instance.
-        else if ((! $response instanceof Layout) && ! empty($this->layout)) {
-            return $this->createLayout()->with('content', $response);
+        // The response is a RenderableInterface implementation.
+        else if ($this->autoLayout() && ! empty($this->layout)) {
+            $view = $this->resolveLayout();
+
+            return View::make($view)->with('content', $response);
         }
 
         return $response;
     }
 
     /**
-     * Create a Layout instance.
+     * Gets a localized View name for the currently used Layout.
+     *
+     * @return string
+     */
+    protected function resolveLayout()
+    {
+        $direction = Language::direction();
+
+        if ($direction == 'rtl') {
+            $layout = 'RTL/' .$this->layout;
+
+            if (View::exists($view = $this->getQualifiedLayout($layout))) {
+                return $view;
+            }
+        }
+
+        return $this->getQualifiedLayout();
+    }
+
+    /**
+     * Gets a qualified View name for the implicit or given Layout.
      *
      * @param  string|null  $layout
-     * @return \Nova\View\Layout
+     * @return string
      */
-    protected function createLayout($layout = null)
+    protected function getQualifiedLayout($layout = null)
     {
-        if (is_null($layout)) {
-            $layout = $this->getLayout();
+        $view = sprintf('Layouts/%s', $layout ?: $this->layout);
+
+        if (empty($theme = $this->getTheme())) {
+            return $view;
         }
 
-        if (! is_null($theme = $this->getTheme()) && ($theme !== false)) {
-            return View::createLayout($layout, $theme);
+        // A theme is specified for auto rendering.
+        else if (! Str::contains($theme, '/')) {
+            $theme = 'Themes/' .$theme;
         }
 
-        $view = 'Layouts/' .($layout ?: 'Default');
-
-        return View::make($view);
+        return $theme .'::' .$view;
     }
 
     /**
@@ -140,66 +173,70 @@ abstract class BaseController extends Controller
             $view = ucfirst($this->action);
         }
 
-        list ($module, $viewPath) = $this->getViewInfo();
+        $view = $this->resolveViewPath().'/' .$view;
 
-        // Compute the full qualified View name.
-        $view = $viewPath .'/' .$view;
-
-        return View::make($view, $data, $module, $this->theme);
+        return View::make($view, $data);
     }
 
     /**
-     * Gets the default View's path and module.
+     * Gets a qualified View path.
      *
      * @return string
      * @throws \BadMethodCallException
      */
-    protected function getViewInfo()
+    protected function resolveViewPath()
     {
-        if (isset($this->viewInfo)) {
-            return $this->viewInfo;
+        if (isset($this->viewPath)) {
+            return $this->viewPath;
         }
 
-        // Cumpute the (application) base path - usually, it is: 'App'
-        $basePath = str_replace('\\', '/', trim(App::getNamespace(), '\\'));
+        $path = str_replace('\\', '/', static::class);
 
-         // Transform the complete class name on a path like variable.
-        $classPath = str_replace('\\', '/', static::class);
+        if (preg_match('#^(.+)/Controllers/(.*)$#', $path, $matches) === 1) {
+            $namespace = $matches[1];
 
-        // Check for a valid controller on App and its Modules.
-        if (preg_match('#^' .$basePath .'(?:/Modules/(.+))?/Controllers/(.*)$#', $classPath, $matches) === 1) {
-            return $this->viewInfo = array_slice($matches, 1);
+            $viewPath = $matches[2];
+
+            if ($namespace != 'App') {
+                // A Controller within a Package namespace.
+                $viewPath = $namespace .'::' .$viewPath;
+            }
+
+            return $this->viewPath = $viewPath;
         }
 
-        throw new BadMethodCallException('Invalid Controller namespace');
+        throw new BadMethodCallException('Invalid controller namespace');
     }
 
     /**
-     * Return a default View instance.
+     * Turns on or off Nova's conventional mode of applying layout files.
      *
-     * @return \Nova\View\View
+     * @param bool|null  $enable
+     * @return bool
      */
-    protected function getView(array $data = array())
+    public function autoLayout($enable = null)
     {
-        return $this->createView($data);
+        if (! is_null($enable)) {
+            $this->autoLayout = (bool) $enable;
+
+            return $this;
+        }
+
+        return $this->autoLayout;
     }
 
     /**
-     * Return the current Theme name.
+     * Return the current Theme.
      *
      * @return string
      */
     public function getTheme()
     {
-        if (! isset($this->theme)) {
-            return $this->theme = Config::get('app.theme', 'Bootstrap');
-        }
-
         return $this->theme;
     }
 
     /**
-     * Return the current Layout name.
+     * Return the current Layout.
      *
      * @return string
      */

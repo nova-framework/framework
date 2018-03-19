@@ -21,16 +21,20 @@
     "repositories": [
         {
             "type": "git",
+            "url": "https://github.com/nova-framework/package-installer"
+        },
+        {
+            "type": "git",
             "url": "https://github.com/nova-framework/system"
         }
     ],
     "require": {
         "php": ">=5.6.0",
+        "nova-framework/package-installer": "*",
         "nova-framework/system": "^3.0",
         "almasaeed2010/adminlte": "^2.4",
         "twbs/bootstrap": "^3.3",
         "ramsey/uuid": "~3.0",
-        "studio-42/elfinder": "^2.1",
         "guzzlehttp/guzzle": "^5.0",
         "filp/whoops": "^2.1",
         "google/recaptcha": "~1.1",
@@ -47,8 +51,10 @@
             "app/Database/Seeds"
         ],
         "psr-4": {
-            "App\\" : "app/",
-            "Shared\\" : "shared/"
+            "App\\": "app/",
+            "Modules\\": "modules/",
+            "Themes\\": "themes/",
+            "Shared\\": "shared/"
         },
         "files": [
             "shared/Support/helpers.php"
@@ -57,14 +63,18 @@
     "scripts": {
         "post-install-cmd": [
             "php forge optimize",
-            "php forge module:optimize"
+            "php forge package:optimize"
         ],
         "post-update-cmd": [
+            "php forge clear-compiled",
             "php forge optimize",
-            "php forge module:optimize"
+            "php forge package:optimize"
         ],
         "post-create-project-cmd": [
             "php forge key:generate"
+        ],
+        "post-autoload-dump": [
+            "Nova\\Composer\\Installer\\PackageInstaller::postAutoloadDump"
         ]
     },
     "prefer-stable": true,

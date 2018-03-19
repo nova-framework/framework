@@ -139,13 +139,12 @@ class PDF
      *
      * @param string $view
      * @param array $data
-     * @param array $module
      * @param string $encoding Not used yet
      * @return static
      */
-    public function loadView($view, $data = array(), $module = null, $encoding = null)
+    public function loadView($view, $data = array(), $encoding = null)
     {
-        $html = $this->views->make($view, $data, $module)->render();
+        $html = $this->views->make($view, $data)->render();
 
         $html = preg_replace('/>\s+</', '><', $html);
 

@@ -1,9 +1,6 @@
 *
 !cache/
-!emails/
-!files/
 !logs/
 !sessions/
-!spool/
 !views/
 !.gitignore

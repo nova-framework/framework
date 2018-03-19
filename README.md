@@ -67,7 +67,7 @@ The foldername is the desired folder to be created.
 composer create-project nova-framework/app foldername 4.* -s dev
 
 > **Note:** For additional installation instructions, for example; setting up a Virtualhost (Recommended for Local Development), Nginx or IIS with URL Rewrite, [please visit the install docs](http://novaframework.com/documentation/v3/install).
-
+```
 ## Documentation
 
 Full docs & tutorials are available on [novaframework.com](http://novaframework.com/documentation/v3).

@@ -13,7 +13,6 @@ $languages = array(
     'es',
     'fa',
     'fr',
-    'hu',
     'it',
     'ja',
     'nl',
@@ -23,6 +22,7 @@ $languages = array(
 );
 
 $workPaths = array(
+    'shared',
     'app'
 );
 
@@ -53,13 +53,35 @@ function phpGrep($q, $path) {
     return $ret;
 }
 
-if(is_dir(BASEPATH .'plugins')) {
-    $path = str_replace('/', DS, BASEPATH .'plugins/*');
+if (is_dir(BASEPATH .'modules')) {
+    $path = str_replace('/', DS, BASEPATH .'modules/*');
 
-    $dirs = glob($path , GLOB_ONLYDIR);
+    $paths = glob($path, GLOB_ONLYDIR);
 
-    foreach($dirs as $template) {
-        $workPaths[] = 'plugins' .DS .basename($template) .DS .'src';
+    foreach($paths as $path) {
+        $workPaths[] = str_replace('/', DS, 'modules/' .basename($path));
+    }
+}
+
+if (is_dir(BASEPATH .'themes')) {
+    $path = str_replace('/', DS, BASEPATH .'themes/*');
+
+    $paths = glob($path , GLOB_ONLYDIR);
+
+    foreach($paths as $path) {
+        $workPaths[] = str_replace('/', DS, 'themes/' .basename($path));
+    }
+}
+
+if(is_dir(BASEPATH .'packages')) {
+    $path = str_replace('/', DS, BASEPATH .'packages/*');
+
+    $paths = glob($path , GLOB_ONLYDIR);
+
+    foreach($paths as $path) {
+        $package = basename($path);
+
+        $workPaths[] = str_replace('/', DS, 'packages/' .$package .'/src');
     }
 }
 
@@ -80,6 +102,19 @@ foreach($workPaths as $workPath) {
     $results = phpGrep($start, BASEPATH .$workPath);
 
     if(empty($results)) {
+        /*
+        foreach($languages as $language) {
+            $langFile = BASEPATH .$workPath.'/Language/'.ucfirst($language).'/messages.php';
+
+            $output = "<?php
+
+return " .var_export(array(), true).";\n";
+
+            file_put_contents($langFile, $output);
+
+            echo 'Written the Language file: "'.str_replace(BASEPATH, '', $langFile).'"'.PHP_EOL;
+        }
+        */
         continue;
     }
 
@@ -96,6 +131,14 @@ foreach($workPaths as $workPath) {
 
     foreach($results as $key => $filePath) {
         $file = substr($filePath, strlen(BASEPATH));
+
+        if($workPath == 'app') {
+            $testPath = substr($filePath, strlen(BASEPATH));
+
+            if(starts_with($testPath, 'app/Modules') || starts_with($testPath, 'app/Themes')) {
+                continue;
+            }
+        }
 
         $content = file_get_contents($filePath);
 
@@ -151,6 +194,8 @@ foreach($workPaths as $workPath) {
             $output = "<?php
 
 return " .var_export($messages, true).";\n";
+
+            //$output = preg_replace("/^ {2}(.*)$/m","    $1", $output);
 
             file_put_contents($langFile, $output);
 

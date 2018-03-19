@@ -2,14 +2,14 @@
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-if (Config::get('app.debug') !== true):
-    throw new NotFoundException('Please replace app/Views/Pages/Home.php with your own version.');
-endif;
+if (Config::get('app.debug') !== true) {
+    throw new NotFoundHttpException('Please replace app/Views/Pages/Home.php with your own version.');
+}
 
 ?>
 
 <div class="row">
-    <h1 class="text-center" style="margin-bottom: 25px;">Welcome to Nova <?= VERSION; ?></h1>
+    <h1 class="text-center" style="margin-bottom: 25px;">Welcome to Nova Framework <?= $version; ?></h1>
     <br>
 
     <div class="alert alert-warning text-center">
@@ -91,5 +91,6 @@ endif;
         <?php else: ?>
             <li><i class='fa fa-close'></i> Your compiled views directory is NOT writable.</li>
         <?php endif; ?>
+        </ul>
     </div>
 </div>

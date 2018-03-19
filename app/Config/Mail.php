@@ -1,13 +1,13 @@
 <?php
 /**
- * Mailer Configuration.
+ * Mailer Configuration
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
+ * @version 3.0
  */
 
 
 return array(
-
     /*
     |--------------------------------------------------------------------------
     | Mail Driver
@@ -22,26 +22,6 @@ return array(
     */
 
     'driver' => 'smtp',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Spool Configuration
-    |--------------------------------------------------------------------------
-    |
-    | When using the mailer's spool, we need a location where spool message
-    | files may be stored. A default has been set for you but a different
-    | location may be specified. This is only needed for spool driver.
-    |
-    */
-
-    'spool' => array(
-        'files' => storage_path('spool'),  // Where the spool queue files are stored.
-
-        'messageLimit'        => 10,  // The maximum number of messages to send per flush.
-        'timeLimit'            => 100, // The time limit (in seconds) per flush.
-        'retryLimit'        => 10,  // Allow to manage the enqueuing retry limit.
-        'recoveryTimeout'    => 900, // in seconds - defaults is for very slow smtp responses.
-    ),
 
     /*
     |--------------------------------------------------------------------------
@@ -81,8 +61,8 @@ return array(
     */
 
     'from' => array(
-        'address'    => 'admin@novaframework.dev',
-        'name'        => 'The Nova Staff',
+        'address' => 'admin@novaframework.dev',
+        'name'    => 'The Nova Staff',
     ),
 
     /*
@@ -149,4 +129,32 @@ return array(
     */
 
     'pretend' => true,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Spool Configuration
+    |--------------------------------------------------------------------------
+    |
+    | When using the mailer's spool, we need a location where spool message
+    | files may be stored. A default has been set for you but a different
+    | location may be specified. This is only needed for spool driver.
+    |
+    */
+
+    'spool' => array(
+        'driver' => 'file', // The driver used for queuing; supported: 'file' or 'database'.
+
+        // Common options:
+        'messageLimit'    => 10,  // The maximum number of messages to send per flush.
+        'timeLimit'       => 100, // The time limit (in seconds) per flush.
+        'retryLimit'      => 10,  // Allow to manage the enqueuing retry limit.
+        'recoveryTimeout' => 900, // in seconds - defaults is for very slow smtp responses.
+
+        // For the File Spool:
+        'files' => STORAGE_PATH .'emails',  // Where the spool queue files are stored.
+
+        // For the Database Spool:
+        'table'      => 'spool',  // The database Table hosting the Mailer Spool data.
+        'connection' => null,     // The Database Connection name used by driver.
+    ),
 );

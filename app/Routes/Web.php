@@ -17,15 +17,17 @@ use Nova\Http\Request;
 /**
  * The static Pages.
  */
-$router->get('/', 'Pages@display');
+Route::get('/', 'Pages@show');
 
-$router->get('pages/{slug}', 'Pages@display')->where('slug', '(.*)');
+Route::get('pages/{slug}', 'Pages@show')->where('slug', '(.*)');
+
+Route::get('tutorials/{slug?}', 'Pages@showTutorial')->where('slug', '(.*)');
 
 
 /**
  * The Language Changer.
  */
-$router->get('language/{language}', function (Request $request, $language)
+Route::get('language/{language}', function (Request $request, $language)
 {
     $url = Config::get('app.url');
 
@@ -46,7 +48,7 @@ $router->get('language/{language}', function (Request $request, $language)
 /**
  * Show the PHP information.
  */
-$router->get('phpinfo', function ()
+Route::get('phpinfo', function ()
 {
     ob_start();
 

@@ -7,7 +7,7 @@
             <hr />
 
             <h3><?= __('Service unavailable'); ?></h3>
-            <p><?= __('This site is temporarily unavailable.'); ?></p>
+            <p><?= __('Be right back.'); ?></p>
 
         </div>
     </div>

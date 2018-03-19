@@ -17,7 +17,7 @@
     </div>
     <div class="box-body">
         <?php //if (Gate::allows('lists', 'Modules\Users\Models\FieldItem')) { ?>
-        <a class="btn btn-primary col-sm-2 pull-left" href="<?= site_url('admin/users/fields'); ?>"><?= __d('users', 'Manage the Users Profile'); ?></a>
+        <a class="btn btn-primary col-sm-2 pull-left" href="<?= site_url('admin/users/fields'); ?>"><?= __d('users', 'Custom Fields / Profile'); ?></a>
         <?php //} ?>
         <?php if (Gate::allows('create', 'Modules\Users\Models\User')) { ?>
         <a class="btn btn-success col-sm-2 pull-right" href="<?= site_url('admin/users/create'); ?>"><?= __d('users', 'Create a new User'); ?></a>

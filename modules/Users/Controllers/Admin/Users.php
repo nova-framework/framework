@@ -10,6 +10,7 @@ namespace Modules\Users\Controllers\Admin;
 
 use Nova\Http\Request;
 use Nova\Auth\Access\AuthorizationException;
+use Nova\Database\ORM\Collection;
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Event;
@@ -20,7 +21,6 @@ use Nova\Support\Facades\File;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Arr;
-use Nova\Support\Collection;
 use Nova\Support\Str;
 
 use Modules\Platform\Controllers\Admin\BaseController;

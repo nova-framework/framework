@@ -8,6 +8,7 @@
 
 namespace Modules\Platform\Controllers;
 
+use Nova\Database\ORM\Collection;
 use Nova\Http\Request;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Event;
@@ -18,7 +19,6 @@ use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 use Nova\Support\Arr;
-use Nova\Support\Collection;
 
 use Modules\Platform\Controllers\BaseController;
 use Modules\Users\Models\FieldItem;

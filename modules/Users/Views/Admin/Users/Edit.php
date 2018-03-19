@@ -70,7 +70,6 @@
             <?php $type = $item->type; ?>
             <?php $name = str_replace('-', '_', $item->name); ?>
             <?php $id  = str_replace('_', '-', $item->name); ?>
-            <?php $required = Str::contains($item->rules, 'required'); ?>
             <?php $options = $item->options ?: array(); ?>
             <?php $placeholder = array_get($options, 'placeholder') ?: $item->title; ?>
             <?php $field = $user->fields->where('name', $item->name)->first(); ?>
@@ -79,7 +78,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="<?= $name; ?>">
                     <?= $item->title; ?>
-                    <?php if ($required) { ?>
+                    <?php if (str_contains($item->rules, 'required')) { ?>
                     <span class="text-danger" title="<?= __d('contacts', 'Required field'); ?>">*</span>
                     <?php } ?>
                 </label>

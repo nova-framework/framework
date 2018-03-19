@@ -67,12 +67,10 @@ class FieldItems extends BaseController
 
     public function index()
     {
-        /*
         // Authorize the current User.
         if (Gate::denies('lists', FieldItem::class)) {
             throw new AuthorizationException();
         }
-        */
 
         $items = FieldItem::all();
 
@@ -83,12 +81,10 @@ class FieldItems extends BaseController
 
     public function create()
     {
-        /*
         // Authorize the current User.
         if (Gate::denies('create', FieldItem::class)) {
             throw new AuthorizationException();
         }
-        */
 
         return $this->createView()
             ->shares('title', __d('contacts', 'Create Field'));
@@ -96,12 +92,10 @@ class FieldItems extends BaseController
 
     public function store(Request $request)
     {
-        /*
         // Authorize the current User.
         if (Gate::denies('create', FieldItem::class)) {
             throw new AuthorizationException();
         }
-        */
 
         $input = $request->only(
             'field_title', 'field_name', 'field_type', 'field_order', 'field_rules',
@@ -176,12 +170,10 @@ class FieldItems extends BaseController
             return Redirect::to('admin/users/fields')->with('danger', __d('contacts', 'Field not found: #{0}', $id));
         }
 
-        /*
         // Authorize the current User.
         if (Gate::denies('view', $item)) {
             throw new AuthorizationException();
         }
-        */
 
         $default = null;
         $choices = null;
@@ -206,12 +198,10 @@ class FieldItems extends BaseController
             return Redirect::to($url)->with('danger', __d('contacts', 'Field not found: #{0}', $id));
         }
 
-        /*
         // Authorize the current User.
         if (Gate::denies('update', $item)) {
             throw new AuthorizationException();
         }
-        */
 
         $placeholder = null;
         $default     = null;
@@ -263,12 +253,10 @@ class FieldItems extends BaseController
             return Redirect::to($url)->with('danger', __d('contacts', 'Field not found: #{0}', $id));
         }
 
-        /*
         // Authorize the current User.
         if (Gate::denies('update', $item)) {
             throw new AuthorizationException();
         }
-        */
 
         $input = $request->only(
             'field_title', 'field_name', 'field_type', 'field_order', 'field_rules',
@@ -344,12 +332,10 @@ class FieldItems extends BaseController
             return Redirect::to('admin/users/fields')->with('danger', __d('contacts', 'Field not found: #{0}', $id));
         }
 
-        /*
         // Authorize the current User for deleting this Field instance.
         if (Gate::denies('delete', $item)) {
             throw new AuthorizationException();
         }
-        */
 
         // Destroy the requested Field record.
         $item->delete();

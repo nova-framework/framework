@@ -77,6 +77,43 @@ class PermissionsTableSeeder extends Seeder
 
                 'roles' => array(1, 2, 3),
             ),
+
+            // FieldItems
+            array(
+                'name'  => 'View the Field Items List',
+                'slug'  => 'module.users.fields.lists',
+                'group' => 'users',
+
+                'roles' => array(1, 2, 3),
+            ),
+            array(
+                'name'  => 'View the Field Items',
+                'slug'  => 'module.users.fields.view',
+                'group' => 'users',
+
+                'roles' => array(1, 2, 3),
+            ),
+            array(
+                'name'  => 'Create new Field Items',
+                'slug'  => 'module.users.fields.create',
+                'group' => 'users',
+
+                'roles' => array(1, 2, 3),
+            ),
+            array(
+                'name'  => 'Update the Field Items',
+                'slug'  => 'module.users.fields.update',
+                'group' => 'users',
+
+                'roles' => array(1, 2, 3),
+            ),
+            array(
+                'name'  => 'Delete Field Items',
+                'slug'  => 'module.users.fields.delete',
+                'group' => 'users',
+
+                'roles' => array(1, 2, 3),
+            ),
          );
 
         $this->createPermissions($permissions);

@@ -121,19 +121,25 @@ foreach ($user->fields as $field) {
             <h4><?= __d('platform', 'Account'); ?></h4>
             <hr>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="name"><?= __d('platform', 'Current Password'); ?> <font color="#CC0000">*</font></label>
+                <label class="col-sm-4 control-label" for="current_password"><?= __d('platform', 'Current Password'); ?> <font color="#CC0000">*</font></label>
                 <div class="col-sm-8">
                     <input name="current_password" id="current_password" type="password" class="form-control" value="" placeholder="<?= __d('platform', 'Insert the current Password'); ?>">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="name"><?= __d('platform', 'New Password'); ?></label>
+                <label class="col-sm-4 control-label" for="realname"><?= __d('platform', 'Name and Surname'); ?></label>
+                <div class="col-sm-8">
+                    <input name="realname" id="realname" type="text" class="form-control" value="<?= $user->realname; ?>" placeholder="<?= __d('platform', 'Name and Surname'); ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="password"><?= __d('platform', 'New Password'); ?></label>
                 <div class="col-sm-8">
                     <input name="password" id="password" type="password" class="form-control" value="" placeholder="<?= __d('platform', 'Insert the new Password'); ?>">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="name"><?= __d('platform', 'Confirm Password'); ?></label>
+                <label class="col-sm-4 control-label" for="password_confirmation"><?= __d('platform', 'Confirm Password'); ?></label>
                 <div class="col-sm-8">
                     <input name="password_confirmation" id="password_confirmation" type="password" class="form-control" value="" placeholder="<?= __d('platform', 'Verify the new Password'); ?>">
                 </div>
@@ -167,7 +173,7 @@ foreach ($user->fields as $field) {
                 <?php } else if ($type == 'textarea') { ?>
                     <textarea name="<?= $name; ?>" id="<?= $id; ?>" rows="<?= array_get($options, 'rows', 10); ?>" class="form-control" style="resize: none;" placeholder="<?= $placeholder; ?>"><?= Input::old($name, $value); ?></textarea>
                 <?php } else if ($type == 'select') { ?>
-                    <select name="<?= $name; ?>" id="<?= $id; ?>" placeholder="" data-placeholder="<?= array_get($options, 'placeholder') ?: __d('requests', '- Choose an option -'); ?>" class="form-control select2">
+                    <select name="<?= $name; ?>" id="<?= $id; ?>" placeholder="" data-placeholder="<?= array_get($options, 'placeholder') ?: __d('platform', '- Choose an option -'); ?>" class="form-control select2">
                         <option></option>
                         <?php $selected = Input::old($name, $value); ?>
                         <?php $choices = explode("\n", trim(array_get($options, 'choices'))); ?>

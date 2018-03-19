@@ -42,18 +42,20 @@ class Account extends BaseController
             'current_password'      => 'required|valid_password',
             'password'              => 'sometimes|required|confirmed|strong_password',
             'password_confirmation' => 'sometimes|required|same:password',
+            'realname'              => 'required|valid_name',
         );
 
         $messages = array(
-            'valid_name'      => __d('users', 'The :attribute field is not a valid name.'),
-            'valid_password'  => __d('users', 'The :attribute field is a valid password.'),
-            'strong_password' => __d('users', 'The :attribute field is not strong enough.'),
+            'valid_name'      => __d('platform', 'The :attribute field is not a valid name.'),
+            'valid_password'  => __d('platform', 'The :attribute field is a valid password.'),
+            'strong_password' => __d('platform', 'The :attribute field is not strong enough.'),
         );
 
         $attributes = array(
-            'current_password'      => __d('users', 'Current Password'),
-            'password'              => __d('users', 'New Password'),
-            'password_confirmation' => __d('users', 'Password Confirmation'),
+            'current_password'      => __d('platform', 'Current Password'),
+            'password'              => __d('platform', 'New Password'),
+            'password_confirmation' => __d('platform', 'Password Confirmation'),
+            'realname'              => __d('platform', 'Name and Surname'),
         );
 
         // Prepare the dynamic rules and attributes for Field Items.
@@ -137,7 +139,7 @@ class Account extends BaseController
         $items = FieldItem::all();
 
         return $this->createView()
-            ->shares('title',  __d('users', 'Account'))
+            ->shares('title',  __d('platform', 'Account'))
             ->with(compact('user', 'items'));
     }
 
@@ -162,6 +164,8 @@ class Account extends BaseController
             return Redirect::back()->withInput()->withErrors($validator);
         }
 
+        $user->realname = $input['realname'];
+
         if (isset($input['password'])) {
             $password = $input['password'];
 
@@ -176,7 +180,7 @@ class Account extends BaseController
         // Use a Redirect to avoid the reposting the data.
 
         return Redirect::back()
-            ->with('success', __d('users', 'You have successfully updated your Account information.'));
+            ->with('success', __d('platform', 'You have successfully updated your Account information.'));
     }
 
     public function picture(Request $request)
@@ -191,7 +195,7 @@ class Account extends BaseController
             $input,
             array('image' => 'required|max:1024|mimes:png,jpg,jpeg,gif'),
             array(),
-            array('image' => __d('users', 'Image'))
+            array('image' => __d('platform', 'Image'))
         );
 
         // Validate the Input.
@@ -205,7 +209,7 @@ class Account extends BaseController
         $user->save();
 
         // Prepare the flash message.
-        $status = __d('users', 'The Profile Picture was successfully updated.');
+        $status = __d('platform', 'The Profile Picture was successfully updated.');
 
         return Redirect::to('account')->withStatus($status);
     }

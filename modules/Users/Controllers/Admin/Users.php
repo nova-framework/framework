@@ -55,6 +55,7 @@ class Users extends BaseController
             'password_confirmation' => $required .'|same:password',
             'realname'              => 'required|valid_name',
             'email'                 => 'required|min:5|max:100|email',
+            'image'                 => 'max:1024|mimes:png,jpg,jpeg,gif'
         );
 
         $messages = array(
@@ -69,6 +70,7 @@ class Users extends BaseController
             'password_confirmation' => __d('users', 'Password confirmation'),
             'realname'              => __d('users', 'Name and Surname'),
             'email'                 => __d('users', 'E-mail'),
+            'image'                 => __d('users', 'Profile Picture'),
         );
 
         // Prepare the dynamic rules and attributes for Field Items.
@@ -194,6 +196,13 @@ class Users extends BaseController
         // Attach the Roles.
         $user->roles()->attach($input['roles']);
 
+        // If a file has been uploaded...
+        if ($request->hasFile('image')) {
+            $user->image = $request->file('image');
+
+            $user->save();
+        }
+
         // Handle the meta fields associated to User Picture and its activation.
         $user->saveMeta(array(
             'activated'       => 1,
@@ -309,6 +318,11 @@ class Users extends BaseController
         if(isset($input['password'])) {
             // Encrypt and add the given Password.
             $user->password = Hash::make($input['password']);
+        }
+
+        // If a file has been uploaded...
+        if ($request->hasFile('image')) {
+            $user->image = $request->file('image');
         }
 
         // Save the User information.

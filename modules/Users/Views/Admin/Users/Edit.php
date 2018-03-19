@@ -131,7 +131,19 @@
             </div>
 
             <?php } ?>
-
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="realname"><?= __d('users', 'Name and Surname'); ?> <font color="#CC0000">*</font></label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <input type="text" class="form-control" readonly>
+                        <label class="input-group-btn">
+                            <span class="btn btn-primary">
+                                <?= __d('contacts', 'Browse ...'); ?> <input type="file" name="image" style="display: none;">
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
             <div class="clearfix"></div>
             <br>
             <font color="#CC0000">*</font><?= __d('users', 'Required field'); ?>
@@ -157,3 +169,46 @@
 <br>
 
 </section>
+
+<script type="text/javascript">
+
+$(function() {
+
+    // We can attach the `fileselect` event to all file inputs on the page
+    $(document).on('change', ':file', function() {
+        var input = $(this),
+            numFiles = input.get(0).files ? input.get(0).files.length : 1,
+            label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+
+        if (input.get(0).files) {
+            var items = [];
+
+            var files = input.get(0).files;
+
+            for (var i = 0, file; file = files[i]; i++) {
+                items.push(file.name);
+            }
+
+            label = items.join(', ');
+        }
+
+        input.trigger('fileselect', [numFiles, label]);
+    });
+
+    // We can watch for our custom `fileselect` event like this
+    $(document).ready( function() {
+        $(':file').on('fileselect', function(event, numFiles, label) {
+            var input = $(this).parents('.input-group').find(':text'),
+                log = (numFiles > 1) ? sprintf("<?= __d('contacts', '%d files selected'); ?>", numFiles) : label;
+
+            if (input.length) {
+                input.val(label);
+            } else {
+                if (log) alert(log);
+            }
+      });
+  });
+
+});
+
+</script>

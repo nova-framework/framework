@@ -131,6 +131,19 @@
 
             <?php } ?>
 
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="realname"><?= __d('users', 'Name and Surname'); ?> <font color="#CC0000">*</font></label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <input type="text" class="form-control" readonly>
+                        <label class="input-group-btn">
+                            <span class="btn btn-primary">
+                                <?= __d('contacts', 'Browse ...'); ?> <input type="file" name="image" style="display: none;">
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
             <div class="clearfix"></div>
             <br>
             <font color="#CC0000">*</font><?= __d('users', 'Required field'); ?>

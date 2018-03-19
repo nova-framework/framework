@@ -121,12 +121,6 @@ foreach ($user->fields as $field) {
             <h4><?= __d('platform', 'Account'); ?></h4>
             <hr>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="current_password"><?= __d('platform', 'Current Password'); ?> <font color="#CC0000">*</font></label>
-                <div class="col-sm-8">
-                    <input name="current_password" id="current_password" type="password" class="form-control" value="" placeholder="<?= __d('platform', 'Insert the current Password'); ?>">
-                </div>
-            </div>
-            <div class="form-group">
                 <label class="col-sm-4 control-label" for="realname"><?= __d('platform', 'Name and Surname'); ?></label>
                 <div class="col-sm-8">
                     <input name="realname" id="realname" type="text" class="form-control" value="<?= $user->realname; ?>" placeholder="<?= __d('platform', 'Name and Surname'); ?>">
@@ -211,6 +205,18 @@ foreach ($user->fields as $field) {
             </div>
 
             <?php } ?>
+
+            <div class="clearfix"></div>
+            <br>
+
+            <h4><?= __d('platform', 'Confirmation'); ?></h4>
+            <hr>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="current_password"><?= __d('platform', 'Current Password'); ?> <font color="#CC0000">*</font></label>
+                <div class="col-sm-8">
+                    <input name="current_password" id="current_password" type="password" class="form-control" value="" placeholder="<?= __d('platform', 'Insert the current Password'); ?>">
+                </div>
+            </div>
             <div class="clearfix"></div>
             <br>
             <font color="#CC0000">*</font><?= __d('platform', 'Required field'); ?>

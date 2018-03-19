@@ -24,6 +24,7 @@ return array (
   'Browse ...' => '',
   'Center Login' => 'Вход в Центр',
   'Confirm Password' => 'Подтверждение пароля',
+  'Confirmation' => '',
   'Content' => 'Содержание',
   'Created At' => 'Создан',
   'Current Password' => 'Текущий пароль',

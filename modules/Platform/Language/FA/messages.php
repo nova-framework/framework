@@ -24,6 +24,7 @@ return array (
   'Browse ...' => '',
   'Center Login' => '',
   'Confirm Password' => '',
+  'Confirmation' => '',
   'Content' => '',
   'Created At' => '',
   'Current Password' => '',

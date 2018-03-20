@@ -21,7 +21,7 @@ use Nova\Support\Str;
 
 use Shared\Support\ReCaptcha;
 
-use Modules\Platform\Models\UserActivationToken;
+use Modules\Platform\Models\ActivationToken as Token;
 use Modules\Platform\Notifications\AccountActivation as AccountActivationNotification;
 use Modules\Roles\Models\Role;
 use Modules\Users\Models\User;
@@ -124,7 +124,7 @@ class Registrar extends BaseController
         $user->roles()->attach($role);
 
         // Create a new Verification Token instance.
-        $verifyToken = ActivationToken::create(array(
+        $authToken = ActivationToken::create(array(
             'email' => $email,
             'token' => $token = ActivationToken::uniqueToken(),
         ));
@@ -190,7 +190,7 @@ class Registrar extends BaseController
         }
 
         // Create a new Verification Token instance.
-        $verifyToken = ActivationToken::create(array(
+        $authToken = ActivationToken::create(array(
             'email' => $email = $request->input('email'),
 
             // We will use an unique token.
@@ -246,12 +246,12 @@ class Registrar extends BaseController
                 ->with('danger', __d('platform', 'Link is invalid, please request a new link.'));
         }
 
-        $validity = Config::get('platform::tokenVerify.validity', 60); // In minutes.
+        $validity = Config::get('platform::tokens.activation.validity', 60); // In minutes.
 
         $oldest = Carbon::parse('-' .$validity .' minutes');
 
         try {
-            $verifyToken = ActivationToken::whereHas('user', function ($query)
+            $authToken = ActivationToken::whereHas('user', function ($query)
             {
                 $query->where('activated', 0);
 
@@ -267,10 +267,10 @@ class Registrar extends BaseController
         }
 
         // Delete all stored verification Tokens for this User.
-        ActivationToken::where('email', $verifyToken->email)->delete();
+        ActivationToken::where('email', $authToken->email)->delete();
 
         // Get a fresh instance of the associated User model.
-        $user = $verifyToken->user()->first();
+        $user = $authToken->user()->first();
 
         // Update the User information.
         $user->activated = 1;

@@ -10,7 +10,6 @@ return array (
   'Account Verification' => '',
   'Account Verification for <b>{0}</b>' => '',
   'Activate your Account' => '',
-  'Activated! You can now Sign in!' => '',
   'Activation instructions have been sent to your email address.' => '',
   'Administration' => '',
   'Apply the changes' => '',
@@ -128,7 +127,6 @@ return array (
   'The name of the external SMTP Server.' => '',
   'The outgoing E-mail address.' => '',
   'The reCaptcha verification failed.' => '',
-  'The selected email cannot receive Account Activation links.' => '',
   'The selected notification(s) was successfully marked as read.' => '',
   'There are no Users on-line.' => '',
   'This password reset token is invalid.' => '',
@@ -157,4 +155,5 @@ return array (
   'You have successfully logged out.' => '',
   'You have successfully updated your Account information.' => '',
   'Your Account has been created. Activation instructions have been sent to your email address.' => '',
+  'Your Account was activated. You can now sign in!' => '',
 );

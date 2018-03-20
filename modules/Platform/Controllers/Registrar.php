@@ -164,7 +164,8 @@ class Registrar extends BaseController
                 'g-recaptcha-response' => 'required|min:1|recaptcha'
             ),
             array(
-                'recaptcha' => __d('platform', 'The reCaptcha verification failed.'),
+                'valid_email' => __d('platform', 'The :attribute field is not a valid email address.'),
+                'recaptcha'   => __d('platform', 'The reCaptcha verification failed.'),
             ),
             array(
                 'email'                => __d('platform', 'E-mail'),

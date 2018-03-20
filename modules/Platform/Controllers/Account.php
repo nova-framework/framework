@@ -39,7 +39,6 @@ class Account extends BaseController
     {
         // Prepare the Validation Rules, Messages and Attributes.
         $rules = array(
-            'current_password'      => 'required|valid_password',
             'password'              => 'sometimes|required|confirmed|strong_password',
             'password_confirmation' => 'sometimes|required|same:password',
             'realname'              => 'required|valid_name',
@@ -47,12 +46,10 @@ class Account extends BaseController
 
         $messages = array(
             'valid_name'      => __d('platform', 'The :attribute field is not a valid name.'),
-            'valid_password'  => __d('platform', 'The :attribute field is a valid password.'),
             'strong_password' => __d('platform', 'The :attribute field is not strong enough.'),
         );
 
         $attributes = array(
-            'current_password'      => __d('platform', 'Current Password'),
             'password'              => __d('platform', 'New Password'),
             'password_confirmation' => __d('platform', 'Password Confirmation'),
             'realname'              => __d('platform', 'Name and Surname'),
@@ -112,14 +109,9 @@ class Account extends BaseController
         // Add the custom Validation Rule commands.
         $validator->addExtension('valid_name', function($attribute, $value, $parameters)
         {
-            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){1,}$~u';
+            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){2,}$~u';
 
             return (preg_match($pattern, $value) === 1);
-        });
-
-        $validator->addExtension('valid_password', function($attribute, $value, $parameters) use ($user)
-        {
-            return Hash::check($value, $user->password);
         });
 
         $validator->addExtension('strong_password', function($attribute, $value, $parameters)
@@ -173,7 +165,6 @@ class Account extends BaseController
             $user->password = Hash::make($password);
         }
 
-        // Save the User Model instance.
         $user->save();
 
         //
@@ -187,12 +178,9 @@ class Account extends BaseController
     {
         $user = Auth::user();
 
-        // Retrieve the Input data.
-        $input = $request->only('image');
-
         // Create a Validator instance.
         $validator = Validator::make(
-            $input,
+            $request->only('image'),
             array('image' => 'required|max:1024|mimes:png,jpg,jpeg,gif'),
             array(),
             array('image' => __d('platform', 'Image'))
@@ -203,8 +191,7 @@ class Account extends BaseController
             return Redirect::back()->withErrors($validator);
         }
 
-        // Update the User record.
-        $user->image = $input['image'];
+        $user->image = $request->file('image');
 
         $user->save();
 

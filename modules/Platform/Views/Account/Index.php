@@ -117,16 +117,6 @@
 
             <div class="clearfix"></div>
             <br>
-            <h4><?= __d('platform', 'Confirmation'); ?></h4>
-            <hr>
-            <div class="form-group">
-                <label class="col-sm-4 control-label" for="current_password"><?= __d('platform', 'Current Password'); ?> <font color="#CC0000">*</font></label>
-                <div class="col-sm-8">
-                    <input name="current_password" id="current_password" type="password" class="form-control" value="" placeholder="<?= __d('platform', 'Insert the current Password'); ?>">
-                </div>
-            </div>
-            <div class="clearfix"></div>
-            <br>
             <font color="#CC0000">*</font><?= __d('platform', 'Required field'); ?>
         </div>
     </div>

@@ -23,6 +23,7 @@ use Shared\Support\ReCaptcha;
 use Modules\Platform\Controllers\BaseController;
 use Modules\Platform\Models\UserToken as LoginToken;
 use Modules\Platform\Notifications\AuthenticationToken as LoginTokenNotification;
+use Modules\Users\Models\User;
 
 use Carbon\Carbon;
 
@@ -63,33 +64,28 @@ class Authorize extends BaseController
         // Retrieve the Authentication credentials.
         $credentials = $request->only('username', 'password');
 
-        // Prepare the 'remember' parameter.
-        $remember = $request->has('remember');
-
         // Make an attempt to login the Guest with the given credentials.
-        if(! Auth::attempt($credentials, $remember)) {
+        if(! Auth::attempt($credentials, $request->has('remember'))) {
             return Redirect::back()->with('danger', __d('platform', 'Wrong username or password.'));
         }
 
         // The User is authenticated now; retrieve his Model instance.
         $user = Auth::user();
 
-        if (Hash::needsRehash($user->password)) {
-            $password = $credentials['password'];
-
-            $user->password = Hash::make($password);
-
-            // Save the User Model instance - used with the Extended Auth Driver.
-            $user->save();
-        }
-
         if ($user->activated == 0) {
             Auth::logout();
 
-            // User not activated; go logout and redirect him to account activation page.
+            // User not activated; logout and redirect him to account activation page.
             return Redirect::to('register/verify')
                 ->withInput(array('email' => $user->email))
                 ->with('danger', __d('platform', 'Please activate your Account!'));
+        }
+
+        // If the User's password needs rehash.
+        else if (Hash::needsRehash($user->password)) {
+            $user->password = Hash::make($credentials['password']);
+
+            $user->save();
         }
 
         // Redirect to the User's Dashboard.
@@ -143,11 +139,12 @@ class Authorize extends BaseController
         $validator = Validator::make(
             $input = $request->only('email', 'g-recaptcha-response'),
             array(
-                'email'                => 'required|email|exists:users',
+                'email'                => 'required|valid_email',
                 'g-recaptcha-response' => 'required|recaptcha'
             ),
             array(
-                'recaptcha' => __d('platform', 'The reCaptcha verification failed.'),
+                'recaptcha'   => __d('platform', 'The reCaptcha verification failed.'),
+                'valid_email' => __d('platform', 'The :attribute field is not a valid email address.'),
             ),
             array(
                 'email'                => __d('platform', 'E-mail'),
@@ -155,15 +152,20 @@ class Authorize extends BaseController
             )
         );
 
+        $validator->addExtension('valid_email', function($attribute, $value, $parameters)
+        {
+            return User::where('activated', 1)->where('email', $value)->exists();
+        });
+
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator);
         }
 
-        $token = LoginToken::uniqueToken();
-
         $loginToken = LoginToken::create(array(
             'email' => $input['email'],
-            'token' => $token,
+
+            // We will use an unique token.
+            'token' => $token = LoginToken::uniqueToken(),
         ));
 
         $hashKey = Config::get('app.key');
@@ -175,7 +177,7 @@ class Authorize extends BaseController
         $loginToken->user->notify(new LoginTokenNotification($hash, $timestamp, $token));
 
         return Redirect::back()
-            ->with('success', __d('platform', 'Login instructions have been sent to the Center email address.'));
+            ->with('success', __d('platform', 'Login instructions have been sent to your email address.'));
     }
 
     /**
@@ -221,11 +223,14 @@ class Authorize extends BaseController
         }
 
         try {
-            $loginToken = LoginToken::with('user')
-                ->where('token', $token)
-                ->where('created_at', '>', $oldest)
-                ->firstOrFail();
+            $loginToken = LoginToken::with('user')->whereHas('user', function ($query)
+            {
+                $query->where('activated', 1);
+
+            })->where('token', $token)->where('created_at', '>', $oldest)->firstOrFail();
         }
+
+        // Catch the ORM exceptions.
         catch (ModelNotFoundException $e) {
             $limiter->hit($throttleKey, $lockoutTime);
 
@@ -238,19 +243,10 @@ class Authorize extends BaseController
         // Delete all stored login Tokens for this User.
         LoginToken::where('email', $loginToken->email)->delete();
 
-        if ($loginToken->user->activated == 0) {
-            Auth::logout();
-
-            // User not activated; go logout and redirect him to account activation page.
-            return Redirect::to('register/verify')
-                ->withInput(array('email' => $user->email))
-                ->with('danger', __d('platform', 'Please activate your Account!'));
-        }
-
-        // Authenticate the User instance.
-        Auth::login($loginToken->user, true /* remember */);
+        // Authenticate the User instance from login Token.
+        Auth::login($user = $loginToken->user, false /* do not remember this login */);
 
         return Redirect::to('dashboard')
-            ->with('success', __d('platform', '<b>{0}</b>, you have successfully logged in.', $loginToken->user->username));
+            ->with('success', __d('platform', '<b>{0}</b>, you have successfully logged in.', $user->username));
     }
 }

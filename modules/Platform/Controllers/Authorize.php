@@ -38,6 +38,40 @@ class Authorize extends BaseController
     protected $layout = 'Default';
 
 
+    protected function validator(Request $request)
+    {
+        $rules = array(
+            'email'                => 'required|valid_email',
+            'g-recaptcha-response' => 'required|min:1|recaptcha'
+        );
+
+        $messages = array(
+                'valid_email' => __d('platform', 'The :attribute field is not a valid email address.'),
+                'recaptcha'   => __d('platform', 'The reCaptcha verification failed.'),
+        );
+
+        $attributes = array(
+            'email'                => __d('platform', 'E-mail'),
+            'g-recaptcha-response' => __d('platform', 'ReCaptcha'),
+        );
+
+        // Create a Validator instance.
+        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
+
+        // Add the custom Validation Rule commands.
+        $validator->addExtension('valid_email', function($attribute, $value, $parameters)
+        {
+            return User::where('activated', 1)->where('email', $value)->exists();
+        });
+
+        $validator->addExtension('recaptcha', function($attribute, $value, $parameters) use ($request)
+        {
+            return ReCaptcha::check($value, $request->ip());
+        });
+
+        return $validator;
+    }
+
     /**
      * Display the login view.
      *
@@ -129,33 +163,8 @@ class Authorize extends BaseController
      */
     public function tokenProcess(Request $request)
     {
-        $remoteIp = $request->ip();
-
-        Validator::extend('recaptcha', function($attribute, $value, $parameters) use ($remoteIp)
-        {
-            return ReCaptcha::check($value, $remoteIp);
-        });
-
-        $validator = Validator::make(
-            $request->only('email', 'g-recaptcha-response'),
-            array(
-                'email'                => 'required|valid_email',
-                'g-recaptcha-response' => 'required|min:1|recaptcha'
-            ),
-            array(
-                'recaptcha'   => __d('platform', 'The reCaptcha verification failed.'),
-                'valid_email' => __d('platform', 'The :attribute field is not a valid email address.'),
-            ),
-            array(
-                'email'                => __d('platform', 'E-mail'),
-                'g-recaptcha-response' => __d('platform', 'ReCaptcha'),
-            )
-        );
-
-        $validator->addExtension('valid_email', function($attribute, $value, $parameters)
-        {
-            return User::where('activated', 1)->where('email', $value)->exists();
-        });
+        // Create a Validator instance.
+        $validator = $this->validator($request);
 
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator);

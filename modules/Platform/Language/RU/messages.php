@@ -10,7 +10,6 @@ return array (
   'Account Verification' => 'Проверка аккаунта',
   'Account Verification for <b>{0}</b>' => 'Аккаунт для <b>{0}</b> проверен',
   'Activate your Account' => 'Активируйте ваш аккаунт',
-  'Activated! You can now Sign in!' => 'Активировано! Теперь вы можете Войти!',
   'Activation instructions have been sent to your email address.' => 'На ваш адрес электронной почты были отправлены инструкции по активации.',
   'Administration' => 'Администрирование',
   'Apply the changes' => 'Применить изменения',
@@ -128,7 +127,6 @@ return array (
   'The name of the external SMTP Server.' => 'Имя внешнего SMTP-сервера.',
   'The outgoing E-mail address.' => 'Исходящий адрес электронной почты.',
   'The reCaptcha verification failed.' => 'Неудачная проверка reCaptcha',
-  'The selected email cannot receive Account Activation links.' => 'Выбранное письмо не может получать ссылки активации аккаунта.',
   'The selected notification(s) was successfully marked as read.' => 'Выбранное уведомление (ы) было успешно отмечено как прочитанное.',
   'There are no Users on-line.' => 'Нет пользователей в режиме онлайн.',
   'This password reset token is invalid.' => 'Неправильный токен сброса пароля',
@@ -157,4 +155,5 @@ return array (
   'You have successfully logged out.' => 'Вы успешно вышли.',
   'You have successfully updated your Account information.' => 'Вы успешно обновили аккаунт.',
   'Your Account has been created. Activation instructions have been sent to your email address.' => 'Ваш аккаунт был создан. На ваш адрес электронной почты были отправлены инструкции по активации.',
+  'Your Account was activated. You can now sign in!' => '',
 );

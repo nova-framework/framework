@@ -26,6 +26,11 @@ class Field extends BaseModel
      */
     protected $fillable = array('user_id', 'field_item_id', 'type', 'name', 'value');
 
+    /**
+     * @var array
+     */
+    protected $with = array('fieldItem');
+
 
     /**
      * @return \Nova\Database\ORM\Relations\BelongsTo

@@ -62,7 +62,12 @@ class Contact extends BaseModel
 
         static::deleting(function (Contact $model)
         {
-            $model->load('messages');
+            $model->load('fieldGroups', 'messages');
+
+            $model->fieldGroups->each(function ($fieldGroup)
+            {
+                $fieldGroup->delete();
+            });
 
             $model->messages->each(function ($message)
             {
@@ -80,22 +85,20 @@ class Contact extends BaseModel
                 return $contact;
             }
         }
-
-        return $contacts->first();
     }
 
     protected function matches($path)
     {
         if (empty($pattern = $this->getAttribute('path'))) {
-            $patterns = array('*');
-        } else {
-            $lines = explode("\n", str_replace('<front>', '/', $pattern));
-
-            $patterns = array_filter(array_map('trim', $lines), function ($value)
-            {
-                return ! empty($value);
-            });
+            return false;
         }
+
+        $lines = explode("\n", str_replace('<front>', '/', $pattern));
+
+        $patterns = array_filter(array_map('trim', $lines), function ($value)
+        {
+            return ! empty($value);
+        });
 
         foreach ($patterns as $pattern) {
             if (Str::is($pattern, $path)) {

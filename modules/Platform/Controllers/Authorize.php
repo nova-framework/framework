@@ -21,7 +21,7 @@ use Shared\Support\Facades\Password;
 use Shared\Support\ReCaptcha;
 
 use Modules\Platform\Controllers\BaseController;
-use Modules\Platform\Models\UserLoginToken as LoginToken;
+use Modules\Platform\Models\LoginToken;
 use Modules\Platform\Notifications\AuthenticationToken as LoginTokenNotification;
 use Modules\Users\Models\User;
 

@@ -21,7 +21,7 @@ use Nova\Support\Str;
 
 use Shared\Support\ReCaptcha;
 
-use Modules\Platform\Models\UserVerifyToken as VerifyToken;
+use Modules\Platform\Models\UserActivationToken;
 use Modules\Platform\Notifications\AccountActivation as AccountActivationNotification;
 use Modules\Roles\Models\Role;
 use Modules\Users\Models\User;
@@ -124,9 +124,9 @@ class Registrar extends BaseController
         $user->roles()->attach($role);
 
         // Create a new Verification Token instance.
-        $verifyToken = VerifyToken::create(array(
+        $verifyToken = ActivationToken::create(array(
             'email' => $email,
-            'token' => $token = VerifyToken::uniqueToken(),
+            'token' => $token = ActivationToken::uniqueToken(),
         ));
 
         // Send the associated Activation Notification.
@@ -190,11 +190,11 @@ class Registrar extends BaseController
         }
 
         // Create a new Verification Token instance.
-        $verifyToken = VerifyToken::create(array(
+        $verifyToken = ActivationToken::create(array(
             'email' => $email = $request->input('email'),
 
             // We will use an unique token.
-            'token' => $token = VerifyToken::uniqueToken(),
+            'token' => $token = ActivationToken::uniqueToken(),
         ));
 
         // Send the associated Activation Notification.
@@ -251,7 +251,7 @@ class Registrar extends BaseController
         $oldest = Carbon::parse('-' .$validity .' minutes');
 
         try {
-            $verifyToken = VerifyToken::whereHas('user', function ($query)
+            $verifyToken = ActivationToken::whereHas('user', function ($query)
             {
                 $query->where('activated', 0);
 
@@ -267,7 +267,7 @@ class Registrar extends BaseController
         }
 
         // Delete all stored verification Tokens for this User.
-        VerifyToken::where('email', $verifyToken->email)->delete();
+        ActivationToken::where('email', $verifyToken->email)->delete();
 
         // Get a fresh instance of the associated User model.
         $user = $verifyToken->user()->first();

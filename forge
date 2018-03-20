@@ -24,7 +24,7 @@ require BASEPATH .'vendor' .DS .'autoload.php';
 // Turn On The Lights
 //--------------------------------------------------------------------------
 
-$app = require_once APPPATH .'Platform' .DS .'Start.php';
+$app = require_once APPPATH .'Platform' .DS .'Bootstrap.php';
 
 //--------------------------------------------------------------------------
 // Load The Forge Console Application

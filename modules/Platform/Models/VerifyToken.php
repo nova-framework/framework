@@ -6,9 +6,9 @@ use Nova\Database\ORM\Model as BaseModel;
 use Nova\Support\Str;
 
 
-class ActivationToken extends BaseModel
+class VerifyToken extends BaseModel
 {
-    protected $table = 'activation_tokens';
+    protected $table = 'user_verify_tokens';
 
     protected $primaryKey = 'id';
 

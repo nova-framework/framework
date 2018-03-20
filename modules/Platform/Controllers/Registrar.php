@@ -21,7 +21,7 @@ use Nova\Support\Str;
 
 use Shared\Support\ReCaptcha;
 
-use Modules\Platform\Models\ActivationToken as Token;
+use Modules\Platform\Models\VerifyToken;
 use Modules\Platform\Notifications\AccountActivation as AccountActivationNotification;
 use Modules\Roles\Models\Role;
 use Modules\Users\Models\User;
@@ -34,7 +34,7 @@ class Registrar extends BaseController
     protected $layout = 'Default';
 
 
-    protected function validator(array $data, $remoteIp)
+    protected function validator(Request $request)
     {
         // Validation rules.
         $rules = array(
@@ -57,12 +57,12 @@ class Registrar extends BaseController
         );
 
         // Create a Validator instance.
-        $validator = Validator::make($data, $rules, $messages, $attributes);
+        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
 
         // Add the custom Validation Rule commands.
-        $validator->addExtension('recaptcha', function($attribute, $value, $parameters) use ($remoteIp)
+        $validator->addExtension('recaptcha', function($attribute, $value, $parameters) use ($request)
         {
-            return ReCaptcha::check($value, $remoteIp);
+            return ReCaptcha::check($value, $request->ip());
         });
 
         $validator->addExtension('strong_password', function($attribute, $value, $parameters)
@@ -95,26 +95,22 @@ class Registrar extends BaseController
      */
     public function store(Request $request)
     {
-        $input = $request->only(
-            'username', 'email', 'password', 'password_confirmation', 'g-recaptcha-response'
-        );
-
         // Create a Validator instance.
-        $validator = $this->validator($input, $request->ip());
+        $validator = $this->validator($request);
 
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withErrors($validator);
         }
 
-        // Encrypt the given Password.
-        $password = Hash::make($input['password']);
+        $email    = $request->input('email');
+        $password = $request->input('password');
 
         // Create the User record.
         $user = User::create(array(
-            'username'        => $input['username'],
-            'email'           => $email = $input['email'],
-            'password'        => $password,
-            'activated'       => 0,
+            'username'  => $request->input('username'),
+            'email'     => $email,
+            'password'  => Hash::make($password),
+            'activated' => 0,
         ));
 
         // Retrieve the default 'user' Role.
@@ -124,9 +120,11 @@ class Registrar extends BaseController
         $user->roles()->attach($role);
 
         // Create a new Verification Token instance.
-        $authToken = ActivationToken::create(array(
+        $verifyToken = VerifyToken::create(array(
             'email' => $email,
-            'token' => $token = ActivationToken::uniqueToken(),
+
+            // We will use an unique token.
+            'token' => $token = VerifyToken::uniqueToken(),
         ));
 
         // Send the associated Activation Notification.
@@ -190,11 +188,11 @@ class Registrar extends BaseController
         }
 
         // Create a new Verification Token instance.
-        $authToken = ActivationToken::create(array(
+        $verifyToken = VerifyToken::create(array(
             'email' => $email = $request->input('email'),
 
             // We will use an unique token.
-            'token' => $token = ActivationToken::uniqueToken(),
+            'token' => $token = VerifyToken::uniqueToken(),
         ));
 
         // Send the associated Activation Notification.
@@ -207,7 +205,7 @@ class Registrar extends BaseController
 
         $user->notify(new AccountActivationNotification($hash, $token));
 
-        return Redirect::to('register/verify')
+        return Redirect::to('register/status')
             ->with('success', __d('platform', 'Activation instructions have been sent to your email address.'));
     }
 
@@ -242,7 +240,7 @@ class Registrar extends BaseController
         if (! hash_equals($hash, hash_hmac('sha256', $token, $hashKey))) {
             $limiter->hit($throttleKey, $lockoutTime);
 
-            return Redirect::to('register/status')
+            return Redirect::to('register/verify')
                 ->with('danger', __d('platform', 'Link is invalid, please request a new link.'));
         }
 
@@ -251,7 +249,7 @@ class Registrar extends BaseController
         $oldest = Carbon::parse('-' .$validity .' minutes');
 
         try {
-            $authToken = ActivationToken::whereHas('user', function ($query)
+            $verifyToken = VerifyToken::whereHas('user', function ($query)
             {
                 $query->where('activated', 0);
 
@@ -262,15 +260,15 @@ class Registrar extends BaseController
         catch (ModelNotFoundException $e) {
             $limiter->hit($throttleKey, $lockoutTime);
 
-            return Redirect::to('password/remind')
+            return Redirect::to('password/verify')
                 ->with('danger', __d('platform', 'Link is invalid, please request a new link.'));
         }
 
         // Delete all stored verification Tokens for this User.
-        ActivationToken::where('email', $authToken->email)->delete();
+        VerifyToken::where('email', $verifyToken->email)->delete();
 
         // Get a fresh instance of the associated User model.
-        $user = $authToken->user()->first();
+        $user = $verifyToken->user()->first();
 
         // Update the User information.
         $user->activated = 1;
@@ -283,7 +281,7 @@ class Registrar extends BaseController
         $uri = Config::get("auth.guards.{$guard}.authorize", 'login');
 
         return Redirect::to($uri)
-            ->with('success', __d('platform', 'Activated! You can now Sign in!'));
+            ->with('success', __d('platform', 'Your Account was activated. You can now sign in!'));
     }
 
     /**

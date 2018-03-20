@@ -4,7 +4,7 @@ use Nova\Database\Schema\Blueprint;
 use Nova\Database\Migrations\Migration;
 
 
-class CreateLoginTokensTable extends Migration
+class CreateUserVerifyTokensTable extends Migration
 {
 
     /**
@@ -14,7 +14,7 @@ class CreateLoginTokensTable extends Migration
      */
     public function up()
     {
-        Schema::create('login_tokens', function (Blueprint $table)
+        Schema::create('user_verify_tokens', function (Blueprint $table)
         {
             $table->increments('id');
             $table->string('email');
@@ -31,6 +31,6 @@ class CreateLoginTokensTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('login_tokens');
+        Schema::dropIfExists('user_verify_tokens');
     }
 }

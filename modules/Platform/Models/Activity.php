@@ -18,7 +18,7 @@ class Activity extends BaseModel
      *
      * @var string
      */
-    public $table = 'activities';
+    public $table = 'user_activities';
 
     protected $primaryKey = 'id';
 

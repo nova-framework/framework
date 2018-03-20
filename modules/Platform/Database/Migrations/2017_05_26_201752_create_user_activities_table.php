@@ -4,7 +4,7 @@ use Nova\Database\Schema\Blueprint;
 use Nova\Database\Migrations\Migration;
 
 
-class CreateActivitiesTable extends Migration
+class CreateUserActivitiesTable extends Migration
 {
 
     /**
@@ -14,7 +14,7 @@ class CreateActivitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('activities', function (Blueprint $table)
+        Schema::create('user_activities', function (Blueprint $table)
         {
             $table->increments('id');
             $table->string('session', 100);
@@ -31,6 +31,6 @@ class CreateActivitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('activities');
+        Schema::dropIfExists('user_activities');
     }
 }

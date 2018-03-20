@@ -21,7 +21,7 @@ use Shared\Support\Facades\Password;
 use Shared\Support\ReCaptcha;
 
 use Modules\Platform\Controllers\BaseController;
-use Modules\Platform\Models\LoginToken as Token;
+use Modules\Platform\Models\LoginToken;
 use Modules\Platform\Notifications\AuthenticationToken as TokenNotification;
 use Modules\Users\Models\User;
 
@@ -161,11 +161,11 @@ class Authorize extends BaseController
             return Redirect::back()->withErrors($validator);
         }
 
-        $authToken = Token::create(array(
+        $loginToken = LoginToken::create(array(
             'email' => $email = $request->input('email'),
 
             // We will use an unique token.
-            'token' => $token = Token::uniqueToken(),
+            'token' => $token = LoginToken::uniqueToken(),
         ));
 
         $hashKey = Config::get('app.key');
@@ -226,7 +226,7 @@ class Authorize extends BaseController
         }
 
         try {
-            $authToken = Token::with('user')->whereHas('user', function ($query)
+            $loginToken = LoginToken::with('user')->whereHas('user', function ($query)
             {
                 $query->where('activated', 1);
 
@@ -244,10 +244,10 @@ class Authorize extends BaseController
         $limiter->clear($throttleKey);
 
         // Delete all stored login Tokens for this User.
-        Token::where('email', $authToken->email)->delete();
+        LoginToken::where('email', $loginToken->email)->delete();
 
         // Authenticate the User instance from login Token.
-        Auth::login($user = $authToken->user, false /* do not remember this login */);
+        Auth::login($user = $loginToken->user, false /* do not remember this login */);
 
         return Redirect::to('dashboard')
             ->with('success', __d('platform', '<b>{0}</b>, you have successfully logged in.', $user->username));

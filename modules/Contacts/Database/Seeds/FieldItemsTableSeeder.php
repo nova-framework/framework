@@ -91,20 +91,5 @@ class FieldItemsTableSeeder extends Seeder
             'field_group_id' => 1,
             'created_by'     => 1,
         ));
-
-        $item = FieldItem::create(array(
-            'id'          => 5,
-            'title'       => 'Attachment',
-            'name'        => 'attachment',
-            'type'        => 'file',
-            'order'       => 4,
-            'rules'       => 'max:10240|mimes:zip,rar,pdf,png,jpg,jpeg,doc,docx',
-
-            'options'     => null,
-
-            //
-            'field_group_id' => 1,
-            'created_by'     => 1,
-        ));
     }
 }

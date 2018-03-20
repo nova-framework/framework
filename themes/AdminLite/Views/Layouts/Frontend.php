@@ -184,7 +184,7 @@ $languages = Config::get('languages');
       <small><!-- DO NOT DELETE! - Statistics --></small>
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.novaframework.com/" target="_blank"><b>Nova Framework <?= $version; ?> / Kernel <?= VERSION; ?></b></a> - </strong> All rights reserved.
+    <strong>Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.novaframework.com/" target="_blank"><b>Nova Framework <?= VERSION; ?> / Kernel <?= App::version(); ?></b></a> - </strong> All rights reserved.
   </footer>
 </div>
 <!-- ./wrapper -->

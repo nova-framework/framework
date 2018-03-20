@@ -4,5 +4,6 @@
 vendor/
 composer.lock
 
-# The developers Playground
-works
+# Local development files
+composer.dev.json
+composer.dev.lock

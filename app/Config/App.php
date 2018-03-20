@@ -121,7 +121,6 @@ return array(
         'Nova\Cache\CacheServiceProvider',
         'Nova\Routing\RoutingServiceProvider',
         'Nova\Cookie\CookieServiceProvider',
-        //'Nova\Module\ModuleServiceProvider',
         'Nova\Package\PackageServiceProvider',
         'Nova\Database\DatabaseServiceProvider',
         'Nova\Encryption\EncryptionServiceProvider',

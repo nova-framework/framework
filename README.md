@@ -61,11 +61,13 @@ composer create-project nova-framework/framework foldername 4.* -s dev
 ```
 The foldername is the desired folder to be created.
 
+
 > **Note:** You can install the bare application variant from a terminal by using:
 
 ```
 composer create-project nova-framework/app foldername 4.* -s dev
 ```
+
 > **Note:** For additional installation instructions, for example; setting up a Virtualhost (Recommended for Local Development), Nginx or IIS with URL Rewrite, [please visit the install docs](http://novaframework.com/documentation/v3/install).
 
 ## Documentation

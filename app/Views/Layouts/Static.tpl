@@ -18,7 +18,7 @@
     <div class="container-fluid">
         <div class="row" style="margin: 15px 0 0;">
             <div class="col-lg-5">
-                <p class="text-muted">Copyright &copy; {{ date('Y') }} <a href="http://www.novaframework.com/" target="_blank"><b>Nova Framework {{ $version; }} / Kernel {{ VERSION }}</b></a></p>
+                <p class="text-muted">Copyright &copy; {{ date('Y') }} <a href="http://www.novaframework.com/" target="_blank"><b>Nova Framework {{ VERSION }} / Kernel {{ App::version() }}</b></a></p>
             </div>
             <div class="col-lg-7">
                 <p class="text-muted pull-right">

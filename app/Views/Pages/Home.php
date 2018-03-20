@@ -9,7 +9,7 @@ if (Config::get('app.debug') !== true) {
 ?>
 
 <div class="row">
-    <h1 class="text-center" style="margin-bottom: 25px;">Welcome to Nova Framework <?= $version; ?></h1>
+    <h1 class="text-center" style="margin-bottom: 25px;">Welcome to Nova Framework <?= VERSION; ?></h1>
     <br>
 
     <div class="alert alert-warning text-center">

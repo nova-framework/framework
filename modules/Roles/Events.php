@@ -11,8 +11,6 @@
 use Modules\Roles\Models\Role;
 
 
-/** Define Events. */
-
 Event::listen('backend.menu.sidebar', function ()
 {
     return array(

@@ -29,31 +29,13 @@ class Pages extends BaseController
 
     public function show($slug = null)
     {
-        list ($view, $title) = $this->parseSlug($slug, 'pages');
-
-        return View::make($view)
-            ->shares('title', ($title != 'Pages') ? $title : 'Home');
-    }
-
-    public function showTutorial($slug = null)
-    {
-        list ($view, $title) = $this->parseSlug($slug, 'tutorials');
-
-        return View::make('Static')
-            ->shares('title', $title)
-            ->nest('sidebar', 'Tutorials/Contents')
-            ->nest('content', $view);
-    }
-
-    protected function parseSlug($slug, $type)
-    {
         $segments = explode('/', $slug, 2);
 
         // Compute the page and subpage.
         list ($page, $subpage) = array_pad($segments, 2, null);
 
         // Compute the full View name, i.e. 'about-us' -> 'Pages/AboutUs'
-        array_unshift($segments, $type);
+        array_unshift($segments, 'pages');
 
         $view = implode('/', array_map(function ($value)
         {
@@ -63,15 +45,22 @@ class Pages extends BaseController
 
         if (! View::exists($view)) {
             // We will look for the Home view before to go Exception.
+
             if (! View::exists($view = $view .'/Home')) {
                 throw new NotFoundHttpException($view);
             }
         }
 
+        if (! is_null($subpage)) {
+            $title = $subpage;
+        } else {
+            $title = $page ?: 'Home';
+        }
+
         $title = Str::title(
-            str_replace(array('-', '_'), ' ', $subpage ?: ($page ?: $type))
+            str_replace(array('-', '_'), ' ', $title)
         );
 
-        return array($view, $title);
+        return View::make($view)->shares('title', $title);
     }
 }

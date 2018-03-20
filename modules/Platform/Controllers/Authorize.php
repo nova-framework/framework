@@ -21,8 +21,8 @@ use Shared\Support\Facades\Password;
 use Shared\Support\ReCaptcha;
 
 use Modules\Platform\Controllers\BaseController;
-use Modules\Platform\Models\LoginToken;
-use Modules\Platform\Notifications\AuthenticationToken as LoginTokenNotification;
+use Modules\Platform\Models\LoginToken as Token;
+use Modules\Platform\Notifications\AuthenticationToken as TokenNotification;
 use Modules\Users\Models\User;
 
 use Carbon\Carbon;
@@ -161,11 +161,11 @@ class Authorize extends BaseController
             return Redirect::back()->withErrors($validator);
         }
 
-        $loginToken = LoginToken::create(array(
+        $authToken = Token::create(array(
             'email' => $email = $request->input('email'),
 
             // We will use an unique token.
-            'token' => $token = LoginToken::uniqueToken(),
+            'token' => $token = Token::uniqueToken(),
         ));
 
         $hashKey = Config::get('app.key');
@@ -177,7 +177,7 @@ class Authorize extends BaseController
         //
         $user = User::where('email', $email)->first();
 
-        $user->notify(new LoginTokenNotification($hash, $timestamp, $token));
+        $user->notify(new TokenNotification($hash, $timestamp, $token));
 
         return Redirect::back()
             ->with('success', __d('platform', 'Login instructions have been sent to your email address.'));
@@ -209,7 +209,7 @@ class Authorize extends BaseController
                 ->with('danger', __d('platform', 'Too many login attempts, please try again in {0} seconds.', $seconds));
         }
 
-        $validity = Config::get('platform::tokenLogin.validity', 15); // In minutes.
+        $validity = Config::get('platform::tokens.login.validity', 15); // In minutes.
 
         $oldest = Carbon::parse('-' .$validity .' minutes');
 
@@ -226,7 +226,7 @@ class Authorize extends BaseController
         }
 
         try {
-            $loginToken = LoginToken::with('user')->whereHas('user', function ($query)
+            $authToken = Token::with('user')->whereHas('user', function ($query)
             {
                 $query->where('activated', 1);
 
@@ -244,10 +244,10 @@ class Authorize extends BaseController
         $limiter->clear($throttleKey);
 
         // Delete all stored login Tokens for this User.
-        LoginToken::where('email', $loginToken->email)->delete();
+        Token::where('email', $authToken->email)->delete();
 
         // Authenticate the User instance from login Token.
-        Auth::login($user = $loginToken->user, false /* do not remember this login */);
+        Auth::login($user = $authToken->user, false /* do not remember this login */);
 
         return Redirect::to('dashboard')
             ->with('success', __d('platform', '<b>{0}</b>, you have successfully logged in.', $user->username));

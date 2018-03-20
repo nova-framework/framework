@@ -5,7 +5,6 @@ return array (
   'ADMINISTRATION' => 'مدیریت کل',
   'Account' => '',
   'Control Panel' => 'پنل کنترل',
-  'Dashboard' => '',
   'Forgot Password?' => 'فراموشی رمزعبور؟',
   'Frontend' => '',
   'Logout' => 'خروج',

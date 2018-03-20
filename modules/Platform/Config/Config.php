@@ -15,10 +15,14 @@ return array(
         'maxAttempts' => 5,
     ),
 
+    'tokenVerify' => array(
+        'validity' => 60,   // In minutes.
+    ),
+
     'tokenLogin' => array(
         'validity' => 15,   // In minutes.
     ),
-
+    
     'reminders' => array(
         'messages' => array(
             'password' => __d('platform', 'Passwords must be at least six characters and match the confirmation.'),

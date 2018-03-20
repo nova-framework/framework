@@ -197,12 +197,11 @@ class Users extends BaseController
 
         // Create a User Model instance.
         $user = User::create(array(
-            'username'        => $input['username'],
-            'password'        => $password,
-            'realname'        => $input['realname'],
-            'email'           => $input['email'],
-            'activated'       => 1,
-            'activation_code' => null,
+            'username'  => $input['username'],
+            'password'  => $password,
+            'realname'  => $input['realname'],
+            'email'     => $input['email'],
+            'activated' => 1,
         ));
 
         // Attach the Roles.

@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 // Define The Application Version
 //--------------------------------------------------------------------------
 
-define('VERSION', '4.0.17');
+define('VERSION', '4.0.18');
 
 //--------------------------------------------------------------------------
 // Set PHP Error Reporting Options
@@ -107,6 +107,7 @@ $app->registerCoreContainerAliases();
 
 with($envVariables = new EnvironmentVariables(
     $app->getEnvironmentVariablesLoader()
+
 ))->load($env);
 
 //--------------------------------------------------------------------------

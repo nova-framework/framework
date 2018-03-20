@@ -26,7 +26,6 @@ class CreateUsersTable extends Migration
             $table->string('api_token', 100)->unique()->nullable();
 
             $table->tinyInteger('activated')->unsigned()->default(0);
-            $table->string('activation_code')->unique()->nullable();
 
             $table->timestamps();
         });

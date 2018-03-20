@@ -27,64 +27,60 @@ class UsersTableSeeder extends Seeder
 
         //
         $user = User::create(array(
-            'id'              => 1,
-            'username'        => 'admin',
-            'password'        => Hash::make('admin'),
-            'email'           => 'admin@novaframework.dev',
-            'realname'        => 'Site Administrator',
-            'image'           => null,
-            'remember_token'  => '',
-            'api_token'       => $this->uniqueToken(),
-            'activated'       => 1,
-            'activation_code' => null,
+            'id'             => 1,
+            'username'       => 'admin',
+            'password'       => Hash::make('admin'),
+            'email'          => 'admin@novaframework.dev',
+            'realname'       => 'Site Administrator',
+            'image'          => null,
+            'remember_token' => '',
+            'api_token'      => $this->uniqueToken(),
+            'activated'      => 1,
         ));
 
         $user->roles()->attach(array(1));
 
         //
         $user = User::create(array(
-            'id'              => 2,
-            'username'        => 'marcus',
-            'password'        => Hash::make('marcus'),
-            'email'           => 'marcus@novaframework.dev',
-            'realname'        => 'Marcus Spears',
-            'image'           => null,
-            'remember_token'  => '',
-            'api_token'       => $this->uniqueToken(),
-            'activated'       => 1,
-            'activation_code' => null,
+            'id'             => 2,
+            'username'       => 'marcus',
+            'password'       => Hash::make('marcus'),
+            'email'          => 'marcus@novaframework.dev',
+            'realname'       => 'Marcus Spears',
+            'image'          => null,
+            'remember_token' => '',
+            'api_token'      => $this->uniqueToken(),
+            'activated'      => 1,
         ));
 
         $user->roles()->attach(array(2));
 
         //
         $user = User::create(array(
-            'id'              => 3,
-            'username'        => 'michael',
-            'password'        => Hash::make('michael'),
-            'email'           => 'michael@novaframework.dev',
-            'realname'        => 'Michael White',
-            'image'           => null,
-            'remember_token'  => '',
-            'api_token'       => $this->uniqueToken(),
-            'activated'       => 1,
-            'activation_code' => null
+            'id'             => 3,
+            'username'       => 'michael',
+            'password'       => Hash::make('michael'),
+            'email'          => 'michael@novaframework.dev',
+            'realname'       => 'Michael White',
+            'image'          => null,
+            'remember_token' => '',
+            'api_token'      => $this->uniqueToken(),
+            'activated'      => 1,
         ));
 
         $user->roles()->attach(array(3));
 
         //
         $user = User::create(array(
-            'id'              => 4,
-            'username'        => 'john',
-            'password'        => Hash::make('john'),
-            'email'           => 'john@novaframework.dev',
-            'realname'        => 'John Kennedy',
-            'image'           => null,
-            'remember_token'  => '',
-            'api_token'       => $this->uniqueToken(),
-            'activated'       => 1,
-            'activation_code' => null,
+            'id'             => 4,
+            'username'       => 'john',
+            'password'       => Hash::make('john'),
+            'email'          => 'john@novaframework.dev',
+            'realname'       => 'John Kennedy',
+            'image'          => null,
+            'remember_token' => '',
+            'api_token'      => $this->uniqueToken(),
+            'activated'      => 1,
         ));
 
         $user->roles()->attach(array(4));
@@ -99,8 +95,7 @@ class UsersTableSeeder extends Seeder
             'image'          => null,
             'remember_token' => '',
             'api_token'      => $this->uniqueToken(),
-            'activated'       => 1,
-            'activation_code' => null,
+            'activated'      => 1,
         ));
 
         $user->roles()->attach(array(4));

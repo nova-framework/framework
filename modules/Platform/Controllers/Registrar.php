@@ -21,10 +21,10 @@ use Nova\Support\Str;
 
 use Shared\Support\ReCaptcha;
 
+use Modules\Platform\Models\UserVerifyToken as VerifyToken;
 use Modules\Platform\Notifications\AccountActivation as AccountActivationNotification;
 use Modules\Roles\Models\Role;
 use Modules\Users\Models\User;
-use Modules\Users\Models\UserMeta;
 
 use Modules\Platform\Controllers\BaseController;
 
@@ -112,10 +112,9 @@ class Registrar extends BaseController
         // Create the User record.
         $user = User::create(array(
             'username'        => $input['username'],
-            'email'           => $input['email'],
+            'email'           => $email = $input['email'],
             'password'        => $password,
             'activated'       => 0,
-            'activation_code' => $token,
         ));
 
         // Retrieve the default 'user' Role.
@@ -124,8 +123,11 @@ class Registrar extends BaseController
         // Update the user's associated Roles.
         $user->roles()->attach($role);
 
-        // Create a new activation token.
-        $token = $this->createNewToken();
+        // Create a new Verification Token instance.
+        $verifyToken = VerifyToken::create(array(
+            'email' => $email,
+            'token' => $token = VerifyToken::uniqueToken(),
+        ));
 
         // Send the associated Activation Notification.
         $hashKey = Config::get('app.key');
@@ -160,7 +162,7 @@ class Registrar extends BaseController
         $validator = Validator::make(
             $request->only('email', 'g-recaptcha-response'),
             array(
-                'email'                => 'required|email|exists:users,email',
+                'email'                => 'required|valid_email',
                 'g-recaptcha-response' => 'required|min:1|recaptcha'
             ),
             array(
@@ -173,6 +175,11 @@ class Registrar extends BaseController
         );
 
         // Add the custom Validation Rule commands.
+        $validator->addExtension('valid_email', function($attribute, $value, $parameters)
+        {
+            return User::where('activated', 0)->where('email', $value)->exists();
+        });
+
         $validator->addExtension('recaptcha', function($attribute, $value, $parameters) use ($request)
         {
             return ReCaptcha::check($value, $request->ip());
@@ -182,25 +189,21 @@ class Registrar extends BaseController
             return Redirect::back()->withErrors($validator);
         }
 
-        $email = $request->input('email');
+        // Create a new Verification Token instance.
+        $verifyToken = VerifyToken::create(array(
+            'email' => $email = $request->input('email'),
 
-        try {
-            $user = User::where('email', $email)->hasMeta('activated', 0)->firstOrFail();
-        }
-        catch (ModelNotFoundException $e) {
-            return Redirect::back()
-                ->onlyInput('email')
-                ->with('danger', __d('platform', 'The selected email cannot receive Account Activation links.'));
-        }
-
-        $user->activation_code = $token = $this->createNewToken();
-
-        $user->save();
+            // We will use an unique token.
+            'token' => $token = VerifyToken::uniqueToken(),
+        ));
 
         // Send the associated Activation Notification.
         $hashKey = Config::get('app.key');
 
         $hash = hash_hmac('sha256', $token, $hashKey);
+
+        //
+        $user = User::where('email', $email)->first();
 
         $user->notify(new AccountActivationNotification($hash, $token));
 
@@ -243,20 +246,19 @@ class Registrar extends BaseController
                 ->with('danger', __d('platform', 'Link is invalid, please request a new link.'));
         }
 
+        $validity = Config::get('platform::tokenVerify.validity', 60); // In minutes.
+
+        $oldest = Carbon::parse('-' .$validity .' minutes');
+
         try {
-            $user = User::whereHas('meta', function ($query) use ($token)
+            $verifyToken = VerifyToken::whereHas('user', function ($query)
             {
-                return $query->where(function ($query)
-                {
-                    return $query->where('key', 'activated')->where('value', 0);
+                $query->where('activated', 0);
 
-                })->where(function ($query) use ($token)
-                {
-                    return $query->where('key', 'activation_code')->where('value', $token);
-                });
-
-            })->firstOrFail();
+            })->where('token', $token)->where('created_at', '>', $oldest)->firstOrFail();
         }
+
+        // Catch the ORM exceptions.
         catch (ModelNotFoundException $e) {
             $limiter->hit($throttleKey, $lockoutTime);
 
@@ -264,8 +266,14 @@ class Registrar extends BaseController
                 ->with('danger', __d('platform', 'Link is invalid, please request a new link.'));
         }
 
-        $user->activated       = 1;
-        $user->activation_code = null;
+        // Delete all stored verification Tokens for this User.
+        VerifyToken::where('email', $verifyToken->email)->delete();
+
+        // Get a fresh instance of the associated User model.
+        $user = $verifyToken->user()->first();
+
+        // Update the User information.
+        $user->activated = 1;
 
         $user->save();
 
@@ -287,24 +295,5 @@ class Registrar extends BaseController
     {
         return $this->createView()
             ->shares('title', __d('platform', 'Registration Status'));
-    }
-
-    /**
-     * Create a new unique Token for the User.
-     *
-     * @return string
-     */
-    public function createNewToken()
-    {
-        $tokens = UserMeta::where('key', 'activation_code')
-            ->whereNotNull('value')
-            ->lists('value');
-
-        do {
-            $token = Str::random(100);
-        }
-        while (in_array($token, $tokens));
-
-        return $token;
     }
 }

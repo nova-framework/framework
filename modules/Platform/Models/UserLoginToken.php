@@ -6,9 +6,9 @@ use Nova\Database\ORM\Model as BaseModel;
 use Nova\Support\Str;
 
 
-class UserToken extends BaseModel
+class UserLoginToken extends BaseModel
 {
-    protected $table = 'user_tokens';
+    protected $table = 'user_login_tokens';
 
     protected $primaryKey = 'id';
 

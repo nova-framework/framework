@@ -21,7 +21,7 @@ use Shared\Support\Facades\Password;
 use Shared\Support\ReCaptcha;
 
 use Modules\Platform\Controllers\BaseController;
-use Modules\Platform\Models\UserToken as LoginToken;
+use Modules\Platform\Models\UserLoginToken as LoginToken;
 use Modules\Platform\Notifications\AuthenticationToken as LoginTokenNotification;
 use Modules\Users\Models\User;
 
@@ -137,10 +137,10 @@ class Authorize extends BaseController
         });
 
         $validator = Validator::make(
-            $input = $request->only('email', 'g-recaptcha-response'),
+            $request->only('email', 'g-recaptcha-response'),
             array(
                 'email'                => 'required|valid_email',
-                'g-recaptcha-response' => 'required|recaptcha'
+                'g-recaptcha-response' => 'required|min:1|recaptcha'
             ),
             array(
                 'recaptcha'   => __d('platform', 'The reCaptcha verification failed.'),
@@ -162,7 +162,7 @@ class Authorize extends BaseController
         }
 
         $loginToken = LoginToken::create(array(
-            'email' => $input['email'],
+            'email' => $email = $request->input('email'),
 
             // We will use an unique token.
             'token' => $token = LoginToken::uniqueToken(),
@@ -174,7 +174,10 @@ class Authorize extends BaseController
 
         $hash = hash_hmac('sha256', $token .'|' .$request->ip() .'|' .$timestamp, $hashKey);
 
-        $loginToken->user->notify(new LoginTokenNotification($hash, $timestamp, $token));
+        //
+        $user = User::where('email', $email)->first();
+
+        $user->notify(new LoginTokenNotification($hash, $timestamp, $token));
 
         return Redirect::back()
             ->with('success', __d('platform', 'Login instructions have been sent to your email address.'));

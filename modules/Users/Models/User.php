@@ -12,16 +12,14 @@ use Nova\Support\Facades\Cache;
 use Shared\Auth\Reminders\RemindableTrait;
 use Shared\Auth\Reminders\RemindableInterface;
 use Shared\FileField\HasFileFieldsTrait;
-use Shared\MetaField\HasMetaFieldsTrait;
 
 use Modules\Messages\Traits\HasMessagesTrait;
-use Modules\Platform\Traits\AliasesTrait;
 use Modules\Platform\Traits\HasActivitiesTrait;
 
 
 class User extends BaseModel implements UserInterface, RemindableInterface
 {
-    use UserTrait, RemindableTrait, AuthorizableTrait, AliasesTrait, HasFileFieldsTrait, HasMetaFieldsTrait, HasActivitiesTrait, HasMessagesTrait, NotifiableTrait;
+    use UserTrait, RemindableTrait, AuthorizableTrait, HasFileFieldsTrait, HasActivitiesTrait, HasMessagesTrait, NotifiableTrait;
 
     //
     protected $table = 'users';
@@ -41,7 +39,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
     /**
      * @var array
      */
-    protected $with = array('fields', 'meta');
+    protected $with = array('fields');
 
     /**
      * @var array
@@ -51,14 +49,6 @@ class User extends BaseModel implements UserInterface, RemindableInterface
             'path'        => BASEPATH .'assets/images/users/:unique_id-:file_name',
             'defaultPath' => BASEPATH .'assets/images/users/no-image.png',
         ),
-    );
-
-    /**
-     * @var array
-     */
-    protected static $aliases = array(
-        'location'  => array('meta' => 'location'),
-        'activated' => array('meta' => 'activated'),
     );
 
     // ACL caches.
@@ -72,14 +62,6 @@ class User extends BaseModel implements UserInterface, RemindableInterface
     public function fields()
     {
         return $this->hasMany('Modules\Users\Models\Field', 'user_id');
-    }
-
-    /**
-     * @return \Nova\Database\ORM\Relations\HasMany
-     */
-    public function meta()
-    {
-        return $this->hasMany('Modules\Users\Models\UserMeta', 'user_id');
     }
 
     public function picture()

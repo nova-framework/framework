@@ -111,9 +111,11 @@ class Registrar extends BaseController
 
         // Create the User record.
         $user = User::create(array(
-            'username' => $input['username'],
-            'email'    => $input['email'],
-            'password' => $password,
+            'username'        => $input['username'],
+            'email'           => $input['email'],
+            'password'        => $password,
+            'activated'       => 0,
+            'activation_code' => $token,
         ));
 
         // Retrieve the default 'user' Role.
@@ -124,12 +126,6 @@ class Registrar extends BaseController
 
         // Create a new activation token.
         $token = $this->createNewToken();
-
-        // Handle the meta-data.
-        $user->saveMeta(array(
-            'activated'       => 0,
-            'activation_code' => $token,
-        ));
 
         // Send the associated Activation Notification.
         $hashKey = Config::get('app.key');
@@ -197,9 +193,7 @@ class Registrar extends BaseController
                 ->with('danger', __d('platform', 'The selected email cannot receive Account Activation links.'));
         }
 
-        $token = $this->createNewToken();
-
-        $user->saveMeta('activation_code', $token);
+        $user->activation_code = $token = $this->createNewToken();
 
         $user->save();
 
@@ -270,10 +264,10 @@ class Registrar extends BaseController
                 ->with('danger', __d('platform', 'Link is invalid, please request a new link.'));
         }
 
-        $user->saveMeta(array(
-            'activated'       => 1,
-            'activation_code' => null,
-        ));
+        $user->activated       = 1;
+        $user->activation_code = null;
+
+        $user->save();
 
         // Redirect to the login page.
         $guard = Config::get('auth.defaults.guard', 'web');

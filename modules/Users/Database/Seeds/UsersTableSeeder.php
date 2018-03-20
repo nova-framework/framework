@@ -27,79 +27,67 @@ class UsersTableSeeder extends Seeder
 
         //
         $user = User::create(array(
-            'id'             => 1,
-            'username'       => 'admin',
-            'password'       => Hash::make('admin'),
-            'email'          => 'admin@novaframework.dev',
-            'realname'       => 'Site Administrator',
-            'image'          => null,
-            'remember_token' => '',
-            'api_token'      => $this->uniqueToken(),
+            'id'              => 1,
+            'username'        => 'admin',
+            'password'        => Hash::make('admin'),
+            'email'           => 'admin@novaframework.dev',
+            'realname'        => 'Site Administrator',
+            'image'           => null,
+            'remember_token'  => '',
+            'api_token'       => $this->uniqueToken(),
+            'activated'       => 1,
+            'activation_code' => null,
         ));
 
         $user->roles()->attach(array(1));
 
-        $user->createMeta(array(
-            'activated'       => 1,
-            'activation_code' => null,
-        ));
-
         //
         $user = User::create(array(
-            'id'             => 2,
-            'username'       => 'marcus',
-            'password'       => Hash::make('marcus'),
-            'email'          => 'marcus@novaframework.dev',
-            'realname'       => 'Marcus Spears',
-            'image'          => null,
-            'remember_token' => '',
-            'api_token'      => $this->uniqueToken(),
+            'id'              => 2,
+            'username'        => 'marcus',
+            'password'        => Hash::make('marcus'),
+            'email'           => 'marcus@novaframework.dev',
+            'realname'        => 'Marcus Spears',
+            'image'           => null,
+            'remember_token'  => '',
+            'api_token'       => $this->uniqueToken(),
+            'activated'       => 1,
+            'activation_code' => null,
         ));
 
         $user->roles()->attach(array(2));
 
-        $user->createMeta(array(
-            'activated'       => 1,
-            'activation_code' => null,
-        ));
-
         //
         $user = User::create(array(
-            'id'             => 3,
-            'username'       => 'michael',
-            'password'       => Hash::make('michael'),
-            'email'          => 'michael@novaframework.dev',
-            'realname'       => 'Michael White',
-            'image'          => null,
-            'remember_token' => '',
-            'api_token'      => $this->uniqueToken(),
+            'id'              => 3,
+            'username'        => 'michael',
+            'password'        => Hash::make('michael'),
+            'email'           => 'michael@novaframework.dev',
+            'realname'        => 'Michael White',
+            'image'           => null,
+            'remember_token'  => '',
+            'api_token'       => $this->uniqueToken(),
+            'activated'       => 1,
+            'activation_code' => null
         ));
 
         $user->roles()->attach(array(3));
 
-        $user->createMeta(array(
-            'activated'       => 1,
-            'activation_code' => null,
-        ));
-
         //
         $user = User::create(array(
-            'id'             => 4,
-            'username'       => 'john',
-            'password'       => Hash::make('john'),
-            'email'          => 'john@novaframework.dev',
-            'realname'       => 'John Kennedy',
-            'image'          => null,
-            'remember_token' => '',
-            'api_token'      => $this->uniqueToken(),
+            'id'              => 4,
+            'username'        => 'john',
+            'password'        => Hash::make('john'),
+            'email'           => 'john@novaframework.dev',
+            'realname'        => 'John Kennedy',
+            'image'           => null,
+            'remember_token'  => '',
+            'api_token'       => $this->uniqueToken(),
+            'activated'       => 1,
+            'activation_code' => null,
         ));
 
         $user->roles()->attach(array(4));
-
-        $user->createMeta(array(
-            'activated'       => 1,
-            'activation_code' => null,
-        ));
 
         //
         $user = User::create(array(
@@ -111,14 +99,11 @@ class UsersTableSeeder extends Seeder
             'image'          => null,
             'remember_token' => '',
             'api_token'      => $this->uniqueToken(),
-        ));
-
-        $user->roles()->attach(array(4));
-
-        $user->createMeta(array(
             'activated'       => 1,
             'activation_code' => null,
         ));
+
+        $user->roles()->attach(array(4));
     }
 
     protected function uniqueToken($length = 60)

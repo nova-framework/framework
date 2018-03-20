@@ -235,10 +235,19 @@ class Authorize extends BaseController
 
         $limiter->clear($throttleKey);
 
-        // Delete all stored login Tokens for this Center.
+        // Delete all stored login Tokens for this User.
         LoginToken::where('email', $loginToken->email)->delete();
 
-        // Authenticate the Center instance.
+        if ($loginToken->user->activated == 0) {
+            Auth::logout();
+
+            // User not activated; go logout and redirect him to account activation page.
+            return Redirect::to('register/verify')
+                ->withInput(array('email' => $user->email))
+                ->with('danger', __d('platform', 'Please activate your Account!'));
+        }
+
+        // Authenticate the User instance.
         Auth::login($loginToken->user, true /* remember */);
 
         return Redirect::to('dashboard')

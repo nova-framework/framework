@@ -99,17 +99,18 @@ $languages = Config::get('languages');
                     </form>
                 </li>
                 <?php } else { ?>
-                <li <?= ($currentUri == 'register') ? 'class="active"' : ''; ?>>
+                <?php $path = Request::path(); ?>
+                <li <?= ($path == 'register') ? 'class="active"' : ''; ?>>
                     <a href='<?= site_url('register'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Sign Up'); ?></a>
                 </li>
-                <li <?= ($currentUri == 'login') ? 'class="active"' : ''; ?>>
+                <li <?= ($path == 'login') ? 'class="active"' : ''; ?>>
                     <a href='<?= site_url('login'); ?>'><i class='fa fa-sign-in'></i> <?= __d('admin_lite', 'Sign In'); ?></a>
                 </li>
                 </li>
-                <li <?= ($currentUri == 'authorize') ? 'class="active"' : ''; ?>>
+                <li <?= ($path == 'authorize') ? 'class="active"' : ''; ?>>
                     <a href='<?= site_url('authorize'); ?>'><i class='fa fa-send'></i> <?= __d('admin_lite', 'On-Time Login'); ?></a>
                 </li>
-                <li <?= ($currentUri == 'password/remind') ? 'class="active"' : ''; ?>>
+                <li <?= ($path == 'password/remind') ? 'class="active"' : ''; ?>>
                     <a href='<?= site_url('password/remind'); ?>'><i class='fa fa-unlock-alt'></i> <?= __d('admin_lite', 'Forgot Password?'); ?></a>
                 </li>
                 <?php } ?>

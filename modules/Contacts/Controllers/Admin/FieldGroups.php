@@ -204,7 +204,7 @@ class FieldGroups extends BaseController
 
         // Invalidate the cached information.
         Cache::section('contacts')->flush();
-        s
+
         //
         $url = site_url('admin/contacts/{0}/field-groups', $contact->id);
 

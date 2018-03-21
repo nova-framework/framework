@@ -23,6 +23,7 @@ class TaggableFileStore extends FileStore
      */
     protected $queue;
 
+
     /**
      * Create a new file cache store instance.
      *
@@ -86,7 +87,9 @@ class TaggableFileStore extends FileStore
      */
     public function tags($names)
     {
-        return new TaggedFileCache($this, new FileTagSet($this, is_array($names) ? $names : func_get_args()));
+        $names = is_array($names) ? $names : func_get_args();
+
+        return new TaggedFileCache($this, new FileTagSet($this, $names));
     }
 
     /**

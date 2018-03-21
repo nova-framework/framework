@@ -20,7 +20,7 @@ return array(
     | Supported: "file", "database", "apc", "memcached", "redis", "array"
     */
 
-    'driver' => 'file',
+    'driver' => 'tagged_file',
 
     /*
     |--------------------------------------------------------------------------
@@ -83,5 +83,4 @@ return array(
     */
 
     'prefix' => 'nova',
-
 );

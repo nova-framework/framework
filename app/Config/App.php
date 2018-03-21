@@ -151,6 +151,7 @@ return array(
         'Shared\Auth\Reminders\ReminderServiceProvider',
         'Shared\Auth\AuthServiceProvider',
         'Shared\Backup\BackupServiceProvider',
+        'Shared\Cache\CacheServiceProvider',
         'Shared\DomPDF\PdfServiceProvider',
         'Shared\Queue\QueueServiceProvider',
         'Shared\Routing\RoutingServiceProvider',

@@ -124,7 +124,7 @@ class Contacts extends BaseController
         $contact->save();
 
         // Invalidate the cached information.
-        Cache::section('contacts.blocks')->flush();
+        Cache::section('contacts')->flush();
 
         return Redirect::to('admin/contacts')
             ->with('success', __d('contacts', 'The Contact <b>{0}</b> was successfully updated.', $name));
@@ -148,7 +148,7 @@ class Contacts extends BaseController
         $contact->delete();
 
         // Invalidate the cached information.
-        Cache::section('contacts.blocks')->flush();
+        Cache::section('contacts')->flush();
 
         return Redirect::to('admin/contacts')->with('success', __d('contacts', 'The Contact was successfully deleted.'));
     }

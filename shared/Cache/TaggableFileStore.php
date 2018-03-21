@@ -48,38 +48,22 @@ class TaggableFileStore extends FileStore
      */
     protected function path($key)
     {
-        $folder = '';
+        $path = $this->directory;
 
         //
-        $isTag = false;
-
         $segments = explode($this->separator, $key);
 
         if (count($segments) > 1) {
-            $folder = reset($segments);
+            list ($folder, $key) = $segments;
 
-            if ($folder === 'cache_tags') {
-                $folder = 'tags';
-
-                $isTag = true;
-            } else {
-                $folder = str_replace('|', '_', $folder);
+            if ($folder !== 'cache_tags') {
+                $path = $this->directory .DS .'tags' .DS .str_replace('|', '_', $folder);
             }
-
-            $key = end($segments);
         }
 
-        if ($isTag) {
-            $hash = $key;
+        $parts = array_slice(str_split($hash = sha1($key), 2), 0, 2);
 
-            $parts = array();
-        } else {
-            $parts = array_slice(str_split($hash = sha1($key), 2), 0, 2);
-        }
-
-        $path = $this->directory .(! empty($folder) ? DS .$folder : '');
-
-        return $path .DS .(count($parts) > 0 ? implode(DS, $parts) .DS : '') .$hash;
+        return $path .DS .join(DS, $parts) .$hash;
     }
 
     /**
@@ -110,7 +94,9 @@ class TaggableFileStore extends FileStore
      */
     public function flushOldTag($tagId)
     {
-        foreach ($this->files->directories($this->directory) as $directory) {
+        $path = $this->directory .DS .'tags';
+
+        foreach ($this->files->directories($path) as $directory) {
             if (Str::contains(basename($directory), $tagId)) {
                 $this->files->deleteDirectory($directory);
             }

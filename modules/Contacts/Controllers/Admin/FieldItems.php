@@ -196,7 +196,7 @@ class FieldItems extends BaseController
         ));
 
         // Invalidate the cached information.
-        Cache::section('contacts.blocks')->flush();
+        Cache::section('contacts')->flush();
 
         //
         $url = site_url('admin/contacts/{0}/field-groups', $group->contact->id);
@@ -416,7 +416,7 @@ class FieldItems extends BaseController
         $item->save();
 
         // Invalidate the cached information.
-        Cache::section('contacts.blocks')->flush();
+        Cache::section('contacts')->flush();
 
         //
         $url = site_url('admin/contacts/{0}/field-groups', $group->contact->id);
@@ -452,7 +452,7 @@ class FieldItems extends BaseController
         $item->delete();
 
         // Invalidate the cached information.
-        Cache::section('contacts.blocks')->flush();
+        Cache::section('contacts')->flush();
 
         //
         $url = site_url('admin/contacts/{0}/field-groups', $group->contact->id);

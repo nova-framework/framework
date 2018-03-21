@@ -32,7 +32,7 @@ return array(
     | are free to change it to any other place on disk that you desire.
     */
 
-    'path' => STORAGE_PATH .'cache',
+    'path' => STORAGE_PATH .'framework' .DS .'cache',
 
     /*
     |--------------------------------------------------------------------------

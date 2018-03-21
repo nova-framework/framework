@@ -9,6 +9,7 @@ use Shared\Cache\Jobs\FlushTagFromFileCache;
 
 class FileTagSet extends TagSet
 {
+
     /**
      * Get the tag identifier key for a given tag.
      *
@@ -18,7 +19,7 @@ class FileTagSet extends TagSet
      */
     public function tagKey($name)
     {
-        return 'cache_tags' .$this->store->separator .sha1($name);
+        return 'cache_tags' .$this->store->separator .$name;
     }
 
     /**
@@ -30,9 +31,9 @@ class FileTagSet extends TagSet
      */
     public function resetTag($name)
     {
-        $id = $this->store->get($this->tagKey($name));
+        $key = $this->tagKey($name);
 
-        if ($id !== false) {
+        if (! is_null($id = $this->store->get($key))) {
             $job = new FlushTagFromFileCache($id);
 
             if (! empty($this->store->queue)) {

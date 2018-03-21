@@ -66,7 +66,7 @@ class TaggableFileStore extends FileStore
 
         $parts = array_slice(str_split($hash = sha1($key), 2), 0, 2);
 
-        return $path .DS .implode(DS, $parts) .$hash;
+        return $path .DS .implode(DS, $parts) .DS .$hash .'.cache';
     }
 
     /**

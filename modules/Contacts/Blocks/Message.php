@@ -24,8 +24,6 @@ class Message extends Block
             return Contact::findByPath($path);
         });
 
-        Cache::tags('contacts', 'blocks')->put('test', 'contacts, blocks', 15);
-
         if (! is_null($contact)) {
             return View::make('Modules/Contacts::Blocks/Message', compact('contact', 'path'))->render();
         }

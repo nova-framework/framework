@@ -5,6 +5,12 @@
 <?php foreach ($contact->fieldGroups->sortBy('order') as $group) { ?>
     <h3><?= $group->title; ?></h3>
     <hr>
+    <?php if (! empty($content = $group->content)) { ?>
+    <p>
+        <?= $content; ?>
+    </p>
+    <div class="clearfix"></div>
+    <?php } ?>
 
     <?php foreach ($group->fieldItems->sortBy('order') as $item) { ?>
         <?php $type = $item->type; ?>

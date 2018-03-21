@@ -12,33 +12,14 @@
 
 <?= View::fetch('Partials/Messages'); ?>
 
-<form id="create-group-form" class="form-horizontal" action="<?= site_url('admin/contacts/{0}/field-groups', $contact->id); ?>" method='POST' role="form">
-
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('contacts', 'Create a new Field Group'); ?></h3>
+        <h3 class="box-title"><?= __d('contacts', 'Manage the Field Groups'); ?></h3>
     </div>
     <div class="box-body">
-        <div class="form-group clearfix" style="margin: 0;">
-            <label class="col-sm-1 control-label" for="title"><?= __d('contacts', 'Title'); ?></label>
-            <div class="col-sm-6">
-                <input name="title" id="title" type="text" class="form-control" value="<?= Input::old('title'); ?>" placeholder="<?= __d('contacts', 'Group Title'); ?>">
-            </div>
-            <label class="col-sm-1 control-label" for="title"><?= __d('contacts', 'Order'); ?></label>
-            <div class="col-sm-1">
-                <input name="order" id="order" type="number" class="form-control" min="-100" max="100" value="<?= Input::old('order', 0); ?>" style="padding: 6px 3px 6px 12px;">
-            </div>
-            <div class="col-sm-3" style="padding: 0;">
-                <input type="submit" name="submit"  class="btn btn-success col-sm-8 pull-right" value="<?= __d('contacts', 'Create a new Field Group'); ?>" />
-            </div>
-        </div>
+        <a class="btn btn-success col-sm-2 pull-right" href="#" data-toggle="modal" data-target="#modal-edit-group-dialog" title="<?= __d('contacts', 'Create a new Fields Group'); ?>" role="button"><?= __d('contacts', 'Create a new Field Group'); ?></a>
     </div>
 </div>
-
-<input type="hidden" name="_token"     value="<?= csrf_token(); ?>" />
-<input type="hidden" name="contact_id" value="<?= $contact->id; ?>" />
-
-</form>
 
 <?php if (! $contact->fieldGroups->isEmpty()) { ?>
 
@@ -50,7 +31,7 @@
         <div class="box-tools">
             <div class="btn-group" role="group" aria-label="...">
                 <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-group-dialog" data-id="<?= $group->id; ?>" title="<?= __d('contacts', 'Delete this Fields Group'); ?>" role="button"><i class="fa fa-remove"></i> </a>
-                <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-edit-group-dialog" data-id="<?= $group->id; ?>" data-title="<?= $group->title; ?>" data-order="<?= $group->order; ?>" title="<?= __d('contacts', 'Edit this Fields Group'); ?>" role="button"><i class="fa fa-pencil"></i></a>
+                <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-edit-group-dialog" data-id="<?= $group->id; ?>" data-title="<?= $group->title; ?>" data-content="<?= $group->content; ?>" data-order="<?= $group->order; ?>" title="<?= __d('contacts', 'Edit this Fields Group'); ?>" role="button"><i class="fa fa-pencil"></i></a>
             </div>
         </div>
     </div>
@@ -223,19 +204,25 @@ $(function () {
             <div class="modal-header" style="padding: 10px;">
                 <button aria-label="<?= __d('records', 'Close'); ?>" data-dismiss="modal" class="close" type="button">
                 <span aria-hidden="true">×</span></button>
-                <h4 class="modal-edit-title" style="margin: 0;"><?= __d('records', 'Edit a Field Group'); ?></h4>
+                <h4 class="modal-edit-title" style="margin: 0;"><?= __d('records', 'Create a new Field Group'); ?></h4>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="field_title"><?= __d('contacts', 'Label'); ?> <font color="#CC0000">*</font></label>
+                    <label class="col-sm-3 control-label" for="title"><?= __d('contacts', 'Label'); ?> <font color="#CC0000">*</font></label>
                     <div class="col-sm-9">
                         <input name="title" id="modal-edit-group-title" type="text" class="form-control" value="" placeholder="<?= __d('contacts', 'Label'); ?>">
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-3 control-label" for="content"><?= __d('contacts', 'Content'); ?> <font color="#CC0000">*</font></label>
+                    <div class="col-sm-9">
+                        <textarea name="content" id="modal-edit-group-content" class="form-control" rows="10" style="resize: none;" placeholder="<?= __d('contacts', 'Content'); ?>"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-3 control-label" for="order"><?= __d('contacts', 'Order'); ?> <font color="#CC0000">*</font></label>
                     <div class="col-sm-2">
-                        <input name="order" id="modal-edit-group-order" type="number" class="form-control" min="0" max="1000" value="1" style="padding: 6px 3px 6px 12px;" autocomplete="off">
+                        <input name="order" id="modal-edit-group-order" type="number" class="form-control" min="0" max="1000" value="0" style="padding: 6px 3px 6px 12px;" autocomplete="off">
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -250,7 +237,8 @@ $(function () {
                 <input type="submit" name="button" class="btn btn btn-success pull-right col-md-3" value="<?= __d('contacts', 'Save'); ?>">
             </div>
 
-            <?= csrf_field(); ?>
+            <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
+            <input type="hidden" name="contact_id" value="<?= $contact->id; ?>" />
 
             </form>
         </div>
@@ -264,23 +252,29 @@ $(function () {
     $('#modal-edit-group-dialog').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal
 
-        var id = button.data('id');
+        var id = parseInt(button.data('id'));
 
-        var title = button.data('title');
-        var order = button.data('order');
+        var action = '<?= site_url("admin/contacts/{0}/field-groups", $contact->id); ?>';
 
-        $('#modal-edit-group-title').val(title);
-        $('#modal-edit-group-order').val(order);
+        if (id > 0) {
+            var title   = button.data('title');
+            var content = button.data('content');
+            var order   = button.data('order');
 
-        $('#modal-edit-group-id').val(id);
+            $('#modal-edit-group-title').val(title);
+            $('#modal-edit-group-content').val(content);
+            $('#modal-edit-group-order').val(order);
 
-        // Adjust the dialog title.
-        var title = sprintf("<?= __d('contacts', 'Edit the Field Group : #%d'); ?>", id);
+            $('#modal-edit-group-id').val(id);
 
-        $('.modal-edit-title').html(title);
+            // Adjust the dialog title.
+            var title = sprintf("<?= __d('contacts', 'Edit the Field Group : #%d'); ?>", id);
 
-        // Adjust the form action.
-        var action = '<?= site_url("admin/contacts/{0}/field-groups", $contact->id); ?>/' + id + '/update';
+            $('.modal-edit-title').html(title);
+
+            // Adjust the form action.
+            var action = '<?= site_url("admin/contacts/{0}/field-groups", $contact->id); ?>/' + id + '/update';
+        }
 
         $('#modal-edit-form').attr('action', action);
     });

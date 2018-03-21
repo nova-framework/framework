@@ -28,6 +28,7 @@ class FieldGroups extends BaseController
         $rules = array(
             'contact_id' => 'required|numeric|exists:contacts,id' .$ignore,
             'title'      => 'required|min:3|max:255|valid_title',
+            'content'    => 'max:1024|valid_text',
             'order'      => 'required|numeric|min:-100|max:100',
         );
 
@@ -38,6 +39,7 @@ class FieldGroups extends BaseController
         $attributes = array(
             'contact_id' => __d('contacts', 'Contact ID'),
             'title'      => __d('contacts', 'Title'),
+            'content'    => __d('contacts', 'Content'),
             'order'      => __d('contacts', 'Order'),
         );
 
@@ -49,6 +51,11 @@ class FieldGroups extends BaseController
             $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){1,}$~u';
 
             return (preg_match($pattern, $value) === 1);
+        });
+
+        $validator->addExtension('valid_text', function($attribute, $value, $parameters)
+        {
+            return strip_tags($value) == $value;
         });
 
         return $validator;
@@ -79,13 +86,13 @@ class FieldGroups extends BaseController
 
     public function store(Request $request, $id)
     {
-        $input = $request->only('contact_id', 'title', 'order');
+        $input = $request->only('contact_id', 'title', 'content', 'order');
 
         // Validate the input data.
         $validator = $this->validator($input);
 
         if ($validator->fails()) {
-            return Redirect::back()->onlyInput('title', 'order')->withErrors($validator);
+            return Redirect::back()->onlyInput('title', 'content', 'order')->withErrors($validator);
         }
 
         try {
@@ -106,6 +113,7 @@ class FieldGroups extends BaseController
 
         $group = FieldGroup::create(array(
             'title'      => $title,
+            'content'    => $input['content'],
             'order'      => $input['order'],
             'contact_id' => $contact->id,
 
@@ -148,19 +156,20 @@ class FieldGroups extends BaseController
         }
         */
 
-        $input = $request->only('contact_id', 'title', 'order');
+        $input = $request->only('contact_id', 'title', 'content', 'order');
 
         // Validate the input data.
         $validator = $this->validator($input);
 
         if ($validator->fails()) {
-            return Redirect::back()->onlyInput('title', 'order')->withErrors($validator);
+            return Redirect::back()->withInput('title', 'content', 'order')->withErrors($validator);
         }
 
         $title = $group->title;
 
-        $group->title = $input['title'];
-        $group->order = $input['order'];
+        $group->title   = $input['title'];
+        $group->content = $input['content'];
+        $group->order   = $input['order'];
 
         $group->updated_by = Auth::id();
 
@@ -204,7 +213,7 @@ class FieldGroups extends BaseController
 
         // Invalidate the cached information.
         Cache::section('contacts')->flush();
-        s
+
         //
         $url = site_url('admin/contacts/{0}/field-groups', $contact->id);
 

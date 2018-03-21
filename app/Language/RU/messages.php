@@ -2,13 +2,13 @@
 
 return array (
   'Bad Request' => 'Неправильный запрос',
-  'Be right back.' => '',
+  'Be right back.' => 'Вернитесь к нам немного позже',
   'Forbidden' => 'Запрещено',
   'Go to our home page and navigate to the content in question.' => 'Перейдите на нашу домашнюю страницу к соответствующему контенту.',
   'Hello!' => 'Привет',
   'If you spelled the URL manually, double check the spelling.' => 'Если вы ввели URL вручную, дважды проверьте правильность написания.',
   'If you\'re having trouble clicking the "{0}" button, copy and paste the URL below into your web browser:' => 'Если у вас возникли проблемы с нажатием кнопки «{0}», скопируйте и вставьте указанный ниже URL-адрес в свой веб-браузер:',
-  'Internal Server Error' => 'Внутрення ошибка сервера',
+  'Internal Server Error' => 'Ошибка на сервере',
   'Method not allowed' => 'Метод не разрешен',
   'Referrer: {0}' => 'Ссылающийся: {0}',
   'Regards,' => 'С уважением',
@@ -64,5 +64,5 @@ return array (
   'Troubleshooting' => 'Исправление проблем',
   'Unauthorized' => 'Неразрешенный',
   'Validation Token has expired. Please try again!' => 'Токен проверки просрочен. Пожалуйста, попробуйте еще раз!',
-  'Whoops!' => '',
+  'Whoops!' => 'Упс!',
 );

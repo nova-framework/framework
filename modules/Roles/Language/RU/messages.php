@@ -3,7 +3,7 @@
 return array (
   '%d %b %Y, %R' => '%d %b %Y, %R',
   '<< Previous Page' => '<< Предыдущая страница',
-  'Are you sure you want to remove this Role, the operation being irreversible?' => '',
+  'Are you sure you want to remove this Role, the operation being irreversible?' => 'Вы уверены, что хотите удалить эту роль, т.к. операция необратима?',
   'Cancel' => 'Отмена',
   'Close' => 'Закрыть',
   'Create Role' => 'Создать роль',

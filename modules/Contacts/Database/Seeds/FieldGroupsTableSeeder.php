@@ -27,6 +27,7 @@ class FieldGroupsTableSeeder extends Seeder
         $contact = FieldGroup::create(array(
             'id'          => 1,
             'title'       => 'Contact Form',
+            'content'     => null,
             'order'       => 0,
 
             'contact_id'  => 1,

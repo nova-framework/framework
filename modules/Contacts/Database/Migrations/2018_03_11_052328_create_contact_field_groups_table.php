@@ -22,6 +22,7 @@ class CreateContactFieldGroupsTable extends Migration
 
             $table->integer('contact_id')->unsigned();
             $table->string('title', 255);
+            $table->text('content')->nullable();
             $table->integer('order')->default(0);
 
             $table->integer('created_by')->unsigned()->nullable();

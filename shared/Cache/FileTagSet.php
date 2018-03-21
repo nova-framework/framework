@@ -18,7 +18,7 @@ class FileTagSet extends TagSet
      */
     public function tagKey($name)
     {
-        return 'cache_tags' .$this->store->separator .sha1($name);
+        return 'cache_tags' .$this->store->separator .$name;
     }
 
     /**

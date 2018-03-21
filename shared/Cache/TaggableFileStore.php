@@ -57,7 +57,7 @@ class TaggableFileStore extends FileStore
             list ($folder, $key) = $segments;
 
             if ($folder !== 'cache_tags') {
-                $path = $this->directory .DS .'tags' .DS .str_replace('|', '_', $folder);
+                $path = $path .DS .'tags' .DS .str_replace('|', '_', $folder);
             }
         }
 

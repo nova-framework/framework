@@ -6,6 +6,7 @@ use Nova\Auth\Access\AuthorizationException;
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Http\Request;
 use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
@@ -112,6 +113,10 @@ class FieldGroups extends BaseController
             'created_by' => Auth::id(),
         ));
 
+        // Invalidate the cached information.
+        Cache::section('contacts.blocks')->flush();
+
+        //
         $url = site_url('admin/contacts/{0}/field-groups', $contact->id);
 
         return Redirect::to($url)
@@ -161,6 +166,9 @@ class FieldGroups extends BaseController
 
         $group->save();
 
+        // Invalidate the cached information.
+        Cache::section('contacts.blocks')->flush();
+
         //
         $url = site_url('admin/contacts/{0}/field-groups', $contact->id);
 
@@ -194,6 +202,9 @@ class FieldGroups extends BaseController
         // Destroy the requested Field Group record.
         $group->delete();
 
+        // Invalidate the cached information.
+        Cache::section('contacts.blocks')->flush();
+        s
         //
         $url = site_url('admin/contacts/{0}/field-groups', $contact->id);
 

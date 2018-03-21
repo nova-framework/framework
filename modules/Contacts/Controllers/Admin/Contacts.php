@@ -6,6 +6,7 @@ use Nova\Auth\Access\AuthorizationException;
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Http\Request;
 use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Redirect;
@@ -122,6 +123,9 @@ class Contacts extends BaseController
 
         $contact->save();
 
+        // Invalidate the cached information.
+        Cache::section('contacts.blocks')->flush();
+
         return Redirect::to('admin/contacts')
             ->with('success', __d('contacts', 'The Contact <b>{0}</b> was successfully updated.', $name));
     }
@@ -142,6 +146,9 @@ class Contacts extends BaseController
 
         // Destroy the requested Contact record.
         $contact->delete();
+
+        // Invalidate the cached information.
+        Cache::section('contacts.blocks')->flush();
 
         return Redirect::to('admin/contacts')->with('success', __d('contacts', 'The Contact was successfully deleted.'));
     }

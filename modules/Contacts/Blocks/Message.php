@@ -19,7 +19,7 @@ class Message extends Block
     {
         $path = Request::path();
 
-        $contact = Cache::remember('contacts.block|' .$path, 1440, function () use ($path)
+        $contact = Cache::section('contacts')->remember('block|' .$path, 1440, function () use ($path)
         {
             return Contact::findByPath($path);
         });

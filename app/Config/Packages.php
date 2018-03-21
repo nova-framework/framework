@@ -19,7 +19,7 @@ return array(
     // Path To The Cache File
     //--------------------------------------------------------------------------
 
-    'cache' => STORAGE_PATH .'packages.php',
+    'cache' => STORAGE_PATH .'framework' .DS .'packages.php',
 
     /*
     |---------------------------------------------------------------------------

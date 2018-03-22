@@ -25,10 +25,12 @@ return array (
   'Contact details' => 'Подробности контакта',
   'Contact not found: #{0}' => 'Контакт: #{0} не найден',
   'Contacts' => 'Контакты',
+  'Content' => '',
   'Create Field Item' => 'Создание поля',
   'Create a new Contact' => 'Создать новый контакт',
   'Create a new Field Group' => 'Создание новой группы полей',
   'Create a new Field Item' => 'Создание нового поля',
+  'Create a new Fields Group' => '',
   'Created At' => 'Создано',
   'Dashboard' => 'Рабочий стол',
   'Default' => 'По умолчанию',
@@ -47,7 +49,6 @@ return array (
   'E-mail' => 'E-mail',
   'Edit Field Item' => 'Редактировать поле',
   'Edit a Contact' => 'Редактировать контакт',
-  'Edit a Field Group' => 'Редактировать группу полей',
   'Edit a Field Item' => 'Редактирование поля',
   'Edit the Field Group : #%d' => 'Редактировать группу полей: #%d',
   'Edit this Contact' => 'Редактировать этот контакт',
@@ -65,7 +66,6 @@ return array (
         <a class="btn btn-success col-sm-2 pull-right" href="<?= site_url(\'admin/contacts/field-groups/{0}/items/create' => 'Порядок группы: <b>{0}</b>\' , $group->order); ?>
         </div>
         <a class="btn btn-success col-sm-2 pull-right" href="<?= site_url(\'admin/contacts/field-groups/{0}/items/create',
-  'Group Title' => 'Название группы',
   'ID' => 'ID',
   'Information' => 'Информация',
   'Label' => 'Метка',

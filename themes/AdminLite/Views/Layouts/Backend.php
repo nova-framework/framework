@@ -43,7 +43,7 @@ $languages = Config::get('languages');
         // Bootstrap WYSIHTML5
         vendor_url('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css', 'almasaeed2010/adminlte'),
         // Custom CSS
-        theme_url('css/style.css', 'admin_lite'),
+        asset_url('css/style.css', 'themes/admin_lite'),
     ));
 
     echo isset($css) ? $css : ''; // Place to pass data
@@ -63,8 +63,8 @@ $languages = Config::get('languages');
     //Add Controller specific JS files.
     Assets::js(array(
         vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
-        resource_url('js/sprintf.min.js'),
-        resource_url('js/bootstrap-notify.min.js'),
+        asset_url('js/sprintf.min.js'),
+        asset_url('js/bootstrap-notify.min.js'),
     ));
 
     ?>
@@ -222,7 +222,7 @@ Assets::js(array(
 
     // Bootstrap WYSIHTML5
     //vendor_url('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.js', 'almasaeed2010/adminlte'),
-    resource_url('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.js'),
+    asset_url('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.js'),
 ));
 
 echo isset($js) ? $js : ''; // Place to pass data

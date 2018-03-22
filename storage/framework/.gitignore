@@ -1,4 +1,5 @@
 *
+!assets/
 !cache/
 !sessions/
 !views/

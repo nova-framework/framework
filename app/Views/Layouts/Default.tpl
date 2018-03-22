@@ -9,8 +9,8 @@
         'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
         'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css',
         'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
-        resource_url('css/bootstrap-xl-mod.min.css'),
-        resource_url('css/style.css'),
+        asset_url('css/bootstrap-xl-mod.min.css'),
+        asset_url('css/style.css'),
     ))
 
 </head>

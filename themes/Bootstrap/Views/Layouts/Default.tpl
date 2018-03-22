@@ -9,12 +9,12 @@
         vendor_url('dist/css/bootstrap.min.css', 'twbs/bootstrap'),
         vendor_url('dist/css/bootstrap-theme.min.css', 'twbs/bootstrap'),
         'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
-        resource_url('css/bootstrap-xl-mod.min.css'),
-        resource_url('css/style.css'),
+        asset_url('css/bootstrap-xl-mod.min.css'),
+        asset_url('css/style.css'),
     ))
 
     @assets('js', array(
-        resource_url('js/sprintf.min.js'),
+        asset_url('js/sprintf.min.js'),
         'https://code.jquery.com/jquery-1.12.4.min.js',
     ))
 

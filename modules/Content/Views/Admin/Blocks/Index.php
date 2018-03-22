@@ -1,5 +1,5 @@
-<link rel="stylesheet" type="text/css" href="<?= resource_url('css/jquery.nestable.css', 'content'); ?>">
-<script type="text/javascript" src="<?= resource_url('js/jquery.nestable.js', 'content'); ?>"></script>
+<link rel="stylesheet" type="text/css" href="<?= asset_url('css/jquery.nestable.css', 'modules/content'); ?>">
+<script type="text/javascript" src="<?= asset_url('js/jquery.nestable.js', 'modules/content'); ?>"></script>
 
 <section class="content-header">
     <h1><?= $title; ?></h1>

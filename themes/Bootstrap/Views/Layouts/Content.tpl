@@ -12,12 +12,12 @@
         'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css',
         'https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css',
         'https://cdn.jsdelivr.net/npm/icheck-bootstrap@2.0.4/icheck-bootstrap.min.css',
-        resource_url('css/bootstrap-xl-mod.min.css'),
-        resource_url('css/style.css'),
+        asset_url('css/bootstrap-xl-mod.min.css'),
+        asset_url('css/style.css'),
     ))
 
     @assets('js', array(
-        resource_url('js/sprintf.min.js'),
+        asset_url('js/sprintf.min.js'),
         'https://code.jquery.com/jquery-1.12.4.min.js',
     ))
 

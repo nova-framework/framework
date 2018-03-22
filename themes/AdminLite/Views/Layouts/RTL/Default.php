@@ -44,13 +44,13 @@ $langMenuLinks = ob_get_clean();
         // Ionicons
         vendor_url('bower_components/Ionicons/css/ionicons.min.css', 'almasaeed2010/adminlte'),
         // Theme style
-        asset_url('css/AdminLTE.rtl.min.css', 'themes/admin_lite'),
+        asset_url('css/AdminLTE.rtl.min.css', 'themes/admin-lite'),
         // AdminLTE Skins
         vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
         // iCheck
         vendor_url('plugins/iCheck/square/blue.css', 'almasaeed2010/adminlte'),
         // Custom CSS
-        asset_url('css/style-rtl.css', 'themes/admin_lite'),
+        asset_url('css/style-rtl.css', 'themes/admin-lite'),
     ));
 
     echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone

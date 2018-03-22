@@ -2,8 +2,8 @@
 
 namespace Modules\Permissions\Providers;
 
-use Nova\Routing\Router;
 use Nova\Package\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Nova\Routing\Router;
 
 
 class RouteServiceProvider extends ServiceProvider
@@ -27,26 +27,5 @@ class RouteServiceProvider extends ServiceProvider
         parent::boot($router);
 
         //
-    }
-
-    /**
-     * Define the routes for the module.
-     *
-     * @param  \Nova\Routing\Router $router
-     * @return void
-     */
-    public function map(Router $router)
-    {
-        $path = realpath(__DIR__ .'/../Routes');
-
-        $router->group(array('prefix' => 'api', 'middleware' => 'api', 'namespace' => $this->namespace), function ($router) use ($path)
-        {
-            require $path .DS .'Api.php';
-        });
-
-        $router->group(array('middleware' => 'web', 'namespace' => $this->namespace), function ($router) use ($path)
-        {
-            require $path .DS .'Web.php';
-        });
     }
 }

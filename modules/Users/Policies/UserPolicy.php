@@ -79,7 +79,14 @@ class UserPolicy
      */
     public function delete(User $authUser, User $user)
     {
-        if ($authUser->hasPermission('module.users.delete')) {
+        if ($user->id === 1) {
+            // The first User Account must NOT be deleted.
+
+            return false;
+        }
+
+        // Not the User Einz.
+        else if ($authUser->hasPermission('module.users.delete')) {
             return true;
         } else if ($authUser->id === $user->id) {
             return $authUser->hasPermission('module.users.delete.own');

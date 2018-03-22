@@ -291,7 +291,7 @@ class Users extends BaseController
 
         // Get the User Model instance.
         try {
-            $user = User::with('fields', 'meta')->findOrFail($id);
+            $user = User::with('fields')->findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
             // There is no User with this ID.

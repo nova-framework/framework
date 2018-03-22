@@ -25,10 +25,12 @@ return array (
   'Contact details' => '',
   'Contact not found: #{0}' => '',
   'Contacts' => '',
+  'Content' => '',
   'Create Field Item' => '',
   'Create a new Contact' => '',
   'Create a new Field Group' => '',
   'Create a new Field Item' => '',
+  'Create a new Fields Group' => '',
   'Created At' => '',
   'Dashboard' => '',
   'Default' => '',
@@ -47,7 +49,6 @@ return array (
   'E-mail' => '',
   'Edit Field Item' => '',
   'Edit a Contact' => '',
-  'Edit a Field Group' => '',
   'Edit a Field Item' => '',
   'Edit the Field Group : #%d' => '',
   'Edit this Contact' => '',
@@ -63,7 +64,6 @@ return array (
   'Group Order: <b>{0}</b>\' , $group->order); ?>
         </div>
         <a class="btn btn-success col-sm-2 pull-right" href="<?= site_url(\'admin/contacts/field-groups/{0}/items/create' => '',
-  'Group Title' => '',
   'ID' => '',
   'Information' => '',
   'Label' => '',

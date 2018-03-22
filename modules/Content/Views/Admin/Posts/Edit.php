@@ -108,7 +108,7 @@ $(function () {
         stylesheets: JSON.parse('<?= json_encode($stylesheets) ?>'),
 
         // The Parser Rules.
-        //parserRules: '<?= resource_url("vendor/bootstrap-wysihtml5/parser_rules/advanced_and_extended.json"); ?>'
+        //parserRules: '<?= asset_url("vendor/bootstrap-wysihtml5/parser_rules/advanced_and_extended.json"); ?>'
 
         // Disable the HTML Parser at all.
         parser: function (html) {

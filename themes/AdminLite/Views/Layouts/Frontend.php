@@ -29,7 +29,7 @@ $languages = Config::get('languages');
         // Bootstrap 3.3.5
         vendor_url('bower_components/bootstrap/dist/css/bootstrap.min.css', 'almasaeed2010/adminlte'),
         // Bootstrap XL
-        theme_url('css/bootstrap-xl-mod.min.css', 'admin_lite'),
+        asset_url('css/bootstrap-xl-mod.min.css', 'themes/admin_lite'),
         // Font Awesome
         vendor_url('bower_components/font-awesome/css/font-awesome.min.css', 'almasaeed2010/adminlte'),
         // Ionicons
@@ -41,7 +41,7 @@ $languages = Config::get('languages');
         // AdminLTE Skins
         vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
         // Custom CSS
-        theme_url('css/style.css', 'admin_lite'),
+        asset_url('css/style.css', 'themes/admin_lite'),
     ));
 
     echo isset($css) ? $css : ''; // Place to pass data
@@ -61,8 +61,8 @@ $languages = Config::get('languages');
     //Add Controller specific JS files.
     Assets::js(array(
             vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
-            resource_url('js/sprintf.min.js'),
-            resource_url('js/bootstrap-notify.min.js'),
+            asset_url('js/sprintf.min.js'),
+            asset_url('js/bootstrap-notify.min.js'),
         )
     );
 

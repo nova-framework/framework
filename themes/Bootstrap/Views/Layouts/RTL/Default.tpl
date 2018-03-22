@@ -8,10 +8,10 @@
     @assets('css', array(
         vendor_url('dist/css/bootstrap.min.css', 'twbs/bootstrap'),
         vendor_url('dist/css/bootstrap-theme.min.css', 'twbs/bootstrap'),
-        theme_url('css/bootstrap-rtl.min.css', 'bootstrap'),
+        asset_url('css/bootstrap-rtl.min.css', 'themes/bootstrap'),
         'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
-        theme_url('css/bootstrap-xl-mod.min.css', 'bootstrap'),
-        theme_url('css/style-rtl.css', 'bootstrap'),
+        asset_url('css/bootstrap-xl-mod.min.css', 'themes/bootstrap'),
+        asset_url('css/style-rtl.css', 'themes/bootstrap'),
     ))
 
 </head>
@@ -35,7 +35,7 @@
 
 @assets('js', array(
     'https://code.jquery.com/jquery-1.12.4.min.js',
-    theme_url('js/bootstrap-rtl.min.js', 'bootstrap'),
+    asset_url('js/bootstrap-rtl.min.js', 'themes/bootstrap'),
 ))
 
 <!-- DO NOT DELETE! - Profiler -->

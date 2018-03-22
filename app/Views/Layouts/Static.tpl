@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="row">
-    <a style="outline: none;" href="<?= site_url(); ?>"><img src="<?= resource_url('images/nova.png') ?>" alt="<?= Config::get('app.name') ?>"></a>
+    <a style="outline: none;" href="<?= site_url(); ?>"><img src="<?= asset_url('images/nova.png') ?>" alt="<?= Config::get('app.name') ?>"></a>
     @if ($title)
     <h1><strong>{{ ($title !== 'Home') ? $title : ''; }}</strong></h1>
     @endif

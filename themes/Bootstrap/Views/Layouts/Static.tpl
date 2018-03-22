@@ -9,12 +9,12 @@
         'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
         'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css',
         'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
-        theme_url('css/bootstrap-xl-mod.min.css', 'bootstrap'),
-        theme_url('css/style.css', 'bootstrap'),
+        asset_url('css/bootstrap-xl-mod.min.css', 'themes/bootstrap'),
+        asset_url('css/style.css', 'themes/bootstrap'),
     ))
 
     @assets('js', array(
-        resource_url('js/sprintf.min.js'),
+        asset_url('js/sprintf.min.js'),
         'https://code.jquery.com/jquery-1.12.4.min.js',
     ))
 </head>
@@ -22,7 +22,7 @@
 
 <div class="container">
     <div class="row">
-        <a style="outline: none;" href="<?= site_url(); ?>"><img src="<?= resource_url('images/nova.png') ?>" alt="<?= Config::get('app.name') ?>"></a>
+        <a style="outline: none;" href="<?= site_url(); ?>"><img src="<?= asset_url('images/nova.png') ?>" alt="<?= Config::get('app.name') ?>"></a>
         <h1><strong>{{ ($title !== 'Home') ? $title : ''; }}</strong></h1>
         <hr style="margin-top: 0;">
     </div>

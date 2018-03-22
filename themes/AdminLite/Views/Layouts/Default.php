@@ -26,7 +26,7 @@ $languages = Config::get('languages');
         // Bootstrap 3.3.5
         vendor_url('bower_components/bootstrap/dist/css/bootstrap.min.css', 'almasaeed2010/adminlte'),
         // Bootstrap XL
-        theme_url('css/bootstrap-xl-mod.min.css', 'admin_lite'),
+        asset_url('css/bootstrap-xl-mod.min.css', 'themes/admin_lite'),
         // Font Awesome
         vendor_url('bower_components/font-awesome/css/font-awesome.min.css', 'almasaeed2010/adminlte'),
         // Ionicons
@@ -38,7 +38,7 @@ $languages = Config::get('languages');
         // iCheck
         vendor_url('plugins/iCheck/square/blue.css', 'almasaeed2010/adminlte'),
         // Custom CSS
-        theme_url('css/style.css', 'admin_lite'),
+        asset_url('css/style.css', 'themes/admin_lite'),
     ));
 
     echo isset($css) ? $css : ''; // Place to pass data

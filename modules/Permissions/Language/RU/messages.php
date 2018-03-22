@@ -5,7 +5,7 @@ return array (
   'Dashboard' => 'Рабочий стол',
   'Permission' => 'Разрешение',
   'Permissions' => 'Разрешения',
-  'Permissions registered by the <b>{0}</b> package' => '',
+  'Permissions registered by the <b>{0}</b> package' => 'Разрешения, зарегистрированные для пакета <b>{0}</b>',
   'Permissions registered by the main <b>Application</b>' => 'Разрешения, зарегистрированные <b>Приложением</b>',
   'Platform' => 'Платформа',
   'Registered Permissions' => 'Зарегистрированные разрешения',

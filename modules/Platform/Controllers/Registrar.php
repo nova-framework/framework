@@ -99,7 +99,7 @@ class Registrar extends BaseController
         $validator = $this->validator($request);
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator);
+            return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
         $email    = $request->input('email');
@@ -185,7 +185,7 @@ class Registrar extends BaseController
         });
 
         if ($validator->fails()) {
-            return Redirect::back()->withErrors($validator);
+            return Redirect::back()->withErrors($validator->errors());
         }
 
         // Create a new Verification Token instance.

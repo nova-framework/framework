@@ -92,7 +92,7 @@ class FieldGroups extends BaseController
         $validator = $this->validator($input);
 
         if ($validator->fails()) {
-            return Redirect::back()->onlyInput('title', 'content', 'order')->withErrors($validator);
+            return Redirect::back()->onlyInput('title', 'content', 'order')->withErrors($validator->errors());
         }
 
         try {
@@ -162,7 +162,7 @@ class FieldGroups extends BaseController
         $validator = $this->validator($input);
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput('title', 'content', 'order')->withErrors($validator);
+            return Redirect::back()->withInput('title', 'content', 'order')->withErrors($validator->errors());
         }
 
         $title = $group->title;

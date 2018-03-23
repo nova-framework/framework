@@ -94,7 +94,7 @@ class Taxonomies extends BaseController
                 return Response::json(array('error' => $validator->errors()), 400);
             }
 
-            return Redirect::back()->withInput()->withErrors($validator);
+            return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
         $slug = ! empty($input['slug']) ? $input['slug'] : Term::uniqueSlug($input['name'], $input['taxonomy']);
@@ -158,7 +158,7 @@ class Taxonomies extends BaseController
         $validator = $this->validator($input, $term->id);
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator);
+            return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
         $slug = ! empty($input['slug']) ? $input['slug'] : Term::uniqueSlug($input['name'], $input['taxonomy']);

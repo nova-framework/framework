@@ -63,7 +63,7 @@ class Comments extends BaseController
         $validator = $this->validator($input);
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput($input)->withErrors($validator);
+            return Redirect::back()->withInput($input)->withErrors($validator->errors());
         }
 
         $userId = Auth::id() ?: 0;

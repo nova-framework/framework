@@ -133,7 +133,7 @@ class FieldItems extends BaseController
         $validator = $this->validator($input, $group->contact);
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput($input)->withErrors($validator);
+            return Redirect::back()->withInput($input)->withErrors($validator->errors());
         }
 
         $type = $input['field_type'];
@@ -353,7 +353,7 @@ class FieldItems extends BaseController
         $validator = $this->validator($input, $group->contact, $id);
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput($input)->withErrors($validator);
+            return Redirect::back()->withInput($input)->withErrors($validator->errors());
         }
 
         $type = $input['field_type'];

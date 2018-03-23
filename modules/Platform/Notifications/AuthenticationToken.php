@@ -2,12 +2,16 @@
 
 namespace Modules\Platform\Notifications;
 
+use Nova\Bus\QueueableTrait;
+use Nova\Queue\ShouldQueueInterface;
 use Nova\Notification\Notification;
 use Nova\Notification\Messages\MailMessage;
 
 
-class AuthenticationToken extends Notification
+class AuthenticationToken extends Notification implements ShouldQueueInterface
 {
+    use QueueableTrait;
+
     /**
      * The login hash.
      *

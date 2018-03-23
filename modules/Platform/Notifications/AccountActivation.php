@@ -2,14 +2,18 @@
 
 namespace Modules\Platform\Notifications;
 
+use Nova\Bus\QueueableTrait;
+use Nova\Queue\ShouldQueueInterface;
 use Nova\Support\Facades\Config;
 
 use Nova\Notification\Notification;
 use Nova\Notification\Messages\MailMessage;
 
 
-class AccountActivation extends Notification
+class AccountActivation extends Notification implements ShouldQueueInterface
 {
+    use QueueableTrait;
+
     /**
      * The account activation hash.
      *

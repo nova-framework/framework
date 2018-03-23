@@ -68,7 +68,12 @@ class BaseController extends Controller
             $this->theme = Config::get('app.theme', 'Themes/Bootstrap');
         }
 
-        if (! Str::contains($theme = $this->theme, '/')) {
+        if ($this->theme === false) {
+            return;
+        }
+
+        // A Theme is configured for this Controller.
+        else if (! Str::contains($theme = $this->theme, '/')) {
             $theme = 'Themes/' .$theme;
         }
 

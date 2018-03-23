@@ -128,7 +128,7 @@ class Messages extends BaseController
         $validator = $this->validator($contact, $request);
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator);
+            return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
         $userId = Auth::id() ?: 0;

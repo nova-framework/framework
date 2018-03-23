@@ -98,7 +98,7 @@ class Settings extends BaseController
         $validator = $this->validator($input);
 
         if($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator);
+            return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
         // The Application.

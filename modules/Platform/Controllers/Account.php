@@ -153,7 +153,7 @@ class Account extends BaseController
 
         // Validate the Input.
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator);
+            return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
         $user->realname = $input['realname'];
@@ -188,7 +188,7 @@ class Account extends BaseController
 
         // Validate the Input.
         if ($validator->fails()) {
-            return Redirect::back()->withErrors($validator);
+            return Redirect::back()->withErrors($validator->errors());
         }
 
         $user->image = $request->file('image');

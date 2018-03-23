@@ -189,7 +189,7 @@ class Users extends BaseController
         $validator = $this->validator($input, $items);
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator);
+            return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
         // Encrypt the given Password.
@@ -309,7 +309,7 @@ class Users extends BaseController
         $validator = $this->validator($input, $items, $id);
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator);
+            return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
         // Update the User Model instance.
@@ -429,7 +429,7 @@ class Users extends BaseController
         $validator = Validator::make($input, $rules, $messages, $attributes);
 
         if($validator->fails()) {
-            return Redirect::back()->withErrors($validator);
+            return Redirect::back()->withErrors($validator->errors());
         }
 
         // Search the Records on Database.

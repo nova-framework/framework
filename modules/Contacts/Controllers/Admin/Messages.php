@@ -130,7 +130,7 @@ class Messages extends BaseController
         });
 
         if ($validator->fails()) {
-            return Redirect::back()->withErrors($validator);
+            return Redirect::back()->withErrors($validator->errors());
         }
 
         try {

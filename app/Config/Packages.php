@@ -77,10 +77,6 @@ return array(
             'enabled'  => true,
             'order'    => 7001,
         ),
-        'fields' => array(
-            'enabled'  => true,
-            'order'    => 7002,
-        ),
         'permissions' => array(
             'enabled'  => true,
             'order'    => 8001,
@@ -98,6 +94,10 @@ return array(
             'order'    => 8004,
         ),
         'messages' => array(
+            'enabled'  => true,
+            'order'    => 9001,
+        ),
+        'contacts' => array(
             'enabled'  => true,
             'order'    => 9001,
         ),

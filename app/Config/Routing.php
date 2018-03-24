@@ -12,6 +12,9 @@ return array(
      * The Asset Files Serving configuration.
      */
     'assets' => array(
+        // The path to the asset files.
+        'path' = BASEPATH .'assets',
+
         // The browser Cache Control options.
         'cache' => array(
             'ttl'          => 600,

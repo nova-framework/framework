@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 // Define The Application Version
 //--------------------------------------------------------------------------
 
-define('VERSION', '4.0.47');
+define('VERSION', '4.0.48');
 
 //--------------------------------------------------------------------------
 // Set PHP Error Reporting Options
@@ -84,7 +84,7 @@ $app->instance('app', $app);
 //--------------------------------------------------------------------------
 
 $app->singleton(
-    'Nova\Foundation\Contracts\ExceptionHandlerInterface', 'App\Platform\Exceptions\Handler'
+    'Nova\Foundation\Exceptions\HandlerInterface', 'App\Platform\Exceptions\Handler'
 );
 
 //--------------------------------------------------------------------------

@@ -21,8 +21,6 @@ Route::get('/', 'Pages@show');
 
 Route::get('pages/{slug}', 'Pages@show')->where('slug', '(.*)');
 
-Route::get('tutorials/{slug?}', 'Pages@showTutorial')->where('slug', '(.*)');
-
 
 /**
  * The Language Changer.

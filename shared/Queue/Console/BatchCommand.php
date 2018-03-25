@@ -93,7 +93,7 @@ class BatchCommand extends WorkCommand
     protected function runWorker($connection, $queue, $delay, $memory, $daemon = false)
     {
         $this->worker->setDaemonExceptionHandler(
-            $this->container['Nova\Foundation\Contracts\ExceptionHandlerInterface']
+            $this->container['Nova\Foundation\Exceptions\HandlerInterface']
         );
 
         $sleep = $this->option('sleep');

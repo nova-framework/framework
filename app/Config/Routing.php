@@ -13,7 +13,7 @@ return array(
      */
     'assets' => array(
         // The path to the asset files.
-        'path' = BASEPATH .'assets',
+        'path' => BASEPATH .'assets',
 
         // The browser Cache Control options.
         'cache' => array(

@@ -16,7 +16,7 @@ if (Config::get('app.debug') !== true) {
         <p>Please be aware that this page will not be shown if you turn off debug mode unless you replace <code>app/Views/Pages/Home.php</code> with your own version.</p>
     </div>
     <div id="url-rewriting-warning" class="alert alert-danger url-rewriting">
-        <p><i class='fa fa-close'></i> URL rewriting is NOT properly configured on your server.</p>
+        <p><i class='fa fa-close '></i> URL rewriting is NOT properly configured on your server.</p>
     </div>
 </div>
 
@@ -27,33 +27,33 @@ if (Config::get('app.debug') !== true) {
 
         <ul class="list-unstyled">
         <?php if (version_compare(PHP_VERSION, '5.6.0', '>=')): ?>
-            <li><i class='fa fa-check'></i> Your version of PHP is 5.6.0 or higher (detected <b><?= PHP_VERSION; ?></b>).</li>
+            <li><i class='fa fa-check text-success'></i> Your version of PHP is 5.6.0 or higher (detected <b><?= PHP_VERSION; ?></b>).</li>
         <?php else: ?>
-            <li><i class='fa fa-close'></i> Your version of PHP is too low. You need PHP 5.6.0 or higher to use Mini Nova (detected <b><?= PHP_VERSION; ?></b>).</li>
+            <li><i class='fa fa-close text-danger'></i> Your version of PHP is too low. You need PHP 5.6.0 or higher to use Mini Nova (detected <b><?= PHP_VERSION; ?></b>).</li>
         <?php endif; ?>
 
         <?php if (extension_loaded('fileinfo')): ?>
-            <li><i class='fa fa-check'></i> Your version of PHP has the <b>FileInfo</b> extension loaded.</li>
+            <li><i class='fa fa-check text-success'></i> Your version of PHP has the <b>FileInfo</b> extension loaded.</li>
         <?php else: ?>
-            <li><i class='fa fa-close'></i> Your version of PHP does NOT have the <b>FileInfo</b> extension loaded.</li>
+            <li><i class='fa fa-close text-danger'></i> Your version of PHP does NOT have the <b>FileInfo</b> extension loaded.</li>
         <?php endif; ?>
 
         <?php if (extension_loaded('openssl')): ?>
-            <li><i class='fa fa-check'></i> Your version of PHP has the <b>OpenSSL</b> extension loaded.</li>
+            <li><i class='fa fa-check text-success'></i> Your version of PHP has the <b>OpenSSL</b> extension loaded.</li>
         <?php else: ?>
-            <li><i class='fa fa-close'></i> Your version of PHP does NOT have the <b>OpenSSL</b> extension loaded.</li>
+            <li><i class='fa fa-close text-danger'></i> Your version of PHP does NOT have the <b>OpenSSL</b> extension loaded.</li>
         <?php endif; ?>
 
         <?php if (extension_loaded('intl')): ?>
-            <li><i class='fa fa-check'></i> Your version of PHP has the <b>INTL</b> extension loaded.</li>
+            <li><i class='fa fa-check text-success'></i> Your version of PHP has the <b>INTL</b> extension loaded.</li>
         <?php else: ?>
-            <li><i class='fa fa-close'></i> Your version of PHP does NOT have the <b>INTL</b> extension loaded.</li>
+            <li><i class='fa fa-close text-danger'></i> Your version of PHP does NOT have the <b>INTL</b> extension loaded.</li>
         <?php endif; ?>
 
         <?php if (extension_loaded('mbstring')): ?>
-            <li><i class='fa fa-check'></i> Your version of PHP has the <b>MBString</b> extension loaded.</li>
+            <li><i class='fa fa-check text-success'></i> Your version of PHP has the <b>MBString</b> extension loaded.</li>
         <?php else: ?>
-            <li><i class='fa fa-close'></i> Your version of PHP does NOT have the <b>MBString</b> extension loaded.</li>;
+            <li><i class='fa fa-close text-danger'></i> Your version of PHP does NOT have the <b>MBString</b> extension loaded.</li>;
         <?php endif; ?>
         </ul>
     </div>
@@ -64,33 +64,33 @@ if (Config::get('app.debug') !== true) {
         <ul class="list-unstyled">
         <?php $path = Config::get('routing.assets.path', base_path('assets')); ?>
         <?php if (is_writable($path)): ?>
-            <li><i class='fa fa-check'></i> Your assets directory is writable.</li>
+            <li><i class='fa fa-check text-success'></i> Your assets directory is writable.</li>
         <?php else: ?>
-            <li><i class='fa fa-close'></i> Your assets directory is NOT writable.</li>
+            <li><i class='fa fa-close text-danger'></i> Your assets directory is NOT writable.</li>
         <?php endif; ?>
 
         <?php if (is_writable(storage_path('framework/cache'))): ?>
-            <li><i class='fa fa-check'></i> Your cache directory is writable.</li>
+            <li><i class='fa fa-check text-success'></i> Your cache directory is writable.</li>
         <?php else: ?>
-            <li><i class='fa fa-close'></i> Your cache directory is NOT writable.</li>
+            <li><i class='fa fa-close text-danger'></i> Your cache directory is NOT writable.</li>
         <?php endif; ?>
 
         <?php if (is_writable(storage_path('logs'))): ?>
-            <li><i class='fa fa-check'></i> Your logs directory is writable.</li>
+            <li><i class='fa fa-check text-success'></i> Your logs directory is writable.</li>
         <?php else: ?>
-            <li><i class='fa fa-close'></i> Your logs directory is NOT writable.</li>
+            <li><i class='fa fa-close text-danger'></i> Your logs directory is NOT writable.</li>
         <?php endif; ?>
 
         <?php if (is_writable(storage_path('framework/sessions'))): ?>
-            <li><i class='fa fa-check'></i> Your sessions directory is writable.</li>
+            <li><i class='fa fa-check text-success'></i> Your sessions directory is writable.</li>
         <?php else: ?>
-            <li><i class='fa fa-close'></i> Your sessions directory is NOT writable.</li>
+            <li><i class='fa fa-close text-danger'></i> Your sessions directory is NOT writable.</li>
         <?php endif; ?>
 
         <?php if (is_writable(storage_path('framework/views'))): ?>
-            <li><i class='fa fa-check'></i> Your compiled views directory is writable.</li>
+            <li><i class='fa fa-check text-success'></i> Your compiled views directory is writable.</li>
         <?php else: ?>
-            <li><i class='fa fa-close'></i> Your compiled views directory is NOT writable.</li>
+            <li><i class='fa fa-close text-danger'></i> Your compiled views directory is NOT writable.</li>
         <?php endif; ?>
         </ul>
     </div>

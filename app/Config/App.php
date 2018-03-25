@@ -93,7 +93,7 @@ return array(
             'App\Middleware\EncryptCookies',
             'Nova\Cookie\Middleware\AddQueuedCookiesToResponse',
             'Nova\Session\Middleware\StartSession',
-            'Nova\Foundation\Http\Middleware\SetupLanguage',
+            'Nova\Localization\Middleware\SetupLanguage',
             'Nova\View\Middleware\ShareErrorsFromSession',
             'App\Middleware\VerifyCsrfToken',
             'App\Middleware\MarkNotificationAsRead',

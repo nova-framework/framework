@@ -11,7 +11,6 @@
 |
 */
 
-
 /** Define static routes. */
 
 // The default Auth Routes.

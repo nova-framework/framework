@@ -62,7 +62,8 @@ if (Config::get('app.debug') !== true) {
         <hr style="margin-top: 0">
 
         <ul class="list-unstyled">
-        <?php if (is_writable(storage_path('assets'))): ?>
+        <?php $path = Config::get('routing.assets.path', base_path('assets')); ?>
+        <?php if (is_writable($path)): ?>
             <li><i class='fa fa-check'></i> Your assets directory is writable.</li>
         <?php else: ?>
             <li><i class='fa fa-close'></i> Your assets directory is NOT writable.</li>

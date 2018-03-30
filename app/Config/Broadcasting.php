@@ -28,11 +28,23 @@ return array(
 
     'connections' => array(
 
+        'quasar' => array(
+            'driver' => 'quasar',
+
+            'appId'  => env('QUASAR_APP_ID'),
+            'secret' => env('QUASAR_SECRET'),
+
+            'host'   => env('QUASAR_HOST', '127.0.0.1'),
+            'port'   => env('QUASAR_PORT', 2121),
+        ),
+
         'pusher' => array(
             'driver'  => 'pusher',
+
             'key'     => env('PUSHER_KEY'),
             'secret'  => env('PUSHER_SECRET'),
             'app_id'  => env('PUSHER_APP_ID'),
+
             'options' => array(
                 //
             ),

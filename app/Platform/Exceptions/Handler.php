@@ -90,7 +90,14 @@ class Handler extends ExceptionHandler
     {
         $status = $e->getStatusCode();
 
-        if (View::exists("Errors/{$status}")) {
+        if ($request->ajax() || $request->wantsJson()) {
+            $e = FlattenException::create($e, $status);
+
+            return Response::json($e->toArray(), $status, $e->getHeaders());
+        }
+
+        // If exists a View for this HTTP error.
+        else if (View::exists("Errors/{$status}")) {
             $view = View::make('Layouts/Default')
                 ->shares('title', "Error {$status}")
                 ->nest('content', "Errors/{$status}", array('exception' => $e));
@@ -111,10 +118,17 @@ class Handler extends ExceptionHandler
     {
         $debug = Config::get('app.debug');
 
-        if (! $debug && View::exists("Errors/500")) {
+        if (! $debug) {
             $e = FlattenException::create($e);
 
-            return $this->renderHttpException($e, $request);
+            if ($request->ajax() || $request->wantsJson()) {
+                return Response::json('Internal Server Error', 500);
+            }
+
+            // Not an AJAX request.
+            else if (View::exists('Errors/500')) {
+                return $this->renderHttpException($e, $request);
+            }
         }
 
         // We will instruct Whoops to not exit after it displays the exception as it

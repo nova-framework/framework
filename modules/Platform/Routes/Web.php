@@ -48,11 +48,11 @@ Route::get('password/reset/{hash}/{time}/{token}', array(
 ));
 
 // The Account Registration.
-Route::get( 'register',         array('middleware' => 'guest', 'uses' => 'Registrar@create'));
-Route::post('register',         array('middleware' => 'guest', 'uses' => 'Registrar@store'));
-Route::get( 'register/status',  array('middleware' => 'guest', 'uses' => 'Registrar@status'));
-Route::get( 'register/verify',  array('middleware' => 'guest', 'uses' => 'Registrar@verify'));
-Route::post('register/verify',  array('middleware' => 'guest', 'uses' => 'Registrar@verifyPost'));
+Route::get( 'register',        array('middleware' => 'guest', 'uses' => 'Registrar@create'));
+Route::post('register',        array('middleware' => 'guest', 'uses' => 'Registrar@store'));
+Route::get( 'register/status', array('middleware' => 'guest', 'uses' => 'Registrar@status'));
+Route::get( 'register/verify', array('middleware' => 'guest', 'uses' => 'Registrar@verify'));
+Route::post('register/verify', array('middleware' => 'guest', 'uses' => 'Registrar@verifyPost'));
 
 Route::get('register/{hash}/{token?}', array('middleware' => 'guest', 'uses' => 'Registrar@tokenVerify'));
 

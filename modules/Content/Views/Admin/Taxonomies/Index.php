@@ -49,7 +49,7 @@
         </div>
     </div>
     <div class="box-footer">
-        <input type="submit" name="submit" class="btn btn-success col-sm-6 pull-right" value="<?= __d('platform', 'Create a New {0}', $name); ?>">
+        <input type="submit" name="submit" class="btn btn-success col-sm-6 pull-right" value="<?= __d('content', 'Create a New {0}', $name); ?>">
     </div>
 </div>
 

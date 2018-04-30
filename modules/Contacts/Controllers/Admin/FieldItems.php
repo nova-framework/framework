@@ -73,10 +73,12 @@ class FieldItems extends BaseController
 
         $validator->addExtension('valid_name', function($attribute, $value, $parameters) use ($contact)
         {
-            $query = $contact->fieldItems()->where('name', $value);
+            $table = with(new FieldItem)->getTable();
+
+            $query = $contact->fieldItems()->where($table .'.name', $value);
 
             if (! empty($parameters) && is_numeric($id = head($parameters))) {
-                $query->where('id', '!=', (int) $id);
+                $query->where($table .'.id', '!=', (int) $id);
             }
 
             return ! $query->exists();

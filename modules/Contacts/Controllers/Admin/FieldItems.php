@@ -31,8 +31,8 @@ class FieldItems extends BaseController
 
         // The Validation rules.
         $rules = array(
-            'field_title' => 'required|min:4|max:40|valid_title',
-            'field_name'  => 'required|min:4|max:40|alpha_dash|valid_name' .$ignore,
+            'field_title' => 'required|min:2|max:40|valid_title',
+            'field_name'  => 'required|min:2|max:40|alpha_dash|valid_name' .$ignore,
             'field_type'  => 'required|valid_type',
             'field_order' => 'required|numeric|min:-100|max:100',
 
@@ -61,7 +61,7 @@ class FieldItems extends BaseController
         // Add the custom Validation Rule commands.
         $validator->addExtension('valid_title', function($attribute, $value, $parameters)
         {
-            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){1,}$~u';
+            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\/\.\d\x{2019}]+(?:$|\s+)){1,}$~u';
 
             return (preg_match($pattern, $value) === 1);
         });

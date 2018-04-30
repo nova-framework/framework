@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" href="<?= asset_url('css/jquery.nestable.css', 'module/content'); ?>">
+<link rel="stylesheet" type="text/css" href="<?= asset_url('css/jquery.nestable.css', 'modules/content'); ?>">
 
 <section class="content-header">
     <h1><?= __d('content', 'Manage the Menu: {0}', $menu->name); ?></h1>

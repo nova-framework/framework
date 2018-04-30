@@ -2,8 +2,8 @@
 
 namespace Shared\Auth\Notifications;
 
-use Nova\Notification\Notification;
-use Nova\Notification\Messages\MailMessage;
+use Nova\Notifications\Notification;
+use Nova\Notifications\Messages\MailMessage;
 
 
 class ResetPassword extends Notification

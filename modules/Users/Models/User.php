@@ -6,7 +6,7 @@ use Nova\Auth\UserTrait;
 use Nova\Auth\UserInterface;
 use Nova\Database\ORM\Model as BaseModel;
 use Nova\Foundation\Auth\Access\AuthorizableTrait;
-use Nova\Notification\NotifiableTrait;
+use Nova\Notifications\NotifiableTrait;
 use Nova\Support\Facades\Cache;
 
 use Shared\Auth\Reminders\RemindableTrait;
@@ -46,8 +46,8 @@ class User extends BaseModel implements UserInterface, RemindableInterface
      */
     public $files = array(
         'image' => array(
-            'path'        => STORAGE_PATH .'assets/images/users/:unique_id-:file_name',
-            'defaultPath' => STORAGE_PATH .'assets/images/users/no-image.png',
+            'path'        => BASEPATH .'assets/images/users/:unique_id-:file_name',
+            'defaultPath' => BASEPATH .'assets/images/users/no-image.png',
         ),
     );
 

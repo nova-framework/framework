@@ -131,23 +131,23 @@
                     'X-Socket-ID':  socket.id
                 });
 
-                var request = new XMLHttpRequest();
+                var xhr = new XMLHttpRequest();
 
-                request.open('POST', settings.authEndpoint);
+                xhr.open('POST', settings.authEndpoint);
 
                 for(var header in headers) {
                     if (headers.hasOwnProperty(header)) {
-                        request.setRequestHeader(header, headers[header]);
+                        xhr.setRequestHeader(header, headers[header]);
                     }
                 }
 
-                request.responseType = 'json';
+                xhr.responseType = 'json';
 
-                request.onload = function () {
-                    var status = request.status;
+                xhr.onload = function () {
+                    var status = xhr.status;
 
                     if ((status >= 200) && (status < 400)) {
-                        var data = request.response;
+                        var data = xhr.response;
 
                         socket.emit('subscribe', channelName, data.auth, data.payload || '');
                     } else {
@@ -155,14 +155,14 @@
                     }
                 }
 
-                request.onerror = function () {
+                xhr.onerror = function () {
                     // There was a connection error of some sort.
                 };
 
                 // Create the POST content.
                 var query = 'channel_name=' + encodeURIComponent(channelName) + '&socket_id=' + encodeURIComponent(socket.id);
 
-                request.send(query);
+                xhr.send(query);
             });
 
             var channel = new Channel(socket, channelName, type);

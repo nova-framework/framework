@@ -92,6 +92,8 @@ class Messages extends BaseController
         // Add the custom Validation Rule commands.
         $validator->addExtension('recaptcha', function($attribute, $value, $parameters) use ($request)
         {
+            if (Auth::check()) return true;
+
             return ReCaptcha::check($value, $request->ip());
         });
 

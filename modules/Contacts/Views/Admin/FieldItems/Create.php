@@ -87,6 +87,13 @@
                         <input name="field_rules" id="field-rules" type="text" class="form-control" value="<?= Input::old('field_rules'); ?>" placeholder="<?= __d('contacts', 'Rules'); ?>">
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="field_rules"><?= __d('contacts', 'Show in lists'); ?></label>
+                    <div class="col-sm-9" style="padding-top: 6px;">
+                        <?php $visible = Input::old('visible', 0); ?>
+                        <input type="checkbox" name="visible" value="visible" <?= ($visible == 1) ? 'checked="checked"' : ''; ?>/>
+                    </div>
+                </div>
             </div>
             <div class="clearfix"></div>
             <font color="#CC0000">*</font><?= __d('contacts', 'Required field'); ?>

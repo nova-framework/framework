@@ -67,6 +67,10 @@
             </tr>
             <?php } ?>
             <tr>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Show in lists'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= ($item->visible == 1) ? __d('contacts', 'Yes') : __d('contacts', 'No'); ?></td>
+            </tr>
+            <tr>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Created At'); ?></th>
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= $item->created_at->formatLocalized($format = __d('contacts', '%d %b %Y, %R')); ?></td>
             </tr>

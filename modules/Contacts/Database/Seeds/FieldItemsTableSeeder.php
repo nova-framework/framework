@@ -37,6 +37,8 @@ class FieldItemsTableSeeder extends Seeder
                 'default'     => '',
             ),
 
+            'visibble' => 1,
+
             'field_group_id' => 1,
             'created_by'     => 1,
         ));
@@ -53,6 +55,8 @@ class FieldItemsTableSeeder extends Seeder
                 'placeholder' => '',
                 'default'     => '',
             ),
+
+            'visibble' => 1,
 
             'field_group_id' => 1,
             'created_by'     => 1,
@@ -71,6 +75,8 @@ class FieldItemsTableSeeder extends Seeder
                 'default'     => '',
             ),
 
+            'visibble' => 0,
+
             'field_group_id' => 1,
             'created_by'     => 1,
         ));
@@ -87,6 +93,8 @@ class FieldItemsTableSeeder extends Seeder
                 'placeholder' => '',
                 'rows'        => 10,
             ),
+
+            'visibble' => 1,
 
             'field_group_id' => 1,
             'created_by'     => 1,

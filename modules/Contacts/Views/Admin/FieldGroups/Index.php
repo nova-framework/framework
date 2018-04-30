@@ -45,6 +45,7 @@
                 <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'Type'); ?></th>
                 <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'Order'); ?></th>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('roles', 'Rules'); ?></th>
+                <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'Visible'); ?></th>
                 <th style="text-align: right; vertical-align: middle;"><?= __d('roles', 'Operations'); ?></th>
             </tr>
             <?php foreach ($group->fieldItems as $item) { ?>
@@ -53,8 +54,9 @@
                 <td style="text-align: center; vertical-align: middle;" width="15%"><?= $item->title; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="10%"><?= $item->name; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="10%"><?= $item->type; ?></td>
-                <td style="text-align: center; vertical-align: middle;" width="10%"><?= $item->order; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="5%"><?= $item->order; ?></td>
                 <td style="text-align: left; vertical-align: middle;" width="25%"><?= $item->rules ?: '-'; ?></td>
+                <td style="text-align: center; vertical-align: middle;" width="5%"><?= ($item->visible == 1) ? __d('contacts', 'Yes') : __d('contacts', 'No'); ?></td>
                 <td style="text-align: right; vertical-align: middle;" width="15%">
                     <div class="btn-group" role="group" aria-label="...">
                         <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-item-dialog" data-group-id="<?= $group->id; ?>" data-id="<?= $item->id; ?>" title="<?= __d('roles', 'Delete this Role'); ?>" role="button"><i class="fa fa-remove"></i></a>

@@ -193,8 +193,13 @@ class FieldItems extends BaseController
             'rules'   => $input['field_rules'],
             'options' => $options,
 
+            'visible' => $request->has('visible') ? 1 : 0,
+
             // Resolve the fieldGroup relationship.
             'field_group_id' => $group->id,
+
+            //
+            'created_by' => Auth::id(),
         ));
 
         // Invalidate the cached information.
@@ -413,7 +418,12 @@ class FieldItems extends BaseController
         $item->order = $input['field_order'];
         $item->rules = $input['field_rules'];
 
+        $item->visible = $request->has('visible') ? 1 : 0;
+
         $item->options = $options;
+
+        //
+        $item->updated_by = Auth::id();
 
         $item->save();
 

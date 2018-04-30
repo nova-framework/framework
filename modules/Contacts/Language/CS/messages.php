@@ -78,6 +78,7 @@ return array (
   'Messages received by : {0}' => '',
   'Name' => '',
   'New message received via {0}' => '',
+  'No' => '',
   'No Field Groups' => '',
   'No Messages' => '',
   'No description' => '',
@@ -109,6 +110,7 @@ return array (
   'Show Field Item' => '',
   'Show Message' => '',
   'Show Role' => '',
+  'Show in lists' => '',
   'Show the Details' => '',
   'Show this Attachment' => '',
   'Site Path' => '',
@@ -146,5 +148,7 @@ return array (
   'View the Messages received by this Contact' => '',
   'View this Contact' => '',
   'View this Message' => '',
+  'Visible' => '',
+  'Yes' => '',
   'Your message was successfully sent.' => '',
 );

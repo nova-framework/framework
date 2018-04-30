@@ -3,7 +3,7 @@
 namespace Modules\Content\Providers;
 
 use Nova\Http\Request;
-use Nova\Package\Support\Providers\ModuleServiceProvider as ServiceProvider;
+use Nova\Packages\Support\Providers\ModuleServiceProvider as ServiceProvider;
 use Nova\Support\Facades\Cache;
 
 use Shared\Support\Facades\Widget;

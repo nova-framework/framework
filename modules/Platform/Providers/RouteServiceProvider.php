@@ -2,7 +2,7 @@
 
 namespace Modules\Platform\Providers;
 
-use Nova\Package\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Nova\Packages\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Nova\Routing\Router;
 
 

@@ -2,7 +2,7 @@
 
 namespace Modules\Contacts\Providers;
 
-use Nova\Package\Support\Providers\ModuleServiceProvider as ServiceProvider;
+use Nova\Packages\Support\Providers\ModuleServiceProvider as ServiceProvider;
 
 
 class ModuleServiceProvider extends ServiceProvider

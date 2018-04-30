@@ -2,7 +2,7 @@
 
 namespace Themes\AdminLite\Providers;
 
-use Nova\Package\Support\Providers\ThemeServiceProvider as ServiceProvider;
+use Nova\Packages\Support\Providers\ThemeServiceProvider as ServiceProvider;
 
 
 class ThemeServiceProvider extends ServiceProvider

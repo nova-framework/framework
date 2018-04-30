@@ -3,7 +3,7 @@
 namespace Modules\Platform\Providers;
 
 use Nova\Foundation\AliasLoader;
-use Nova\Package\Support\Providers\ModuleServiceProvider as ServiceProvider;
+use Nova\Packages\Support\Providers\ModuleServiceProvider as ServiceProvider;
 
 
 class ModuleServiceProvider extends ServiceProvider

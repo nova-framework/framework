@@ -7,8 +7,8 @@ use Nova\Queue\ShouldQueueInterface;
 use Nova\Support\Arr;
 use Nova\Support\Str;
 
-use Nova\Notification\Messages\MailMessage;
-use Nova\Notification\Notification;
+use Nova\Notifications\Messages\MailMessage;
+use Nova\Notifications\Notification;
 
 use Modules\Contacts\Models\Contact;
 use Modules\Contacts\Models\Message;
@@ -64,7 +64,7 @@ class MessageSubmitted extends Notification implements ShouldQueueInterface
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Nova\Notification\Messages\MailMessage
+     * @return \Nova\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
     {

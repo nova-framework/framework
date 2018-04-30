@@ -44,8 +44,9 @@
         <table id="left" class="table table-hover responsive">
             <tr class="bg-navy disabled">
                 <th style="text-align: center; vertical-align: middle;"><?= __d('contacts', 'ID'); ?></th>
-                <th style="text-align: center; vertical-align: middle;"><?= __d('contacts', 'Author'); ?></th>
-                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Message'); ?></th>
+                <?php foreach (array_values($fields) as $title) { ?>
+                <th style="text-align: center; vertical-align: middle;"><?= $title; ?></th>
+                <?php } ?>
                 <th style="text-align: center; vertical-align: middle;"><?= __d('contacts', 'Attachments'); ?></th>
                 <th style="text-align: center; vertical-align: middle;"><?= __d('contacts', 'Submitted On'); ?></th>
                 <th style="text-align: right; vertical-align: middle;"><?= __d('contacts', 'Operations'); ?></th>
@@ -54,8 +55,10 @@
             <?php $deletables++; ?>
             <tr>
                 <td style="text-align: center; vertical-align: middle;" width="5%"><?= $message->id; ?></td>
-                <td style="text-align: center; vertical-align: middle;" width="30%"><?= e($message->fields->author); ?> &lt;<?= e($message->fields->author_email); ?>&gt;</td>
-                <td style="text-align: left; vertical-align: middle;" width="30%" title="<?= e($message->fields->message); ?>"><?= Str::limit(e($message->fields->message), 60); ?></td>
+
+                <?php foreach (array_keys($fields) as $field) { ?>
+                <td style="text-align: center; vertical-align: middle;" title="<?= $value = e($message->fields->{$field}); ?>"><?= Str::limit($value, 40); ?></td>
+                <?php } ?>
                 <td style="text-align: center; vertical-align: middle;" width="10%"><?= $message->attachments->count(); ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="15%"><?= $message->created_at->formatLocalized(__d('contacts', '%d %b %Y, %R')); ?></td>
                 <td style="text-align: right; vertical-align: middle;" width="10%">

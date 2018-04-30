@@ -33,11 +33,13 @@ class Messages extends BaseController
             return Redirect::back()->with('danger', __d('contacts', 'Contact not found: #{0}', $id));
         }
 
+        $fields = $contact->fieldItems->where('visible', 1)->lists('title', 'name');
+
         $messages = $contact->messages()->orderBy('created_at', 'DESC')->paginate(15);
 
         return $this->createView()
             ->shares('title', __d('contacts', 'Messages received by : {0}', $contact->name))
-            ->with(compact('contact', 'messages'))
+            ->with(compact('contact', 'fields', 'messages'))
             ->with('search', '')
             ->with('searching', false);
     }

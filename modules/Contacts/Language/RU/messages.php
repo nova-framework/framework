@@ -80,6 +80,7 @@ return array (
   'Messages received by : {0}' => 'Сообщения, полученные : {0}',
   'Name' => 'Имя',
   'New message received via {0}' => 'Новое сообщение полученно {0}',
+  'No' => '',
   'No Field Groups' => 'Нет групп полей',
   'No Messages' => 'Нет сообщений',
   'No description' => 'Нет описания',
@@ -111,6 +112,7 @@ return array (
   'Show Field Item' => 'Показать элемент поля',
   'Show Message' => 'Просмотр сообщения',
   'Show Role' => 'Просмотр роли',
+  'Show in lists' => '',
   'Show the Details' => 'Подробнее',
   'Show this Attachment' => 'Показать вложение',
   'Site Path' => 'Путь на сайте',
@@ -148,5 +150,7 @@ return array (
   'View the Messages received by this Contact' => 'Просмотр сообщений, полученных этим контактом',
   'View this Contact' => 'Просмотр этого контакта',
   'View this Message' => 'Посмотреть это сообщение',
+  'Visible' => '',
+  'Yes' => '',
   'Your message was successfully sent.' => 'Ваше сообщение было успешно отправлено.',
 );

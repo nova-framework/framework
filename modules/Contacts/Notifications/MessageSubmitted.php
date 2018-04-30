@@ -46,7 +46,7 @@ class MessageSubmitted extends Notification implements ShouldQueueInterface
         $this->message = $message;
         $this->contact = $contact;
 
-        $this->pdf = $pdf;
+        $this->pdf = utf8_encode($pdf);
     }
 
     /**
@@ -122,7 +122,7 @@ class MessageSubmitted extends Notification implements ShouldQueueInterface
         if (isset($this->pdf)) {
             $fileName = sprintf('message-%06d-%s.pdf', $this->message->id, $this->message->created_at->format('Hi_dmY'));
 
-            $message->attachData($this->pdf, $fileName, array(
+            $message->attachData(utf8_decode($this->pdf), $fileName, array(
                 'mime' => 'application/pdf',
             ));
         }

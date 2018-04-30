@@ -253,7 +253,7 @@ class Posts extends BaseController
             $post = Post::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            Session::pushStatus(__d('content', 'Record not found: #{0}', $id), 'danger');
+            Session::flash('danger', __d('content', 'Record not found: #{0}', $id));
 
             return Response::json(array('redirectTo' => 'refresh'), 400);
         }
@@ -413,9 +413,9 @@ class Posts extends BaseController
         $this->clearContentCache();
 
         //
-        $status = __d('content', 'The {0} <b>#{1}</b> was successfully saved.', $postType->label('name'), $post->id);
-
-        Session::pushStatus($status, 'success');
+        Session::flash(
+            'success', __d('content', 'The {0} <b>#{1}</b> was successfully saved.', $postType->label('name'), $post->id)
+        );
 
         return Response::json(array(
             'redirectTo' => site_url('admin/content/' .Str::plural($type))

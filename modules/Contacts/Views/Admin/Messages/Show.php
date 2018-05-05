@@ -127,7 +127,7 @@ foreach ($contact->fieldGroups as $group) {
         </table>
         <?php } else { ?>
         <div class="text-center" style="padding-top: 25px; padding-bottom: 25px;">
-            <b class="text-muted"><?= __d('users', 'This message has no attached files.'); ?></b>
+            <b class="text-muted"><?= __d('contacts', 'This message has no attached files.'); ?></b>
         </div>
         <?php } ?>
     </div>

@@ -57,7 +57,7 @@
     </div>
     <?php if (! $notifications->isEmpty()) { ?>
     <div class="box-footer">
-        <input type="submit" name="submit" id="submitButton1" class="btn btn-success col-sm-2 pull-right" value="<?= __d('users', 'Mark as read'); ?>" disabled="disabled">
+        <input type="submit" name="submit" id="submitButton1" class="btn btn-success col-sm-2 pull-right" value="<?= __d('plaform', 'Mark as read'); ?>" disabled="disabled">
     </div>
     <?php } ?>
 </div>

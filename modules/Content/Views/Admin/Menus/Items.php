@@ -27,7 +27,7 @@
     <?= $pages; ?>
     </div>
     <div class="box-footer">
-        <input type="submit" name="submit" class="btn btn-primary col-sm-5 pull-right" value="<?= __d('users', 'Add to Menu'); ?>" />
+        <input type="submit" name="submit" class="btn btn-primary col-sm-5 pull-right" value="<?= __d('content', 'Add to Menu'); ?>" />
     </div>
 </div>
 
@@ -46,7 +46,7 @@
     <?= $posts; ?>
     </div>
     <div class="box-footer">
-        <input type="submit" name="submit" class="btn btn-primary col-sm-5 pull-right" value="<?= __d('users', 'Add to Menu'); ?>" />
+        <input type="submit" name="submit" class="btn btn-primary col-sm-5 pull-right" value="<?= __d('content', 'Add to Menu'); ?>" />
     </div>
 </div>
 
@@ -65,7 +65,7 @@
     <?= $categories; ?>
     </div>
     <div class="box-footer">
-        <input type="submit" name="submit" class="btn btn-primary col-sm-5 pull-right" value="<?= __d('users', 'Add to Menu'); ?>" />
+        <input type="submit" name="submit" class="btn btn-primary col-sm-5 pull-right" value="<?= __d('content', 'Add to Menu'); ?>" />
     </div>
 </div>
 
@@ -98,7 +98,7 @@
             </div>
     </div>
     <div class="box-footer">
-        <input type="submit" name="submit" class="btn btn-primary col-sm-5 pull-right" value="<?= __d('users', 'Add to Menu'); ?>" />
+        <input type="submit" name="submit" class="btn btn-primary col-sm-5 pull-right" value="<?= __d('content', 'Add to Menu'); ?>" />
     </div>
 </div>
 
@@ -123,7 +123,7 @@
         </div>
     </div>
     <div class="box-footer">
-        <input type="submit" name="submit" class="btn btn-success col-sm-3 pull-right" value="<?= __d('users', 'Save the Items'); ?>" />
+        <input type="submit" name="submit" class="btn btn-success col-sm-3 pull-right" value="<?= __d('content', 'Save the Items'); ?>" />
     </div>
 </div>
 

@@ -53,7 +53,20 @@ class PostTypeManager
 
     public function getNames()
     {
-        return array_keys($this->types);
+        return array_map(function ($type)
+        {
+            return $type->name();
+
+        }, $this->types);
+    }
+
+    public function getSlugs()
+    {
+        return array_map(function ($type)
+        {
+            return $type->slug();
+
+        }, $this->types);
     }
 
     public function getTypeModel($name)

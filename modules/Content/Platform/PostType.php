@@ -79,7 +79,7 @@ class PostType
         $this->model = $model;
 
         // Initialize the properties from config.
-        $this->view = Arr::get($config, 'view');
+        $this->view = Arr::get($config, 'view', 'Modules/Content::Content/Post');
 
         $this->label = Arr::get($config, 'label');
 
@@ -147,8 +147,17 @@ class PostType
         return $this->hasArchive;
     }
 
-    public function rewrite()
+    public function rewrite($key = null)
     {
+        if (! is_null($key)) {
+            return Arr::get($this->rewrite, $key);
+        }
+
         return $this->rewrite;
+    }
+
+    public function slug()
+    {
+        return Arr::get($this->rewrite, 'slug');
     }
 }

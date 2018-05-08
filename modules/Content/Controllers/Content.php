@@ -82,11 +82,10 @@ class Content extends BaseController
             App::abort(404);
         }
 
-        // Calculate the View used for rendering this Post instance.
-        if (is_null($postType = PostType::make($post->type))) {
-            App::abort(404);
-        } else if (! $postType->public() && Auth::guest()) {
-            App::abort(404);
+        $postType = PostType::make($post->type);
+
+        if (! $postType->public() && Auth::guest()) {
+            App::abort(403);
         }
 
         return View::make($postType->view(), compact('post'))

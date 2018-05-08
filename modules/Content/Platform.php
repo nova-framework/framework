@@ -76,7 +76,7 @@ PostType::register('page', array(
 PostType::register('block', array(
     'model' => 'Modules\Content\Models\Block',
 
-    'view'  => null, // The Blocks are rendered via the Modules\Content\BlockHandler.
+    'view'  => null, // The Blocks are rendered via the Modules\Content\Widgets\BlockHandler.
 
     'labels' => array(
         'name'        => __d('content', 'Block'),

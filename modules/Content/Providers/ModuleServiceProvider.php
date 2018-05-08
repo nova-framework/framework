@@ -21,6 +21,7 @@ class ModuleServiceProvider extends ServiceProvider
     protected $providers = array(
         'Modules\Content\Providers\AuthServiceProvider',
         'Modules\Content\Providers\EventServiceProvider',
+        'Modules\Content\Providers\PlatformServiceProvider',
         'Modules\Content\Providers\RouteServiceProvider',
     );
 

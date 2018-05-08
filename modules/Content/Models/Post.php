@@ -3,11 +3,12 @@
 namespace Modules\Content\Models;
 
 use Nova\Database\ORM\Model;
-use Nova\Support\Facades\Config;
 use Nova\Support\Arr;
 use Nova\Support\Str;
 
 use Shared\MetaField\HasMetaFieldsTrait;
+
+use Modules\Content\Support\Facades\PostType;
 
 use Modules\Content\Models\PostBuilder;
 use Modules\Content\Traits\OrderedTrait;
@@ -212,8 +213,8 @@ class Post extends Model
 
             if (isset(static::$postTypes[$type])) {
                 $className = static::$postTypes[$type];
-            } else {
-                $className = Config::get("content::postTypes.{$type}.model", $className);
+            } else if (! is_null($model = PostType::getTypeModel($type))) {
+                $className = $model;
             }
         }
 

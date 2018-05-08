@@ -1,8 +1,7 @@
 <?php
 
-namespace Modules\Content\Support;
+namespace Modules\Content\Platform;
 
-use Nova\Support\Facades\Config;
 use Nova\Support\Arr;
 use Nova\Support\Str;
 
@@ -26,6 +25,11 @@ class PostType
     /**
      * @var string
      */
+    protected $view;
+
+    /**
+     * @var string
+     */
     protected $label;
 
     /**
@@ -37,6 +41,11 @@ class PostType
      * @var array
      */
     protected $labels = array();
+
+    /**
+     * @var bool
+     */
+    protected $public = true;
 
     /**
      * @var bool
@@ -59,12 +68,8 @@ class PostType
     protected static $types = array();
 
 
-    public function __construct($name)
+    public function __construct($name, array $config)
     {
-        if (is_null($config = Config::get('content::postTypes.' .$name))) {
-            throw new InvalidArgumentException('Invalid Post type specified');
-        }
-
         $this->name = $name;
 
         if (is_null($model = Arr::get($config, 'model'))) {
@@ -74,6 +79,8 @@ class PostType
         $this->model = $model;
 
         // Initialize the properties from config.
+        $this->view = Arr::get($config, 'view');
+
         $this->label = Arr::get($config, 'label');
 
         $this->description = Arr::get($config, 'description');
@@ -82,27 +89,26 @@ class PostType
 
         $this->hierarchical = (bool) Arr::get($config, 'hierarchical', false);
 
+        $this->public = (bool) Arr::get($config, 'public', false);
+
         $this->hasArchive = (bool) Arr::get($config, 'hasArchive', true);
 
         $this->rewrite = Arr::get($config, 'rewrite', array());
     }
 
-    public static function make($type)
-    {
-        if ($type instanceof Post) {
-            $type = $type->type;
-        }
-
-        if (isset(static::$types[$type])) {
-            return static::$types[$type];
-        }
-
-        return static::$types[$type] = new static($type);
-    }
-
     public function name()
     {
         return $this->name;
+    }
+
+    public function model()
+    {
+        return $this->model;
+    }
+
+    public function view()
+    {
+        return $this->view;
     }
 
     public function label($name = null, $default = null)
@@ -124,6 +130,11 @@ class PostType
     public function description()
     {
         return $this->description;
+    }
+
+    public function public()
+    {
+        return $this->public;
     }
 
     public function hierarchical()

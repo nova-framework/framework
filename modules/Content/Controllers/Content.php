@@ -19,6 +19,8 @@ use Shared\Support\ReCaptcha;
 
 use App\Controllers\BaseController;
 
+use Modules\Content\Support\Facades\PostType;
+
 use Modules\Content\Models\Post;
 use Modules\Content\Models\Taxonomy;
 
@@ -64,11 +66,6 @@ class Content extends BaseController
                 return null;
             }
 
-            // If the Post status is 'protected', it is for internal use only.
-            else if ($post->status === 'protected') {
-                return null;
-            }
-
             // If the Post is a Revision.
             else if ((($post->type === 'revision') || ($post->type === 'attachment')) && ($post->status === 'inherit')) {
                 $parent = $post->parent()->first();
@@ -86,9 +83,13 @@ class Content extends BaseController
         }
 
         // Calculate the View used for rendering this Post instance.
-        $view = ($post->type == 'page') ? 'Page' : 'Post';
+        if (is_null($postType = PostType::make($post->type))) {
+            App::abort(404);
+        } else if (! $postType->public() && Auth::guest()) {
+            App::abort(404);
+        }
 
-        return $this->createView(compact('post'), $view)
+        return View::make($postType->view(), compact('post'))
             ->shares('title', $post->title);
     }
 

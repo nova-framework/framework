@@ -11,6 +11,8 @@
 |
 */
 
+use Modules\Content\Support\Facades\PostType;
+
 
 // The Media Files serving.
 Route::get('content/media/serve/{name}', 'Attachments@serve');
@@ -52,9 +54,7 @@ Route::post('content/{id}/comment', 'Comments@store')->where('id', '\d+');
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
 {
-    $types = array_keys(
-        Config::get('content::postTypes', array())
-    );
+    $types = PostType::getNames();
 
     // The Media CRUD.
     Route::get( 'media',                array('middleware' => 'auth', 'uses' => 'Attachments@index'));

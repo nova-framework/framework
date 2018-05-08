@@ -22,7 +22,8 @@ use Modules\Content\Models\Post;
 use Modules\Content\Models\Tag;
 use Modules\Content\Models\Term;
 use Modules\Content\Models\Taxonomy;
-use Modules\Content\Support\PostType;
+//use Modules\Content\Support\PostType;
+use Modules\Content\Support\Facades\PostType;
 use Modules\Platform\Controllers\Admin\BaseController;
 use Modules\Users\Models\User;
 

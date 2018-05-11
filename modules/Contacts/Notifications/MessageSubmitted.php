@@ -3,12 +3,11 @@
 namespace Modules\Contacts\Notifications;
 
 use Nova\Bus\QueueableTrait;
+use Nova\Notifications\Messages\MailMessage;
+use Nova\Notifications\Notification;
 use Nova\Queue\ShouldQueueInterface;
 use Nova\Support\Arr;
 use Nova\Support\Str;
-
-use Nova\Notifications\Messages\MailMessage;
-use Nova\Notifications\Notification;
 
 use Modules\Contacts\Models\Contact;
 use Modules\Contacts\Models\Message;

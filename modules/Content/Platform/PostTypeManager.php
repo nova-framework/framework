@@ -17,7 +17,7 @@ class PostTypeManager
     protected $container;
 
     /**
-     * @var \Modules\Content\Platform\PostType[]
+     * @var array
      */
     protected $types = array();
 
@@ -27,23 +27,23 @@ class PostTypeManager
         $this->container = $container;
     }
 
-    public function make($name)
+    public function make($type)
     {
-        if (isset($this->types[$name])) {
-            return $this->types[$name];
+        if (isset($this->types[$type])) {
+            return $this->types[$type];
         }
 
         throw new InvalidArgumentException('Invalid Post type specified');
     }
 
-    public function register($name, array $options = array())
+    public function register($type, array $options = array())
     {
-        $this->types[$name] = new PostType($name, $options);
+        $this->types[$type] = new PostType($type, $options);
     }
 
-    public function forgetType($name)
+    public function forget($type)
     {
-        unset($this->types[$name]);
+        unset($this->types[$type]);
     }
 
     public function getTypes()
@@ -69,12 +69,12 @@ class PostTypeManager
         }, $this->types);
     }
 
-    public function getTypeModel($name)
+    public function getModel($type)
     {
-        if (isset($this->types[$name])) {
-            $type = $this->types[$name];
+        if (isset($this->types[$type])) {
+            $postType = $this->types[$type];
 
-            return $type->model();
+            return $postType->model();
         }
     }
 }

@@ -3,9 +3,9 @@
 namespace Modules\Platform\Notifications;
 
 use Nova\Bus\QueueableTrait;
-use Nova\Queue\ShouldQueueInterface;
 use Nova\Notifications\Notification;
 use Nova\Notifications\Messages\MailMessage;
+use Nova\Queue\ShouldQueueInterface;
 
 
 class AuthenticationToken extends Notification implements ShouldQueueInterface

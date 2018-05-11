@@ -62,11 +62,6 @@ class PostType
      */
     protected $rewrite = array();
 
-    /**
-     * @var PostType[]
-     */
-    protected static $types = array();
-
 
     public function __construct($name, array $config)
     {
@@ -147,10 +142,10 @@ class PostType
         return $this->hasArchive;
     }
 
-    public function rewrite($key = null)
+    public function rewrite($key = null, $default = null)
     {
         if (! is_null($key)) {
-            return Arr::get($this->rewrite, $key);
+            return Arr::get($this->rewrite, $key, $default);
         }
 
         return $this->rewrite;

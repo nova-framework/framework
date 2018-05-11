@@ -3,10 +3,9 @@
 namespace Modules\Platform\Notifications;
 
 use Nova\Bus\QueueableTrait;
-use Nova\Queue\ShouldQueueInterface;
-
 use Nova\Notifications\Messages\MailMessage;
 use Nova\Notifications\Notification;
+use Nova\Queue\ShouldQueueInterface;
 
 
 class Sample extends Notification implements ShouldQueueInterface

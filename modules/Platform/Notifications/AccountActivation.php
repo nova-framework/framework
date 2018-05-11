@@ -3,11 +3,10 @@
 namespace Modules\Platform\Notifications;
 
 use Nova\Bus\QueueableTrait;
-use Nova\Queue\ShouldQueueInterface;
-use Nova\Support\Facades\Config;
-
 use Nova\Notifications\Notification;
 use Nova\Notifications\Messages\MailMessage;
+use Nova\Queue\ShouldQueueInterface;
+use Nova\Support\Facades\Config
 
 
 class AccountActivation extends Notification implements ShouldQueueInterface

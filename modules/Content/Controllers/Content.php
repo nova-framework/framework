@@ -26,6 +26,8 @@ use Modules\Content\Models\Taxonomy;
 
 use Carbon\Carbon;
 
+use Exception;
+
 
 class Content extends BaseController
 {

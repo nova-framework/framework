@@ -213,12 +213,23 @@ class Post extends Model
 
             if (isset(static::$postTypes[$type])) {
                 $className = static::$postTypes[$type];
-            } else if (! is_null($model = PostType::getTypeModel($type))) {
+            } else if (! is_null($model = PostType::getModel($type))) {
                 $className = $model;
             }
         }
 
         return new $className();
+    }
+
+    public function getTypeInstance()
+    {
+        if (isset($this->postType)) {
+            $type = $this->postType;
+        } else {
+            $type = $this->type ?: 'post';
+        }
+
+        return PostType::make($type);
     }
 
     /**
@@ -289,7 +300,8 @@ class Post extends Model
         {
             return ($taxonomy->taxonomy == 'post_tag') ? 'tag' : $taxonomy->taxonomy;
 
-        })->map(function ($group) {
+        })->map(function ($group)
+        {
             return $group->mapWithKeys(function ($item)
             {
                 return array($item->term->slug => $item->term->name);

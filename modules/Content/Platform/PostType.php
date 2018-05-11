@@ -127,7 +127,7 @@ class PostType
         return $this->description;
     }
 
-    public function public()
+    public function isPublic()
     {
         return $this->public;
     }

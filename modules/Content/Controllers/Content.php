@@ -86,7 +86,7 @@ class Content extends BaseController
 
         $postType = PostType::make($post->type);
 
-        if (! $postType->public() && Auth::guest()) {
+        if (! $postType->isPublic() && Auth::guest()) {
             App::abort(403);
         }
 

@@ -236,7 +236,7 @@ class Profiler
 
         // GET variables
         if (count($_GET) == 0) {
-            $output['get'] = __d('nova', 'No GET data exists');
+            $output['get'] = __d('shared', 'No GET data exists');
         } else {
             $output['get'] = array();
 
@@ -255,7 +255,7 @@ class Profiler
 
         // POST variables
         if (count($_POST) == 0) {
-            $output['post'] = __d('nova', 'No POST data exists');
+            $output['post'] = __d('shared', 'No POST data exists');
         } else {
             $output['post'] = array();
 
@@ -355,7 +355,7 @@ class Profiler
      */
     public function display($fetch = false)
     {
-        Console::log(__d('nova', 'Forensics - Profiler start gathering the information'));
+        Console::log(__d('shared', 'Forensics - Profiler start gathering the information'));
 
         // Gather the information.
         $this->gatherFileData();
@@ -363,7 +363,7 @@ class Profiler
         $this->gatherSQLQueryData();
         $this->gatherFrameworkData();
 
-        Console::logSpeed(__d('nova', 'Forensics - Profiler start displaying the information'));
+        Console::logSpeed(__d('shared', 'Forensics - Profiler start displaying the information'));
 
         $this->gatherConsoleData();
         $this->gatherSpeedData();

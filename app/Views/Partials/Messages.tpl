@@ -1,4 +1,4 @@
-@foreach (array('success', 'warning', 'danger') as $type)
+@foreach (array('info', 'success', 'warning', 'danger') as $type)
     @if (Session::has($type))
 <div class="alert alert-{{ $type }} alert-dismissable">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true"><span aria-hidden="true">&times;</span></button>

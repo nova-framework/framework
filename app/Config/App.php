@@ -1,11 +1,4 @@
 <?php
-/**
- * Application Configuration
- *
- * @author David Carr - dave@daveismyname.com
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 
 return array(
@@ -81,7 +74,7 @@ return array(
      */
     'middleware' => array(
         'Nova\Foundation\Http\Middleware\CheckForMaintenanceMode',
-        'Nova\Routing\Middleware\DispatchAssetFiles',
+        'Nova\Assets\Middleware\DispatchAssetFiles',
     ),
 
     /**
@@ -119,6 +112,7 @@ return array(
         'Nova\Auth\AuthServiceProvider',
         'Nova\Bus\BusServiceProvider',
         'Nova\Cache\CacheServiceProvider',
+        'Nova\Assets\AssetServiceProvider',
         'Nova\Routing\RoutingServiceProvider',
         'Nova\Cookie\CookieServiceProvider',
         'Nova\Packages\PackageServiceProvider',
@@ -177,7 +171,6 @@ return array(
     'aliases' => array(
         // The Support Classes.
         'Arr'           => 'Nova\Support\Arr',
-        'Assets'        => 'Nova\Support\Assets',
         'Str'           => 'Nova\Support\Str',
 
         // The Database Seeder.
@@ -185,6 +178,7 @@ return array(
 
         // The Support Facades.
         'App'           => 'Nova\Support\Facades\App',
+        'Asset'         => 'Nova\Support\Facades\Asset',
         'Auth'          => 'Nova\Support\Facades\Auth',
         'Broadcast'     => 'Nova\Support\Facades\Broadcast',
         'Bus'           => 'Nova\Support\Facades\Bus',

@@ -24,8 +24,9 @@ $languages = Config::get('languages');
     <?= isset($meta) ? $meta : ''; // Place to pass data ?>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <?php
-    Assets::css(array(
+<?php
+
+    echo Asset::build('css', array(
         // Bootstrap 3.3.7
         vendor_url('bower_components/bootstrap/dist/css/bootstrap.min.css', 'almasaeed2010/adminlte'),
         // Font Awesome
@@ -46,7 +47,7 @@ $languages = Config::get('languages');
         asset_url('css/style.css', 'themes/admin-lite'),
     ));
 
-    echo isset($css) ? $css : ''; // Place to pass data
+    echo Asset::render('css', 'header');
 ?>
 
 <style>
@@ -58,17 +59,6 @@ $languages = Config::get('languages');
   padding: 5px 10px;
 }
 </style>
-
-<?php
-    //Add Controller specific JS files.
-    Assets::js(array(
-        vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
-        asset_url('js/sprintf.min.js'),
-        asset_url('js/bootstrap-notify.min.js'),
-    ));
-
-    ?>
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -78,6 +68,16 @@ $languages = Config::get('languages');
 
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+<?php
+
+    echo Asset::build('js', array(
+        vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
+        asset_url('js/sprintf.min.js'),
+        asset_url('js/bootstrap-notify.min.js'),
+    ));
+
+    echo Asset::render('js', 'header');
+?>
 </head>
 
 <body class="hold-transition skin-<?= Config::get('app.color_scheme', 'blue'); ?> sidebar-mini">
@@ -205,7 +205,8 @@ $languages = Config::get('languages');
 
 <!-- REQUIRED JS SCRIPTS -->
 <?php
-Assets::js(array(
+
+echo Asset::build('js', array(
     // Bootstrap 3.3.5
     vendor_url('bower_components/bootstrap/dist/js/bootstrap.min.js', 'almasaeed2010/adminlte'),
     // SlimScroll
@@ -225,7 +226,7 @@ Assets::js(array(
     asset_url('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.js'),
 ));
 
-echo isset($js) ? $js : ''; // Place to pass data
+echo Asset::render('js', 'footer');
 
 ?>
 

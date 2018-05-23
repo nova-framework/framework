@@ -26,7 +26,7 @@ $languages = Config::get('languages');
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 <?php
 
-    echo Asset:fetch('css', array(
+    echo Asset::build('css', array(
         // Bootstrap 3.3.5
         vendor_url('bower_components/bootstrap/dist/css/bootstrap.min.css', 'almasaeed2010/adminlte'),
         // Bootstrap XL

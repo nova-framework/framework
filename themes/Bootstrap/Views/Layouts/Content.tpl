@@ -6,7 +6,7 @@
     <title>{{ $title or 'Page' }} - {{ Config::get('app.name') }}</title>
 @php
 
-echo Asset::build('css', array(
+echo Asset::render('css', array(
     vendor_url('dist/css/bootstrap.min.css', 'twbs/bootstrap'),
     vendor_url('dist/css/bootstrap-theme.min.css', 'twbs/bootstrap'),
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
@@ -17,14 +17,14 @@ echo Asset::build('css', array(
     asset_url('css/style.css'),
 ));
 
-echo Asset::render('css', 'header');
+echo Asset::position('header', 'css');
 
-echo Asset::build('js', array(
+echo Asset::render('js', array(
     asset_url('js/sprintf.min.js'),
     'https://code.jquery.com/jquery-1.12.4.min.js',
 ));
 
-echo Asset::render('js', 'header');
+echo Asset::position('header', 'js');
 
 @endphp
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -66,13 +66,13 @@ $(function () {
 
 @php
 
-echo Asset::build('js', array(
+echo Asset::render('js', array(
     vendor_url('dist/js/bootstrap.min.js', 'twbs/bootstrap'),
     'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js',
     'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/i18n/' .$code .'.js',
 ));
 
-echo Asset::render('js', 'footer');
+echo Asset::position('footer', 'js');
 
 @endphp
 

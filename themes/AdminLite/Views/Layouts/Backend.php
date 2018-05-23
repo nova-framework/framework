@@ -26,7 +26,7 @@ $languages = Config::get('languages');
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 <?php
 
-echo Asset::build('css', array(
+echo Asset::render('css', array(
     // Bootstrap 3.3.7
     vendor_url('bower_components/bootstrap/dist/css/bootstrap.min.css', 'almasaeed2010/adminlte'),
     // Font Awesome
@@ -47,7 +47,7 @@ echo Asset::build('css', array(
     asset_url('css/style.css', 'themes/admin-lite'),
 ));
 
-echo Asset::render('css', 'header');
+echo Asset::position('header', 'css');
 
 ?>
 
@@ -64,13 +64,13 @@ echo Asset::render('css', 'header');
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 <?php
 
-echo Asset::build('js', array(
+echo Asset::render('js', array(
     vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
     asset_url('js/sprintf.min.js'),
     asset_url('js/bootstrap-notify.min.js'),
 ));
 
-echo Asset::render('js', 'header');
+echo Asset::position('header', 'js');
 
 ?>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -207,7 +207,7 @@ echo Asset::render('js', 'header');
 <!-- REQUIRED JS SCRIPTS -->
 <?php
 
-echo Asset::build('js', array(
+echo Asset::render('js', array(
     // Bootstrap 3.3.5
     vendor_url('bower_components/bootstrap/dist/js/bootstrap.min.js', 'almasaeed2010/adminlte'),
     // SlimScroll
@@ -227,7 +227,7 @@ echo Asset::build('js', array(
     asset_url('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.js'),
 ));
 
-echo Asset::render('js', 'footer');
+echo Asset::position('footer', 'js');
 
 ?>
 

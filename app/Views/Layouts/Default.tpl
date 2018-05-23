@@ -6,7 +6,7 @@
     <title>{{ $title or 'Page' }} - {{ Config::get('app.name'); }}</title>
 @php
 
-echo Asset::build('css', array(
+echo Asset::render('css', array(
     'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
     'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css',
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
@@ -14,9 +14,9 @@ echo Asset::build('css', array(
     asset_url('css/style.css'),
 ));
 
-echo Asset::render('css', 'header');
+echo Asset::position('header', 'css');
 
-echo Asset::render('js', 'header');
+echo Asset::position('header', 'js');
 
 @endphp
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -42,12 +42,12 @@ echo Asset::render('js', 'header');
 
 @php
 
-echo Asset::build('js', array(
+echo Asset::render('js', array(
     'https://code.jquery.com/jquery-1.12.4.min.js',
     'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'
 ));
 
-echo Asset::render('js', 'footer');
+echo Asset::position('footer', 'js');
 
 @endphp
 

@@ -14,14 +14,14 @@ echo Assets::build('css', array(
     asset_url('css/style.css', 'themes/bootstrap'),
 ));
 
-echo Asset::render('css', 'header');
+echo Asset::position('header', 'css');
 
 echo Assets::build('js', array(
     asset_url('js/sprintf.min.js'),
     'https://code.jquery.com/jquery-1.12.4.min.js',
 ));
 
-echo Asset::render('js', 'header');
+echo Asset::position('header', 'js');
 
 @endphp
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -46,11 +46,11 @@ echo Asset::render('js', 'header');
 
 @php
 
-echo Asset::build('js', array(
+echo Asset::render('js', array(
     'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'
 ));
 
-echo Asset::render('js', 'footer');
+echo Asset::position('footer', 'js');
 
 @endphp
 

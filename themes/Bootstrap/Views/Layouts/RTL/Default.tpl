@@ -6,7 +6,7 @@
     <title>{{ $title or 'Page' }} - {{ Config::get('app.name') }}</title>
 @php
 
-echo Asset::build('css', array(
+echo Asset::render('css', array(
         vendor_url('dist/css/bootstrap.min.css', 'twbs/bootstrap'),
         vendor_url('dist/css/bootstrap-theme.min.css', 'twbs/bootstrap'),
         asset_url('css/bootstrap-rtl.min.css', 'themes/bootstrap'),
@@ -15,9 +15,9 @@ echo Asset::build('css', array(
         asset_url('css/style-rtl.css', 'themes/bootstrap'),
 ));
 
-echo Asset::render('css', 'header');
+echo Asset::position('header', 'css');
 
-echo Asset::render('js', 'header');
+echo Asset::position('header', 'js');
 
 @endphp
 </head>
@@ -41,12 +41,12 @@ echo Asset::render('js', 'header');
 
 @php
 
-echo Asset::build('js', array(
+echo Asset::render('js', array(
     'https://code.jquery.com/jquery-1.12.4.min.js',
     asset_url('js/bootstrap-rtl.min.js', 'themes/bootstrap'),
 ));
 
-echo Asset::render('js', 'footer');
+echo Asset::position('footer', 'js');
 
 @endphp
 

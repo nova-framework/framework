@@ -57,7 +57,7 @@ echo Assets::build('css', array(
     asset_url('css/style-rtl.css', 'themes/admin-lite'),
 ));
 
-echo Asset::render('css', 'header');
+echo Asset::position('header', 'css');
 
 ?>
 
@@ -78,7 +78,7 @@ echo Assets::build('js', array(
     vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
 ));
 
-echo Asset::render('js', 'header');
+echo Asset::position('header', 'js');
 
 ?>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -206,7 +206,7 @@ echo Asset::render('js', 'header');
 <!-- REQUIRED JS SCRIPTS -->
 <?php
 
-echo Asset::build('js', array(
+echo Asset::render('js', array(
     // Bootstrap 3.3.5
     asset_url('js/bootstrap-rtl.min.js', 'themes/bootstrap'),
     // AdminLTE App
@@ -215,7 +215,7 @@ echo Asset::build('js', array(
     vendor_url('bower_components/select2/dist/js/select2.full.min.js', 'almasaeed2010/adminlte')
 ));
 
-echo Asset::render('js', 'footer');
+echo Asset::position('footer', 'js');
 
 ?>
 

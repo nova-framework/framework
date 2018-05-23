@@ -21,8 +21,9 @@ $languages = Config::get('languages');
     <?= isset($meta) ? $meta : ''; // Place to pass data ?>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <?php
-    Assets::css(array(
+<?php
+
+    echo Asset::build('css', array(
         // Bootstrap 3.3.5
         vendor_url('bower_components/bootstrap/dist/css/bootstrap.min.css', 'almasaeed2010/adminlte'),
         // Bootstrap XL
@@ -41,13 +42,7 @@ $languages = Config::get('languages');
         asset_url('css/style.css', 'themes/admin-lite'),
     ));
 
-    echo isset($css) ? $css : ''; // Place to pass data
-
-    //Add Controller specific JS files.
-    Assets::js(array(
-            vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
-        )
-    );
+    echo Asset::render('css', 'header');
 
     ?>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -59,6 +54,14 @@ $languages = Config::get('languages');
 
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+<?php
+
+    echo Asset::build('js', array(
+        vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
+    ));
+
+    echo Asset::render('js', 'header');
+?>
 </head>
 <body class="hold-transition skin-<?= Config::get('app.color_scheme', 'blue'); ?> layout-top-nav">
 <div class="wrapper">
@@ -146,7 +149,8 @@ $languages = Config::get('languages');
 
 <!-- REQUIRED JS SCRIPTS -->
 <?php
-Assets::js(array(
+
+echo Asset::build('js', array(
     // Bootstrap 3.3.5
     vendor_url('bower_components/bootstrap/dist/js/bootstrap.min.js', 'almasaeed2010/adminlte'),
     // iCheck
@@ -155,7 +159,7 @@ Assets::js(array(
     vendor_url('dist/js/adminlte.min.js', 'almasaeed2010/adminlte'),
 ));
 
-echo isset($js) ? $js : ''; // Place to pass data
+echo Asset::render('js', 'footer');
 
 ?>
 

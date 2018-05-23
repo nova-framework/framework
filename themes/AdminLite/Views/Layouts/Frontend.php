@@ -26,26 +26,27 @@ $languages = Config::get('languages');
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 <?php
 
-    echo Asset::build('css', array(
-        // Bootstrap 3.3.5
-        vendor_url('bower_components/bootstrap/dist/css/bootstrap.min.css', 'almasaeed2010/adminlte'),
-        // Bootstrap XL
-        asset_url('css/bootstrap-xl-mod.min.css', 'themes/admin-lite'),
-        // Font Awesome
-        vendor_url('bower_components/font-awesome/css/font-awesome.min.css', 'almasaeed2010/adminlte'),
-        // Ionicons
-        vendor_url('bower_components/Ionicons/css/ionicons.min.css', 'almasaeed2010/adminlte'),
-        // iCheck
-        vendor_url('plugins/iCheck/square/blue.css', 'almasaeed2010/adminlte'),
-        // Theme style
-        vendor_url('dist/css/AdminLTE.css', 'almasaeed2010/adminlte'),
-        // AdminLTE Skins
-        vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
-        // Custom CSS
-        asset_url('css/style.css', 'themes/admin-lite'),
-    ));
+echo Asset::build('css', array(
+    // Bootstrap 3.3.5
+    vendor_url('bower_components/bootstrap/dist/css/bootstrap.min.css', 'almasaeed2010/adminlte'),
+    // Bootstrap XL
+    asset_url('css/bootstrap-xl-mod.min.css', 'themes/admin-lite'),
+    // Font Awesome
+    vendor_url('bower_components/font-awesome/css/font-awesome.min.css', 'almasaeed2010/adminlte'),
+    // Ionicons
+    vendor_url('bower_components/Ionicons/css/ionicons.min.css', 'almasaeed2010/adminlte'),
+    // iCheck
+    vendor_url('plugins/iCheck/square/blue.css', 'almasaeed2010/adminlte'),
+    // Theme style
+    vendor_url('dist/css/AdminLTE.css', 'almasaeed2010/adminlte'),
+    // AdminLTE Skins
+    vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
+    // Custom CSS
+    asset_url('css/style.css', 'themes/admin-lite'),
+));
 
-    echo Asset::render('css', 'header');
+echo Asset::render('css', 'header');
+
 ?>
 
 <style>
@@ -57,25 +58,25 @@ $languages = Config::get('languages');
   padding: 5px 10px;
 }
 </style>
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+<?php
+
+echo Asset::build('js', array(
+    vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
+    asset_url('js/sprintf.min.js'),
+    asset_url('js/bootstrap-notify.min.js'),
+));
+
+echo Asset::render('js', 'header');
+
+?>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-
-    <!-- Google Font -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-<?php
-
-    echo Asset::build('js', array(
-        vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
-        asset_url('js/sprintf.min.js'),
-        asset_url('js/bootstrap-notify.min.js'),
-    ));
-
-    echo Asset::render('js', 'header');
-?>
 </head>
 <body class="hold-transition skin-<?= Config::get('app.color_scheme', 'blue'); ?> layout-top-nav">
 <div class="wrapper">

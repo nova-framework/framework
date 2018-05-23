@@ -54,18 +54,18 @@ echo Assets::build('css', array(
     asset_url('css/style-rtl.css', 'themes/admin-lite'),
 ));
 
-echo Asset::render('css', 'header');
+echo Asset::position('header', 'css');
 
 ?>
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 <?php
 
-echo Asset::build('js', array(
+echo Asset::render('js', array(
     vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
 ));
 
-echo Asset::render('js', 'header');
+echo Asset::position('header', 'js');
 
 ?>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

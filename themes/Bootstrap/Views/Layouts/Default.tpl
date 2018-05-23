@@ -27,8 +27,8 @@ echo Asset::render('css', 'header');
 @php
 
 echo Asset::build('js', array(
-        asset_url('js/sprintf.min.js'),
-        'https://code.jquery.com/jquery-1.12.4.min.js',
+    asset_url('js/sprintf.min.js'),
+    'https://code.jquery.com/jquery-1.12.4.min.js',
 ));
 
 echo Asset::render('js', 'header');

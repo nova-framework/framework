@@ -36,27 +36,29 @@ $langMenuLinks = ob_get_clean();
     <?= isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone ?>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <?php
-    Assets::css(array(
-        // Bootstrap 3.3.7
-        vendor_url('bower_components/bootstrap/dist/css/bootstrap.min.css', 'almasaeed2010/adminlte'),
-        // Bootstrap RTL 3.3.4
-        asset_url('css/bootstrap-rtl.min.css', 'themes/bootstrap'),
-        // Font Awesome
-        vendor_url('bower_components/font-awesome/css/font-awesome.min.css', 'almasaeed2010/adminlte'),
-        // Ionicons
-        vendor_url('bower_components/Ionicons/css/ionicons.min.css', 'almasaeed2010/adminlte'),
-        // Select2
-        vendor_url('bower_components/select2/dist/css/select2.min.css', 'almasaeed2010/adminlte'),
-        // Theme style
-        asset_url('css/AdminLTE.rtl.min.css', 'themes/admin-lite'),
-        // AdminLTE Skins
-        vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
-        // Custom CSS
-        asset_url('css/style-rtl.css', 'themes/admin-lite'),
-    ));
+<?php
 
-    echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
+echo Assets::build('css', array(
+    // Bootstrap 3.3.7
+    vendor_url('bower_components/bootstrap/dist/css/bootstrap.min.css', 'almasaeed2010/adminlte'),
+    // Bootstrap RTL 3.3.4
+    asset_url('css/bootstrap-rtl.min.css', 'themes/bootstrap'),
+    // Font Awesome
+    vendor_url('bower_components/font-awesome/css/font-awesome.min.css', 'almasaeed2010/adminlte'),
+    // Ionicons
+    vendor_url('bower_components/Ionicons/css/ionicons.min.css', 'almasaeed2010/adminlte'),
+    // Select2
+    vendor_url('bower_components/select2/dist/css/select2.min.css', 'almasaeed2010/adminlte'),
+    // Theme style
+    asset_url('css/AdminLTE.rtl.min.css', 'themes/admin-lite'),
+    // AdminLTE Skins
+    vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
+    // Custom CSS
+    asset_url('css/style-rtl.css', 'themes/admin-lite'),
+));
+
+echo Asset::render('css', 'header');
+
 ?>
 
 <style>
@@ -68,24 +70,23 @@ $langMenuLinks = ob_get_clean();
   padding: 5px 10px;
 }
 </style>
-
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 <?php
-    //Add Controller specific JS files.
-    Assets::js(array(
-        vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
-    ));
 
-    ?>
+echo Assets::build('js', array(
+    vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
+));
 
+echo Asset::render('js', 'header');
+
+?>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-
-    <!-- Google Font -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 
 <body class="hold-transition skin-<?= Config::get('app.color_scheme', 'blue'); ?> sidebar-mini">
@@ -204,7 +205,8 @@ $langMenuLinks = ob_get_clean();
 
 <!-- REQUIRED JS SCRIPTS -->
 <?php
-Assets::js(array(
+
+echo Asset::build('js', array(
     // Bootstrap 3.3.5
     asset_url('js/bootstrap-rtl.min.js', 'themes/bootstrap'),
     // AdminLTE App
@@ -213,9 +215,8 @@ Assets::js(array(
     vendor_url('bower_components/select2/dist/js/select2.full.min.js', 'almasaeed2010/adminlte')
 ));
 
-echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone
+echo Asset::render('js', 'footer');
 
-echo isset($footer) ? $footer : ''; // Place to pass data / plugable hook zone
 ?>
 
 <script>

@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title or 'Page' }} - {{ Config::get('app.name') }}</title>
-
 @php
 
 echo Asset::build('css', array(
@@ -17,13 +16,24 @@ echo Asset::build('css', array(
 
 echo Asset::render('css', 'header');
 
+@endphp
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+@php
+
 echo Asset::build('js', array(
-        asset_url('js/sprintf.min.js'),
-        'https://code.jquery.com/jquery-1.12.4.min.js',
+    asset_url('js/sprintf.min.js'),
+    'https://code.jquery.com/jquery-1.12.4.min.js',
 ));
 
 echo Asset::render('js', 'header');
 
+@endphp
 
 </head>
 <body>

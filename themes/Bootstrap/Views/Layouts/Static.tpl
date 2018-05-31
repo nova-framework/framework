@@ -6,7 +6,7 @@
     <title>{{ $title or 'Page' }} - {{ Config::get('app.name') }}</title>
 @php
 
-echo Assets::build('css', array(
+echo Assets::render('css', array(
     'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
     'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css',
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',

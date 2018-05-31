@@ -27,7 +27,7 @@ return array(
         ),
         'pgsql' => array(
             'driver'   => 'pgsql',
-            'host'     => 'localhost',
+            'hostname' => 'localhost',
             'database' => 'nova',
             'username' => 'nova',
             'password' => 'password',

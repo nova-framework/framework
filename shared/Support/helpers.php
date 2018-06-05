@@ -83,3 +83,28 @@ if (! function_exists('human_size'))
         return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
     }
 }
+
+if (! function_exists('sanitize'))
+{
+    function sanitize($data, $filter)
+    {
+        switch ($filter) {
+            case 'string':
+                return filter_var($data, FILTER_SANITIZE_STRING);
+
+            case 'email':
+                return filter_var($data, FILTER_SANITIZE_EMAIL);
+
+            case 'integer':
+                return filter_var($data, FILTER_SANITIZE_NUMBER_INT);
+
+            case 'float':
+                return filter_var($data, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION | FILTER_FLAG_ALLOW_THOUSAND);
+
+            case 'url':
+                return filter_var($data, FILTER_SANITIZE_URL);
+        }
+
+        throw new InvalidArgumentException('Filter sanitize unknown.');
+    }
+}

@@ -47,8 +47,7 @@
     },
     "autoload": {
         "classmap": [
-            "app/Database/Migrations",
-            "app/Database/Seeds"
+            "app/Database/Migrations"
         ],
         "psr-4": {
             "App\\": "app/",

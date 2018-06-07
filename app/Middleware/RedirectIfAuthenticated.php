@@ -24,7 +24,7 @@ class RedirectIfAuthenticated
     public function handle(Request $request, Closure $next, $guard = null)
     {
         if (is_null($guard)) {
-            $guard = Config::get('auth.default', 'web');
+            $guard = Config::get('auth.defaults.guard', 'web');
         }
 
         if (Auth::guard($guard)->guest()) {

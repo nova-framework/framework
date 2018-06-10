@@ -27,6 +27,7 @@ class CreateContactFieldItemsTable extends Migration
             $table->integer('order')->default(0)->nullable();
             $table->string('rules', 255)->nullable();
             $table->text('options')->nullable();
+            $table->tinyInteger('visible')->default(1);
 
             $table->integer('created_by')->unsigned()->nullable();
             $table->integer('updated_by')->unsigned()->nullable();

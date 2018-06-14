@@ -21,7 +21,7 @@ class MainMenu extends Widget
     {
         $siteUrl = Request::url();
 
-        $items = Cache::remember('content.menus.main_menu', 1440, function ()
+        $items = Cache::remember('content.menus.main-menu', 1440, function ()
         {
             $menu = Menu::slug('main-menu')->first();
 

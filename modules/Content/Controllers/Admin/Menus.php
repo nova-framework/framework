@@ -172,15 +172,17 @@ class Menus extends BaseController
 
             $post->guid = site_url('content/' .$postId);
 
-            // Setup the Metadata.
-            $post->meta->menu_item_type             = $type;
-            $post->meta->menu_item_menu_item_parent = $instance->parent_id;
-            $post->meta->menu_item_object           = $type;
-            $post->meta->menu_item_object_id        = $instance->id;
-            $post->meta->menu_item_target           = null;
-            $post->meta->menu_item_url              = null;
-
             $post->save();
+
+            // Handle the Metadata.
+            $post->saveMeta(array(
+                'menu_item_type'             => $type,
+                'menu_item_menu_item_parent' => $instance->parent_id,
+                'menu_item_object'           => $type,
+                'menu_item_object_id'        => $instance->id,
+                'menu_item_target'           => null,
+                'menu_item_url'              => null,
+            ));
 
             $post->taxonomies()->attach($taxonomy);
 
@@ -222,15 +224,18 @@ class Menus extends BaseController
 
             $post->guid = site_url('content/' .$postId);
 
-            // Setup the Metadata.
-            $post->meta->menu_item_type             = 'taxonomy';
-            $post->meta->menu_item_menu_item_parent = $instance->parent_id;
-            $post->meta->menu_item_object           = 'category';
-            $post->meta->menu_item_object_id        = $instance->id;
-            $post->meta->menu_item_target           = null;
-            $post->meta->menu_item_url              = null;
-
             $post->save();
+
+            // Handle the Metadata.
+            $post->saveMeta(array(
+                // Setup the Metadata.
+                'menu_item_type'             => 'taxonomy',
+                'menu_item_menu_item_parent' => $instance->parent_id,
+                'menu_item_object'           => 'category',
+                'menu_item_object_id'        => $instance->id,
+                'menu_item_target'           => null,
+                'menu_item_url'              => null,
+            ));
 
             $post->taxonomies()->attach($taxonomy);
 
@@ -277,15 +282,18 @@ class Menus extends BaseController
 
         $post->guid = site_url('content/' .$post->id);
 
-        // Setup the Metadata.
-        $post->meta->menu_item_type             = 'custom';
-        $post->meta->menu_item_menu_item_parent = 0;
-        $post->meta->menu_item_object           = 'custom';
-        $post->meta->menu_item_object_id        = $post->id;
-        $post->meta->menu_item_target           = null;
-        $post->meta->menu_item_url              = $url;
-
         $post->save();
+
+        // Handle the Metadata.
+        $post->saveMeta(array(
+            // Setup the Metadata.
+            'menu_item_type'             => 'custom',
+            'menu_item_menu_item_parent' => 0,
+            'menu_item_object'           => 'custom',
+            'menu_item_object_id'        => $post->id,
+            'menu_item_target'           => null,
+            'menu_item_url'              => $url,
+        ));
 
         $post->taxonomies()->attach($taxonomy);
 
@@ -320,7 +328,7 @@ class Menus extends BaseController
         $item->save();
 
         // Invalidate the cached menu data.
-        Cache::forget('content.menus.main_menu');
+        Cache::forget('content.menus.' .$taxonomy->slug);
 
         return Redirect::back()->with('success', __d('content', 'The Menu Item was successfully updated.'));
     }

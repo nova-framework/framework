@@ -28,8 +28,7 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     Route::get('users/search', 'Users@search');
 
     // The Users CRUD.
-    Route::get('users',             array('middleware' => 'paginate', 'uses' => 'Users@index'));
-    Route::get('users/page/{page}', array('middleware' => 'paginate', 'uses' => 'Users@index'))->where('page', '[0-9]+');
+    Route::paginate('users', 'Users@index');
 
     Route::get( 'users/create',       'Users@create');
     Route::post('users',              'Users@store');

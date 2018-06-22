@@ -24,9 +24,14 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        parent::boot($router);
+        $router->macro('paginate', function ($uri, $action, $pageName = 'page') use ($router)
+        {
+            return $router->get($uri .'/{pageQuery?}', $action)
+                ->middleware('App\Middleware\SetupRoutePagination')
+                ->where('pageQuery', $pageName .'/[0-9]+');
+        });
 
-        //
+        parent::boot($router);
     }
 
     /**

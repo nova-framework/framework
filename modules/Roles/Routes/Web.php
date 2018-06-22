@@ -15,8 +15,7 @@
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin'), function ()
 {
-    Route::get('roles',             array('middleware' => 'paginate', 'uses' => 'Roles@index'));
-    Route::get('roles/page/{page}', array('middleware' => 'paginate', 'uses' => 'Roles@index'))->where('page', '[0-9]+');
+    Route::paginate('roles', 'Roles@index');
 
     Route::get( 'roles/create',       'Roles@create');
     Route::post('roles',              'Roles@store');

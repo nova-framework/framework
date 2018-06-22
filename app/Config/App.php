@@ -103,7 +103,6 @@ return array(
         'auth'     => 'Nova\Auth\Middleware\Authenticate',
         'guest'    => 'App\Middleware\RedirectIfAuthenticated',
         'throttle' => 'Nova\Routing\Middleware\ThrottleRequests',
-        'paginate' => 'App\Middleware\SetupRoutePagination',
     ),
 
     /**

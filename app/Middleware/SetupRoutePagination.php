@@ -47,39 +47,35 @@ class SetupRoutePagination
 
         Paginator::currentPathResolver(function ($pageName = 'page') use ($route)
         {
-            $path = $route->uri();
-
-            if (preg_match('#^(.*)/' .$pageName .'/\{page\}$#s', $path, $matches) === 1) {
-                $path = $matches[1];
-            }
-
             $parameters = $route->parameters();
 
-            $path = preg_replace_callback('#\{(.*?)\??\}#', function ($matches) use ($parameters)
+            $path = preg_replace_callback('#/\{(.*?)\??\}#', function ($matches) use ($parameters)
             {
-                return Arr::get($parameters, $matches[1], $matches[0]);
+                $value = Arr::get($parameters, $name = $matches[1], trim($matches[0], '/'));
 
-            }, $path);
+                return ($name !== 'pageQuery') ? '/' .$value : '';
+
+            }, $route->uri());
 
             return $this->app['url']->to($path);
         });
 
         Paginator::currentPageResolver(function ($pageName = 'page') use ($route)
         {
-            return $route->parameter($pageName, 1);
-        });
-
-        Paginator::pageUrlResolver(function ($page, array $query, $pageName = 'page', $path = '/')
-        {
-            $path .= '/' .$pageName .'/' .$page;
-
-            if (empty($query)) {
-                return $path;
+            if (! empty($parameter = $route->parameter('pageQuery'))) {
+                return (int) str_replace($pageName .'/', '', $parameter);
             }
 
-            $separator = Str::contains($path, '?') ? '&' : '?';
+            return 1;
+        });
 
-            return $path .$separator .http_build_query($query, '', '&');
+        Paginator::pageUrlResolver(function ($page, array $query, $path, $pageName = 'page')
+        {
+            if ($page > 1) {
+                $path .= '/' .$pageName .'/' .$page;
+            }
+
+            return array($path, $query);
         });
 
         return $next($request);

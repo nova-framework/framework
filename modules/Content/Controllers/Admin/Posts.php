@@ -22,8 +22,8 @@ use Modules\Content\Models\Post;
 use Modules\Content\Models\Tag;
 use Modules\Content\Models\Term;
 use Modules\Content\Models\Taxonomy;
-//use Modules\Content\Support\PostType;
 use Modules\Content\Support\Facades\PostType;
+use Modules\Content\Support\Facades\TaxonomyType;
 use Modules\Platform\Controllers\Admin\BaseController;
 use Modules\Users\Models\User;
 
@@ -35,13 +35,14 @@ class Posts extends BaseController
 
     public function taxonomy(Request $request, $type, $slug)
     {
+        $taxonomyType = TaxonomyType::make($type);
+
+        //
+        $name = $taxonomyType->label('name');
+
         $statuses = Config::get('content::statuses', array());
 
-        $name = Config::get('content::labels.' .$type .'.name', Str::title($type));
-
-        // Get the taxonomy.
-        $type = ($type == 'tag') ? 'post_tag' : 'category';
-
+        // Get the Taxonomy instance.
         $taxonomy = Taxonomy::where('taxonomy', $type)->slug($slug)->first();
 
         //
@@ -80,7 +81,7 @@ class Posts extends BaseController
             ->paginate(15);
 
         return $this->createView()
-            ->shares('title', $postType->label('items'))
+            ->shares('title', $postType->label('title'))
             ->with(compact('type', 'name', 'statuses', 'posts', 'postType'));
     }
 
@@ -209,7 +210,7 @@ class Posts extends BaseController
         $categorySelect = $this->generateCategorySelect($ids);
 
         // The Tags.
-        $tags = $post->taxonomies()->where('taxonomy', 'post_tag')->get();
+        $tags = $post->taxonomies()->where('taxonomy', 'tag')->get();
 
         $tags = $tags->map(function ($tag)
         {
@@ -528,7 +529,7 @@ class Posts extends BaseController
         }
 
         // Get the actual Tag instances associated to this Post.
-        $items = $post->taxonomies()->where('taxonomy', 'post_tag')->get();
+        $items = $post->taxonomies()->where('taxonomy', 'tag')->get();
 
         // Get the names of the already associated tags.
         $existentTags = $items->map(function ($item)
@@ -555,7 +556,7 @@ class Posts extends BaseController
                 continue;
             }
 
-            $tag = Taxonomy::where('taxonomy', 'post_tag')->whereHas('term', function ($query) use ($name)
+            $tag = Taxonomy::where('taxonomy', 'tag')->whereHas('term', function ($query) use ($name)
             {
                 $query->where('name', $name);
 
@@ -567,7 +568,7 @@ class Posts extends BaseController
                 continue;
             }
 
-            $slug = Term::uniqueSlug($name, 'post_tag');
+            $slug = Term::uniqueSlug($name, 'tag');
 
             $term = Term::create(array(
                 'name'   => $name,
@@ -576,7 +577,7 @@ class Posts extends BaseController
 
             $tag = Taxonomy::create(array(
                 'term_id'     => $term->id,
-                'taxonomy'    => 'post_tag',
+                'taxonomy'    => 'tag',
                 'description' => '',
             ));
 

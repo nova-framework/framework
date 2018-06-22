@@ -18,70 +18,63 @@ Route::get( 'login',  array('middleware' => 'guest', 'uses' => 'Authorize@login'
 Route::post('login',  array('middleware' => 'guest', 'uses' => 'Authorize@postLogin'));
 Route::post('logout', array('middleware' => 'auth',  'uses' => 'Authorize@logout'));
 
-// The One-Time Authentication.
-Route::get( 'authorize', array('middleware' => 'guest', 'uses' => 'Authorize@tokenRequest'));
-Route::post('authorize', array('middleware' => 'guest', 'uses' => 'Authorize@tokenProcess'));
+// The Public Area Routes.
+Route::group(array('middleware' => 'guest'), function ()
+{
+    // The One-Time Authentication.
+    Route::get( 'authorize', 'Authorize@tokenRequest');
+    Route::post('authorize', 'Authorize@tokenProcess');
 
-Route::get('authorize/{hash}/{time}/{token}', array(
-    'middleware' => 'guest',
+    Route::get('authorize/{hash}/{time}/{token}', 'Authorize@tokenLogin')->where('time', '\d+');
 
-    'uses'  => 'Authorize@tokenLogin',
-    'where' => array(
-        'time' => '(\d+)'
-    ),
-));
+    // The Password Remind.
+    Route::get( 'password/remind', 'Reminders@remind');
+    Route::post('password/remind', 'Reminders@postRemind');
 
-// The Password Remind.
-Route::get( 'password/remind', array('middleware' => 'guest', 'uses' => 'Reminders@remind'));
-Route::post('password/remind', array('middleware' => 'guest', 'uses' => 'Reminders@postRemind'));
+    // The Password Reset.
+    Route::post('password/reset', 'Reminders@postReset');
 
-// The Password Reset.
-Route::post('password/reset', array('middleware' => 'guest', 'uses' => 'Reminders@postReset'));
+    Route::get('password/reset/{hash}/{time}/{token}', 'Reminders@reset')->where('time', '\d+');
 
-Route::get('password/reset/{hash}/{time}/{token}', array(
-    'middleware' => 'guest',
+    // The Account Registration.
+    Route::get( 'register',        'Registrar@create');
+    Route::post('register',        'Registrar@store');
+    Route::get( 'register/status', 'Registrar@status');
+    Route::get( 'register/verify', 'Registrar@verify');
+    Route::post('register/verify', 'Registrar@verifyPost');
 
-    'uses'  => 'Reminders@reset',
-    'where' => array(
-        'time' => '(\d+)'
-    ),
-));
+    Route::get('register/{hash}/{token?}', 'Registrar@tokenVerify');
+});
 
-// The Account Registration.
-Route::get( 'register',        array('middleware' => 'guest', 'uses' => 'Registrar@create'));
-Route::post('register',        array('middleware' => 'guest', 'uses' => 'Registrar@store'));
-Route::get( 'register/status', array('middleware' => 'guest', 'uses' => 'Registrar@status'));
-Route::get( 'register/verify', array('middleware' => 'guest', 'uses' => 'Registrar@verify'));
-Route::post('register/verify', array('middleware' => 'guest', 'uses' => 'Registrar@verifyPost'));
+// The Frontend Area Routes.
+Route::group(array('middleware' => 'auth'), function ()
+{
+    // The User's Dashboard.
+    Route::get('dashboard', 'Dashboard@index');
 
-Route::get('register/{hash}/{token?}', array('middleware' => 'guest', 'uses' => 'Registrar@tokenVerify'));
+    Route::get('dashboard/notify', 'Dashboard@notify');
 
-// The User's Dashboard.
-Route::get('dashboard', array('middleware' => 'auth', 'uses' => 'Dashboard@index'));
+    // The User's Account.
+    Route::get( 'account',         'Account@index');
+    Route::post('account',         'Account@update');
+    Route::post('account/picture', 'Account@picture');
 
-Route::get('dashboard/notify', array('middleware' => 'auth', 'uses' => 'Dashboard@notify'));
+    // The User's Notifications.
+    Route::get( 'notifications', 'Notifications@index');
+    Route::post('notifications', 'Notifications@update');
 
-// The User's Account.
-Route::get( 'account',         array('middleware' => 'auth', 'uses' => 'Account@index'));
-Route::post('account',         array('middleware' => 'auth', 'uses' => 'Account@update'));
-Route::post('account/picture', array('middleware' => 'auth', 'uses' => 'Account@picture'));
-
-// The User's Notifications.
-Route::get( 'notifications', array('middleware' => 'auth', 'uses' => 'Notifications@index'));
-Route::post('notifications', array('middleware' => 'auth', 'uses' => 'Notifications@update'));
-
-// The Heartbeat
-Route::post('heartbeat', array('middleware' => 'auth', 'uses' => 'Heartbeat@update'));
-
+    // The Heartbeat
+    Route::post('heartbeat', 'Heartbeat@update');
+});
 
 // The Adminstration Routes.
-Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
+Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin'), function ()
 {
     // The Administration Dashboard.
-    Route::get('/',         array('middleware' => 'auth', 'uses' => 'Dashboard@index'));
-    Route::get('dashboard', array('middleware' => 'auth', 'uses' => 'Dashboard@index'));
+    Route::get('/',         'Dashboard@index');
+    Route::get('dashboard', 'Dashboard@index');
 
     // The Site Settings.
-    Route::get( 'settings', array('middleware' => 'auth', 'uses' => 'Settings@index'));
-    Route::post('settings', array('middleware' => 'auth', 'uses' => 'Settings@store'));
+    Route::get( 'settings', 'Settings@index');
+    Route::post('settings', 'Settings@store');
 });

@@ -298,7 +298,7 @@ class Post extends Model
     {
         return $this->taxonomies->groupBy(function ($taxonomy)
         {
-            return ($taxonomy->taxonomy == 'post_tag') ? 'tag' : $taxonomy->taxonomy;
+            return $taxonomy->taxonomy;
 
         })->map(function ($group)
         {
@@ -393,15 +393,15 @@ class Post extends Model
 
     public static function uniqueName($name, $id = null)
     {
-        $slug = Str::slug($name);
+        $query = static::query();
 
         if (! is_null($id)) {
-            $names = static::where('id', '!=', (int) $id)->lists('name');
-        } else {
-            $names = static::lists('name');
+            $query->where('id', '!=', (int) $id);
         }
 
-        if (! in_array($slug, $names)) {
+        $names = $query->lists('name');
+
+        if (! in_array($slug = Str::slug($name), $names)) {
             // The slug is unique, then no further processing is required.
             return $slug;
         }
@@ -417,9 +417,7 @@ class Post extends Model
         }
 
         do {
-            $name = $slug;
-
-            if ($count > 0) $name .= '-' .$count;
+            $name = ($count === 0) ? $slug : $slug .'-' .$count;
 
             $count++;
         }

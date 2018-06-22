@@ -53,7 +53,7 @@
     </div>
 </div>
 
-<input type="hidden" name="taxonomy" value="<?= ($type == 'tag') ? 'post_tag' : $type; ?>" />
+<input type="hidden" name="taxonomy" value="<?= $type; ?>" />
 <input type="hidden" name="_token"   value="<?= csrf_token(); ?>" />
 
 </form>
@@ -199,7 +199,7 @@ $(function () {
             </div>
             <div class="modal-footer">
                 <input type="hidden" name="id" id="edit-record-id" value="0" />
-                <input type="hidden" name="taxonomy" value="<?= ($type == 'tag') ? 'post_tag' : $type; ?>" />
+                <input type="hidden" name="taxonomy" value="<?= $type; ?>" />
                 <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
                 <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('content', 'Cancel'); ?></button>
                 <input type="submit" name="button" class="btn btn btn-success pull-right col-md-3" value="<?= __d('content', 'Save'); ?>">

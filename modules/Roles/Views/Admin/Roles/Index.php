@@ -43,7 +43,7 @@
                 <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'Users'); ?></th>
                 <th style="text-align: right; vertical-align: middle;"><?= __d('roles', 'Operations'); ?></th>
             </tr>
-            <?php foreach ($roles->getItems() as $role) { ?>
+            <?php foreach ($roles->items() as $role) { ?>
             <tr>
                 <td style="text-align: center; vertical-align: middle;" width="5%"><?= $role->id; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="17%"><?= $role->name; ?></td>

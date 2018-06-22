@@ -44,16 +44,6 @@ class TaxonomiesTableSeeder extends Seeder
         $taxonomy = Taxonomy::create(array(
             'id'          => 3,
             'term_id'     => 3,
-            'taxonomy'    => 'post_tag',
-            'description' => '',
-            'parent_id'   => 0,
-            'count'       => 0,
-        ));
-
-        //
-        $tag = Tag::create(array(
-            'id'          => 4,
-            'term_id'     => 4,
             'taxonomy'    => 'tag',
             'description' => '',
             'parent_id'   => 0,

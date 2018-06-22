@@ -103,6 +103,7 @@ return array(
         'auth'     => 'Nova\Auth\Middleware\Authenticate',
         'guest'    => 'App\Middleware\RedirectIfAuthenticated',
         'throttle' => 'Nova\Routing\Middleware\ThrottleRequests',
+        'paginate' => 'App\Middleware\SetupRoutePagination',
     ),
 
     /**
@@ -196,7 +197,6 @@ return array(
         'Language'      => 'Nova\Support\Facades\Language',
         'Mailer'        => 'Nova\Support\Facades\Mailer',
         'Notification'  => 'Nova\Support\Facades\Notification',
-        'Paginator'     => 'Nova\Support\Facades\Paginator',
         'Queue'         => 'Nova\Support\Facades\Queue',
         'Redirect'      => 'Nova\Support\Facades\Redirect',
         'Redis'         => 'Nova\Support\Facades\Redis',

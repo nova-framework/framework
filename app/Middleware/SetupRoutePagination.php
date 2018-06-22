@@ -73,13 +73,13 @@ class SetupRoutePagination
         {
             $path .= '/' .$pageName .'/' .$page;
 
-            if (count($query) > 0) {
-                $path .= Str::contains($path, '?') ? '&' : '?';
-
-                $path .= http_build_query($query, '', '&');
+            if (empty($query)) {
+                return $path;
             }
 
-            return $path;
+            $separator = Str::contains($path, '?') ? '&' : '?';
+
+            return $path .$separator .http_build_query($query, '', '&');
         });
 
         return $next($request);

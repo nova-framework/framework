@@ -8,6 +8,7 @@ use Nova\Pagination\Paginator;
 use Nova\Routing\Route;
 use Nova\Routing\UrlGenerator;
 use Nova\Support\Arr;
+use Nova\Support\Str;
 
 use Closure;
 
@@ -44,9 +45,6 @@ class SetupRoutePagination
     {
         $route = $request->route();
 
-        // Setup the pagination for the route mode.
-        Paginator::enableRouteMode();
-
         Paginator::currentPathResolver(function ($pageName = 'page') use ($route)
         {
             $path = $route->uri();
@@ -69,6 +67,19 @@ class SetupRoutePagination
         Paginator::currentPageResolver(function ($pageName = 'page') use ($route)
         {
             return $route->parameter($pageName, 1);
+        });
+
+        Paginator::pageUrlResolver(function ($page, array $query, $pageName = 'page', $path = '/')
+        {
+            $path .= '/' .$pageName .'/' .$page;
+
+            if (count($query) > 0) {
+                $path .= Str::contains($path, '?') ? '&' : '?';
+
+                $path .= http_build_query($query, '', '&');
+            }
+
+            return $path;
         });
 
         return $next($request);

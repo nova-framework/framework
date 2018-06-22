@@ -62,8 +62,8 @@ class SetupRoutePagination
 
         Paginator::currentPageResolver(function ($pageName = 'page') use ($route)
         {
-            if (! empty($parameter = $route->parameter('pageQuery'))) {
-                return (int) str_replace($pageName .'/', '', $parameter);
+            if (! empty($value = $route->parameter('pageQuery'))) {
+                return (int) str_replace($pageName .'/', '', $value);
             }
 
             return 1;

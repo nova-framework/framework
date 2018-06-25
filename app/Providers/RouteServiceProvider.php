@@ -8,6 +8,7 @@ use Nova\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
 {
+
     /**
      * This namespace is applied to the controller routes in your routes file.
      *
@@ -54,5 +55,4 @@ class RouteServiceProvider extends ServiceProvider
             require $path .DS .'Web.php';
         });
     }
-
 }

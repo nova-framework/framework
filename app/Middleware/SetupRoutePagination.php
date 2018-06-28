@@ -75,7 +75,7 @@ class SetupRoutePagination
                 $path .= '/' .$pageName .'/' .$page;
             }
 
-            return array($path, $query);
+            return Paginator::buildPageUrl($path, $query);
         });
 
         return $next($request);

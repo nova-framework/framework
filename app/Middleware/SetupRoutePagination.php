@@ -45,19 +45,11 @@ class SetupRoutePagination
     {
         $route = $request->route();
 
-        $urlGenerator = $this->app['url'];
-
-        Paginator::currentPathResolver(function ($pageName = 'page') use ($route, $urlGenerator)
+        Paginator::currentPathResolver(function ($pageName = 'page') use ($route)
         {
-            $parameters = $route->parameters();
+            $urlGenerator = $this->app['url'];
 
-            $uri = preg_replace_callback('#/\{(.*?)\??\}#', function ($matches) use ($parameters)
-            {
-                $value = Arr::get($parameters, $name = $matches[1], trim($matches[0], '/'));
-
-                return ($name !== 'pageQuery') ? '/' .$value : '';
-
-            }, $route->uri());
+            $uri = $this->resolveRoutePath($route);
 
             return $urlGenerator->to($uri);
         });
@@ -81,9 +73,46 @@ class SetupRoutePagination
                 $path = trim($path, '/') .'/' .$pageName .'/' .$page;
             }
 
-            return Paginator::buildPageUrl($path, $query);
+            return $this->buildPageUrl($path, $query);
         });
 
         return $next($request);
+    }
+
+    /**
+     * Resolve a Route path, replacing the parameters within pattern.
+     *
+     * @param  \Nova\Routing\Reute  $route
+     * @return string
+     */
+    protected function resolveRoutePath(Route $route)
+    {
+        $parameters = $route->parameters();
+
+        return preg_replace_callback('#/\{(.*?)\??\}#', function ($matches) use ($parameters)
+        {
+            $value = Arr::get($parameters, $name = $matches[1], trim($matches[0], '/'));
+
+            return ($name !== 'pageQuery') ? '/' .$value : '';
+
+        }, $route->uri());
+    }
+
+    /**
+     * Create a qualified page URL from the given path and query.
+     *
+     * @param  string  $path
+     * @param  array  $query
+     * @return string
+     */
+    protected function buildPageUrl($path, array $query)
+    {
+        if (empty($query)) {
+            return $path;
+        }
+
+        $separator = Str::contains($path, '?') ? '&' : '?';
+
+        return $path .$separator .http_build_query($query, '', '&');
     }
 }

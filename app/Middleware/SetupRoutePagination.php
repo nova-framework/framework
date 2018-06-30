@@ -45,11 +45,13 @@ class SetupRoutePagination
     {
         $route = $request->route();
 
-        Paginator::currentPathResolver(function ($pageName = 'page') use ($route)
+        $urlGenerator = $this->app['url'];
+
+        Paginator::currentPathResolver(function ($pageName = 'page') use ($route, $urlGenerator)
         {
             $parameters = $route->parameters();
 
-            $path = preg_replace_callback('#/\{(.*?)\??\}#', function ($matches) use ($parameters)
+            $uri = preg_replace_callback('#/\{(.*?)\??\}#', function ($matches) use ($parameters)
             {
                 $value = Arr::get($parameters, $name = $matches[1], trim($matches[0], '/'));
 
@@ -57,7 +59,7 @@ class SetupRoutePagination
 
             }, $route->uri());
 
-            return $this->app['url']->to($path);
+            return $urlGenerator->to($uri);
         });
 
         Paginator::currentPageResolver(function ($pageName = 'page') use ($route)

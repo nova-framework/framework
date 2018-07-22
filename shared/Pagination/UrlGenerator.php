@@ -17,7 +17,7 @@ class UrlGenerator extends BaseUrlGenerator
      * @param  string|null  $fragment
      * @return string
      */
-    public function resolve($page, $path, array $query, $fragment)
+    public function pageUrl($page, $path, array $query, $fragment)
     {
         if ($page > 1) {
             $pageName = $this->getPageName();

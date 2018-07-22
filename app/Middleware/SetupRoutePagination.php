@@ -47,7 +47,15 @@ class SetupRoutePagination
 
         Paginator::currentPathResolver(function ($pageName = 'page') use ($route)
         {
-            $path = $this->resolveRoutePath($route);
+            $parameters = $route->parameters();
+
+            $path = preg_replace_callback('#/\{(.*?)\??\}#', function ($matches) use ($parameters)
+            {
+                $value = Arr::get($parameters, $name = $matches[1], trim($matches[0], '/'));
+
+                return ($name !== 'pageQuery') ? '/' .$value : '';
+
+            }, $route->uri());
 
             return $this->app['url']->to($path);
         });
@@ -71,46 +79,15 @@ class SetupRoutePagination
                 $path = trim($path, '/') .'/' .$pageName .'/' .$page;
             }
 
-            return $this->buildPageUrl($path, $query);
+            if (! empty($query)) {
+                $separator = Str::contains($path, '?') ? '&' : '?';
+
+                $path .= $separator .http_build_query($query, '', '&');
+            }
+
+            return $path;
         });
 
         return $next($request);
-    }
-
-    /**
-     * Resolve a Route path, replacing the parameters within pattern.
-     *
-     * @param  \Nova\Routing\Reute  $route
-     * @return string
-     */
-    protected function resolveRoutePath(Route $route)
-    {
-        $parameters = $route->parameters();
-
-        return preg_replace_callback('#/\{(.*?)\??\}#', function ($matches) use ($parameters)
-        {
-            $value = Arr::get($parameters, $name = $matches[1], trim($matches[0], '/'));
-
-            return ($name !== 'pageQuery') ? '/' .$value : '';
-
-        }, $route->uri());
-    }
-
-    /**
-     * Create a qualified page URL from the given path and query.
-     *
-     * @param  string  $path
-     * @param  array  $query
-     * @return string
-     */
-    protected function buildPageUrl($path, array $query)
-    {
-        if (empty($query)) {
-            return $path;
-        }
-
-        $separator = Str::contains($path, '?') ? '&' : '?';
-
-        return $path .$separator .http_build_query($query, '', '&');
     }
 }

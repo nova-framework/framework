@@ -25,6 +25,6 @@ class UrlGenerator extends BaseUrlGenerator
             $path = trim($path, '/') .'/' .$pageName .'/' .$page;
         }
 
-        return $path .$this->buildQuery($query, $path) .$this->buildFragment($fragment);
+        return $this->buildUrl($path, $query, $fragment);
     }
 }

@@ -2,12 +2,14 @@
 
 namespace App\Middleware;
 
+use Nova\Foundation\Application;
 use Nova\Http\Request;
 use Nova\Pagination\Paginator;
 use Nova\Routing\Route;
-use Nova\Routing\UrlGenerator;
 use Nova\Support\Arr;
 use Nova\Support\Str;
+
+use Shared\Pagination\UrlGenerator;
 
 use Closure;
 
@@ -15,22 +17,22 @@ use Closure;
 class SetupRoutePagination
 {
     /**
-     * The URL Generator instance.
+     * The Application instance.
      *
-     * @var \Nova\Routing\UrlGenerator
+     * @var \Nova\Foundation\Application
      */
-    protected $urlGenerator;
+    protected $app;
 
 
     /**
      * Create a new middleware instance.
      *
-     * @param  \Nova\Routing\UrlGenerator  $url
+     * @param  \Nova\Foundation\Application  $app
      * @return void
      */
-    public function __construct(UrlGenerator $urlGenerator)
+    public function __construct(Application $app)
     {
-        $this->urlGenerator = $urlGenerator;
+        $this->app = $app;
     }
 
     /**
@@ -56,7 +58,7 @@ class SetupRoutePagination
 
             }, $route->uri());
 
-            return $this->urlGenerator->to($path);
+            return $this->app['url']->to($path);
         });
 
         Paginator::currentPageResolver(function ($pageName = 'page') use ($route)
@@ -72,19 +74,9 @@ class SetupRoutePagination
             return 1;
         });
 
-        Paginator::pageUrlResolver(function ($page, array $query, $path, $pageName = 'page')
+        Paginator::urlGeneratorResolver(function ($pageName = 'page')
         {
-            if ($page > 1) {
-                $path = trim($path, '/') .'/' .$pageName .'/' .$page;
-            }
-
-            if (! empty($query)) {
-                $separator = Str::contains($path, '?') ? '&' : '?';
-
-                $path .= $separator .http_build_query($query, '', '&');
-            }
-
-            return $path;
+            return new UrlGenerator($pageName);
         });
 
         return $next($request);

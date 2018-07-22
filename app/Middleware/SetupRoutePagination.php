@@ -58,7 +58,9 @@ class SetupRoutePagination
 
             }, $route->uri());
 
-            return $this->app['url']->to($path);
+            $urlGenerator = $this->app['url'];
+
+            return $urlGenerator->to($path);
         });
 
         Paginator::currentPageResolver(function ($pageName = 'page') use ($route)

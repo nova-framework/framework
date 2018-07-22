@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  '&laquo; Previous' => '',
   'Bad Request' => 'Неправильный запрос',
   'Be right back.' => 'Вернитесь к нам немного позже',
   'Forbidden' => 'Запрещено',
@@ -10,6 +11,7 @@ return array (
   'If you\'re having trouble clicking the "{0}" button, copy and paste the URL below into your web browser:' => 'Если у вас возникли проблемы с нажатием кнопки «{0}», скопируйте и вставьте указанный ниже URL-адрес в свой веб-браузер:',
   'Internal Server Error' => 'Ошибка на сервере',
   'Method not allowed' => 'Метод не разрешен',
+  'Next &raquo;' => '',
   'Referrer: {0}' => 'Ссылающийся: {0}',
   'Regards,' => 'С уважением',
   'Service unavailable' => 'Сервис недоступен',

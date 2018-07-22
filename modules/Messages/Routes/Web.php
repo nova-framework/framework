@@ -13,11 +13,14 @@
 
 
 // The Private Messages.
-Route::get( 'messages',            array('middleware' => 'auth', 'uses' => 'Messages@index'));
-Route::get( 'messages/create',     array('middleware' => 'auth', 'uses' => 'Messages@create'));
-Route::post('messages',            array('middleware' => 'auth', 'uses' => 'Messages@store'));
-Route::get( 'messages/{threadId}', array('middleware' => 'auth', 'uses' => 'Messages@show'));
+Route::group(array('middleware' => 'auth'), function ()
+{
+    Route::get( 'messages',            'Messages@index');
+    Route::get( 'messages/create',     'Messages@create');
+    Route::post('messages',            'Messages@store');
+    Route::get( 'messages/{threadId}', 'Messages@show');
 
-//Route::post('messages/{postId}/destroy', array('middleware' => 'auth', 'uses' => 'Messages@destroy'));
+    //Route::post('messages/{postId}/destroy', 'Messages@destroy');
 
-Route::post('messages/{threadId}', array('middleware' => 'auth', 'uses' => 'Messages@reply'));
+    Route::post('messages/{threadId}', 'Messages@reply');
+});

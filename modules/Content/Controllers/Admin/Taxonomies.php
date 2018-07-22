@@ -13,6 +13,7 @@ use Nova\Support\Str;
 
 use Modules\Content\Models\Taxonomy;
 use Modules\Content\Models\Term;
+use Modules\Content\Support\Facades\TaxonomyType;
 use Modules\Platform\Controllers\Admin\BaseController;
 
 
@@ -28,7 +29,7 @@ class Taxonomies extends BaseController
             'name'           => 'required|min:3|max:255|valid_text',
             'slug'           => 'min:4|max:100|alpha_dash|unique:terms,slug' .$ignore,
             'description'    => 'min:3|max:1000|valid_text',
-            'taxonomy'       => 'required|in:category,post_tag',
+            'taxonomy'       => 'required|in:category,tag',
         );
 
         $messages = array(
@@ -74,7 +75,7 @@ class Taxonomies extends BaseController
         $name  = __d('content', 'Tag');
         $title = __d('content', 'Tags');
 
-        $items = Taxonomy::where('taxonomy', 'post_tag')->paginate(15);
+        $items = Taxonomy::where('taxonomy', 'tag')->paginate(15);
 
         return $this->createView(compact('items', 'type', 'name'), 'Index')
             ->shares('title', $title)
@@ -133,9 +134,9 @@ class Taxonomies extends BaseController
         $this->clearContentCache();
 
         //
-        $type = $taxonomy->taxonomy == 'post_tag' ? 'tag' : $taxonomy->taxonomy;
+        $taxonomyType = TaxonomyType::make($taxonomy->taxonomy);
 
-        $name = Config::get("content::labels.{$type}.name", Str::title($type));
+        $name = $taxonomyType->label('name');
 
         return Redirect::back()
             ->with('success', __d('content', 'The {0} <b>{1}</b> was successfully created.', $name, $input['name']));
@@ -181,9 +182,9 @@ class Taxonomies extends BaseController
         $this->clearContentCache();
 
         //
-        $type = $taxonomy->taxonomy == 'post_tag' ? 'tag' : $taxonomy->taxonomy;
+        $taxonomyType = TaxonomyType::make($taxonomy->taxonomy);
 
-        $name = Config::get("content::labels.{$type}.name", Str::title($type));
+        $name = $taxonomyType->label('name');
 
         return Redirect::back()
             ->with('success', __d('content', 'The {0} <b>{1}</b> was successfully updated.', $name, $input['name']));
@@ -213,9 +214,9 @@ class Taxonomies extends BaseController
         $this->clearContentCache();
 
         //
-        $type = $taxonomy->taxonomy == 'post_tag' ? 'tag' : $taxonomy->taxonomy;
+        $taxonomyType = TaxonomyType::make($taxonomy->taxonomy);
 
-        $name = Config::get("content::labels.{$type}.name", Str::title($type));
+        $name = $taxonomyType->label('name');
 
         return Redirect::back()
             ->with('success', __d('content', 'The {0} <b>{1}</b> was successfully deleted.', $name, $taxonomy->name));

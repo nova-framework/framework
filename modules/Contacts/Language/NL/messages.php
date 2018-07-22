@@ -13,7 +13,6 @@ return array (
   'Are you sure you want to remove this Field Item, the operation being irreversible?' => '',
   'Are you sure you want to remove this Message, the operation being irreversible?' => '',
   'Attachments' => '',
-  'Author' => '',
   'Browse ...' => '',
   'Cancel' => '',
   'Checkbox' => '',

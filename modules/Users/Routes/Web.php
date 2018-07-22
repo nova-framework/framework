@@ -13,26 +13,27 @@
 
 
 // The Adminstration Routes.
-Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
+Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin'), function ()
 {
     // The Custom Fields CRUD.
-    Route::get( 'users/fields',              array('middleware' => 'auth', 'uses' => 'FieldItems@index'));
-    Route::get( 'users/fields/create',       array('middleware' => 'auth', 'uses' => 'FieldItems@create'));
-    Route::post('users/fields',              array('middleware' => 'auth', 'uses' => 'FieldItems@store'));
-    Route::get( 'users/fields/{id}',         array('middleware' => 'auth', 'uses' => 'FieldItems@show'));
-    Route::get( 'users/fields/{id}/edit',    array('middleware' => 'auth', 'uses' => 'FieldItems@edit'));
-    Route::post('users/fields/{id}',         array('middleware' => 'auth', 'uses' => 'FieldItems@update'));
-    Route::post('users/fields/{id}/destroy', array('middleware' => 'auth', 'uses' => 'FieldItems@destroy'));
+    Route::get( 'users/fields',              'FieldItems@index');
+    Route::get( 'users/fields/create',       'FieldItems@create');
+    Route::post('users/fields',              'FieldItems@store');
+    Route::get( 'users/fields/{id}',         'FieldItems@show');
+    Route::get( 'users/fields/{id}/edit',    'FieldItems@edit');
+    Route::post('users/fields/{id}',         'FieldItems@update');
+    Route::post('users/fields/{id}/destroy', 'FieldItems@destroy');
 
     // The Users Search.
-    Route::get('users/search', array('middleware' => 'auth', 'uses' => 'Users@search'));
+    Route::get('users/search', 'Users@search');
 
     // The Users CRUD.
-    Route::get( 'users',              array('middleware' => 'auth', 'uses' => 'Users@index'));
-    Route::get( 'users/create',       array('middleware' => 'auth', 'uses' => 'Users@create'));
-    Route::post('users',              array('middleware' => 'auth', 'uses' => 'Users@store'));
-    Route::get( 'users/{id}',         array('middleware' => 'auth', 'uses' => 'Users@show'));
-    Route::get( 'users/{id}/edit',    array('middleware' => 'auth', 'uses' => 'Users@edit'));
-    Route::post('users/{id}',         array('middleware' => 'auth', 'uses' => 'Users@update'));
-    Route::post('users/{id}/destroy', array('middleware' => 'auth', 'uses' => 'Users@destroy'));
+    Route::paginate('users', 'Users@index');
+
+    Route::get( 'users/create',       'Users@create');
+    Route::post('users',              'Users@store');
+    Route::get( 'users/{id}',         'Users@show');
+    Route::get( 'users/{id}/edit',    'Users@edit');
+    Route::post('users/{id}',         'Users@update');
+    Route::post('users/{id}/destroy', 'Users@destroy');
 });

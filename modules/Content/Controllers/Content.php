@@ -20,6 +20,7 @@ use Shared\Support\ReCaptcha;
 use App\Controllers\BaseController;
 
 use Modules\Content\Support\Facades\PostType;
+use Modules\Content\Support\Facades\TaxonomyType;
 
 use Modules\Content\Models\Post;
 use Modules\Content\Models\Taxonomy;
@@ -131,11 +132,13 @@ class Content extends BaseController
 
     public function taxonomy($type, $slug)
     {
+        $taxonomyType = TaxonomyType::make($type);
+
         $taxonomy = Taxonomy::whereHas('term', function ($query) use ($slug)
         {
             $query->where('slug', $slug);
 
-        })->where('taxonomy', ($type == 'tag') ? 'post_tag' : $type)->firstOrFail();
+        })->where('taxonomy', $type)->firstOrFail();
 
         $posts = $taxonomy->posts()
             ->with('author', 'thumbnail', 'taxonomies')
@@ -144,7 +147,7 @@ class Content extends BaseController
             ->orderBy('created_at', 'DESC')
             ->paginate(5);
 
-        $name = Config::get("content::labels.{$type}.name", Str::title($type));
+        $name = $taxonomyType->label('name');
 
         return $this->createView(compact('posts'), 'Index')
             ->shares('title', $name .' : ' .$taxonomy->name);

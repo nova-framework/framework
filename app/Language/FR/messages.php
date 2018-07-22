@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  '&laquo; Previous' => '',
   'Bad Request' => 'Requète incorrect',
   'Be right back.' => '',
   'Forbidden' => 'Accès interdit',
@@ -10,6 +11,7 @@ return array (
   'If you\'re having trouble clicking the "{0}" button, copy and paste the URL below into your web browser:' => '',
   'Internal Server Error' => 'Erreur interne du serveur',
   'Method not allowed' => 'Méthode non autorisée',
+  'Next &raquo;' => '',
   'Referrer: {0}' => 'Referrer: {0}',
   'Regards,' => '',
   'Service unavailable' => '',

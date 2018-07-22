@@ -18,7 +18,7 @@
                 <th style="text-align: center; vertical-align: middle;"><?= __d('platform', 'Roles'); ?></th>
                 <th style="text-align: right; vertical-align: middle;"><?= __d('platform', 'Operations'); ?></th>
             </tr>
-            <?php foreach ($users->getItems() as $user) { ?>
+            <?php foreach ($users->items() as $user) { ?>
             <tr>
                 <td style="text-align: center; vertical-align: middle;" width='5%'><?= $user->id; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width='20%'><?= $user->username; ?></td>

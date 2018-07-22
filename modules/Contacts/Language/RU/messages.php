@@ -13,7 +13,6 @@ return array (
   'Are you sure you want to remove this Field Item, the operation being irreversible?' => 'Вы действительно хотите удалить этот элемент поля, т.к. операция необратима?',
   'Are you sure you want to remove this Message, the operation being irreversible?' => 'Вы уверены, что хотите удалить это сообщение, т.к. операция необратима',
   'Attachments' => 'Вложения',
-  'Author' => 'Автор',
   'Browse ...' => 'Просмотр...',
   'Cancel' => 'Отмена',
   'Checkbox' => 'Checkbox',

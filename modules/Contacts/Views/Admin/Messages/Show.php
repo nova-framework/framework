@@ -137,7 +137,7 @@ foreach ($contact->fieldGroups as $group) {
 
 <div class="clearfix"></div>
 
-<a class="btn btn-primary col-sm-2" href="<?= site_url('admin/contacts/' .$contact->id .'/messages?offset=' .Input::get('offset', 1)); ?>"><?= __d('contacts', '<< Previous Page'); ?></a>
+<a class="btn btn-primary col-sm-2" href="<?= site_url('admin/contacts/' .$contact->id .'/messages?page=' .Input::get('page', 1)); ?>"><?= __d('contacts', '<< Previous Page'); ?></a>
 
 <div class="clearfix"></div>
 <br>

@@ -69,13 +69,11 @@ class Term extends Model
         })->lists('slug');
 
         do {
-            $slug = $name;
-
-            if ($count > 0) $slug .= '-' .$count;
+            $slug = ($count === 0) ? $name : $name .'-' .$count;
 
             $count++;
-        }
-        while (in_array($slug, $slugs));
+
+        } while (in_array($slug, $slugs));
 
         return $slug;
     }

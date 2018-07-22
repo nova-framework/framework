@@ -42,78 +42,78 @@ Route::post('content/{id}', 'Content@unlock')->where('id', '\d+');
 Route::post('content/{id}/comment', 'Comments@store')->where('id', '\d+');
 
 
+// The administration group's wheres.
+$wheres = array(
+    'id'  => '\d+',
+);
+
 // The Adminstration Routes.
-Route::group(array('prefix' => 'admin', 'namespace' => 'Admin', 'where' => array('id' => '\d+')), function ()
+Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin', 'where' => $wheres), function ()
 {
     // The Media CRUD.
-    Route::get( 'media',                array('middleware' => 'auth', 'uses' => 'Attachments@index'));
-    Route::post('media/update/{field}', array('middleware' => 'auth', 'uses' => 'Attachments@update'));
-    Route::post('media/delete',         array('middleware' => 'auth', 'uses' => 'Attachments@destroy'));
+    Route::get( 'media',                'Attachments@index');
+    Route::post('media/update/{field}', 'Attachments@update');
+    Route::post('media/delete',         'Attachments@destroy');
 
-    Route::post('media/upload',         array('middleware' => 'auth', 'uses' => 'Attachments@upload'));
-    Route::get( 'media/uploaded',       array('middleware' => 'auth', 'uses' => 'Attachments@uploaded'));
+    Route::post('media/upload',         'Attachments@upload');
+    Route::get( 'media/uploaded',       'Attachments@uploaded');
 
     // The Blocks positions.
-    Route::get( 'blocks', array('middleware' => 'auth', 'uses' => 'Blocks@index'));
-    Route::post('blocks', array('middleware' => 'auth', 'uses' => 'Blocks@order'));
+    Route::get( 'blocks', 'Blocks@index');
+    Route::post('blocks', 'Blocks@order');
 
     // The Menus CRUD.
-    Route::get( 'menus',               array('middleware' => 'auth', 'uses' => 'Menus@index'));
-    Route::post('menus',               array('middleware' => 'auth', 'uses' => 'Menus@store'));
-    Route::post('menus/{id}',          array('middleware' => 'auth', 'uses' => 'Menus@update'));
-    Route::post('menus/{id}/destroy',  array('middleware' => 'auth', 'uses' => 'Menus@destroy'));
+    Route::get( 'menus',               'Menus@index');
+    Route::post('menus',               'Menus@store');
+    Route::post('menus/{id}',          'Menus@update');
+    Route::post('menus/{id}/destroy',  'Menus@destroy');
 
-    Route::get( 'menus/{id}',                        array('middleware' => 'auth', 'uses' => 'Menus@items'));
-    Route::post('menus/{id}/post',                   array('middleware' => 'auth', 'uses' => 'Menus@addPost'));
-    Route::post('menus/{id}/category',               array('middleware' => 'auth', 'uses' => 'Menus@addCategory'));
-    Route::post('menus/{id}/custom',                 array('middleware' => 'auth', 'uses' => 'Menus@addCustom'));
-    Route::post('menus/{id}/items',                  array('middleware' => 'auth', 'uses' => 'Menus@itemsOrder'));
-    Route::post('menus/{id}/items/{itemId}',         array('middleware' => 'auth', 'uses' => 'Menus@updateItem'));
-    Route::post('menus/{id}/items/{itemId}/destroy', array('middleware' => 'auth', 'uses' => 'Menus@deleteItem'));
+    Route::get( 'menus/{id}',                        'Menus@items');
+    Route::post('menus/{id}/post',                   'Menus@addPost');
+    Route::post('menus/{id}/category',               'Menus@addCategory');
+    Route::post('menus/{id}/custom',                 'Menus@addCustom');
+    Route::post('menus/{id}/items',                  'Menus@itemsOrder');
+    Route::post('menus/{id}/items/{itemId}',         'Menus@updateItem');
+    Route::post('menus/{id}/items/{itemId}/destroy', 'Menus@deleteItem');
 
     // The Comments CRUD.
-    Route::get( 'comments',                array('middleware' => 'auth', 'uses' => 'Comments@index'));
-    Route::get( 'comments/{id}',           array('middleware' => 'auth', 'uses' => 'Comments@load'));
-    Route::post('comments/{id}',           array('middleware' => 'auth', 'uses' => 'Comments@update'));
-    Route::post('comments/{id}/destroy',   array('middleware' => 'auth', 'uses' => 'Comments@destroy'));
+    Route::get( 'comments',                'Comments@index');
+    Route::get( 'comments/{id}',           'Comments@load');
+    Route::post('comments/{id}',           'Comments@update');
+    Route::post('comments/{id}/destroy',   'Comments@destroy');
 
-    Route::post('comments/{id}/approve',   array('middleware' => 'auth', 'uses' => 'Comments@approve'));
-    Route::post('comments/{id}/unapprove', array('middleware' => 'auth', 'uses' => 'Comments@unapprove'));
+    Route::post('comments/{id}/approve',   'Comments@approve');
+    Route::post('comments/{id}/unapprove', 'Comments@unapprove');
 
     // The Posts CRUD.
-    Route::get('content/create/{type}',  array('middleware' => 'auth', 'uses' => 'Posts@create'))
-        ->where('type', '(' .implode('|', PostType::getNames()) .')');
+    Route::get('content/create/{type}',  'Posts@create')->where('type', '(' .implode('|', PostType::getNames()) .')');
 
     //
-    Route::get( 'content/{id}/edit',     array('middleware' => 'auth', 'uses' => 'Posts@edit'));
-    Route::post('content/{id}',          array('middleware' => 'auth', 'uses' => 'Posts@update'));
-    Route::post('content/{id}/restore',  array('middleware' => 'auth', 'uses' => 'Posts@restore'));
-    Route::post('content/{id}/destroy',  array('middleware' => 'auth', 'uses' => 'Posts@destroy'));
+    Route::get( 'content/{id}/edit',     'Posts@edit');
+    Route::post('content/{id}',          'Posts@update');
+    Route::post('content/{id}/restore',  'Posts@restore');
+    Route::post('content/{id}/destroy',  'Posts@destroy');
 
-    Route::get('content/{id}/revisions', array('middleware' => 'auth', 'uses' => 'Posts@revisions'));
+    Route::get('content/{id}/revisions', 'Posts@revisions');
 
-    Route::post('content/{id}/tags', array('middleware' => 'auth', 'uses' => 'Posts@addTags'));
+    Route::post('content/{id}/tags', 'Posts@addTags');
 
-    Route::post('content/{id}/tags/{tagId}/detach', array('middleware' => 'auth', 'uses' => 'Posts@detachTag'))
-        ->where('tagId', '\d+');
+    Route::post('content/{id}/tags/{tagId}/detach', 'Posts@detachTag')->where('tagId', '\d+');
 
     // The Taxonomies listings.
-    Route::get('content/categories',    array('middleware' => 'auth', 'uses' => 'Taxonomies@index'));
-    Route::get('content/tags',          array('middleware' => 'auth', 'uses' => 'Taxonomies@tags'));
+    Route::get('content/categories',    'Taxonomies@index');
+    Route::get('content/tags',          'Taxonomies@tags');
 
-    Route::get('content/{type}/{slug}', array('middleware' => 'auth', 'uses' => 'Posts@taxonomy'))
-        ->where('type', '(category|tag)');
+    Route::get('content/{type}/{slug}', 'Posts@taxonomy')->where('type', '(category|tag)');
 
     // The Posts listing.
-    Route::get('content/{slug?}', array('middleware' => 'auth', 'uses' => 'Posts@index'))
-        ->where('type', '(' .implode('|', PostType::getSlugs()) .')');
+    Route::get('content/{slug?}', 'Posts@index')->where('type', '(' .implode('|', PostType::getSlugs()) .')');
 
     // The Taxonomies CRUD.
-    Route::post('taxonomies',              array('middleware' => 'auth', 'uses' => 'Taxonomies@store'));
-    Route::post('taxonomies/{id}',         array('middleware' => 'auth', 'uses' => 'Taxonomies@update'));
-    Route::post('taxonomies/{id}/destroy', array('middleware' => 'auth', 'uses' => 'Taxonomies@destroy'));
+    Route::post('taxonomies',              'Taxonomies@store');
+    Route::post('taxonomies/{id}',         'Taxonomies@update');
+    Route::post('taxonomies/{id}/destroy', 'Taxonomies@destroy');
 
     // For AJAX.
-    Route::get('taxonomies/{id}/{parent}', array('middleware' => 'auth', 'uses' => 'Taxonomies@categories'))
-        ->where('parent', '\d+');
+    Route::get('taxonomies/{id}/{parent}', 'Taxonomies@categories')->where('parent', '\d+');
 });

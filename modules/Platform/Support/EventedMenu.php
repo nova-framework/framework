@@ -81,7 +81,16 @@ class EventedMenu
                 // Add the item to the menu items array.
                 Arr::set($items, $key, $item);
 
-                if (($item['url'] == $url) && empty($path)) {
+                //
+                $itemUrl = $item['url'];
+
+                if (! empty($path) || ($itemUrl === '#')) {
+                    continue;
+                }
+
+                $pattern = preg_quote($itemUrl, '#');
+
+                if (($itemUrl == $url) || (preg_match('#^' .$pattern .'/page/[0-9]+$#', $url) === 1)) {
                     $path = $item['path'];
                 }
             }
@@ -137,15 +146,23 @@ class EventedMenu
      * @param  array  $items
      * @param  string $path
      * @param  string $url
+     * @param  string $pageName
      * @return array
      */
     protected function prepareItems(array $items, $path, $url)
     {
         foreach ($items as &$item) {
-            $active = false;
+            $itemUrl = $item['url'];
 
-            if (($item['url'] == $url) || Str::startsWith($path, $item['path'])) {
+            //
+            $pattern = preg_quote($itemUrl, '#');
+
+            if (($itemUrl == $url) || Str::startsWith($path, $item['path'])) {
                 $active = true;
+            } else if (($itemUrl !== '#') && (preg_match('#^' .$pattern .'/page/[0-9]+$#', $url) === 1)) {
+                $active = true;
+            } else {
+                $active = false;
             }
 
             $item['active'] = $active;

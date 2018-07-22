@@ -64,7 +64,7 @@
                 <td style="text-align: right; vertical-align: middle;" width="10%">
                     <div class="btn-group" role="group" aria-label="...">
                         <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $message->id; ?>" title="<?= __d('contacts', 'Delete this Message'); ?>" role="button"><i class="fa fa-trash"></i></a>
-                        <a class="btn btn-sm btn-success" href="<?= site_url('admin/contacts/' .$contact->id .'/messages/' .$message->id .'?offset=' .Input::get('offset', 1)); ?>" title="<?= __d('contacts', 'View this Message'); ?>" role="button"><i class="fa fa-search"></i></a>
+                        <a class="btn btn-sm btn-success" href="<?= site_url('admin/contacts/' .$contact->id .'/messages/' .$message->id .'?page=' .Input::get('page', 1)); ?>" title="<?= __d('contacts', 'View this Message'); ?>" role="button"><i class="fa fa-search"></i></a>
                     </div>
                 </td>
             </tr>

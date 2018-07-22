@@ -59,9 +59,7 @@ class MainMenu extends Widget
                 if ($type == 'taxonomy') {
                     $title = $instance->name;
 
-                    $taxonomy = ($instance->taxonomy == 'post_tag') ? 'tag' : $instance->taxonomy;
-
-                    $url = url('content', array($taxonomy, $instance->slug));
+                    $url = url('content', array($instance->taxonomy, $instance->slug));
                 }
 
                 // Everthing else is based on Posts or extended from them.

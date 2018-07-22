@@ -8,6 +8,7 @@ use Nova\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
 {
+
     /**
      * This namespace is applied to the controller routes in your routes file.
      *
@@ -24,9 +25,14 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        parent::boot($router);
+        $router->macro('paginate', function ($uri, $action, $pageName = 'page') use ($router)
+        {
+            return $router->get($uri .'/{pageQuery?}', $action)
+                ->middleware('App\Middleware\SetupRoutePagination')
+                ->where('pageQuery', $pageName .'/[0-9]+');
+        });
 
-        //
+        parent::boot($router);
     }
 
     /**
@@ -49,5 +55,4 @@ class RouteServiceProvider extends ServiceProvider
             require $path .DS .'Web.php';
         });
     }
-
 }

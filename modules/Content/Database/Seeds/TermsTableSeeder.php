@@ -38,13 +38,6 @@ class TermsTableSeeder extends Seeder
 
         $term = Term::create(array(
             'id'     => 3,
-            'name'   => 'Post Tag',
-            'slug'   => 'post-tag',
-            'group'  => 0,
-        ));
-
-        $term = Term::create(array(
-            'id'     => 4,
             'name'   => 'Sample Tag',
             'slug'   => 'sample-tag',
             'group'  => 0,

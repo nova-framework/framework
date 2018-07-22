@@ -1,6 +1,71 @@
 <?php
 
 use Modules\Content\Support\Facades\PostType;
+use Modules\Content\Support\Facades\TaxonomyType;
+
+
+/**
+ * Register the Taxonomy Types.
+ */
+TaxonomyType::register('category', array(
+    'labels' => array(
+        'name'        => __d('content', 'Category'),
+        'title'       => __d('content', 'Categories'),
+
+        'searchItems' => __d('content', 'Search Categories'),
+        'allItems'    => __d('content', 'All Category'),
+
+        'parentItem'      => __d('content', 'Parent Category'),
+        'parentItemColon' => __d('content', 'Parent Category:'),
+
+        'editItem'    => __d('content', 'Edit Category'),
+        'updateItem'  => __d('content', 'Update Category'),
+        'deleteItem'  => __d('content', 'Delete Category'),
+        'addNewItem'  => __d('content', 'Add New Category'),
+        'newItemName' => __d('content', 'New Category Name'),
+
+        'menuName'    => __d('content', 'Categories'),
+    ),
+
+    'label'       => __d('content', 'posts'),
+    'description' => __d('content', 'A type of hierarchical taxonomy.'),
+
+    'hierarchical' => true,
+
+    'rewrite' => array(
+        'slug' => 'posts'
+    ),
+));
+
+TaxonomyType::register('tag', array(
+    'labels' => array(
+        'name'        => __d('content', 'Tag'),
+        'title'       => __d('content', 'Tags'),
+
+        'searchItems' => __d('content', 'Search Tags'),
+        'allItems'    => __d('content', 'All Tag'),
+
+        'parentItem'      => null,
+        'parentItemColon' => null,
+
+        'editItem'    => __d('content', 'Edit Tag'),
+        'updateItem'  => __d('content', 'Update Tag'),
+        'deleteItem'  => __d('content', 'Delete Tag'),
+        'addNewItem'  => __d('content', 'Add New Tag'),
+        'newItemName' => __d('content', 'New Tag Name'),
+
+        'menuName'    => __d('content', 'Tags'),
+    ),
+
+    'label'       => __d('content', 'tags'),
+    'description' => __d('content', 'A type of non-hierarchical taxonomy.'),
+
+    'hierarchical' => false,
+
+    'rewrite' => array(
+        'slug' => 'tags'
+    ),
+));
 
 
 /**
@@ -14,7 +79,14 @@ PostType::register('post', array(
 
     'labels' => array(
         'name'        => __d('content', 'Post'),
-        'items'       => __d('content', 'Posts'),
+        'title'       => __d('content', 'Posts'),
+
+        'searchItems' => __d('content', 'Search Posts'),
+        'allItems'    => __d('content', 'All Posts'),
+        'notFound'    => __d('content', 'No posts found'),
+
+        'parentItem'      => null,
+        'parentItemColon' => null,
 
         'addNew'      => __d('content', 'Add New'),
         'addNewItem'  => __d('content', 'Add New Post'),
@@ -22,10 +94,7 @@ PostType::register('post', array(
         'updateItem'  => __d('content', 'Update Post'),
         'deleteItem'  => __d('content', 'Delete Post'),
         'newItem'     => __d('content', 'New Post'),
-        'allItems'    => __d('content', 'All Posts'),
         'viewItem'    => __d('content', 'View Post'),
-        'searchItems' => __d('content', 'Search Posts'),
-        'notFound'    => __d('content', 'No posts found'),
     ),
 
     'label'       => __d('content', 'posts'),
@@ -47,7 +116,14 @@ PostType::register('page', array(
 
     'labels' => array(
         'name'        => __d('content', 'Page'),
-        'items'       => __d('content', 'Pages'),
+        'title'       => __d('content', 'Pages'),
+
+        'searchItems' => __d('content', 'Search Pages'),
+        'allItems'    => __d('content', 'All Pages'),
+        'notFound'    => __d('content', 'No pages found'),
+
+        'parentItem'      => __d('content', 'Parent Page'),
+        'parentItemColon' => __d('content', 'Parent Page:'),
 
         'addNew'      => __d('content', 'Add New'),
         'addNewItem'  => __d('content', 'Add New Page'),
@@ -55,10 +131,7 @@ PostType::register('page', array(
         'updateItem'  => __d('content', 'Update Page'),
         'deleteItem'  => __d('content', 'Delete Page'),
         'newItem'     => __d('content', 'New Page'),
-        'allItems'    => __d('content', 'All Pages'),
         'viewItem'    => __d('content', 'View Page'),
-        'searchItems' => __d('content', 'Search Pages'),
-        'notFound'    => __d('content', 'No pages found'),
     ),
 
     'label'       => __d('content', 'pages'),
@@ -80,7 +153,14 @@ PostType::register('block', array(
 
     'labels' => array(
         'name'        => __d('content', 'Block'),
-        'items'       => __d('content', 'Blocks'),
+        'title'       => __d('content', 'Blocks'),
+
+        'searchItems' => __d('content', 'Search Blocks'),
+        'allItems'    => __d('content', 'All Blocks'),
+        'notFound'    => __d('content', 'No blocks found'),
+
+        'parentItem'      => null,
+        'parentItemColon' => null,
 
         'addNew'      => __d('content', 'Add New'),
         'addNewItem'  => __d('content', 'Add New Block'),
@@ -88,10 +168,7 @@ PostType::register('block', array(
         'updateItem'  => __d('content', 'Update Block'),
         'deleteItem'  => __d('content', 'Delete Block'),
         'newItem'     => __d('content', 'New Block'),
-        'allItems'    => __d('content', 'All Blocks'),
         'viewItem'    => __d('content', 'View Block'),
-        'searchItems' => __d('content', 'Search Blocks'),
-        'notFound'    => __d('content', 'No blocks found'),
     ),
 
     'label'       => __d('content', 'blocks'),

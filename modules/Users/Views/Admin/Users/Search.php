@@ -29,7 +29,7 @@
                 <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Created At'); ?></th>
                 <th style="text-align: right; vertical-align: middle;"><?= __d('users', 'Operations'); ?></th>
             </tr>
-            <?php foreach ($users->getItems() as $user) { ?>
+            <?php foreach ($users->items() as $user) { ?>
             <tr>
                 <td style="text-align: center; vertical-align: middle;" width="5%"><?= $user->id; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="18%"><?= $user->username; ?></td>

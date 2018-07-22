@@ -2,7 +2,6 @@
 
 namespace App\Middleware;
 
-use Nova\Foundation\Application;
 use Nova\Http\Request;
 use Nova\Pagination\Paginator;
 use Nova\Routing\Route;
@@ -16,22 +15,22 @@ use Closure;
 class SetupRoutePagination
 {
     /**
-     * The application implementation.
+     * The URL Generator instance.
      *
-     * @var \Nova\Foundation\Application
+     * @var \Nova\Routing\UrlGenerator
      */
-    protected $app;
+    protected $urlGenerator;
 
 
     /**
      * Create a new middleware instance.
      *
-     * @param  \Nova\Foundation\Application  $app
+     * @param  \Nova\Routing\UrlGenerator  $url
      * @return void
      */
-    public function __construct(Application $app)
+    public function __construct(UrlGenerator $urlGenerator)
     {
-        $this->app = $app;
+        $this->urlGenerator = $urlGenerator;
     }
 
     /**
@@ -57,7 +56,7 @@ class SetupRoutePagination
 
             }, $route->uri());
 
-            return $this->app['url']->to($path);
+            return $this->urlGenerator->to($path);
         });
 
         Paginator::currentPageResolver(function ($pageName = 'page') use ($route)

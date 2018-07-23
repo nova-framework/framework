@@ -48,19 +48,9 @@ class SetupRoutePagination
 
         Paginator::currentPathResolver(function ($pageName = 'page') use ($route)
         {
-            $parameters = $route->parameters();
+            $path = $this->resolveRoutePath($route);
 
-            $path = preg_replace_callback('#/\{(.*?)\??\}#', function ($matches) use ($parameters)
-            {
-                $value = Arr::get($parameters, $name = $matches[1], trim($matches[0], '/'));
-
-                return ($name !== 'pageQuery') ? '/' .$value : '';
-
-            }, $route->uri());
-
-            $urlGenerator = $this->app['url'];
-
-            return $urlGenerator->to($path);
+            return $this->app['url']->to($path);
         });
 
         Paginator::currentPageResolver(function ($pageName = 'page') use ($route)
@@ -82,5 +72,24 @@ class SetupRoutePagination
         });
 
         return $next($request);
+    }
+
+    /**
+     * Resolve the parameters of a Route path.
+     *
+     * @param  \Nova\Routing\Route  $route
+     * @return string
+     */
+    protected function resolveRoutePath(Route $route)
+    {
+        $parameters = $route->parameters();
+
+        return preg_replace_callback('#/\{(.*?)\??\}#', function ($matches) use ($parameters)
+        {
+            $value = Arr::get($parameters, $name = $matches[1], trim($matches[0], '/'));
+
+            return ($name !== 'pageQuery') ? '/' .$value : '';
+
+        }, $route->uri());
     }
 }

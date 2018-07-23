@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Middleware;
+namespace Shared\Pagination\Middleware;
 
 use Nova\Foundation\Application;
 use Nova\Http\Request;

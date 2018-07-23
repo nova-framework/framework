@@ -28,7 +28,7 @@ class RouteServiceProvider extends ServiceProvider
         $router->macro('paginate', function ($uri, $action, $pageName = 'page') use ($router)
         {
             return $router->get($uri .'/{pageQuery?}', $action)
-                ->middleware('App\Middleware\SetupRoutePagination')
+                ->middleware('Shared\Pagination\Middleware\SetupRoutePagination')
                 ->where('pageQuery', $pageName .'/[0-9]+');
         });
 

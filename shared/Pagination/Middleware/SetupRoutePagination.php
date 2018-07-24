@@ -4,8 +4,8 @@ namespace Shared\Pagination\Middleware;
 
 use Nova\Foundation\Application;
 use Nova\Http\Request;
+use Nova\Pagination\AbstractPaginator;
 use Nova\Pagination\Paginator;
-use Nova\Pagination\PaginatorInterface;
 use Nova\Routing\Route;
 use Nova\Support\Arr;
 
@@ -66,7 +66,7 @@ class SetupRoutePagination
             return 1;
         });
 
-        Paginator::urlGeneratorResolver(function (PaginatorInterface $paginator)
+        Paginator::urlGeneratorResolver(function (AbstractPaginator $paginator)
         {
             return new UrlGenerator($paginator);
         });

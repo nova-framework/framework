@@ -2,29 +2,33 @@
 
 namespace Shared\Pagination;
 
-use Nova\Pagination\UrlGenerator as BaseUrlGenerator;
+use Nova\Pagination\UrlGenerator as PaginationUrlGenerator;
 
 
-class UrlGenerator extends BaseUrlGenerator
+class UrlGenerator extends PaginationUrlGenerator
 {
 
     /**
      * Resolve the URL for a given page number.
      *
      * @param  int  $page
-     * @param  string  $path
-     * @param  array  $query
-     * @param  string|null  $fragment
      * @return string
      */
-    public function pageUrl($page, $path, array $query, $fragment)
+    public function url($page)
     {
+        $paginator = $this->getPaginator();
+
+        //
+        $path = $paginator->getPath();
+
         if ($page > 1) {
-            $pageName = $this->getPageName();
+            $pageName = $paginator->getPageName();
 
             $path = trim($path, '/') .'/' .$pageName .'/' .$page;
         }
 
-        return $this->buildUrl($path, $query, $fragment);
+        return $this->buildUrl(
+            $path, $paginator->getQuery(), $paginator->fragment()
+        );
     }
 }

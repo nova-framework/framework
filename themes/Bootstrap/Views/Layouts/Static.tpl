@@ -4,9 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title or 'Page' }} - {{ Config::get('app.name') }}</title>
-@php
 
-echo Assets::render('css', array(
+{{ Assets::render('css', array(
     'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
     'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css',
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
@@ -14,14 +13,18 @@ echo Assets::render('css', array(
     asset_url('css/style.css', 'themes/bootstrap'),
 ));
 
-echo Asset::position('header', 'css');
+}}
 
-echo Assets::build('js', array(
+{{ Asset::position('header', 'css') }}
+
+{{ Assets::build('js', array(
     asset_url('js/sprintf.min.js'),
     'https://code.jquery.com/jquery-1.12.4.min.js',
 ));
 
-echo Asset::position('header', 'js');
+}}
+
+{{ Asset::position('header', 'js') }}
 
 @endphp
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -44,15 +47,13 @@ echo Asset::position('header', 'js');
 
 @include('Themes/Bootstrap::Partials/Footer')
 
-@php
-
-echo Asset::render('js', array(
+{{ Asset::render('js', array(
     'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'
 ));
 
-echo Asset::position('footer', 'js');
+}}
 
-@endphp
+{{ Asset::position('footer', 'js') }}
 
 </body>
 </html>

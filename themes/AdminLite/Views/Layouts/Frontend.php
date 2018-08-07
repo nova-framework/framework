@@ -45,9 +45,9 @@ echo Asset::render('css', array(
     asset_url('css/style.css', 'themes/admin-lite'),
 ));
 
-echo Asset::position('header', 'css');
-
 ?>
+
+<?= Asset::position('header', 'css'); ?>
 
 <style>
 .pagination {
@@ -68,9 +68,10 @@ echo Asset::render('js', array(
     asset_url('js/bootstrap-notify.min.js'),
 ));
 
-echo Asset::position('header', 'js');
-
 ?>
+
+<?= Asset::position('header', 'js'); ?>
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -202,9 +203,9 @@ echo Asset::render('js', array(
     vendor_url('dist/js/adminlte.min.js', 'almasaeed2010/adminlte'),
 ));
 
-echo Asset::position('footer', 'js');
-
 ?>
+
+<?= Asset::position('footer', 'js'); ?>
 
 <script>
 

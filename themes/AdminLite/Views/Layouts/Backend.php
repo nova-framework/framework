@@ -24,7 +24,7 @@ $languages = Config::get('languages');
     <?= isset($meta) ? $meta : ''; // Place to pass data ?>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-<?php
+    <?php
 
 echo Asset::render('css', array(
     // Bootstrap 3.3.7
@@ -37,6 +37,8 @@ echo Asset::render('css', array(
     vendor_url('bower_components/select2/dist/css/select2.min.css', 'almasaeed2010/adminlte'),
     // iCheck
     vendor_url('plugins/iCheck/square/blue.css', 'almasaeed2010/adminlte'),
+    // DataTables
+    vendor_url('bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css', 'almasaeed2010/adminlte'),
     // Theme style
     vendor_url('dist/css/AdminLTE.min.css', 'almasaeed2010/adminlte'),
     // AdminLTE Skins
@@ -47,9 +49,9 @@ echo Asset::render('css', array(
     asset_url('css/style.css', 'themes/admin-lite'),
 ));
 
-echo Asset::position('header', 'css');
-
 ?>
+
+<?= Asset::position('header', 'css'); ?>
 
 <style>
 .pagination {
@@ -62,7 +64,7 @@ echo Asset::position('header', 'css');
 </style>
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-<?php
+    <?php
 
 echo Asset::render('js', array(
     vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
@@ -70,9 +72,10 @@ echo Asset::render('js', array(
     asset_url('js/bootstrap-notify.min.js'),
 ));
 
-echo Asset::position('header', 'js');
-
 ?>
+
+<?= Asset::position('header', 'js'); ?>
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -219,6 +222,13 @@ echo Asset::render('js', array(
     vendor_url('bower_components/select2/dist/js/i18n/' .$langCode .'.js', 'almasaeed2010/adminlte'),
     // iCheck
     vendor_url('plugins/iCheck/icheck.min.js', 'almasaeed2010/adminlte'),
+    // DataTables
+    vendor_url('bower_components/datatables.net/js/jquery.dataTables.js', 'almasaeed2010/adminlte'),
+    vendor_url('bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js', 'almasaeed2010/adminlte'),
+    // Slimscroll
+    vendor_url('bower_components/jquery-slimscroll/jquery.slimscroll.min.js', 'almasaeed2010/adminlte'),
+    // FastClick
+    vendor_url('bower_components/fastclick/lib/fastclick.js', 'almasaeed2010/adminlte'),
     // AdminLTE App
     vendor_url('dist/js/adminlte.min.js', 'almasaeed2010/adminlte'),
 
@@ -227,9 +237,9 @@ echo Asset::render('js', array(
     asset_url('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.js'),
 ));
 
-echo Asset::position('footer', 'js');
-
 ?>
+
+<?= Asset::position('footer', 'js'); ?>
 
 <script>
 

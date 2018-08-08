@@ -42,9 +42,10 @@ echo Asset::render('css', array(
     asset_url('css/style.css', 'themes/admin-lite'),
 ));
 
-echo Asset::position('header', 'css');
-
 ?>
+
+<?= Asset::position('header', 'css'); ?>
+
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 <?php
@@ -53,9 +54,10 @@ echo Asset::render('js', array(
     vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
 ));
 
-echo Asset::position('header', 'js');
-
 ?>
+
+<?= Asset::position('header', 'js'); ?>
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -159,9 +161,9 @@ echo Asset::render('js', array(
     vendor_url('dist/js/adminlte.min.js', 'almasaeed2010/adminlte'),
 ));
 
-echo Asset::position('footer', 'js');
-
 ?>
+
+<?= Asset::position('footer', 'js'); ?>
 
 <script>
   $(function () {

@@ -231,6 +231,18 @@ class BaseController extends Controller
     }
 
     /**
+     * Return the current called action
+     *
+     * NOTE: this information is available after Controller initialization.
+     *
+     * @return string
+     */
+    public function getAction()
+    {
+        return $this->action;
+    }
+
+    /**
      * Return the current Theme.
      *
      * @return string

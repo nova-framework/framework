@@ -17,11 +17,16 @@ use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
+use Nova\Support\Facades\Language;
 use Nova\Support\Facades\File;
 use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Validator;
+use Nova\Support\Facades\View;
 use Nova\Support\Arr;
 use Nova\Support\Str;
+
+use Shared\Support\DataTable;
 
 use Modules\Platform\Controllers\Admin\BaseController;
 use Modules\Roles\Models\Role;
@@ -142,6 +147,41 @@ class Users extends BaseController
         return $validator;
     }
 
+    public function data(Request $request)
+    {
+        $columns = array(
+            array('data' => 'id',       'name' => 'id'),
+            array('data' => 'username', 'name' => 'username'),
+            array('data' => 'realname', 'name' => 'realname'),
+            array('data' => 'email',    'name' => 'email'),
+
+            array('data' => 'roles', 'name' => 'roles.name', 'uses' => function ($user)
+            {
+                $roles = $user->roles->lists('name');
+
+                return implode(', ', $roles);
+            }),
+
+            array('data' => 'created_at', 'name' => 'created_at', 'uses' => function ($user)
+            {
+                $format = __d('users', '%d %b %Y, %H:%M');
+
+                return $user->created_at->formatLocalized($format);
+            }),
+
+            array('data' => 'actions', 'name' => 'actions', 'uses' => function ($user)
+            {
+                return View::fetch('Modules/Users::Partials/UsersTableActions', compact('user'));
+            }),
+        );
+
+        $query = User::with('roles')->where('activated', 1);
+
+        $data = DataTable::handle($query, $request, $columns);
+
+        return Response::json($data);
+    }
+
     public function index()
     {
         // Authorize the current User.
@@ -149,12 +189,11 @@ class Users extends BaseController
             throw new AuthorizationException();
         }
 
-        // Get all User records for current page.
-        $users = User::where('activated', 1)->paginate(25);
+        $langInfo = Language::info();
 
         return $this->createView()
             ->shares('title', __d('users', 'Users'))
-            ->with('users', $users);
+            ->with('langInfo', $langInfo);
     }
 
     public function create(Request $request)

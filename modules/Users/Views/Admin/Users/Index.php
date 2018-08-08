@@ -26,62 +26,71 @@
 </div>
 
 <div class="box box-widget">
-    <div class="box-header">
+    <div class="box-header with-border">
         <h3 class="box-title"><?= __d('users', 'Registered Users'); ?></h3>
-        <div class="box-tools">
-        <?= $users->links(); ?>
-        </div>
     </div>
     <div class="box-body no-padding">
-        <?php $deletables = 0; ?>
-        <?php if (! $users->isEmpty()) { ?>
-        <table id="left" class="table table-striped table-hover responsive">
-            <tr class="bg-navy disabled">
-                <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'ID'); ?></th>
-                <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Username'); ?></th>
-                <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Roles'); ?></th>
-                <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Name and Surname'); ?></th>
-                <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'E-mail'); ?></th>
-                <th style="text-align: center; vertical-align: middle;"><?= __d('users', 'Created At'); ?></th>
-                <th style="text-align: right; vertical-align: middle;"><?= __d('users', 'Operations'); ?></th>
-            </tr>
-            <?php foreach ($users->items() as $user) { ?>
-            <tr>
-                <td style="text-align: center; vertical-align: middle;" width="5%"><?= $user->id; ?></td>
-                <td style="text-align: center; vertical-align: middle;" width="18%"><?= $user->username; ?></td>
-                <td style="text-align: center; vertical-align: middle;" width="11%"><?= implode(', ', $user->roles->lists('name')); ?></td>
-                <td style="text-align: center; vertical-align: middle;" width="18%"><?= $user->realname; ?></td>
-                <td style="text-align: center; vertical-align: middle;" width="18%"><?= $user->email; ?></td>
-                <td style="text-align: center; vertical-align: middle;" width="15%"><?= $user->created_at->formatLocalized(__d('users', '%d %b %Y, %R')); ?></td>
-                <td style="text-align: right; vertical-align: middle;" width="15%">
-                    <div class="btn-group" role="group" aria-label="...">
-                        <?php if (Gate::allows('delete', $user)) { ?>
-                        <?php $deletables++; ?>
-                        <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $user->id; ?>" title="<?= __d('users', 'Delete this User'); ?>" role="button"><i class="fa fa-remove"></i></a>
-                        <?php } ?>
-                        <?php if (Gate::allows('update', $user)) { ?>
-                        <a class="btn btn-sm btn-success" href="<?= site_url('admin/users/' .$user->id .'/edit'); ?>" title="<?= __d('users', 'Edit this User'); ?>" role="button"><i class="fa fa-pencil"></i></a>
-                        <?php } ?>
-                        <?php if (Gate::allows('view', $user)) { ?>
-                        <a class="btn btn-sm btn-warning" href="<?= site_url('admin/users/' .$user->id); ?>" title="<?= __d('users', 'Show the Details'); ?>" role="button"><i class="fa fa-search"></i></a>
-                        <?php } ?>
-                    </div>
-                </td>
-            </tr>
-            <?php } ?>
+        <table id='usersTable' class='table table-striped table-hover responsive' style="width: 100%;">
+            <thead>
+                <tr class="bg-navy disabled">
+                    <th width='5%'><?= __d('users', 'ID'); ?></th>
+                    <th width='18%'><?= __d('users', 'Username'); ?></th>
+                    <th width='11%'><?= __d('users', 'Roles'); ?></th>
+                    <th width='18%'><?= __d('users', 'Name and Surname'); ?></th>
+                    <th width='18%'><?= __d('users', 'E-mail'); ?></th>
+                    <th width='15%'><?= __d('users', 'Created At'); ?></th>
+                    <th width='15%'><?= __d('users', 'Actions'); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
         </table>
-        <?php } else { ?>
-        <div class="alert alert-warning" style="margin: 0 5px 5px;">
-            <h4><i class="icon fa fa-warning"></i> <?= strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('users', 'No registered Users'); ?></h4>
-            <?= __d('users', 'There are no registered Users.'); ?>
-        </div>
-        <?php } ?>
     </div>
 </div>
 
-</section>
+<script>
 
-<?php if ($deletables > 0) { ?>
+$(function () {
+    $('#usersTable').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/<?= $langInfo; ?>.json'
+        },
+        responsive: true,
+        stateSave: true,
+        processing: true,
+        serverSide: true,
+        ajax: {
+            type: 'POST',
+            url: '<?= site_url('admin/users/data'); ?>',
+            data: function (data) {
+                data._token = '<?= csrf_token(); ?>';
+            }
+        },
+        pageLength: 15,
+        lengthMenu: [ 5, 10, 15, 20, 25, 50, 100 ],
+
+        columns: [
+            { data: 'id',         name: 'id',         orderable: true,  searchable: false,  className: "text-center" },
+            { data: 'username',   name: 'username',   orderable: true,  searchable: true,  className: "text-center" },
+            { data: 'roles',      name: 'roles.name', orderable: true,  searchable: true,  className: "text-center" },
+            { data: 'realname',   name: 'realname',   orderable: true,  searchable: true,  className: "text-center" },
+            { data: 'email',      name: 'email',      orderable: true,  searchable: true,  className: "text-center" },
+            { data: 'created_at', name: 'created_at', orderable: true,  searchable: false, className: "text-center" },
+            { data: 'actions',    name: 'actions',    orderable: false, searchable: false, className: "text-right compact" },
+        ],
+
+        drawCallback: function(settings)
+        {
+            var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
+
+            pagination.toggle(this.api().page.info().pages > 1);
+        },
+    });
+});
+
+</script>
+
+</section>
 
 <div class="modal modal-default" id="modal-delete-dialog">
     <div class="modal-dialog">
@@ -124,5 +133,3 @@ $(function () {
 });
 
 </script>
-
-<?php } ?>

@@ -27,9 +27,11 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     // The Users Search.
     Route::get('users/search', 'Users@search');
 
-    // The Users CRUD.
-    Route::paginate('users', 'Users@index');
+    // Server Side Processor for Roles DataTable.
+    Route::post('users/data',         'Users@data');
 
+    // The Users CRUD.
+    Route::get( 'users',              'Users@index');
     Route::get( 'users/create',       'Users@create');
     Route::post('users',              'Users@store');
     Route::get( 'users/{id}',         'Users@show');

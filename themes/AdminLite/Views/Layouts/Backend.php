@@ -37,6 +37,8 @@ echo Asset::render('css', array(
     vendor_url('bower_components/select2/dist/css/select2.min.css', 'almasaeed2010/adminlte'),
     // iCheck
     vendor_url('plugins/iCheck/square/blue.css', 'almasaeed2010/adminlte'),
+    // DataTables
+    vendor_url('bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css', 'almasaeed2010/adminlte'),
     // Theme style
     vendor_url('dist/css/AdminLTE.min.css', 'almasaeed2010/adminlte'),
     // AdminLTE Skins
@@ -220,6 +222,9 @@ echo Asset::render('js', array(
     vendor_url('bower_components/select2/dist/js/i18n/' .$langCode .'.js', 'almasaeed2010/adminlte'),
     // iCheck
     vendor_url('plugins/iCheck/icheck.min.js', 'almasaeed2010/adminlte'),
+    // DataTables
+    vendor_url('bower_components/datatables.net/js/jquery.dataTables.js', 'almasaeed2010/adminlte'),
+    vendor_url('bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js', 'almasaeed2010/adminlte'),
     // Slimscroll
     vendor_url('bower_components/jquery-slimscroll/jquery.slimscroll.min.js', 'almasaeed2010/adminlte'),
     // FastClick

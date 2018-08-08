@@ -3,9 +3,9 @@
 namespace Shared\Support;
 
 use Nova\Database\ORM\Builder as ModelBuilder;
-use Nova\Support\Facades\Input;
-use Nova\Support\Facades\Response;
+use Nova\Http\Request;
 use Nova\Support\Arr;
+use Nova\Support\Str;
 
 use Closure;
 
@@ -16,32 +16,51 @@ class DataTable
      * Server Side Processor for DataTables.
      *
      * @param Nova\Database\Query\Builder|Nova\Database\ORM\Builder $query
+     * @param Nova\Http\Request $request
      * @param array $options
-     * @param array $input
      *
      * @return array
      */
-    public static function handle($query, array $options, array $input = array())
+    public static function handle($query, Request $request, array $options)
     {
-        if (empty($input)) {
-            $input = Input::only('draw', 'columns', 'start', 'length', 'search', 'order');
-        }
+        $input = $request->only('draw', 'columns', 'start', 'length', 'search', 'order');
 
+        return with(new static)->process($query, $input, $options);
+    }
+
+    /**
+     * Server Side Processor for DataTables.
+     *
+     * @param Nova\Database\Query\Builder|Nova\Database\ORM\Builder $query
+     * @param array $input
+     * @param array $options
+     *
+     * @return array
+     */
+    public function process($query, array $input, array $options)
+    {
+        $ormQuery = ($query instanceof ModelBuilder);
+
+        // Get the columns from input.
         $columns = Arr::get($input, 'columns', array());
 
         // Compute the total count.
         $recordsTotal = $query->count();
 
         // Compute the draw.
-        $draw = intval(Arr::get($input, 'draw', 0));
+        $draw = (int) Arr::get($input, 'draw', 0);
 
         // Handle the global searching.
-        $search = trim(Arr::get($input, 'search.value'));
+        $search = Arr::get($input, 'search.value');
 
-        if (! empty($search)) {
-            $query->whereNested(function($query) use($columns, $options, $search)
+        if (! empty($search = trim($search))) {
+            $query->where(function ($query) use ($columns, $options, $search, $ormQuery)
             {
-                foreach($columns as $column) {
+                foreach ($columns as $column) {
+                    if ($column['searchable'] !== 'true') {
+                        continue;
+                    }
+
                     $data = $column['data'];
 
                     $option = Arr::first($options, function ($key, $value) use ($data)
@@ -49,15 +68,40 @@ class DataTable
                         return ($value['data'] == $data);
                     });
 
-                    if ($column['searchable'] == 'true') {
-                        $query->orWhere($option['field'], 'LIKE', '%' .$search .'%');
+                    if (! is_array($option) || ! isset($option['name'])) {
+                        continue;
                     }
+
+                    // We will try first the standard querying.
+                    else if (! Str::contains($field = $option['name'], '.')) {
+                        $query->orWhere($field, 'LIKE', '%' .$search .'%');
+
+                        continue;
+                    }
+
+                    // The relationships handling needs an ORM query.
+                    else if (! $ormQuery) {
+                        continue;
+                    }
+
+                    list ($relation, $field) = explode('.', $field);
+
+                    $query->orWhereHas($relation, function ($query) use ($field, $search)
+                    {
+                        $query->where($field, 'LIKE', '%' .$search .'%');
+                    });
                 }
             });
         }
 
         // Handle the column searching.
-        foreach($columns as $column) {
+        foreach ($columns as $column) {
+            $search = Arr::get($column, 'search.value');
+
+            if (($column['searchable'] !== 'true') || empty($search = trim($search))) {
+                continue;
+            }
+
             $data = $column['data'];
 
             $option = Arr::first($options, function ($key, $value) use ($data)
@@ -65,11 +109,28 @@ class DataTable
                 return ($value['data'] == $data);
             });
 
-            $search = trim(Arr::get($column, 'search.value'));
-
-            if (($column['searchable'] == 'true') && (strlen($search) > 0)) {
-                $query->where($option['field'], 'LIKE', '%' .$search .'%');
+            if (! is_array($option) || ! isset($option['name'])) {
+                continue;
             }
+
+            // We will try first the standard querying.
+            else if (! Str::contains($field = $option['name'], '.')) {
+                $query->where($field, 'LIKE', '%' .$search .'%');
+
+                continue;
+            }
+
+            // The relationships handling needs an ORM query.
+            else if (! $ormQuery) {
+                continue;
+            }
+
+            list ($relation, $field) = explode('.', $field);
+
+            $query->whereHas($relation, function ($query) use ($field, $search)
+            {
+                $query->where($field, 'LIKE', '%' .$search .'%');
+            });
         }
 
         // Compute the filtered count.
@@ -81,7 +142,11 @@ class DataTable
         foreach ($orders as $order) {
             $index = intval($order['column']);
 
-            $column = Arr::get($input, 'columns.' .$index, array());
+            $column = isset($columns[$index]) ? $columns[$index] : array();
+
+            if ($column['orderable'] !== 'true') {
+                continue;
+            }
 
             //
             $data = $column['data'];
@@ -91,73 +156,68 @@ class DataTable
                 return ($value['data'] == $data);
             });
 
-            if ($column['orderable'] == 'true') {
-                $dir = ($order['dir'] === 'asc') ? 'ASC' : 'DESC';
-
-                $field = $option['field'];
-
-                if ($query instanceof ModelBuilder) {
-                    $model = $query->getModel();
-
-                    $field = $model->getTable() .'.' .$field;
-                }
-
-                $query->orderBy($field, $dir);
+            if (! is_array($option) || ! isset($option['name'])) {
+                continue;
             }
+
+            // We cannot order by relationships.
+            else if (Str::contains($field = $option['name'], '.')) {
+                continue;
+            }
+
+            $direction = ($order['dir'] === 'asc') ? 'ASC' : 'DESC';
+
+            if ($ormQuery) {
+                $table = $query->getModel()->getTable();
+
+                $field = $table .'.' .$field;
+            }
+
+            $query->orderBy($field, $direction);
         }
 
-        // Handle the pagination.
+        // Handle the results pagination.
         $start  = Arr::get($input, 'start',  0);
         $length = Arr::get($input, 'length', 25);
 
         $query->skip($start)->take($length);
 
-        // Calculate the columns.
-        $columns = array();
-
-        foreach ($options as $option) {
-            $key = $option['data'];
-
-            //
-            $field = Arr::get($option, 'field');
-
-            $columns[$key] = Arr::get($option, 'uses', $field);
-        }
-
-        // Retrieve the data from database and it on respect of DataTables specs.
+        // Retrieve the results from database.
         $results = $query->get();
 
-        $data = array();
-
-        foreach ($results as $result) {
+        // Gather the data records from results.
+        $data = $results->map(function ($result) use ($options)
+        {
             $record = array();
 
-            foreach ($columns as $key => $field) {
-                if (is_null($field)) {
+            foreach ($options as $option) {
+                $data = $option['data'];
+
+                $field = Arr::get($option, 'uses', $name = $option['name']);
+
+                if ($field instanceof Closure) {
+                    $value = call_user_func($field, $result, $name, $data);
+                }
+
+                // The column has no custom renderer.
+                else if (! Str::contains($field, '.')) {
+                    $value = $result->getAttribute($field);
+                } else {
                     continue;
                 }
 
-                // Process for dynamic columns.
-                else if ($field instanceof Closure) {
-                    $value = call_user_func($field, $result, $key);
-                }
-
-                // Process for standard columns.
-                else {
-                    $value = $result->{$field};
-                }
-
-                $record[$key] = $value;
+                $record[$data] = $value;
             }
 
-            $data[] = $record;
-        }
+            return $record;
 
-        return Response::json(array(
+        })->toArray();
+
+        return array(
             "draw"            => $draw,
             "recordsTotal"    => $recordsTotal,
             "recordsFiltered" => $recordsFiltered,
             "data"            => $data
-        ));
+        );
     }
 }

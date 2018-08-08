@@ -387,3 +387,33 @@ a.uploaded_file {
   vertical-align: top;
   margin-right: 10px;
 }
+
+/* =================== DataTables =================== */
+
+#usersTable td {
+    vertical-align: middle;
+}
+
+#usersTable td.compact {
+    padding: 5px;
+}
+
+#usersTable {
+    border-bottom: 1px solid #f4f4f4;
+}
+
+#usersTable_length {
+    padding: 10px 0 0 10px;
+}
+
+#usersTable_filter {
+    padding: 10px 10px 0 0;
+}
+
+#usersTable_info {
+    padding: 9px 0 15px 20px;
+}
+
+#usersTable_paginate {
+    padding: 2px 10px 2px 0;
+}

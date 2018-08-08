@@ -1,15 +1,3 @@
-<style>
-
-#usersTable td {
-    vertical-align: middle;
-}
-
-#usersTable td.compact {
-    padding: 5px;
-}
-
-</style>
-
 <section class="content-header">
     <h1><?= $title; ?></h1>
     <ol class="breadcrumb">
@@ -41,10 +29,10 @@
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('users', 'Registered Users'); ?></h3>
     </div>
-    <div class="box-body ">
-        <table id='usersTable' class='table table-bordered table-striped table-hover responsive' style="width: 100%;">
+    <div class="box-body no-padding">
+        <table id='usersTable' class='table table-striped table-hover responsive' style="width: 100%;">
             <thead>
-                <tr>
+                <tr class="bg-navy disabled">
                     <th width='5%'><?= __d('users', 'ID'); ?></th>
                     <th width='18%'><?= __d('users', 'Username'); ?></th>
                     <th width='11%'><?= __d('users', 'Roles'); ?></th>
@@ -79,10 +67,10 @@ $(function () {
             }
         },
         pageLength: 15,
-        lengthMenu: [ 5, 10, 15, 20, 25, 50, 100 ],
+        lengthMenu: [ 2, 5, 10, 15, 20, 25, 50, 100 ],
 
         columns: [
-            { data: 'id',         name: 'id',         orderable: true,  searchable: false },
+            { data: 'id',         name: 'id',         orderable: true,  searchable: false,  className: "text-center" },
             { data: 'username',   name: 'username',   orderable: true,  searchable: true,  className: "text-center" },
             { data: 'roles',      name: 'roles.name', orderable: true,  searchable: true,  className: "text-center" },
             { data: 'realname',   name: 'realname',   orderable: true,  searchable: true,  className: "text-center" },

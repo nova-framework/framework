@@ -25,7 +25,7 @@
 <?php } ?>
 
 <div class="box box-widget">
-    <div class="box-header with-border">
+    <div class="box-header">
         <h3 class="box-title"><?= __d('roles', 'Registered Roles'); ?></h3>
         <div class="box-tools">
         <?= $roles->links(); ?>

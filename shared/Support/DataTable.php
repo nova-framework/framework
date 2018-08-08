@@ -91,7 +91,7 @@ class DataTable
                         continue;
                     }
 
-                    list ($relation, $field) = explode('.', $field);
+                    list ($relation, $field) = explode('.', $field, 2);
 
                     $query->orWhereHas($relation, function ($query) use ($field, $search)
                     {
@@ -132,7 +132,7 @@ class DataTable
                 continue;
             }
 
-            list ($relation, $field) = explode('.', $field);
+            list ($relation, $field) = explode('.', $field, 2);
 
             $query->whereHas($relation, function ($query) use ($field, $search)
             {
@@ -177,7 +177,7 @@ class DataTable
                 continue;
             }
 
-            // An ORM query.
+            // We have an ORM query.
             else if (! Str::contains($field, '.')) {
                 $table = $query->getModel()->getTable();
 
@@ -186,29 +186,9 @@ class DataTable
                 continue;
             }
 
-            $grammar = $query->getGrammar();
+            $column = $this->handleOrderByRelation($query, $field);
 
-            list ($relation, $field) = explode('.', $field, 2);
-
-            // Get the Relation instance by relationship name.
-            $relation = $query->getRelation($relation);
-
-            $related = $relation->getRelated();
-
-            $hasQuery = $relation->getRelationCountQuery($related->newQuery(), $query);
-
-            // Build the SQL script needed by the relation's JOIN.
-            $field = $related->getTable() .'.' .$field;
-
-            $sql = str_replace('count(*)', 'group_concat(distinct ' .$grammar->wrap($field) .')', $hasQuery->toSql());
-
-            // Create a sub-query select on main query.
-            $field = str_replace('.', '_', $field) .'_order';
-
-            $query->selectRaw('('. $sql .') as ' .$grammar->wrap($field), $hasQuery->getBindings());
-
-            // Add the order by the field of sub-query.
-            $query->orderBy($field, $direction);
+            $query->orderBy($column, $direction);
         }
 
         // Handle the results pagination.
@@ -254,5 +234,39 @@ class DataTable
             "recordsFiltered" => $recordsFiltered,
             "data"            => $data
         );
+    }
+
+    /**
+     * Updates the given query for an order by relationship.
+     *
+     * @param Nova\Database\Query\Builder|Nova\Database\ORM\Builder $query
+     * @param string $field
+     *
+     * @return string
+     */
+    protected function handleOrderByRelation($query, $field)
+    {
+        list ($relation, $field) = explode('.', $field, 2);
+
+        // Get the Relation instance by relationship name.
+        $relation = $query->getRelation($relation);
+
+        $related = $relation->getRelated();
+
+        $hasQuery = $relation->getRelationCountQuery($related->newQuery(), $query);
+
+        $grammar = $query->getGrammar();
+
+        // Build the SQL script needed by the relation's JOIN.
+        $field = $related->getTable() .'.' .$field;
+
+        $sql = str_replace('count(*)', 'group_concat(distinct ' .$grammar->wrap($field) .')', $hasQuery->toSql());
+
+        // Create a sub-query select on main query.
+        $field = str_replace('.', '_', $field) .'_order';
+
+        $query->selectRaw('('. $sql .') as ' .$grammar->wrap($field), $hasQuery->getBindings());
+
+        return $field;
     }
 }

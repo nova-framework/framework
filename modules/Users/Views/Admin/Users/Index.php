@@ -84,7 +84,7 @@ $(function () {
         columns: [
             { data: 'id',         name: 'id',         orderable: true,  searchable: false },
             { data: 'username',   name: 'username',   orderable: true,  searchable: true,  className: "text-center" },
-            { data: 'roles',      name: 'roles.name', orderable: false, searchable: true,  className: "text-center" },
+            { data: 'roles',      name: 'roles.name', orderable: true,  searchable: true,  className: "text-center" },
             { data: 'realname',   name: 'realname',   orderable: true,  searchable: true,  className: "text-center" },
             { data: 'email',      name: 'email',      orderable: true,  searchable: true,  className: "text-center" },
             { data: 'created_at', name: 'created_at', orderable: true,  searchable: false, className: "text-center" },

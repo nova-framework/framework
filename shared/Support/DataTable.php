@@ -41,6 +41,13 @@ class DataTable
     {
         $ormQuery = ($query instanceof ModelBuilder);
 
+        // Add the default * columns when is used an ORM query.
+        if ($ormQuery) {
+            $table = $query->getModel()->getTable();
+
+            $query->select($table .'.*');
+        }
+
         // Get the columns from input.
         $columns = Arr::get($input, 'columns', array());
 
@@ -160,19 +167,47 @@ class DataTable
                 continue;
             }
 
-            // We cannot order by relationships.
-            else if (Str::contains($field = $option['name'], '.')) {
-                continue;
-            }
+            $field = $option['name'];
 
             $direction = ($order['dir'] === 'asc') ? 'ASC' : 'DESC';
 
-            if ($ormQuery) {
-                $table = $query->getModel()->getTable();
+            if (! $ormQuery) {
+                $query->orderBy($field, $direction);
 
-                $field = $table .'.' .$field;
+                continue;
             }
 
+            // An ORM query.
+            else if (! Str::contains($field, '.')) {
+                $table = $query->getModel()->getTable();
+
+                $query->orderBy($table .'.' .$field, $direction);
+
+                continue;
+            }
+
+            $grammar = $query->getGrammar();
+
+            list ($relation, $field) = explode('.', $field, 2);
+
+            // Get the Relation instance by relationship name.
+            $relation = $query->getRelation($relation);
+
+            $related = $relation->getRelated();
+
+            $hasQuery = $relation->getRelationCountQuery($related->newQuery(), $query);
+
+            // Build the SQL script needed by the relation's JOIN.
+            $field = $related->getTable() .'.' .$field;
+
+            $sql = str_replace('count(*)', 'group_concat(distinct ' .$grammar->wrap($field) .')', $hasQuery->toSql());
+
+            // Create a sub-query select on main query.
+            $field = str_replace('.', '_', $field) .'_order';
+
+            $query->selectRaw('('. $sql .') as ' .$grammar->wrap($field), $hasQuery->getBindings());
+
+            // Add the order by the field of sub-query.
             $query->orderBy($field, $direction);
         }
 

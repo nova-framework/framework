@@ -67,7 +67,7 @@ $(function () {
             }
         },
         pageLength: 15,
-        lengthMenu: [ 2, 5, 10, 15, 20, 25, 50, 100 ],
+        lengthMenu: [ 5, 10, 15, 20, 25, 50, 100 ],
 
         columns: [
             { data: 'id',         name: 'id',         orderable: true,  searchable: false,  className: "text-center" },

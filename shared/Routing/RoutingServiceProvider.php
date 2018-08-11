@@ -12,14 +12,6 @@ class RoutingServiceProvider extends ServiceProvider
 {
 
     /**
-     * Boot the Service Provider.
-     */
-    public function boot()
-    {
-        //
-    }
-
-    /**
      * Register the Service Provider.
      *
      * @return void

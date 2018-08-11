@@ -10,14 +10,13 @@ use Shared\Widgets\WidgetManager;
 
 class WidgetServiceProvider extends ServiceProvider
 {
-
     /**
-     * Boot the Service Provider.
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
      */
-    public function boot()
-    {
-        //
-    }
+    protected $defer = true;
+
 
     /**
      * Register the Service Provider.
@@ -26,7 +25,7 @@ class WidgetServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bindShared('widgets', function($app)
+        $this->app->singleton('widgets', function($app)
         {
             return new WidgetManager($app['request'], $app);
         });

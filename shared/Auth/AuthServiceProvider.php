@@ -25,12 +25,12 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bindShared('command.auth.reminders', function($app)
+        $this->app->singleton('command.auth.reminders', function($app)
         {
             return new RemindersTableCommand($app['files']);
         });
 
-        $this->app->bindShared('command.auth.reminders.clear', function()
+        $this->app->singleton('command.auth.reminders.clear', function()
         {
             return new ClearRemindersCommand;
         });

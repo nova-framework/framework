@@ -147,6 +147,7 @@ return array(
         'Shared\Auth\AuthServiceProvider',
         'Shared\Backup\BackupServiceProvider',
         'Shared\Cache\CacheServiceProvider',
+        'Shared\DataTable\DataTableServiceProvider',
         'Shared\DomPDF\PdfServiceProvider',
         'Shared\Queue\QueueServiceProvider',
         'Shared\Routing\RoutingServiceProvider',

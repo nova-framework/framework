@@ -26,7 +26,7 @@ use Nova\Support\Facades\View;
 use Nova\Support\Arr;
 use Nova\Support\Str;
 
-use Shared\Support\DataTable;
+use Shared\Support\Facades\DataTable;
 
 use Modules\Platform\Controllers\Admin\BaseController;
 use Modules\Roles\Models\Role;
@@ -149,37 +149,34 @@ class Users extends BaseController
 
     public function data(Request $request)
     {
-        $columns = array(
-            array('data' => 'id',       'name' => 'id'),
-            array('data' => 'username', 'name' => 'username'),
-            array('data' => 'realname', 'name' => 'realname'),
-            array('data' => 'email',    'name' => 'email'),
-
-            array('data' => 'roles', 'name' => 'roles.name', 'uses' => function ($user)
-            {
-                $roles = $user->roles->lists('name');
-
-                return implode(', ', $roles);
-            }),
-
-            array('data' => 'created_at', 'name' => 'created_at', 'uses' => function ($user)
-            {
-                $format = __d('users', '%d %b %Y, %H:%M');
-
-                return $user->created_at->formatLocalized($format);
-            }),
-
-            array('data' => 'actions', 'name' => 'actions', 'uses' => function ($user)
-            {
-                return View::fetch('Modules/Users::Partials/UsersTableActions', compact('user'));
-            }),
-        );
-
         $query = User::with('roles')->where('activated', 1);
 
-        $data = DataTable::handle($query, $request, $columns);
+        $dataTable = DataTable::make($query)
+            ->column('id')
+            ->column('username')
+            ->column('realname')
+            ->column('email');
 
-        return Response::json($data);
+        $dataTable->column('roles', 'roles.name', function ($user)
+        {
+            $roles = $user->roles->lists('name');
+
+            return implode(', ', $roles);
+        });
+
+        $dataTable->column('created_at', function ($user)
+        {
+            $format = __d('users', '%d %b %Y, %H:%M');
+
+            return $user->created_at->formatLocalized($format);
+        });
+
+        $dataTable->column('actions', function ($user)
+        {
+            return View::fetch('Modules/Users::Partials/UsersTableActions', compact('user'));
+        });
+
+        return $dataTable->handle($request);
     }
 
     public function index()

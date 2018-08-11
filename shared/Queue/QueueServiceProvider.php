@@ -12,6 +12,13 @@ use Shared\Queue\BatchRunner;
 
 class QueueServiceProvider extends ServiceProvider
 {
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = true;
+
 
     /**
      * Bootstrap the Application Events.
@@ -48,7 +55,7 @@ class QueueServiceProvider extends ServiceProvider
      */
     protected function registerBatchRunner()
     {
-        $this->app->bindShared('queue.batch.runner', function($app)
+        $this->app->singleton('queue.batch.runner', function($app)
         {
             return new BatchRunner($app['queue'], $app['queue.failer'], $app['events']);
         });
@@ -61,7 +68,7 @@ class QueueServiceProvider extends ServiceProvider
      */
     protected function registerBatchCommand()
     {
-        $this->app->bindShared('command.queue.batch', function()
+        $this->app->singleton('command.queue.batch', function()
         {
             return new BatchCommand($this->app['queue.batch.runner']);
         });
@@ -74,7 +81,7 @@ class QueueServiceProvider extends ServiceProvider
      */
     protected function registerAsyncCommand()
     {
-        $this->app->bindShared('command.queue.async', function()
+        $this->app->singleton('command.queue.async', function()
         {
             return new AsyncCommand($this->app['queue.worker']);
         });

@@ -80,9 +80,9 @@ class Roles extends BaseController
 
         $dataTable->column('description', function ($role)
         {
-            $shortDesc = Str::limit($role->description, 80);
+            $content = Str::limit($title = $role->description, 80);
 
-            return sprintf('<div title="%s">%s</div>', e($role->description), e($shortDesc));
+            return sprintf('<div title="%s">%s</div>', $title, $content);
         });
 
         $dataTable->column('users', 'users_count');

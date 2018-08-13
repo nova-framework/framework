@@ -13,7 +13,7 @@
 
 <div class="box box-default">
     <div class="box-body">
-        <button id="addNewUploads" class="btn btn-success btn-sm col-sm-2 pull-right"><?= __d('content', 'Add New'); ?></button>
+        <button id="addNewUploads" class="btn btn-success col-sm-2 pull-right"><?= __d('content', 'Add New'); ?></button>
         <div class="clearfix"></div>
 
         <form action="<?= site_url('admin/media/upload'); ?>" id="fm_dropzone_main" enctype="multipart/form-data" method="POST" style="display: none;">

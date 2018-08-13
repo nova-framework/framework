@@ -50,15 +50,18 @@ class Roles extends BaseController
             'description' => __d('roles', 'Description'),
         );
 
+        // Create a Validator instance.
+        $validator = Validator::make($data, $rules, $messages, $attributes);
+
         // Add the custom Validation Rule commands.
-        Validator::extend('valid_name', function($attribute, $value, $parameters)
+        $validator->addExtension('valid_name', function($attribute, $value, $parameters)
         {
             $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){1,}$~u';
 
             return (preg_match($pattern, $value) === 1);
         });
 
-        return Validator::make($data, $rules, $messages, $attributes);
+        return $validator;
     }
 
     public function data(Request $request)

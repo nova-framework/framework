@@ -1,3 +1,33 @@
+<style>
+#usersTable td {
+    vertical-align: middle;
+}
+
+#usersTable td.compact {
+    padding: 5px;
+}
+
+#usersTable {
+    border-bottom: 1px solid #f4f4f4;
+}
+
+#usersTable_length {
+    padding: 10px 0 0 10px;
+}
+
+#usersTable_filter {
+    padding: 10px 10px 0 0;
+}
+
+#usersTable_info {
+    padding: 9px 0 15px 20px;
+}
+
+#usersTable_paginate {
+    padding: 2px 10px 4px 0;
+}
+</style>
+
 <section class="content-header">
     <h1><?= $title; ?></h1>
     <ol class="breadcrumb">
@@ -53,24 +83,21 @@
 $(function () {
     $('#usersTable').DataTable({
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/<?= $langInfo; ?>.json'
+            url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/<?= Language::info(); ?>.json'
         },
         responsive: true,
-        stateSave: true,
+        stateSave:  true,
         processing: true,
         serverSide: true,
         ajax: {
             type: 'POST',
-            url: '<?= site_url('admin/users/data'); ?>',
-            data: function (data) {
-                data._token = '<?= csrf_token(); ?>';
-            }
+            url: '<?= site_url('admin/users/data'); ?>'
         },
         pageLength: 15,
         lengthMenu: [ 5, 10, 15, 20, 25, 50, 100 ],
 
         columns: [
-            { data: 'id',         name: 'id',         orderable: true,  searchable: false,  className: "text-center" },
+            { data: 'id',         name: 'id',         orderable: true,  searchable: false, className: "text-center" },
             { data: 'username',   name: 'username',   orderable: true,  searchable: true,  className: "text-center" },
             { data: 'roles',      name: 'roles.name', orderable: true,  searchable: true,  className: "text-center" },
             { data: 'realname',   name: 'realname',   orderable: true,  searchable: true,  className: "text-center" },

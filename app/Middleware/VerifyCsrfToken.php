@@ -14,6 +14,8 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected $except = array(
         'admin/files/connector',
+        'admin/roles/data',
+        'admin/users/data',
         'livechat/*',
     );
 }

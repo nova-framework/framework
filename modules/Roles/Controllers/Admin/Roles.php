@@ -63,6 +63,11 @@ class Roles extends BaseController
 
     public function data(Request $request)
     {
+        // Authorize the current User.
+        if (Gate::denies('lists', Role::class)) {
+            throw new AuthorizationException();
+        }
+
         $query = Role::withCount('users');
 
         $dataTable = DataTable::make($query)

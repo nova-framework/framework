@@ -1,31 +1,5 @@
 <style>
-#rolesTable td {
-    vertical-align: middle;
-}
-
-#rolesTable td.compact {
-    padding: 5px;
-}
-
-#rolesTable {
-    border-bottom: 1px solid #f4f4f4;
-}
-
-#rolesTable_length {
-    padding: 10px 0 0 10px;
-}
-
-#rolesTable_filter {
-    padding: 10px 10px 0 0;
-}
-
-#rolesTable_info {
-    padding: 9px 0 15px 20px;
-}
-
-#rolesTable_paginate {
-    padding: 2px 10px 4px 0;
-}
+<?= View::fetch('Modules/Roles::Partials/RolesDataTable'); ?>
 </style>
 
 <section class="content-header">

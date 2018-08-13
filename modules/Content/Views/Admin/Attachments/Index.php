@@ -11,18 +11,20 @@
 
 <?= View::fetch('Partials/Messages'); ?>
 
-<p>
-    <button id="addNewUploads" class="btn btn-success btn-sm pull-right"><?= __d('content', 'Add New'); ?></button>
-    <div class="clearfix"></div>
-</p>
-
-<form action="<?= site_url('admin/media/upload'); ?>" id="fm_dropzone_main" enctype="multipart/form-data" method="POST">
-    <?= csrf_field() ?>
-    <a id="closeDZ1"><i class="fa fa-times"></i></a>
-    <div class="dz-message"><i class="fa fa-cloud-upload"></i><br><?= __d('content', 'Drop files here to upload'); ?></div>
-</form>
-
 <div class="box box-default">
+    <div class="box-body">
+        <button id="addNewUploads" class="btn btn-success btn-sm col-sm-2 pull-right"><?= __d('content', 'Add New'); ?></button>
+        <div class="clearfix"></div>
+
+        <form action="<?= site_url('admin/media/upload'); ?>" id="fm_dropzone_main" enctype="multipart/form-data" method="POST" style="display: none;">
+            <?= csrf_field() ?>
+            <a id="closeDZ1"><i class="fa fa-times"></i></a>
+            <div class="dz-message"><i class="fa fa-cloud-upload"></i><br><?= __d('content', 'Drop files here to upload'); ?></div>
+        </form>
+    </div>
+</div>
+
+<div class="box box-widget">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('content', 'Uploaded files'); ?></h3>
     </div>

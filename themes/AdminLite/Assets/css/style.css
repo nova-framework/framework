@@ -79,11 +79,10 @@
 
 #fm_dropzone_main {
   border: 1px dashed #0087F7;
-  border-radius: 5px;
+  border-radius: 10px;
   background: white;
   text-align: center;
-  margin-top: 15px;
-  margin-bottom: 15px;
+  margin-top: 10px;
   /*min-height: 100px;*/
   padding: 8px;
   vertical-align: middle;

@@ -149,6 +149,11 @@ class Users extends BaseController
 
     public function data(Request $request)
     {
+        // Authorize the current User.
+        if (Gate::denies('lists', User::class)) {
+            throw new AuthorizationException();
+        }
+
         $query = User::with('roles')->where('activated', 1);
 
         $dataTable = DataTable::make($query)

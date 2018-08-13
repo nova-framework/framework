@@ -1,3 +1,33 @@
+<style>
+#rolesTable td {
+    vertical-align: middle;
+}
+
+#rolesTable td.compact {
+    padding: 5px;
+}
+
+#rolesTable {
+    border-bottom: 1px solid #f4f4f4;
+}
+
+#rolesTable_length {
+    padding: 10px 0 0 10px;
+}
+
+#rolesTable_filter {
+    padding: 10px 10px 0 0;
+}
+
+#rolesTable_info {
+    padding: 9px 0 15px 20px;
+}
+
+#rolesTable_paginate {
+    padding: 2px 10px 4px 0;
+}
+</style>
+
 <section class="content-header">
     <h1><?= __d('roles', 'Roles'); ?></h1>
     <ol class="breadcrumb">
@@ -22,63 +52,72 @@
     </div>
 </div>
 
+<?php $boxType = 'widget'; ?>
+<?php } else { ?>
+<?php $boxType = 'default'; ?>
 <?php } ?>
 
-<div class="box box-widget">
-    <div class="box-header">
+<div class="box box-<?= $boxType; ?>">
+    <div class="box-header with-border">
         <h3 class="box-title"><?= __d('roles', 'Registered Roles'); ?></h3>
-        <div class="box-tools">
-        <?= $roles->links(); ?>
-        </div>
     </div>
     <div class="box-body no-padding">
-        <?php $deletables = 0; ?>
-        <?php if (! $roles->isEmpty()) { ?>
-        <table id="left" class="table table-striped table-hover responsive">
-            <tr class="bg-navy disabled">
-                <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'ID'); ?></th>
-                <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'Name'); ?></th>
-                <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'Slug'); ?></th>
-                <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'Description'); ?></th>
-                <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'Users'); ?></th>
-                <th style="text-align: right; vertical-align: middle;"><?= __d('roles', 'Operations'); ?></th>
-            </tr>
-            <?php foreach ($roles->items() as $role) { ?>
-            <tr>
-                <td style="text-align: center; vertical-align: middle;" width="5%"><?= $role->id; ?></td>
-                <td style="text-align: center; vertical-align: middle;" width="17%"><?= $role->name; ?></td>
-                <td style="text-align: center; vertical-align: middle;" width="17%"><?= $role->slug; ?></td>
-                <td style="text-align: left; vertical-align: middle;" width="40%"><?= $role->description; ?></td>
-                <td style="text-align: center; vertical-align: middle;" width="6%"><?= $role->users->count(); ?></td>
-                <td style="text-align: right; vertical-align: middle;" width="15%">
-                    <div class="btn-group" role="group" aria-label="...">
-                        <?php if (Gate::allows('delete', $role)) { ?>
-                        <?php $deletables++; ?>
-                        <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $role->id; ?>" title="<?= __d('roles', 'Delete this Role'); ?>" role="button"><i class="fa fa-remove"></i></a>
-                        <?php } ?>
-                        <?php if (Gate::allows('update', $role)) { ?>
-                        <a class="btn btn-sm btn-success" href="<?= site_url('admin/roles/' .$role->id .'/edit'); ?>" title="<?= __d('roles', 'Edit this Role'); ?>" role="button"><i class="fa fa-pencil"></i></a>
-                        <?php } ?>
-                        <?php if (Gate::allows('view', $role)) { ?>
-                        <a class="btn btn-sm btn-warning" href="<?= site_url('admin/roles/' .$role->id); ?>" title="<?= __d('roles', 'Show the Details'); ?>" role="button"><i class="fa fa-search"></i></a>
-                        <?php } ?>
-                    </div>
-                </td>
-            </tr>
-            <?php } ?>
+        <table id='rolesTable' class='table table-striped table-hover responsive' style="width: 100%;">
+            <thead>
+                <tr class="bg-navy disabled">
+                    <th width='5%'><?= __d('roles', 'ID'); ?></th>
+                    <th width='15%'><?= __d('roles', 'Name'); ?></th>
+                    <th width='15%'><?= __d('roles', 'Slug'); ?></th>
+                    <th width='40%'><?= __d('roles', 'Description'); ?></th>
+                    <th width='10%'><?= __d('roles', 'Users'); ?></th>
+                    <th width='15%'><?= __d('roles', 'Actions'); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
         </table>
-        <?php } else { ?>
-        <div class="alert alert-warning" style="margin: 0 5px 5px;">
-            <h4><i class="icon fa fa-warning"></i> <?= strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('roles', 'No registered Roles'); ?></h4>
-            <?= __d('roles', 'There are no registered Roles.'); ?>
-        </div>
-    <?php } ?>
     </div>
 </div>
 
-</section>
+<script>
 
-<?php if ($deletables > 0) { ?>
+$(function () {
+    $('#rolesTable').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/<?= Language::info(); ?>.json'
+        },
+        responsive: true,
+        stateSave:  true,
+        processing: true,
+        serverSide: true,
+        ajax: {
+            type: 'POST',
+            url: '<?= site_url('admin/roles/data'); ?>'
+        },
+        pageLength: 15,
+        lengthMenu: [ 5, 10, 15, 20, 25, 50, 100 ],
+
+        columns: [
+            { data: 'id',          name: 'id',          orderable: true,  searchable: false, className: "text-center" },
+            { data: 'name',        name: 'name',        orderable: true,  searchable: true,  className: "text-center" },
+            { data: 'slug',        name: 'slug',        orderable: true,  searchable: true,  className: "text-center" },
+            { data: 'description', name: 'description', orderable: false, searchable: true,  className: "text-left" },
+            { data: 'users',       name: 'users_count', orderable: true,  searchable: false, className: "text-center" },
+            { data: 'actions',     name: 'actions',     orderable: false, searchable: false, className: "text-right compact" },
+        ],
+
+        drawCallback: function(settings)
+        {
+            var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
+
+            pagination.toggle(this.api().page.info().pages > 1);
+        },
+    });
+});
+
+</script>
+
+</section>
 
 <div class="modal modal-default" id="modal-delete-dialog">
     <div class="modal-dialog">
@@ -121,6 +160,3 @@ $(function () {
 });
 
 </script>
-
-<?php } ?>
-

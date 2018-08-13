@@ -8,10 +8,10 @@
 
 namespace Modules\Users\Controllers\Admin;
 
-use Nova\Http\Request;
 use Nova\Auth\Access\AuthorizationException;
 use Nova\Database\ORM\Collection;
 use Nova\Database\ORM\ModelNotFoundException;
+use Nova\Http\Request;
 use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Gate;
@@ -186,11 +186,8 @@ class Users extends BaseController
             throw new AuthorizationException();
         }
 
-        $langInfo = Language::info();
-
         return $this->createView()
-            ->shares('title', __d('users', 'Users'))
-            ->with('langInfo', $langInfo);
+            ->shares('title', __d('users', 'Users'));
     }
 
     public function create(Request $request)

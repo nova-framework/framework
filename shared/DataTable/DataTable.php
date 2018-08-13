@@ -26,7 +26,7 @@ class DataTable
     /**
      * @var array
      */
-    protected $options;
+    protected $columns = array();
 
     /**
      * @var string
@@ -38,23 +38,32 @@ class DataTable
      * Server Side Processor for DataTables.
      *
      * @param Nova\Database\Query\Builder|Nova\Database\ORM\Builder $query
-     * @param array $options
+     * @param array $columns
      *
      * @return array
      */
-    public function __construct(Factory $factory, $query, array $options)
+    public function __construct(Factory $factory, $query, array $columns)
     {
         $this->factory = $factory;
 
-        $this->options = $options;
-
         $this->query = $query;
 
-        // For an ORM query we will set the Model table and add the default * columns.
         if ($query instanceof ModelBuilder) {
+            // We will set the Model table and add the default * columns if is needed.
+
             $this->table = $table = $query->getModel()->getTable();
 
-            $query->select($table .'.*');
+            if (is_null($query->getQuery()->columns)) {
+                $query->select($table .'.*');
+            }
+        }
+
+        foreach ($columns as $column) {
+            if (! is_array($column) || is_null($key = Arr::get($column, 'data'))) {
+                throw new InvalidArgumentException('Invalid column specified.');
+            }
+
+            $this->columns[$key] = $column;
         }
     }
 
@@ -69,8 +78,10 @@ class DataTable
      */
     public function column($data, $name = null, Closure $callback = null)
     {
-        if (preg_match('/^[a-z]\w+/i', $data) !== 1) {
-            throw new InvalidArgumentException('Invalid column data.');
+        if (isset($this->columns[$data])) {
+            throw new InvalidArgumentException('Column already exists.');
+        } else if (preg_match('/^[a-z]\w+/i', $data) !== 1) {
+            throw new InvalidArgumentException('Invalid column key.');
         }
 
         if (is_null($name)) {
@@ -90,7 +101,7 @@ class DataTable
             $column['uses'] = $callback;
         }
 
-        $this->options[] = $column;
+        $this->columns[$data] = $column;
 
         return $this;
     }
@@ -107,7 +118,7 @@ class DataTable
         $query = $this->getQuery();
 
         if (is_null($request)) {
-            $request = $this->factory->getRequest();
+            $request = $this->getRequest();
         }
 
         $input = $request->only('draw', 'columns', 'start', 'length', 'search', 'order');
@@ -116,14 +127,14 @@ class DataTable
         $columns = Arr::get($input, 'columns', array());
 
         //
-        // Compute the total count.
-
-        $recordsTotal = $query->count();
-
-        //
         // Compute the draw.
 
         $draw = (int) Arr::get($input, 'draw', 0);
+
+        //
+        // Compute the total count.
+
+        $recordsTotal = $query->count();
 
         //
         // Handle the global searching.
@@ -138,7 +149,7 @@ class DataTable
                         continue;
                     }
 
-                    $this->handleColumnSearching($query, $column, $search, 'or');
+                    $this->handleColumnSearching($query, $column['data'], $search, 'or');
                 }
             });
         }
@@ -153,7 +164,7 @@ class DataTable
                 continue;
             }
 
-            $this->handleColumnSearching($query, $column, $search, 'and');
+            $this->handleColumnSearching($query, $column['data'], $search, 'and');
         }
 
         //
@@ -177,7 +188,7 @@ class DataTable
 
             $direction = ($order['dir'] === 'asc') ? 'ASC' : 'DESC';
 
-            $this->handleColumnOrdering($query, $column, $direction);
+            $this->handleColumnOrdering($query, $column['data'], $direction);
         }
 
         //
@@ -214,17 +225,17 @@ class DataTable
      * Handles the search for a column.
      *
      * @param Nova\Database\Query\Builder|Nova\Database\ORM\Builder $query
-     * @param array $column
+     * @param string $data
      * @param string $search
      * @param string $boolean
      *
      * @return void
      */
-    protected function handleColumnSearching($query, $column, $search, $boolean = 'and')
+    protected function handleColumnSearching($query, $data, $search, $boolean = 'and')
     {
-        if (! is_array($options = $this->getColumnOptions($column))) {
+        if (is_null($column = Arr::get($this->columns, $data))) {
             return;
-        } else if (is_null($field = Arr::get($options, 'name'))) {
+        } else if (is_null($field = Arr::get($column, 'name'))) {
             return;
         }
 
@@ -249,16 +260,16 @@ class DataTable
      * Handles the search for a column.
      *
      * @param Nova\Database\Query\Builder|Nova\Database\ORM\Builder $query
-     * @param array $column
+     * @param string $data
      * @param string $direction
      *
      * @return void
      */
-    protected function handleColumnOrdering($query, $column, $direction)
+    protected function handleColumnOrdering($query, $data, $direction)
     {
-        if (! is_array($options = $this->getColumnOptions($column))) {
+        if (is_null($column = Arr::get($this->columns, $data))) {
             return;
-        } else if (is_null($field = Arr::get($options, 'name'))) {
+        } else if (is_null($field = Arr::get($column, 'name'))) {
             return;
         }
 
@@ -277,7 +288,6 @@ class DataTable
 
             $sql = str_replace('count(*)', 'group_concat(distinct ' .$column .')', $hasQuery->toSql());
 
-            //
             $field = str_replace('.', '_', $field) .'_order';
 
             $query->selectRaw('('. $sql .') as ' .$grammar->wrap($field), $hasQuery->getBindings());
@@ -292,23 +302,6 @@ class DataTable
     }
 
     /**
-     * Returns the column options.
-     *
-     * @param array $column
-     *
-     * @return array|null
-     */
-    protected function getColumnOptions(array $column)
-    {
-        $data = $column['data'];
-
-        return Arr::first($this->options, function ($key, $value) use ($data)
-        {
-            return ($value['data'] == $data);
-        });
-    }
-
-    /**
      * Builds a record from a query's result.
      *
      * @param mixed $result
@@ -319,10 +312,8 @@ class DataTable
     {
         $record = array();
 
-        foreach ($this->getOptions() as $option) {
-            $data = $option['data'];
-
-            $field = Arr::get($option, 'uses', $name = $option['name']);
+        foreach ($this->columns as $data => $column) {
+            $field = Arr::get($column, 'uses', $name = $column['name']);
 
             if ($field instanceof Closure) {
                 $value = call_user_func($field, $result, $name, $data);
@@ -350,9 +341,29 @@ class DataTable
      */
     protected function createResponse(array $data, $status = 200, array $headers = array(), $options = 0)
     {
-        $responseFactory = $this->factory->getResponseFactory();
+        $responseFactory = $this->getResponseFactory();
 
         return $responseFactory->json($data, $status, $headers, $options);
+    }
+
+    /**
+     * Returns the Request instance.
+     *
+     * @return \Nova\Http\Request
+     */
+    protected function getRequest()
+    {
+        return $this->factory->getRequest();
+    }
+
+    /**
+     * Returns the Response Factory instance.
+     *
+     * @return \Nova\Routing\ResponseFactory
+     */
+    protected function getResponseFactory()
+    {
+        return $this->factory->getResponseFactory();
     }
 
     /**
@@ -380,9 +391,13 @@ class DataTable
      *
      * @return array
      */
-    protected function getOptions()
+    protected function getColumns()
     {
-        return $this->options;
+        return array_map(function ($column)
+        {
+            return $column;
+
+        }, $this->columns);
     }
 
     /**

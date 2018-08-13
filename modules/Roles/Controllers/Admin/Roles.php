@@ -10,10 +10,15 @@ namespace Modules\Roles\Controllers\Admin;
 
 use Nova\Auth\Access\AuthorizationException;
 use Nova\Database\ORM\ModelNotFoundException;
+use Nova\Http\Request;
 use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
+use Nova\Support\Facades\View;
+use Nova\Support\Str;
+
+use Shared\Support\Facades\DataTable;
 
 use Modules\Platform\Controllers\Admin\BaseController;
 use Modules\Roles\Models\Role;
@@ -56,6 +61,32 @@ class Roles extends BaseController
         return Validator::make($data, $rules, $messages, $attributes);
     }
 
+    public function data(Request $request)
+    {
+        $query = Role::withCount('users');
+
+        $dataTable = DataTable::make($query)
+            ->column('id')
+            ->column('name')
+            ->column('slug');
+
+        $dataTable->column('description', function ($role)
+        {
+            $shortDesc = Str::limit($role->description, 80);
+
+            return sprintf('<div title="%s">%s</div>', e($role->description), e($shortDesc));
+        });
+
+        $dataTable->column('users', 'users_count');
+
+        $dataTable->column('actions', function ($role)
+        {
+            return View::fetch('Modules/Roles::Partials/RolesTableActions', compact('role'));
+        });
+
+        return $dataTable->handle($request);
+    }
+
     public function index()
     {
         // Authorize the current User.
@@ -63,12 +94,8 @@ class Roles extends BaseController
             throw new AuthorizationException();
         }
 
-        // Get all Role records for current page.
-        $roles = Role::with('users')->paginate(25);
-
         return $this->createView()
-            ->shares('title', __d('roles', 'Roles'))
-            ->with('roles', $roles);
+            ->shares('title', __d('roles', 'Roles'));
     }
 
     public function create()

@@ -15,8 +15,11 @@
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin'), function ()
 {
-    Route::paginate('roles', 'Roles@index');
+    // Server Side Processor for Roles DataTable.
+    Route::post('roles/data',         'Roles@data');
 
+    // The Users CRUD.
+    Route::get( 'roles',              'Roles@index');
     Route::get( 'roles/create',       'Roles@create');
     Route::post('roles',              'Roles@store');
     Route::get( 'roles/{id}',         'Roles@show');

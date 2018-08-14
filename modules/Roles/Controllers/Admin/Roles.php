@@ -76,16 +76,17 @@ class Roles extends BaseController
         $dataTable = DataTable::make($query)
             ->column('id')
             ->column('name')
-            ->column('slug');
-
-        $dataTable->column('description', function ($role)
-        {
-            $shortDesc = Str::limit($role->description, 80);
-
-            return sprintf('<div title="%s">%s</div>', e($role->description), e($shortDesc));
-        });
+            ->column('slug')
+            ->column('description');
 
         $dataTable->column('users', 'users_count');
+
+        $dataTable->column('created_at', function ($role)
+        {
+            $format = __d('roles', '%d %b %Y, %H:%M');
+
+            return $role->created_at->formatLocalized($format);
+        });
 
         $dataTable->column('actions', function ($role)
         {

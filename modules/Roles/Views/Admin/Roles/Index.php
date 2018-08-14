@@ -42,8 +42,9 @@
                     <th width='5%'><?= __d('roles', 'ID'); ?></th>
                     <th width='15%'><?= __d('roles', 'Name'); ?></th>
                     <th width='15%'><?= __d('roles', 'Slug'); ?></th>
-                    <th width='40%'><?= __d('roles', 'Description'); ?></th>
+                    <th width='25%'><?= __d('roles', 'Description'); ?></th>
                     <th width='10%'><?= __d('roles', 'Users'); ?></th>
+                    <th width='15%'><?= __d('users', 'Created At'); ?></th>
                     <th width='15%'><?= __d('roles', 'Actions'); ?></th>
                 </tr>
             </thead>
@@ -77,6 +78,7 @@ $(function () {
             { data: 'slug',        name: 'slug',        orderable: true,  searchable: true,  className: "text-center" },
             { data: 'description', name: 'description', orderable: false, searchable: true,  className: "text-left" },
             { data: 'users',       name: 'users_count', orderable: true,  searchable: false, className: "text-center" },
+            { data: 'created_at',  name: 'created_at',  orderable: true,  searchable: false, className: "text-center" },
             { data: 'actions',     name: 'actions',     orderable: false, searchable: false, className: "text-right compact" },
         ],
 

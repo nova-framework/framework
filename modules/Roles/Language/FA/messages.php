@@ -1,8 +1,10 @@
 <?php
 
 return array (
+  '%d %b %Y, %H:%M' => '',
   '%d %b %Y, %R' => '',
   '<< Previous Page' => '',
+  'Actions' => '',
   'Are you sure you want to remove this Role, the operation being irreversible?' => '',
   'Cancel' => '',
   'Close' => '',
@@ -21,8 +23,6 @@ return array (
   'Field' => '',
   'ID' => '',
   'Name' => '',
-  'No registered Roles' => '',
-  'Operations' => '',
   'Platform' => '',
   'Please click the button <b>Delete</b> to proceed, or <b>Cancel</b> to abandon the operation.' => '',
   'Registered Roles' => '',
@@ -37,7 +37,6 @@ return array (
   'The Role <b>{0}</b> was successfully created.' => '',
   'The Role <b>{0}</b> was successfully deleted.' => '',
   'The Role <b>{0}</b> was successfully updated.' => '',
-  'There are no registered Roles.' => '',
   'Updated At' => '',
   'User Role : <b>{0}</b>' => '',
   'User Roles' => '',

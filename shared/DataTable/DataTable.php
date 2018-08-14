@@ -28,11 +28,6 @@ class DataTable
      */
     protected $columns = array();
 
-    /**
-     * @var string
-     */
-    protected $table;
-
 
     /**
      * Server Side Processor for DataTables.
@@ -48,22 +43,22 @@ class DataTable
 
         $this->query = $query;
 
-        if ($query instanceof ModelBuilder) {
-            // We will set the Model table and add the default * columns if is needed.
-
-            $this->table = $table = $query->getModel()->getTable();
-
-            if (is_null($query->getQuery()->columns)) {
-                $query->select($table .'.*');
-            }
-        }
-
         foreach ($columns as $column) {
             if (! is_array($column) || is_null($key = Arr::get($column, 'data'))) {
                 throw new InvalidArgumentException('Invalid column specified.');
             }
 
             $this->columns[$key] = $column;
+        }
+
+        if ($query instanceof ModelBuilder) {
+            $baseQuery = $query->getQuery();
+
+            if (is_null($baseQuery->columns)) {
+                $table = $query->getModel()->getTable();
+
+                $query->select($table .'.*');
+            }
         }
     }
 
@@ -248,11 +243,6 @@ class DataTable
             });
         }
 
-        // Not a relationship based search.
-        else if (! is_null($table = $this->getTable())) {
-            $field = $table .'.' .$field;
-        }
-
         $query->where($field, 'like', '%' .$search .'%', $boolean);
     }
 
@@ -291,11 +281,6 @@ class DataTable
             $field = str_replace('.', '_', $field) .'_order';
 
             $query->selectRaw('('. $sql .') as ' .$grammar->wrap($field), $hasQuery->getBindings());
-        }
-
-        // Not a relationship based ordering.
-        else if (! is_null($table = $this->getTable())) {
-            $field = $table .'.' .$field;
         }
 
         $query->orderBy($field, $direction);
@@ -398,15 +383,5 @@ class DataTable
             return $column;
 
         }, $this->columns);
-    }
-
-    /**
-     * Returns cached the current query Model table if any.
-     *
-     * @return string
-     */
-    protected function getTable()
-    {
-        return $this->table;
     }
 }

@@ -1,11 +1,13 @@
 <?php
 
 return array (
+  '%d %b %Y, %H:%M' => '',
   '%d %b %Y, %R' => '',
   '%d files selected' => '',
   '- Choose an option -' => '',
   '<< Previous Page' => '<< Sidste Side',
   'Account' => '',
+  'Actions' => '',
   'Are you sure you want to remove this Field Item, the operation being irreversible?' => '',
   'Are you sure you want to remove this User, the operation being irreversible?' => '',
   'Browse ...' => '',

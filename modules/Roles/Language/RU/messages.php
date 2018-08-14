@@ -1,8 +1,10 @@
 <?php
 
 return array (
+  '%d %b %Y, %H:%M' => '',
   '%d %b %Y, %R' => '%d %b %Y, %R',
   '<< Previous Page' => '<< Предыдущая страница',
+  'Actions' => '',
   'Are you sure you want to remove this Role, the operation being irreversible?' => 'Вы уверены, что хотите удалить эту роль, т.к. операция необратима?',
   'Cancel' => 'Отмена',
   'Close' => 'Закрыть',
@@ -21,8 +23,6 @@ return array (
   'Field' => 'Поле',
   'ID' => 'ID',
   'Name' => 'Наименование',
-  'No registered Roles' => 'Нет зарегистрированных ролей',
-  'Operations' => 'Операции',
   'Platform' => 'Платформа',
   'Please click the button <b>Delete</b> to proceed, or <b>Cancel</b> to abandon the operation.' => 'Пожалуйста, нажмите кнопку <b>Удалить</b> для начала процесса или  <b>Отмена</b> для прерывания операции.',
   'Registered Roles' => 'Зарегистрированные роли',
@@ -37,7 +37,6 @@ return array (
   'The Role <b>{0}</b> was successfully created.' => 'Роль <b>{0}</b> была успешно создана',
   'The Role <b>{0}</b> was successfully deleted.' => 'Роль <b>{0}</b> была успешно удалена',
   'The Role <b>{0}</b> was successfully updated.' => 'Роль <b>{0}</b> была успешно обновлена',
-  'There are no registered Roles.' => 'Нет зарегистрированных ролей',
   'Updated At' => 'Обновлено',
   'User Role : <b>{0}</b>' => 'Роль пользователя: <b>{0}</b>',
   'User Roles' => 'Роли пользователя',

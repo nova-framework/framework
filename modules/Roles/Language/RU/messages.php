@@ -1,10 +1,10 @@
 <?php
 
 return array (
-  '%d %b %Y, %H:%M' => '',
+  '%d %b %Y, %H:%M' => '%d %b %Y, %H:%M',
   '%d %b %Y, %R' => '%d %b %Y, %R',
   '<< Previous Page' => '<< Предыдущая страница',
-  'Actions' => '',
+  'Actions' => 'Действие',
   'Are you sure you want to remove this Role, the operation being irreversible?' => 'Вы уверены, что хотите удалить эту роль, т.к. операция необратима?',
   'Cancel' => 'Отмена',
   'Close' => 'Закрыть',

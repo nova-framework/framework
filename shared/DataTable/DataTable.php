@@ -119,7 +119,10 @@ class DataTable
         $input = $request->only('draw', 'columns', 'start', 'length', 'search', 'order');
 
         // Get the columns from input.
-        $columns = Arr::get($input, 'columns', array());
+        $columns = array_filter($columns = Arr::get($input, 'columns', array()), function ($column)
+        {
+            return is_array($column) && ! empty($column);
+        });
 
         //
         // Compute the draw.
@@ -134,17 +137,17 @@ class DataTable
         //
         // Handle the global searching.
 
-        $search = Arr::get($input, 'search.value', '');
+        $value = Arr::get($input, 'search.value', '');
 
-        if (! empty($search = trim($search))) {
-            $query->where(function ($query) use ($columns, $search)
+        if ($this->validateSearchValue($value = trim($value))) {
+            $query->where(function ($query) use ($columns, $value)
             {
                 foreach ($columns as $column) {
-                    if ($column['searchable'] !== 'true') {
-                        continue;
-                    }
+                    $searchable = Arr::get($column, 'searchable', 'false');
 
-                    $this->handleColumnSearching($query, $column['data'], $search, 'or');
+                    if (($searchable === 'true') && ! is_null($field = Arr::get($column, 'name'))) {
+                        $this->columnSearch($query, $field, $value, 'or');
+                    }
                 }
             });
         }
@@ -153,13 +156,15 @@ class DataTable
         // Handle the column searching.
 
         foreach ($columns as $column) {
-            $search = Arr::get($column, 'search.value', '');
+            $searchable = Arr::get($column, 'searchable', 'false');
 
-            if (($column['searchable'] !== 'true') || empty($search = trim($search))) {
-                continue;
+            if (($searchable === 'true') && ! is_null($field = Arr::get($column, 'name'))) {
+                $value = Arr::get($column, 'search.value', '');
+
+                if ($this->validateSearchValue($value = trim($value))) {
+                    $this->columnSearch($query, $field, $value, 'and');
+                }
             }
-
-            $this->handleColumnSearching($query, $column['data'], $search, 'and');
         }
 
         //
@@ -170,20 +175,23 @@ class DataTable
         //
         // Handle the column ordering.
 
-        $orders = Arr::get($input, 'order', array());
+        $orders = array_filter($orders = Arr::get($input, 'order', array()), function ($order)
+        {
+            return is_array($order) && isset($order['column']) && isset($order['dir']);
+        });
 
         foreach ($orders as $order) {
-            $key = (int) $order['column'];
+            $key = (int) Arr::get($order, 'column', -1);
 
-            if (! isset($columns[$key])) {
-                continue;
+            $column = (($key !== -1) && isset($columns[$key])) ? $columns[$key] : array();
+
+            $orderable = Arr::get($column, 'orderable', 'false');
+
+            if (($orderable === 'true') && ! is_null($field = Arr::get($column, 'name'))) {
+                $direction = ($order['dir'] === 'asc') ? 'ASC' : 'DESC';
+
+                $this->columnOrdering($query, $field, $direction);
             }
-
-            $column = $columns[$key];
-
-            $direction = ($order['dir'] === 'asc') ? 'ASC' : 'DESC';
-
-            $this->handleColumnOrdering($query, $column['data'], $direction);
         }
 
         //
@@ -220,20 +228,14 @@ class DataTable
      * Handles the search for a column.
      *
      * @param Nova\Database\Query\Builder|Nova\Database\ORM\Builder $query
-     * @param string $data
+     * @param string $field
      * @param string $search
      * @param string $boolean
      *
      * @return void
      */
-    protected function handleColumnSearching($query, $data, $search, $boolean = 'and')
+    protected function columnSearch($query, $field, $search, $boolean = 'and')
     {
-        if (is_null($column = Arr::get($this->columns, $data))) {
-            return;
-        } else if (is_null($field = Arr::get($column, 'name'))) {
-            return;
-        }
-
         if (($query instanceof ModelBuilder) && Str::contains($field, '.')) {
             list ($relation, $field) = explode('.', $field, 2);
 
@@ -250,19 +252,13 @@ class DataTable
      * Handles the search for a column.
      *
      * @param Nova\Database\Query\Builder|Nova\Database\ORM\Builder $query
-     * @param string $data
+     * @param string $field
      * @param string $direction
      *
      * @return void
      */
-    protected function handleColumnOrdering($query, $data, $direction)
+    protected function columnOrdering($query, $field, $direction)
     {
-        if (is_null($column = Arr::get($this->columns, $data))) {
-            return;
-        } else if (is_null($field = Arr::get($column, 'name'))) {
-            return;
-        }
-
         if (($query instanceof ModelBuilder) && Str::contains($field, '.')) {
             list ($relation, $column) = explode('.', $field, 2);
 
@@ -321,6 +317,9 @@ class DataTable
      * Returns the column options.
      *
      * @param array $data
+     * @param int $status
+     * @param array $headers
+     * @param int $options
      *
      * @return \Nova\Http\JsonResponse
      */
@@ -329,6 +328,18 @@ class DataTable
         $responseFactory = $this->getResponseFactory();
 
         return $responseFactory->json($data, $status, $headers, $options);
+    }
+
+    /**
+     * Validate the given string for validity as search query.
+     *
+     * @param string $value
+     *
+     * @return bool
+     */
+    protected function validateSearchValue($value)
+    {
+        return preg_match('/^[\p{L}\p{M}\p{N}\p{P}\p{Zs}_-]+$/u', $value);
     }
 
     /**

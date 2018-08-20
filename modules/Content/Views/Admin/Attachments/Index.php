@@ -118,8 +118,6 @@ $(function () {
         }
     });
 
-    $("#fm_dropzone_main").slideUp();
-
     $("#addNewUploads").on("click", function() {
         $("#fm_dropzone_main").slideDown();
     });

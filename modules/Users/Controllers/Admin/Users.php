@@ -162,7 +162,7 @@ class Users extends BaseController
             ->column('realname')
             ->column('email');
 
-        $dataTable->column('roles', 'roles.name', function ($user)
+        $dataTable->column('roles.name', 'roles', function ($user)
         {
             $roles = $user->roles->lists('name');
 

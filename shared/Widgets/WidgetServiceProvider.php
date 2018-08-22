@@ -30,4 +30,14 @@ class WidgetServiceProvider extends ServiceProvider
             return new WidgetManager($app['request'], $app);
         });
     }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return array('widgets');
+    }
 }

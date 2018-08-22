@@ -44,11 +44,11 @@ class DataTable
         $this->query = $query;
 
         foreach ($columns as $column) {
-            if (! is_array($column) || is_null($key = Arr::get($column, 'data'))) {
+            if (! is_array($column) || is_null($name = Arr::get($column, 'name'))) {
                 throw new InvalidArgumentException('Invalid column specified.');
             }
 
-            $this->columns[$key] = $column;
+            $this->columns[$name] = $column;
         }
 
         if ($query instanceof ModelBuilder) {
@@ -65,38 +65,40 @@ class DataTable
     /**
      * Adds a column definition to internal options.
      *
-     * @param string  $data
-     * @param string|null  $name
+     * @param string  $name
+     * @param string|\Closure|null  $data
      * @param \Closure|null  $callback
      *
      * @return array
      */
-    public function column($data, $name = null, Closure $callback = null)
+    public function column($name, $data = null, Closure $callback = null)
     {
-        if (isset($this->columns[$data])) {
+        if (isset($this->columns[$name])) {
             throw new InvalidArgumentException('Column already exists.');
-        } else if (preg_match('/^[a-z]\w+/i', $data) !== 1) {
-            throw new InvalidArgumentException('Invalid column key.');
-        }
-
-        if (is_null($name)) {
-            $name = $data;
-        } else if ($name instanceof Closure) {
-            list ($callback, $name) = array($name, $data);
-        }
-
-        // A standard column name.
-        else if (preg_match('/^[a-z]\w+/i', $name) !== 1) {
+        } else if (preg_match('/^[a-z]\w+/i', $name) !== 1) {
             throw new InvalidArgumentException('Invalid column name.');
         }
 
-        $column = compact('data', 'name');
+        $safeName = str_replace('.', '_', $name);
+
+        if (is_null($data)) {
+            $data = $safeName;
+        } else if ($data instanceof Closure) {
+            list ($callback, $data) = array($data, $safeName);
+        }
+
+        // A standard column data.
+        else if (preg_match('/^[a-z]\w+/i', $data) !== 1) {
+            throw new InvalidArgumentException('Invalid column name.');
+        }
+
+        $column = compact('name', 'data');
 
         if (! is_null($callback)) {
             $column['uses'] = $callback;
         }
 
-        $this->columns[$data] = $column;
+        $this->columns[$name] = $column;
 
         return $this;
     }
@@ -139,7 +141,7 @@ class DataTable
 
         $value = Arr::get($input, 'search.value', '');
 
-        if ($this->validateSearchValue($value = trim($value))) {
+        if ($this->validSearchValue($value = trim($value))) {
             $query->where(function ($query) use ($columns, $value)
             {
                 foreach ($columns as $column) {
@@ -161,7 +163,7 @@ class DataTable
             if (($searchable === 'true') && ! is_null($field = Arr::get($column, 'name'))) {
                 $value = Arr::get($column, 'search.value', '');
 
-                if ($this->validateSearchValue($value = trim($value))) {
+                if ($this->validSearchValue($value = trim($value))) {
                     $this->columnSearch($query, $field, $value, 'and');
                 }
             }
@@ -293,8 +295,10 @@ class DataTable
     {
         $record = array();
 
-        foreach ($this->columns as $data => $column) {
-            $field = Arr::get($column, 'uses', $name = $column['name']);
+        foreach ($this->columns as $name => $column) {
+            $field = Arr::get($column, 'uses', $name);
+
+            $data = Arr::get($column, 'data', str_replace('.', '_', $name));
 
             if ($field instanceof Closure) {
                 $value = call_user_func($field, $result, $name, $data);
@@ -337,7 +341,7 @@ class DataTable
      *
      * @return bool
      */
-    protected function validateSearchValue($value)
+    protected function validSearchValue($value)
     {
         return preg_match('/^[\p{L}\p{M}\p{N}\p{P}\p{Zs}_-]+$/u', $value);
     }

@@ -79,7 +79,7 @@ class Roles extends BaseController
             ->column('slug')
             ->column('description');
 
-        $dataTable->column('users', 'users_count');
+        $dataTable->column('users_count', 'users');
 
         $dataTable->column('created_at', function ($role)
         {

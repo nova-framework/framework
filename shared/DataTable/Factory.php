@@ -40,14 +40,13 @@ class Factory
     /**
      * Create a new DataTable instance.
      *
-     * @param Nova\Database\Query\Builder|Nova\Database\ORM\Builder $query
      * @param array $columns
      *
      * @return array
      */
-    public function make($query, array $columns = array())
+    public function make(array $columns = array())
     {
-        return new DataTable($this, $query, $columns);
+        return new DataTable($this, $columns);
     }
 
     /**

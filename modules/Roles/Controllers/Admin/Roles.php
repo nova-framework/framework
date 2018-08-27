@@ -64,6 +64,34 @@ class Roles extends BaseController
         return $validator;
     }
 
+    protected function dataTable()
+    {
+        $format = __d('users', '%d %b %Y, %H:%M');
+
+        // Create a DataTable instance.
+        $dataTable = DataTable::make();
+
+        // Setup the columns.
+        $dataTable->column('id');
+        $dataTable->column('name');
+        $dataTable->column('slug');
+        $dataTable->column('description');
+
+        $dataTable->column('users_count', 'users');
+
+        $dataTable->column('created_at', function ($role) use ($format)
+        {
+            return $role->created_at->formatLocalized($format);
+        });
+
+        $dataTable->column('actions', function ($role)
+        {
+            return View::fetch('Modules/Roles::Partials/RolesTableActions', compact('role'));
+        });
+
+        return $dataTable;
+    }
+
     public function data(Request $request)
     {
         // Authorize the current User.
@@ -73,27 +101,7 @@ class Roles extends BaseController
 
         $query = Role::withCount('users');
 
-        $dataTable = DataTable::make($query)
-            ->column('id')
-            ->column('name')
-            ->column('slug')
-            ->column('description');
-
-        $dataTable->column('users_count', 'users');
-
-        $dataTable->column('created_at', function ($role)
-        {
-            $format = __d('roles', '%d %b %Y, %H:%M');
-
-            return $role->created_at->formatLocalized($format);
-        });
-
-        $dataTable->column('actions', function ($role)
-        {
-            return View::fetch('Modules/Roles::Partials/RolesTableActions', compact('role'));
-        });
-
-        return $dataTable->handle($request);
+        return $this->dataTable()->handle($query, $request);
     }
 
     public function index()

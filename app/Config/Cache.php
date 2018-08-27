@@ -14,7 +14,7 @@ return array(
     | Supported: "file", "database", "apc", "memcached", "redis", "array"
     */
 
-    'driver' => 'tagged_file',
+    'driver' => 'taggedFile',
 
     /*
     |--------------------------------------------------------------------------

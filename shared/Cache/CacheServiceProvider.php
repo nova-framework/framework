@@ -19,7 +19,7 @@ class CacheServiceProvider extends ServiceProvider
     {
         $config = $this->app['config'];
 
-        $this->app['cache']->extend('tagged_file', function ($app) use ($config)
+        $this->app['cache']->extend('taggedFile', function ($app) use ($config)
         {
             $path = $config->get('cache.path');
 

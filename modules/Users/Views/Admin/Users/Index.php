@@ -71,13 +71,8 @@ $(function () {
         lengthMenu: [ 5, 10, 15, 20, 25, 50, 100 ],
 
         columns: [
-            { data: 'id',         name: 'id',         orderable: true,  searchable: false, className: "text-center" },
-            { data: 'username',   name: 'username',   orderable: true,  searchable: true,  className: "text-center" },
-            { data: 'roles',      name: 'roles.name', orderable: true,  searchable: true,  className: "text-center" },
-            { data: 'realname',   name: 'realname',   orderable: true,  searchable: true,  className: "text-center" },
-            { data: 'email',      name: 'email',      orderable: true,  searchable: true,  className: "text-center" },
-            { data: 'created_at', name: 'created_at', orderable: true,  searchable: false, className: "text-center" },
-            { data: 'actions',    name: 'actions',    orderable: false, searchable: false, className: "text-right compact" },
+            <?= $dataTable->script(); ?>
+
         ],
 
         drawCallback: function(settings)

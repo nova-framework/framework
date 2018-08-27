@@ -147,6 +147,47 @@ class Users extends BaseController
         return $validator;
     }
 
+    protected function dataTable()
+    {
+        $dataTable = DataTable::make();
+
+        // Setup the DataTable columns.
+        $dataTable->group(array('className' => 'text-center'), function ($dataTable)
+        {
+            $dataTable->column('id')->orderable(true);
+
+            $dataTable->column('username', array('orderable' => true, 'searchable' => true));
+
+            $dataTable->group(array('orderable' => true, 'searchable' => true), function ($dataTable)
+            {
+                $dataTable->column('roles.name', array('data' => 'roles', 'uses' => function ($user)
+                {
+                    $roles = $user->roles->lists('name');
+
+                    return implode(', ', $roles);
+                }));
+
+                $dataTable->column('realname');
+                $dataTable->column('email');
+            });
+
+            $dataTable->column('created_at', function ($user)
+            {
+                $format = __d('users', '%d %b %Y, %H:%M');
+
+                return $user->created_at->formatLocalized($format);
+
+            })->orderable(true);
+        });
+
+        $dataTable->column('actions', array('className' => 'text-right compact', function ($user)
+        {
+            return View::fetch('Modules/Users::Partials/UsersTableActions', compact('user'));
+        }));
+
+        return $dataTable;
+    }
+
     public function data(Request $request)
     {
         // Authorize the current User.
@@ -156,32 +197,7 @@ class Users extends BaseController
 
         $query = User::with('roles')->where('activated', 1);
 
-        $dataTable = DataTable::make($query)
-            ->column('id')
-            ->column('username')
-            ->column('realname')
-            ->column('email');
-
-        $dataTable->column('roles.name', 'roles', function ($user)
-        {
-            $roles = $user->roles->lists('name');
-
-            return implode(', ', $roles);
-        });
-
-        $dataTable->column('created_at', function ($user)
-        {
-            $format = __d('users', '%d %b %Y, %H:%M');
-
-            return $user->created_at->formatLocalized($format);
-        });
-
-        $dataTable->column('actions', function ($user)
-        {
-            return View::fetch('Modules/Users::Partials/UsersTableActions', compact('user'));
-        });
-
-        return $dataTable->handle($request);
+        return $this->dataTable()->handle($query, $request);
     }
 
     public function index()
@@ -192,7 +208,8 @@ class Users extends BaseController
         }
 
         return $this->createView()
-            ->shares('title', __d('users', 'Users'));
+            ->shares('title', __d('users', 'Users'))
+            ->with('dataTable', $this->dataTable());
     }
 
     public function create(Request $request)

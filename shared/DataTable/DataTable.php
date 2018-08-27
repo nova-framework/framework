@@ -3,6 +3,7 @@
 namespace Shared\DataTable;
 
 use Nova\Database\ORM\Builder as ModelBuilder;
+use Nova\Database\Query\Builder as QueryBuilder;
 use Nova\Http\Request;
 use Nova\Support\Arr;
 use Nova\Support\Str;
@@ -19,14 +20,14 @@ class DataTable
     protected $factory;
 
     /**
-     * @var Nova\Database\Query\Builder|Nova\Database\ORM\Builder
+     * @var array
      */
-    protected $query;
+    protected $columns = array();
 
     /**
      * @var array
      */
-    protected $columns = array();
+    protected $groupStack = array();
 
 
     /**
@@ -37,82 +38,147 @@ class DataTable
      *
      * @return array
      */
-    public function __construct(Factory $factory, $query, array $columns)
+    public function __construct(Factory $factory, array $columns)
     {
         $this->factory = $factory;
 
-        $this->query = $query;
-
         foreach ($columns as $column) {
-            if (! is_array($column) || is_null($name = Arr::get($column, 'name'))) {
-                throw new InvalidArgumentException('Invalid column specified.');
-            }
-
-            $this->columns[$name] = $column;
-        }
-
-        if ($query instanceof ModelBuilder) {
-            $baseQuery = $query->getQuery();
-
-            if (is_null($baseQuery->columns)) {
-                $table = $query->getModel()->getTable();
-
-                $query->select($table .'.*');
+            if (is_array($column) && ! is_null($name = Arr::get($column, 'name'))) {
+                $this->column($name, $column);
             }
         }
+    }
+
+    /**
+     * Create a column group with shared attributes.
+     *
+     * @param  array     $attributes
+     * @param  \Closure  $callback
+     * @return void
+     */
+    public function group(array $attributes, Closure $callback)
+    {
+        if (! empty($this->groupStack)) {
+            $lastGroup = last($this->groupStack);
+
+            $attributes = array_merge($lastGroup, $attributes);
+        }
+
+        $this->groupStack[] = $attributes;
+
+        call_user_func($callback, $this);
+
+        array_pop($this->groupStack);
     }
 
     /**
      * Adds a column definition to internal options.
      *
      * @param string  $name
-     * @param string|\Closure|null  $data
-     * @param \Closure|null  $callback
+     * @param string|array|\Closure|null  $attributes
      *
      * @return array
      */
-    public function column($name, $data = null, Closure $callback = null)
+    public function column($name, $attributes = null)
     {
         if (isset($this->columns[$name])) {
             throw new InvalidArgumentException('Column already exists.');
-        } else if (preg_match('/^[a-z]\w+/i', $name) !== 1) {
+        }
+
+        // Check if the column name is valid.
+        else if (preg_match('/^[a-z]\w+/i', $name) !== 1) {
             throw new InvalidArgumentException('Invalid column name.');
         }
 
-        $safeName = str_replace('.', '_', $name);
-
-        if (is_null($data)) {
-            $data = $safeName;
-        } else if ($data instanceof Closure) {
-            list ($callback, $data) = array($data, $safeName);
+        if ($attributes instanceof Closure) {
+            $attributes = array('uses' => $attributes);
         }
 
-        // A standard column data.
+        //
+        else if (! is_array($attributes)) {
+            $attributes = array('data' => $attributes);
+        }
+
+        $attributes['name'] = $name;
+
+        if (empty($data = Arr::get($attributes, 'data'))) {
+            $attributes['data'] = str_replace('.', '_', $name);
+        }
+
+        // Check if the column data is valid.
         else if (preg_match('/^[a-z]\w+/i', $data) !== 1) {
-            throw new InvalidArgumentException('Invalid column name.');
+            throw new InvalidArgumentException('Invalid column data.');
         }
 
-        $column = compact('name', 'data');
-
-        if (! is_null($callback)) {
-            $column['uses'] = $callback;
+        if (! isset($attributes['uses']) && ! is_null($callback = $this->findColumnClosure($attributes))) {
+            $attributes['uses'] = $callback;
         }
 
-        $this->columns[$name] = $column;
+        if (! empty($this->groupStack)) {
+            $lastGroup = last($this->groupStack);
 
-        return $this;
+            $attributes = array_merge($lastGroup, $attributes);
+        }
+
+        $this->columns[$name] = $column = new Column($attributes);
+
+        return $column;
+    }
+
+    /**
+     * Find the Closure in an column array or returns a default callback.
+     *
+     * @param  array  $column
+     * @return \Closure
+     */
+    protected function findColumnClosure(array $column)
+    {
+        return Arr::first($column, function ($key, $value)
+        {
+            return is_callable($value) && is_numeric($key);
+        });
+    }
+
+    public function script()
+    {
+        $lines = array();
+
+        foreach ($this->columns as $name => $column) {
+            $orderable  = $column->get('orderable', false)  ? 'true' : 'false';
+            $searchable = $column->get('searchable', false) ? 'true' : 'false';
+
+            $lines[] = sprintf("{ data: '%s', name: '%s', orderable: %s, searchable: %s, className: '%s' }",
+                $column->get('data'), $name, $orderable,  $searchable, $column->get('className')
+            );
+        }
+
+        return implode(', ', $lines);
     }
 
     /**
      * Handle a Request.
      *
+     * @param Nova\Database\Query\Builder|Nova\Database\ORM\Builder $query
      * @param Nova\Http\Request $request
      *
      * @return array
      */
-    public function handle(Request $request = null)
+    public function handle($query, Request $request = null)
     {
-        $query = $this->getQuery();
+        if ($query instanceof ModelBuilder) {
+            $queryBuilder = $query->getQuery();
+
+            if (is_null($queryBuilder->columns)) {
+                $table = $query->getModel()->getTable();
+
+                $query->select($table .'.*');
+            }
+        }
+
+        //
+        else if (! $query instanceof QueryBuilder) {
+            throw new InvalidArgumentException('Invalid query.');
+        }
 
         if (is_null($request)) {
             $request = $this->getRequest();
@@ -296,22 +362,18 @@ class DataTable
         $record = array();
 
         foreach ($this->columns as $name => $column) {
-            $field = Arr::get($column, 'uses', $name);
+            $key = $column->get('data');
 
-            $data = Arr::get($column, 'data', str_replace('.', '_', $name));
+            $callback = $column->get('uses', function ($record, $field)
+            {
+                if (! Str::contains($field, '.')) {
+                    return $record->{$field};
+                }
+            });
 
-            if ($field instanceof Closure) {
-                $value = call_user_func($field, $result, $name, $data);
+            if ($callback instanceof Closure) {
+                $record[$key] = call_user_func($callback, $result, $name);
             }
-
-            // The column has no custom renderer.
-            else if (! Str::contains($field, '.')) {
-                $value = $result->{$field};
-            } else {
-                continue;
-            }
-
-            $record[$data] = $value;
         }
 
         return $record;
@@ -377,26 +439,12 @@ class DataTable
     }
 
     /**
-     * Returns the current query.
-     *
-     * @return \Nova\Database\Query\Builder|Nova\Database\ORM\Builder
-     */
-    protected function getQuery()
-    {
-        return $this->query;
-    }
-
-    /**
      * Returns the options.
      *
      * @return array
      */
     protected function getColumns()
     {
-        return array_map(function ($column)
-        {
-            return $column;
-
-        }, $this->columns);
+        return array_values($this->columns);
     }
 }

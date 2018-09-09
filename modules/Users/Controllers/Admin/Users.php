@@ -271,7 +271,7 @@ class Users extends BaseController
 
         // Update the Custom Fields.
         foreach ($items as $item) {
-            $value = Arr::get($input, $name = $item->name);
+            $value = Arr::get($input, $name = $item->getAttribute('name'));
 
             $field = Field::create(array(
                 'name'  => $name,
@@ -393,9 +393,11 @@ class Users extends BaseController
 
         // Update the Custom Fields.
         foreach ($items as $item) {
-            $value = Arr::get($input, $name = $item->name);
+            $value = Arr::get($input, $name = $item->getAttribute('name'));
 
-            if (! is_null($field = $user->fields->findBy('name', $name))) {
+            $field = $user->fields->findBy('name', $name);
+
+            if (! is_null($field)) {
                 $field->value = $value;
 
                 $field->save();
@@ -450,57 +452,5 @@ class Users extends BaseController
 
         return Redirect::to('admin/users')
             ->with('success', __d('users', 'The User <b>{0}</b> was successfully deleted.', $user->username));
-    }
-
-    public function search()
-    {
-        // Authorize the current User.
-        if (Gate::denies('lists', User::class)) {
-            throw new AuthorizationException();
-        }
-
-        // Validation rules
-        $rules = array(
-            'query' => 'required|min:4|valid_query'
-        );
-
-        $messages = array(
-            'valid_query' => __d('users', 'The :attribute field is not a valid query string.'),
-        );
-
-        $attributes = array(
-            'query' => __('Search Query'),
-        );
-
-        // Add the custom Validation Rule commands.
-        Validator::extend('valid_query', function($attribute, $value, $parameters)
-        {
-            return (preg_match('/^[\p{L}\p{N}_\-\s]+$/', $value) === 1);
-        });
-
-        // Validate the Input data.
-        $input = Input::only('query');
-
-        $validator = Validator::make($input, $rules, $messages, $attributes);
-
-        if($validator->fails()) {
-            return Redirect::back()->withErrors($validator->errors());
-        }
-
-        // Search the Records on Database.
-        $search = $input['query'];
-
-        $users = User::where('username', 'LIKE', '%' .$search .'%')
-            ->orWhere('email', 'LIKE', '%' .$search .'%')
-            ->orWhere('realname', 'LIKE', '%' .$search .'%')
-            ->paginate(15);
-
-        // Prepare the Query for displaying.
-        $search = htmlentities($search);
-
-        return $this->createView()
-            ->shares('title', __d('users', 'Searching Users for: {0}', $search))
-            ->with('search', $search)
-            ->with('users', $users);
     }
 }

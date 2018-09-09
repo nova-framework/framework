@@ -29,7 +29,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
     /**
      * @var array
      */
-    protected $fillable = array('username', 'password', 'email', 'remember_token', 'api_token');
+    protected $fillable = array('username', 'realname', 'password', 'email', 'remember_token', 'api_token');
 
     /**
      * @var array

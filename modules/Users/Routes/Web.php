@@ -24,9 +24,6 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     Route::post('users/fields/{id}',         'FieldItems@update');
     Route::post('users/fields/{id}/destroy', 'FieldItems@destroy');
 
-    // The Users Search.
-    Route::get('users/search', 'Users@search');
-
     // Server Side Processor for Users DataTable.
     Route::post('users/data',         'Users@data');
 

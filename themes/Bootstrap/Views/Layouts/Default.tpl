@@ -8,8 +8,7 @@
 {{ Asset::render('css', array(
     vendor_url('dist/css/bootstrap.min.css', 'twbs/bootstrap'),
     vendor_url('dist/css/bootstrap-theme.min.css', 'twbs/bootstrap'),
-    //'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
-    vendor_url('bower_components/font-awesome/css/font-awesome.min.css', 'almasaeed2010/adminlte'),
+    'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
     asset_url('css/bootstrap-xl-mod.min.css'),
     asset_url('css/style.css'),
 ));
@@ -20,8 +19,7 @@
 
 {{ Asset::render('js', array(
     asset_url('js/sprintf.min.js'),
-    //'https://code.jquery.com/jquery-1.12.4.min.js',
-    vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
+    'https://code.jquery.com/jquery-1.12.4.min.js',
 ));
 
 }}

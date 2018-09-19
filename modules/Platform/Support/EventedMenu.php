@@ -121,12 +121,15 @@ class EventedMenu
 
         if (! isset($item['can'])) {
             return true;
-        } else if (is_string($abilities = $item['can'])) {
+        }
+
+        // The abilities entry was specified.
+        else if (is_string($abilities = $item['can'])) {
             $abilities = explode('|', $abilities);
         }
 
         foreach ($abilities as $ability) {
-            list($ability, $parameters) = array_pad(explode(':', $ability, 2), 2, array());
+            list ($ability, $parameters) = array_pad(explode(':', $ability, 2), 2, array());
 
             if (is_string($parameters)) {
                 $parameters = explode(',', $parameters);

@@ -16,6 +16,10 @@ class VerifyCsrfToken extends BaseVerifier
         'admin/files/connector',
         'admin/roles/data',
         'admin/users/data',
+
+        // Live Chat
+        'admin/livechat',
+        'admin/livechat/*',
         'livechat/*',
     );
 }

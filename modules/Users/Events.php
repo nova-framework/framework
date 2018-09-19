@@ -42,7 +42,7 @@ Event::listen('backend.menu.sidebar', function ()
 
             //
             'path'   => 'users.create',
-            'can'    => 'create:' .User::class,
+            'can'    => 'create:' .User::class .',menu',
         ),
     );
 });

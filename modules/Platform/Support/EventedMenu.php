@@ -10,6 +10,8 @@ use Nova\Support\Facades\Request;
 use Nova\Support\Arr;
 use Nova\Support\Str;
 
+use LogicException;
+
 
 class EventedMenu
 {
@@ -124,15 +126,30 @@ class EventedMenu
         }
 
         // The abilities entry was specified.
-        else if (is_string($abilities = $item['can'])) {
+        else if (! is_array($abilities = $item['can'])) {
             $abilities = explode('|', $abilities);
         }
 
-        foreach ($abilities as $ability) {
-            list ($ability, $parameters) = array_pad(explode(':', $ability, 2), 2, array());
+        foreach ($abilities as $value) {
+            if (! is_array($value)) {
+                list ($ability, $parameters) = array_pad(explode(':', $value, 2), 2, array());
 
-            if (is_string($parameters)) {
-                $parameters = explode(',', $parameters);
+                if (is_string($parameters)) {
+                    $parameters = explode(',', $parameters);
+                }
+
+            // The information is given as an array.
+            } else if (! is_null($ability = Arr::get($value, 'ability'))) {
+                $parameters = Arr::get($value, 'arguments', array());
+
+                if (! is_array($parameters)) {
+                    $parameters = array($parameters);
+                }
+            }
+
+            // Invalid ability format specified.
+            else {
+                throw new LogicException('Invalid user ability.');
             }
 
             if (call_user_func(array($gate, 'allows'), $ability, $parameters)) {

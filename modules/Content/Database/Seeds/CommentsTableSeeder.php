@@ -29,8 +29,8 @@ class CommentsTableSeeder extends Seeder
             'id'           => 1,
             'post_id'      => $post->id,
             'author'       => 'A Nova Commenter',
-            'author_email' => 'rookie@novaframework.dev',
-            'author_url'   => 'https://novaframework.dev',
+            'author_email' => 'rookie@novaframework.local',
+            'author_url'   => 'https://novaframework.local',
             'author_ip'    => '',
             'content'      => 'Hi, this is a comment.
 To get started with moderating, editing, and deleting comments, please visit the Comments screen in the dashboard.

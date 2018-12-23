@@ -379,7 +379,7 @@ class Menus extends BaseController
         );
 
         // Invalidate the cached menu data.
-        Cache::forget('content.menus.main_menu');
+        Cache::forget('content.menus.' .$taxonomy->slug);
 
         return Redirect::back()->with('success', __d('content', 'The Menu Items order was successfully updated.'));
     }

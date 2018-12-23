@@ -27,7 +27,7 @@ class ContactsTableSeeder extends Seeder
         $contact = Contact::create(array(
             'id'          => 1,
             'name'        => 'Site Contact',
-            'email'       => 'admin@novaframework.dev',
+            'email'       => 'admin@novaframework.local',
             'path'        => 'content/contact-us',
             'description' => 'The default site-wide Contact',
 

@@ -12,8 +12,8 @@ return array(
 
     'author' => array(
         'name'     => 'John Doe',
-        'email'    => 'john.doe@novaframework.dev',
-        'homepage' => 'http://novaframework.dev',
+        'email'    => 'john.doe@novaframework.local',
+        'homepage' => 'http://novaframework.local',
     ),
 
     //--------------------------------------------------------------------------

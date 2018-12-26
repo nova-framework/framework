@@ -10,12 +10,12 @@ return array(
     /**
      * The Website URL.
      */
-    'url' => 'http://www.novaframework.dev/',
+    'url' => 'http://www.novaframework.local/',
 
     /**
     * The Administrator's E-mail Address.
     */
-    'email' => 'admin@novaframework.dev',
+    'email' => 'admin@novaframework.local',
 
     /**
      * The Website Path.

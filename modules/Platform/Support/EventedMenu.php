@@ -92,7 +92,7 @@ class EventedMenu
 
                 $pattern = preg_quote($itemUrl, '#');
 
-                if (($itemUrl == $url) || (preg_match('#^' .$pattern .'/page/[0-9]+$#', $url) === 1)) {
+                if (($itemUrl === $url) || (preg_match('#^' .$pattern .'/page/[0-9]+$#', $url) === 1)) {
                     $path = $item['path'];
                 }
             }
@@ -102,10 +102,52 @@ class EventedMenu
     }
 
     /**
+     * Prepare the given menu items.
+     *
+     * @param  array  $items
+     * @param  string $path
+     * @param  string $url
+     * @param  string $pageName
+     * @return array
+     */
+    protected function prepareItems(array $items, $path, $url)
+    {
+        foreach ($items as &$item) {
+            $pattern = preg_quote($itemUrl = $item['url'], '#');
+
+            if (($itemUrl === $url) || Str::startsWith($path, $item['path'])) {
+                $active = true;
+            } else if (preg_match('#^' .$pattern .'/page/[0-9]+$#', $url) === 1) {
+                $active = true;
+            } else {
+                $active = false;
+            }
+
+            $item['active'] = $active;
+
+            if (! empty($children = $item['children'])) {
+                $item['children'] = $this->prepareItems($children, $path, $url);
+            }
+        }
+
+        // Sort the menu items by their weight and title.
+        usort($items, function ($a, $b)
+        {
+            if ($a['weight'] === $b['weight']) {
+                return strcmp($a['title'], $b['title']);
+            }
+
+            return ($a['weight'] < $b['weight']) ? -1 : 1;
+        });
+
+        return $items;
+    }
+
+    /**
      * Determine if the menu item usage is allowed by the specified User Roles.
      *
      * @param  array  $item
-     * @param  mixed  $user
+     * @param  \Nova\Auth\UserInterface  $user
      * @param  \Nova\Auth\Access\GateInterface  $gate
      * @return boolean
      */
@@ -130,29 +172,8 @@ class EventedMenu
             $abilities = explode('|', $abilities);
         }
 
-        foreach ($abilities as $value) {
-            if (! is_array($value)) {
-                list ($ability, $parameters) = array_pad(explode(':', $value, 2), 2, array());
-
-                if (is_string($parameters)) {
-                    $parameters = explode(',', $parameters);
-                }
-
-            // The information is given as an array.
-            } else if (! is_null($ability = Arr::get($value, 'ability'))) {
-                $parameters = Arr::get($value, 'arguments', array());
-
-                if (! is_array($parameters)) {
-                    $parameters = array($parameters);
-                }
-            }
-
-            // Invalid ability format specified.
-            else {
-                throw new LogicException('Invalid user ability.');
-            }
-
-            if (call_user_func(array($gate, 'allows'), $ability, $parameters)) {
+        foreach ($abilities as $ability) {
+            if ($this->userHasAbility($ability, $user, $gate)) {
                 return true;
             }
         }
@@ -161,47 +182,37 @@ class EventedMenu
     }
 
     /**
-     * Prepare the given menu items.
+     * Determine if the User has a specific Access Ability.
      *
-     * @param  array  $items
-     * @param  string $path
-     * @param  string $url
-     * @param  string $pageName
-     * @return array
+     * @param  array|string  $data
+     * @param  \Nova\Auth\UserInterface  $user
+     * @param  \Nova\Auth\Access\GateInterface  $gate
+     * @return boolean
+     * @throws \LogicException
      */
-    protected function prepareItems(array $items, $path, $url)
+    protected function userHasAbility($data, UserInterface $user, GateInterface $gate)
     {
-        foreach ($items as &$item) {
-            $itemUrl = $item['url'];
+        if (! is_array($data)) {
+            list ($ability, $parameters) = array_pad(explode(':', $data, 2), 2, array());
 
-            //
-            $pattern = preg_quote($itemUrl, '#');
-
-            if (($itemUrl == $url) || Str::startsWith($path, $item['path'])) {
-                $active = true;
-            } else if (($itemUrl !== '#') && (preg_match('#^' .$pattern .'/page/[0-9]+$#', $url) === 1)) {
-                $active = true;
-            } else {
-                $active = false;
+            if (is_string($parameters)) {
+                $parameters = explode(',', $parameters);
             }
 
-            $item['active'] = $active;
+        // The data is not a string.
+        } else if (is_null($ability = Arr::get($data, 'ability'))) {
+            throw new LogicException('Invalid format of the user ability.');
+        } else {
+            if (! is_null($model = Arr::get($data, 'model'))) {
+                $parameters = array($model);
+            }
 
-            if (! empty($children = $item['children'])) {
-                $item['children'] = $this->prepareItems($children, $path, $url);
+            // The 'arguments' field must be an array.
+            else if (! is_array($parameters = Arr::get($data, 'arguments', array()))) {
+                throw new LogicException('Invalid format of the user ability.');
             }
         }
 
-        // Sort the menu items by their weight and title.
-        usort($items, function ($a, $b)
-        {
-            if ($a['weight'] === $b['weight']) {
-                return strcmp($a['title'], $b['title']);
-            }
-
-            return ($a['weight'] < $b['weight']) ? -1 : 1;
-        });
-
-        return $items;
+        return call_user_func(array($gate, 'allows'), $ability, $parameters);
     }
 }

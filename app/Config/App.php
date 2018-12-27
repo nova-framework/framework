@@ -25,7 +25,7 @@ return array(
     /**
      * Website Name.
      */
-    'name' => 'Nova 4.0',
+    'name' => 'Nova 4.1',
 
     /**
      * The default Theme.

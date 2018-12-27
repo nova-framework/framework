@@ -27,10 +27,10 @@ if (Config::get('app.debug') !== true) {
 
         <ul class="list-unstyled">
 
-            <?php if (version_compare(PHP_VERSION, '5.6.0', '>=')) { ?>
-            <li><i class='fa fa-check text-success'></i> Your version of PHP is 5.6.0 or higher (detected <b><?= PHP_VERSION; ?></b>).</li>
+            <?php if (version_compare(PHP_VERSION, '7.1.0', '>=')) { ?>
+            <li><i class='fa fa-check text-success'></i> Your version of PHP is 7.1.0 or higher (detected <b><?= PHP_VERSION; ?></b>).</li>
             <?php } else { ?>
-            <li><i class='fa fa-close text-danger'></i> Your version of PHP is too low. You need PHP 5.6.0 or higher to use Mini Nova (detected <b><?= PHP_VERSION; ?></b>).</li>
+            <li><i class='fa fa-close text-danger'></i> Your version of PHP is too low. You need PHP 7.1.0 or higher to use Mini Nova (detected <b><?= PHP_VERSION; ?></b>).</li>
             <?php } ?>
 
             <?php if (extension_loaded('fileinfo')) { ?>

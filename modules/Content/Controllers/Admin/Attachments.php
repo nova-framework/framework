@@ -124,7 +124,7 @@ class Attachments extends BaseController
 
     public function uploaded()
     {
-        $uploads = Attachment::all();
+        $uploads = Attachment::with('author')->get();
 
         //
         $result = array();

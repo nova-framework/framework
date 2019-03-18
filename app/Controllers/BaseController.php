@@ -136,14 +136,14 @@ class BaseController extends Controller
         else if (Language::direction() == 'rtl') {
             $path = sprintf('Layouts/RTL/%s', $layout);
 
-            if (View::exists($view = $this->getQualifiedView($path))) {
+            if (View::exists($view = $this->getQualifiedLayout($path))) {
                 return $view;
             }
         }
 
         $path = sprintf('Layouts/%s', $layout);
 
-        return $this->getQualifiedView($path);
+        return $this->getQualifiedLayout($path);
     }
 
     /**
@@ -152,7 +152,7 @@ class BaseController extends Controller
      * @param  string  $view
      * @return string
      */
-    protected function getQualifiedView($view)
+    protected function getQualifiedLayout($view)
     {
         if (empty($theme = $this->getTheme())) {
             return $view;

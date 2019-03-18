@@ -134,26 +134,26 @@ class BaseController extends Controller
 
         // We have a valid layout.
         else if (Language::direction() == 'rtl') {
-            $layout = 'RTL/' .$layout;
+            $path = sprintf('Layouts/RTL/%s', $layout);
 
-            if (View::exists($view = $this->getQualifiedLayout($layout))) {
+            if (View::exists($view = $this->getQualifiedView($path))) {
                 return $view;
             }
         }
 
-        return $this->getQualifiedLayout();
+        $path = sprintf('Layouts/%s', $layout);
+
+        return $this->getQualifiedView($path);
     }
 
     /**
      * Gets a qualified View name for the implicit or given Layout.
      *
-     * @param  string|null  $layout
+     * @param  string  $view
      * @return string
      */
-    protected function getQualifiedLayout($layout = null)
+    protected function getQualifiedView($view)
     {
-        $view = sprintf('Layouts/%s', $layout ?: $this->getLayout());
-
         if (empty($theme = $this->getTheme())) {
             return $view;
         }

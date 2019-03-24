@@ -29,7 +29,11 @@ class Pages extends BaseController
 
     public function show($slug = null)
     {
-        $segments = explode('/', $slug, 2);
+        $segments = array();
+
+        if (! empty($slug)) {
+            $segments = explode('/', $slug, 2);
+        }
 
         // Compute the page and subpage.
         list ($page, $subpage) = array_pad($segments, 2, null);
@@ -43,22 +47,17 @@ class Pages extends BaseController
 
         }, $segments));
 
-        if (! View::exists($view)) {
-            // We will look for the Home view before to go Exception.
-
-            if (! View::exists($view = $view .'/Home')) {
-                throw new NotFoundHttpException($view);
-            }
+        if (View::exists($view)) {
+            // We found a proper View for the given URI.
         }
 
-        if (! is_null($subpage)) {
-            $title = $subpage;
-        } else {
-            $title = $page ?: 'Home';
+        // We will look for a Home View before to go Exception.
+        else if (! View::exists($view = $view .'/Home')) {
+            throw new NotFoundHttpException($view);
         }
 
         $title = Str::title(
-            str_replace(array('-', '_'), ' ', $title)
+            str_replace(array('-', '_'), ' ', $subPage ?: ($page ?: 'Home'))
         );
 
         return View::make($view)->shares('title', $title);

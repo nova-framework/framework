@@ -160,10 +160,10 @@ class BaseController extends Controller
 
         // A theme is specified for auto rendering.
         else if (! Str::contains($theme, '/')) {
-            $theme = 'Themes/' .$theme;
+            return sprintf('Themes/%s::%s', $theme, $view);
         }
 
-        return $theme .'::' .$view;
+        return sprintf('%s::%s', $theme, $view);
     }
 
     /**

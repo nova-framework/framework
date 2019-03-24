@@ -36,7 +36,7 @@ class Pages extends BaseController
         }
 
         // Compute the page and subpage.
-        list ($page, $subpage) = array_pad($segments, 2, null);
+        list ($page, $subPage) = array_pad($segments, 2, null);
 
         // Compute the full View name, i.e. 'about-us' -> 'Pages/AboutUs'
         array_unshift($segments, 'pages');

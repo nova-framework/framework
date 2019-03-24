@@ -179,7 +179,7 @@ class BaseController extends Controller
             $view = ucfirst($this->action);
         }
 
-        $view = $this->resolveViewPath().'/' .$view;
+        $view = sprintf('%s/%s', $this->resolveViewPath(), $view);
 
         return View::make($view, $data);
     }

@@ -114,7 +114,7 @@ class BaseController extends Controller
         }
 
         // The response is a RenderableInterface implementation.
-        else if ($this->autoLayout() && ! empty($view = $this->resolveLayout())) {
+        else if ($this->autoLayout() && ! empty($view = $this->resolveLayoutView())) {
             return View::make($view)->with('content', $response);
         }
 
@@ -126,7 +126,7 @@ class BaseController extends Controller
      *
      * @return string
      */
-    protected function resolveLayout()
+    protected function resolveLayoutView()
     {
         if (empty($layout = $this->getLayout())) {
             return false;
@@ -136,14 +136,14 @@ class BaseController extends Controller
         else if (Language::direction() == 'rtl') {
             $path = sprintf('Layouts/RTL/%s', $layout);
 
-            if (View::exists($view = $this->resolveLayoutFromTheme($path))) {
+            if (View::exists($view = $this->resolveViewFromTheme($path))) {
                 return $view;
             }
         }
 
         $path = sprintf('Layouts/%s', $layout);
 
-        return $this->resolveLayoutFromTheme($path);
+        return $this->resolveViewFromTheme($path);
     }
 
     /**
@@ -152,7 +152,7 @@ class BaseController extends Controller
      * @param  string  $view
      * @return string
      */
-    protected function resolveLayoutFromTheme($view)
+    protected function resolveViewFromTheme($view)
     {
         if (empty($theme = $this->getTheme())) {
             return $view;

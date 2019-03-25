@@ -203,7 +203,7 @@ class BaseController extends Controller
 
             if ($namespace != 'App') {
                 // A Controller within a Package namespace.
-                $viewPath = sprintf('%s::%s', $namespace, $viewPath);
+                return $this->viewPath = sprintf('%s::%s', $namespace, $viewPath);
             }
 
             return $this->viewPath = $viewPath;

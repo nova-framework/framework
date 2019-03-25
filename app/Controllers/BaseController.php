@@ -199,13 +199,11 @@ class BaseController extends Controller
         $path = str_replace('\\', '/', static::class);
 
         if (preg_match('#^(.+)/Controllers/(.*)$#', $path, $matches) === 1) {
-            $namespace = $matches[1];
-
-            $viewPath = $matches[2];
+            list (, $namespace, $viewPath) = $matches;
 
             if ($namespace != 'App') {
                 // A Controller within a Package namespace.
-                $viewPath = $namespace .'::' .$viewPath;
+                $viewPath = sprintf('%s::%s', $namespace, $viewPath);
             }
 
             return $this->viewPath = $viewPath;

@@ -46,7 +46,7 @@ class BaseController extends Controller
      *
      * @var bool
      */
-    protected $autoRender = true;
+    protected $autoRender = false;
 
     /**
      * True when the auto-layouting is active.
@@ -112,6 +112,10 @@ class BaseController extends Controller
 
         $response = call_user_func_array(array($this, $method), $parameters);
 
+        if (is_null($response) && $this->autoRender()) {
+            $response = $this->createView();
+        }
+
         return $this->processResponse($response);
     }
 
@@ -123,15 +127,6 @@ class BaseController extends Controller
      */
     protected function processResponse($response)
     {
-        if (! $this->autoRender()) {
-            return $response;
-        }
-
-        // The auto-rendering is active.
-        else if (is_null($response)) {
-            $response = $this->createView();
-        }
-
         if (! $response instanceof RenderableInterface) {
             return $response;
         }

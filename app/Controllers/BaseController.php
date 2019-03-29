@@ -236,21 +236,6 @@ class BaseController extends Controller
     }
 
     /**
-     * Set the variable 'title' on the View data and enable auto-rendering.
-     *
-     * @param  string  $string
-     * @return BaseController
-     */
-    protected function title($title)
-    {
-        $this->autoRender = true;
-
-        $this->set('title', $title);
-
-        return $this;
-    }
-
-    /**
      * Add a key / value pair to the view data.
      *
      * Bound data will be available to the view as variables.

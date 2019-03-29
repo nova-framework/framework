@@ -217,11 +217,11 @@ class BaseController extends Controller
         $path = str_replace('\\', '/', static::class);
 
         if (preg_match('#^(.+)/Controllers/(.*)$#', $path, $matches) === 1) {
-            list (, $namespace, $viewPath) = $matches;
+            list (, $basePath, $viewPath) = $matches;
 
-            if ($namespace != 'App') {
+            if ($basePath != 'App') {
                 // A Controller within a Package namespace.
-                return $this->viewPath = sprintf('%s::%s', $namespace, $viewPath);
+                return $this->viewPath = sprintf('%s::%s', $basePath, $viewPath);
             }
 
             return $this->viewPath = $viewPath;

@@ -245,7 +245,7 @@ class BaseController extends Controller
     {
         $this->autoRender = true;
 
-        View::share('title', $title);
+        $this->set('title', $title);
 
         return $this;
     }

@@ -245,7 +245,23 @@ class BaseController extends Controller
     {
         $this->autoRender = true;
 
-        $this->set('title', $title);
+        View::share('title', $title);
+
+        return $this;
+    }
+
+    /**
+     * Add a key / value pair to the shared View data.
+     *
+     * Shared view data is accessible to every view created by the application.
+     *
+     * @param  string  $key
+     * @param  mixed   $value
+     * @return BaseController
+     */
+    public function shares($key, $value)
+    {
+        View::share($key, $value);
 
         return $this;
     }

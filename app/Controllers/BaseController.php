@@ -172,7 +172,7 @@ class BaseController extends Controller
      */
     protected function resolveViewFromTheme($view)
     {
-        if (empty($theme = $this->getTheme())) {
+        if (empty($theme = Config::get('themes.current', $this->getTheme()))) {
             return $view;
         }
 

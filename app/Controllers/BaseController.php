@@ -260,13 +260,13 @@ class BaseController extends Controller
      */
     public function autoRender($enable = null)
     {
-        if (! is_null($enable)) {
-            $this->autoRender = (bool) $enable;
-
-            return $this;
+        if (is_null($enable)) {
+            return $this->autoRender;
         }
 
-        return $this->autoRender;
+        $this->autoRender = (bool) $enable;
+
+        return $this;
     }
 
     /**
@@ -277,13 +277,13 @@ class BaseController extends Controller
      */
     public function autoLayout($enable = null)
     {
-        if (! is_null($enable)) {
-            $this->autoLayout = (bool) $enable;
-
-            return $this;
+        if (is_null($enable)) {
+            return $this->autoLayout;
         }
 
-        return $this->autoLayout;
+        $this->autoLayout = (bool) $enable;
+
+        return $this;
     }
 
     /**

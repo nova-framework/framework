@@ -219,9 +219,8 @@ class BaseController extends Controller
         if (preg_match('#^(.+)/Controllers/(.*)$#', $path, $matches) === 1) {
             list (, $basePath, $viewPath) = $matches;
 
-            if ($basePath != 'App') {
-                // A Controller within a Package namespace.
-                return $this->viewPath = sprintf('%s::%s', $basePath, $viewPath);
+            if ($basePath !== 'App') {
+                $viewPath = sprintf('%s::%s', $basePath, $viewPath);
             }
 
             return $this->viewPath = $viewPath;

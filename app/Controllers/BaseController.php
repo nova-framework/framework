@@ -251,22 +251,6 @@ class BaseController extends Controller
     }
 
     /**
-     * Add a key / value pair to the shared View data.
-     *
-     * Shared view data is accessible to every view created by the application.
-     *
-     * @param  string  $key
-     * @param  mixed   $value
-     * @return BaseController
-     */
-    public function shares($key, $value)
-    {
-        View::share($key, $value);
-
-        return $this;
-    }
-
-    /**
      * Add a key / value pair to the view data.
      *
      * Bound data will be available to the view as variables.

@@ -42,6 +42,13 @@ class BaseController extends Controller
     protected $layout = 'Default';
 
     /**
+     * True when the auto-rendering is active.
+     *
+     * @var bool
+     */
+    protected $autoRender = true;
+
+    /**
      * True when the auto-layouting is active.
      *
      * @var bool
@@ -54,6 +61,13 @@ class BaseController extends Controller
      * @var string
      */
     protected $viewPath;
+
+    /**
+     * The View variables.
+     *
+     * @var array
+     */
+    protected $viewData = array();
 
 
     /**
@@ -109,13 +123,22 @@ class BaseController extends Controller
      */
     protected function processResponse($response)
     {
+        if (! $this->autoRender()) {
+            return $response;
+        }
+
+        // The auto-rendering is active.
+        else if (is_null($response)) {
+            $response = $this->createView();
+        }
+
         if (! $response instanceof RenderableInterface) {
             return $response;
         }
 
         // The response is a RenderableInterface implementation.
         else if ($this->autoLayout() && ! empty($view = $this->resolveLayoutView())) {
-            return View::make($view)->with('content', $response);
+            return View::make($view, $this->viewData)->with('content', $response);
         }
 
         return $response;
@@ -181,7 +204,7 @@ class BaseController extends Controller
 
         $view = sprintf('%s/%s', $this->resolveViewPath(), $view);
 
-        return View::make($view, $data);
+        return View::make($view, array_merge($this->viewData, $data));
     }
 
     /**
@@ -210,6 +233,60 @@ class BaseController extends Controller
         }
 
         throw new BadMethodCallException('Invalid controller namespace');
+    }
+
+    /**
+     * Set the variable 'title' on the View data and enable auto-rendering.
+     *
+     * @param  string  $string
+     * @return BaseController
+     */
+    protected function title($title)
+    {
+        $this->autoRender = true;
+
+        $this->set('title', $title);
+
+        return $this;
+    }
+
+    /**
+     * Add a key / value pair to the view data.
+     *
+     * Bound data will be available to the view as variables.
+     *
+     * @param  string|array  $one
+     * @param  string|array  $two
+     * @return BaseController
+     */
+    public function set($one, $two = null)
+    {
+        if (is_array($one)) {
+            $data = is_array($two) ? array_combine($one, $two) : $one;
+        } else {
+            $data = array($one => $two);
+        }
+
+        $this->viewData = $data + $this->viewData;
+
+        return $this;
+    }
+
+    /**
+     * Turns on or off Nova's conventional mode of auto-rendering.
+     *
+     * @param bool|null  $enable
+     * @return bool
+     */
+    public function autoRender($enable = null)
+    {
+        if (! is_null($enable)) {
+            $this->autoRender = (bool) $enable;
+
+            return $this;
+        }
+
+        return $this->autoRender;
     }
 
     /**
@@ -259,5 +336,15 @@ class BaseController extends Controller
     public function getLayout()
     {
         return $this->layout;
+    }
+
+    /**
+     * Return the current View data.
+     *
+     * @return string
+     */
+    public function getViewData()
+    {
+        return $this->viewData;
     }
 }

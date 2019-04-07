@@ -86,7 +86,9 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     Route::post('comments/{id}/unapprove', 'Comments@unapprove');
 
     // The Posts CRUD.
-    Route::get('content/create/{type}',  'Posts@create')->where('type', '(' .implode('|', PostType::getNames()) .')');
+    $types = PostType::getNames();
+
+    Route::get('content/create/{type}',  'Posts@create')->where('type', '(' .implode('|', $types) .')');
 
     //
     Route::get( 'content/{id}/edit',     'Posts@edit');
@@ -107,7 +109,9 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     Route::get('content/{type}/{slug}', 'Posts@taxonomy')->where('type', '(category|tag)');
 
     // The Posts listing.
-    Route::get('content/{slug?}', 'Posts@index')->where('type', '(' .implode('|', PostType::getSlugs()) .')');
+    $types = PostType::getSlugs();
+
+    Route::get('content/{slug?}', 'Posts@index')->where('type', '(' .implode('|', $types) .')');
 
     // The Taxonomies CRUD.
     Route::post('taxonomies',              'Taxonomies@store');

@@ -42,7 +42,7 @@ class TaxonomyManager
             throw new InvalidArgumentException("The Taxonomy Type class must be a subclass of [{$baseClass}]");
         }
 
-        $taxonomyType = new $className($this->container, $options);
+        $taxonomyType = new $className($this, $options);
 
         //
         $type = $taxonomyType->name();

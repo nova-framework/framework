@@ -42,7 +42,7 @@ class PostManager
             throw new InvalidArgumentException("The Post Type class must be a subclass of [{$baseClass}]");
         }
 
-        $postType = new $className($this->container, $options);
+        $postType = new $className($this, $options);
 
         //
         $type = $postType->name();

@@ -45,7 +45,7 @@ class Menu extends Taxonomy
      */
     public function description()
     {
-        return __d('content', 'A taxonomy type which represents a menu.');
+        return __d('content', 'A type of taxonomy which represents a menu.');
     }
 
     /**

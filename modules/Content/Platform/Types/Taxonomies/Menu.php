@@ -18,11 +18,6 @@ class Menu extends Taxonomy
     protected $model = 'Modules\Content\Models\Menu';
 
     /**
-     * @var string
-     */
-    protected $view = 'Modules/Content::Content/Taxonomy';
-
-    /**
      * @var bool
      */
     protected $hidden = false;

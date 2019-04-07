@@ -63,6 +63,11 @@ abstract class Taxonomy
         return $this->name;
     }
 
+    public function model()
+    {
+        return $this->model;
+    }
+
     abstract public function description();
 
     abstract public function labels();

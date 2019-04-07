@@ -18,11 +18,6 @@ class Category extends Taxonomy
     protected $model = 'Modules\Content\Models\Taxonomy';
 
     /**
-     * @var string
-     */
-    protected $view = 'Modules/Content::Content/Taxonomy';
-
-    /**
      * @var bool
      */
     protected $hidden = false;

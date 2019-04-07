@@ -18,11 +18,6 @@ class Tag extends Taxonomy
     protected $model = 'Modules\Content\Models\Tag';
 
     /**
-     * @var string
-     */
-    protected $view = 'Modules/Content::Content/Taxonomy';
-
-    /**
      * @var bool
      */
     protected $hidden = false;

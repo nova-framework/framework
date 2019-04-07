@@ -80,6 +80,17 @@ class TaxonomyManager
         }));
     }
 
+    public function getModel($type)
+    {
+        if (isset($this->types[$type])) {
+            $taxonomyType = $this->types[$type];
+
+            return $taxonomyType->model();
+        }
+
+        throw new InvalidArgumentException('Invalid Taxonomy type specified');
+    }
+
     public function getCurrentLocale()
     {
         $languageManager = $this->container['language'];

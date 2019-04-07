@@ -10,7 +10,7 @@ class Menu extends Taxonomy
     /**
      * @var string
      */
-    protected $name = 'tag';
+    protected $name = 'menu';
 
     /**
      * @var string
@@ -20,7 +20,7 @@ class Menu extends Taxonomy
     /**
      * @var bool
      */
-    protected $hidden = false;
+    protected $hidden = true;
 
     /**
      * @var bool
@@ -36,7 +36,7 @@ class Menu extends Taxonomy
      * @var array
      */
     protected $rewrite = array(
-        'slug' => 'tags'
+        'slug' => 'menus'
     );
 
 

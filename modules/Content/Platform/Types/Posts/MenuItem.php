@@ -30,7 +30,7 @@ class MenuItem extends BasePost
     /**
      * @var bool
      */
-    protected $public = true;
+    protected $public = false;
 
     /**
      * @var bool

@@ -64,7 +64,7 @@ class TaxonomyManager
         return array_values($this->types);
     }
 
-    public function getSlugs($plural = false)
+    public function getRouteSlugs($plural = false)
     {
         return array_map(function ($type) use ($plural)
         {

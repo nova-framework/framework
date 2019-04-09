@@ -52,6 +52,8 @@ class PostManager
         }
 
         $this->types[$type] = $postType;
+
+        return $this;
     }
 
     public function forget($type)
@@ -62,6 +64,17 @@ class PostManager
     public function getTypes()
     {
         return array_values($this->types);
+    }
+
+    public function getModel($type)
+    {
+        if (isset($this->types[$type])) {
+            $postType = $this->types[$type];
+
+            return $postType->model();
+        }
+
+        throw new InvalidArgumentException('Invalid Post type specified');
     }
 
     public function getRouteSlugs($plural = false)
@@ -78,17 +91,6 @@ class PostManager
         {
             return ! $type->isHidden();
         }));
-    }
-
-    public function getModel($type)
-    {
-        if (isset($this->types[$type])) {
-            $postType = $this->types[$type];
-
-            return $postType->model();
-        }
-
-        throw new InvalidArgumentException('Invalid Post type specified');
     }
 
     public function getCurrentLocale()

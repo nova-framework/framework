@@ -52,6 +52,8 @@ class TaxonomyManager
         }
 
         $this->types[$type] = $taxonomyType;
+
+        return $this;
     }
 
     public function forget($type)
@@ -62,6 +64,17 @@ class TaxonomyManager
     public function getTypes()
     {
         return array_values($this->types);
+    }
+
+    public function getModel($type)
+    {
+        if (isset($this->types[$type])) {
+            $taxonomyType = $this->types[$type];
+
+            return $taxonomyType->model();
+        }
+
+        throw new InvalidArgumentException('Invalid Taxonomy type specified');
     }
 
     public function getRouteSlugs($plural = false)
@@ -78,17 +91,6 @@ class TaxonomyManager
         {
             return ! $type->isHidden();
         }));
-    }
-
-    public function getModel($type)
-    {
-        if (isset($this->types[$type])) {
-            $taxonomyType = $this->types[$type];
-
-            return $taxonomyType->model();
-        }
-
-        throw new InvalidArgumentException('Invalid Taxonomy type specified');
     }
 
     public function getCurrentLocale()

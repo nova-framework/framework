@@ -92,7 +92,7 @@ class ModuleServiceProvider extends ServiceProvider
             'post'       => array('type' => 'Modules\Content\Platform\Types\Posts\Post'),
         ));
 
-        array_walk($config, function ($data)
+        array_walk($config, function ($data, $name)
         {
             $type = Arr::get($data, 'type');
 
@@ -113,7 +113,7 @@ class ModuleServiceProvider extends ServiceProvider
             'tag'      => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Tag'),
         ));
 
-        array_walk($config, function ($data)
+        array_walk($config, function ($data, $name)
         {
             $type = Arr::get($data, 'type');
 

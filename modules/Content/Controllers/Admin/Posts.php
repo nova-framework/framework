@@ -59,14 +59,8 @@ class Posts extends BaseController
             ->shares('title', $title);
     }
 
-    public function index(Request $request, $type = null)
+    public function index(Request $request, $type)
     {
-        if (! is_null($type)) {
-            $type = Str::singular($type);
-        } else {
-            $type = 'post';
-        }
-
         $postType = PostType::make($type);
 
         //

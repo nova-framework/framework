@@ -52,7 +52,7 @@ class ModuleServiceProvider extends ServiceProvider
             return;
         }
 
-        $this->registerContentBlocks($request);
+        $this->registerContentBlocks();
     }
 
     /**

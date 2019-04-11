@@ -106,6 +106,11 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
 
     Route::get('content/{type}', 'Posts@index')->where('type', '(' .implode('|', $types) .')');
 
+    //
+    $types = TaxonomyType::getRouteSlugs(false);
+
+    Route::get('taxonomies/{type}/{slug}', 'Posts@taxonomy')->where('type', '(' .implode('|', $types) .')');
+
     // The Taxonomies CRUD.
     Route::post('taxonomies',              'Taxonomies@store');
     Route::post('taxonomies/{id}',         'Taxonomies@update');
@@ -113,11 +118,6 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
 
     // For AJAX.
     Route::get('taxonomies/{id}/{parentId}', 'Taxonomies@categories')->where('parentId', '\d+');
-
-    //
-    $types = TaxonomyType::getRouteSlugs(false);
-
-    Route::get('taxonomies/{type}/{slug}', 'Posts@taxonomy')->where('type', '(' .implode('|', $types) .')');
 
     // The Taxonomies listings.
     Route::get('taxonomies/categories',    'Taxonomies@index');

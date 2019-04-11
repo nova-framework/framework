@@ -48,11 +48,11 @@ class ModuleServiceProvider extends ServiceProvider
         //
         // Conditionally register the Content Blocks.
 
-        if ($this->app->runningInConsole() || $request->ajax() || $request->wantsJson()) {
-            return;
-        }
+        $wantsJson = $request->ajax() || $request->wantsJson();
 
-        $this->registerContentBlocks();
+        if (! $this->app->runningInConsole() && ! $wantsJson) {
+            $this->registerContentBlocks();
+        }
     }
 
     /**
@@ -94,10 +94,10 @@ class ModuleServiceProvider extends ServiceProvider
 
         array_walk($config, function ($data)
         {
-            $className = Arr::get($data, 'type');
+            $type = Arr::get($data, 'type');
 
             PostType::register(
-                $className, Arr::get($data, 'options', array())
+                $type, Arr::get($data, 'options', array())
             );
         });
     }
@@ -115,10 +115,10 @@ class ModuleServiceProvider extends ServiceProvider
 
         array_walk($config, function ($data)
         {
-            $className = Arr::get($data, 'type');
+            $type = Arr::get($data, 'type');
 
             TaxonomyType::register(
-                $className, Arr::get($data, 'options', array())
+                $type, Arr::get($data, 'options', array())
             );
         });
     }

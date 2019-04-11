@@ -3,7 +3,7 @@
 namespace Modules\Content\Platform\Types;
 
 use Modules\Content\Platform\ContentType;
-use Modules\Content\Platform\PostManager;
+use Modules\Content\Platform\Types\PostManager;
 
 
 abstract class Post extends ContentType

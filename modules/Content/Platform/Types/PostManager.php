@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Content\Platform;
+namespace Modules\Content\Platform\Types;
 
 use Nova\Container\Container;
 

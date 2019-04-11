@@ -3,7 +3,7 @@
 namespace Modules\Content\Platform\Types;
 
 use Modules\Content\Platform\ContentType;
-use Modules\Content\Platform\TaxonomyManager;
+use Modules\Content\Platform\Types\TaxonomyManager;
 
 
 abstract class Taxonomy extends ContentType

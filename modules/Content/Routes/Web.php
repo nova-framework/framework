@@ -106,19 +106,15 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
 
     Route::post('content/{id}/tags/{tagId}/detach', 'Posts@detachTag')->where('tagId', '\d+');
 
-    // The Taxonomies listings.
-    Route::get('content/categories',    'Taxonomies@index');
-    Route::get('content/tags',          'Taxonomies@tags');
-
-    //
-    $types = TaxonomyType::getRouteSlugs(false);
-
-    Route::get('content/{type}/{slug}', 'Posts@taxonomy')->where('type', '(' .implode('|', $types) .')');
-
     // The Posts listing.
     $types = PostType::getRouteSlugs();
 
     Route::get('content/{type?}', 'Posts@index')->where('type', '(' .implode('|', $types) .')');
+
+    //
+    $types = TaxonomyType::getRouteSlugs(false);
+
+    Route::get('taxonomies/{type}/{slug}', 'Posts@taxonomy')->where('type', '(' .implode('|', $types) .')');
 
     // The Taxonomies CRUD.
     Route::post('taxonomies',              'Taxonomies@store');
@@ -126,5 +122,9 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     Route::post('taxonomies/{id}/destroy', 'Taxonomies@destroy');
 
     // For AJAX.
-    Route::get('taxonomies/{id}/{parent}', 'Taxonomies@categories')->where('parent', '\d+');
+    Route::get('taxonomies/{id}/{parentId}', 'Taxonomies@categories')->where('parentId', '\d+');
+
+    // The Taxonomies listings.
+    Route::get('taxonomies/categories',    'Taxonomies@index');
+    Route::get('taxonomies/tags',          'Taxonomies@tags');
 });

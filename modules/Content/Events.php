@@ -88,7 +88,7 @@ Event::listen('backend.menu.sidebar', function ()
             //'can'    => 'create:' .Post::class,
         ),
         array(
-            'url'    => site_url('admin/content/categories'),
+            'url'    => site_url('admin/taxonomies/categories'),
             'title'  => __d('content', 'Categories'),
             'icon'   => 'circle-o',
             'weight' => 2,
@@ -98,7 +98,7 @@ Event::listen('backend.menu.sidebar', function ()
             //'can'    => 'lists:' .Post::class,
         ),
         array(
-            'url'    => site_url('admin/content/tags'),
+            'url'    => site_url('admin/taxonomies/tags'),
             'title'  => __d('content', 'Tags'),
             'icon'   => 'circle-o',
             'weight' => 2,

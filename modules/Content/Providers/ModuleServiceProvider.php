@@ -48,9 +48,9 @@ class ModuleServiceProvider extends ServiceProvider
         //
         // Conditionally register the Content Blocks.
 
-        $wantsJson = $request->ajax() || $request->wantsJson();
+        $requestWantsJson = $request->ajax() || $request->wantsJson();
 
-        if (! $this->app->runningInConsole() && ! $wantsJson) {
+        if (! $this->app->runningInConsole() && ! $requestWantsJson) {
             $this->registerContentBlocks();
         }
     }

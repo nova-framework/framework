@@ -57,7 +57,7 @@ abstract class ContentType
         $this->manager = $manager;
 
         //
-        unset($options['manager'], $options['labels']);
+        unset($options['manager'], $options['name'], $options['labels']);
 
         foreach ($options as $key => $value) {
             $this->{$key} = $value;

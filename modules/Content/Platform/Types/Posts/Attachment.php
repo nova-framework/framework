@@ -64,8 +64,8 @@ class Attachment extends BasePost
     public function labels()
     {
         return array(
-            'item'        => __d('content', 'Attachment'),
-            'items'       => __d('content', 'Attachments'),
+            'name'        => __d('content', 'Attachment'),
+            'title'       => __d('content', 'Attachments'),
 
             'searchItems' => __d('content', 'Search Attachments'),
             'allItems'    => __d('content', 'All Attachments'),

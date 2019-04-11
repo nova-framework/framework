@@ -64,8 +64,8 @@ class MenuItem extends BasePost
     public function labels()
     {
         return array(
-            'item'        => __d('content', 'Menu Item'),
-            'items'       => __d('content', 'Menu Items'),
+            'name'        => __d('content', 'Menu Item'),
+            'title'       => __d('content', 'Menu Items'),
 
             'searchItems' => __d('content', 'Search Menu Items'),
             'allItems'    => __d('content', 'All Menu Items'),

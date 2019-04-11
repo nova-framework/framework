@@ -64,8 +64,8 @@ class Post extends BasePost
     public function labels()
     {
         return array(
-            'item'        => __d('content', 'Post'),
-            'items'       => __d('content', 'Posts'),
+            'name'        => __d('content', 'Post'),
+            'title'       => __d('content', 'Posts'),
 
             'searchItems' => __d('content', 'Search Posts'),
             'allItems'    => __d('content', 'All Posts'),

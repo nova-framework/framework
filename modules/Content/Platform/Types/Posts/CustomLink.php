@@ -64,8 +64,8 @@ class CustomLink extends BasePost
     public function labels()
     {
         return array(
-            'item'        => __d('content', 'Custom Link'),
-            'items'       => __d('content', 'Custom Links'),
+            'name'        => __d('content', 'Custom Link'),
+            'title'       => __d('content', 'Custom Links'),
 
             'searchItems' => __d('content', 'Search Custom Links'),
             'allItems'    => __d('content', 'All Custom Links'),

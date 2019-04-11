@@ -64,8 +64,8 @@ class Page extends BasePost
     public function labels()
     {
         return array(
-            'item'        => __d('content', 'Page'),
-            'items'       => __d('content', 'Pages'),
+            'name'        => __d('content', 'Page'),
+            'title'       => __d('content', 'Pages'),
 
             'searchItems' => __d('content', 'Search Pages'),
             'allItems'    => __d('content', 'All Pages'),

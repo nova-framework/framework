@@ -64,8 +64,8 @@ class Block extends BasePost
     public function labels()
     {
         return array(
-            'item'        => __d('content', 'Block'),
-            'items'       => __d('content', 'Blocks'),
+            'name'        => __d('content', 'Block'),
+            'title'       => __d('content', 'Blocks'),
 
             'searchItems' => __d('content', 'Search Blocks'),
             'allItems'    => __d('content', 'All Blocks'),

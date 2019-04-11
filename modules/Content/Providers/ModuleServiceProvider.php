@@ -92,14 +92,13 @@ class ModuleServiceProvider extends ServiceProvider
             'post'       => array('type' => 'Modules\Content\Platform\Types\Posts\Post'),
         ));
 
-        array_walk($config, function ($data, $name)
-        {
+        foreach ($config as $name => $data) {
             $type = Arr::get($data, 'type');
 
             PostType::register(
                 $type, Arr::get($data, 'options', array())
             );
-        });
+        }
     }
 
     /**
@@ -113,14 +112,13 @@ class ModuleServiceProvider extends ServiceProvider
             'tag'      => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Tag'),
         ));
 
-        array_walk($config, function ($data, $name)
-        {
+        foreach ($config as $name => $data) {
             $type = Arr::get($data, 'type');
 
             TaxonomyType::register(
                 $type, Arr::get($data, 'options', array())
             );
-        });
+        }
     }
 
     /**

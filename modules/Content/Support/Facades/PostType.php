@@ -4,7 +4,7 @@ namespace Modules\Content\Support\Facades;
 
 use Nova\Support\Facades\Facade;
 
-use Modules\Content\Platform\PostTypeManager;
+use Modules\Content\Platform\Types\PostManager;
 
 
 class PostType extends Facade
@@ -15,6 +15,6 @@ class PostType extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return PostTypeManager::class;
+        return PostManager::class;
     }
 }

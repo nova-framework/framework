@@ -13,7 +13,7 @@
 
 <div class="box box-default">
     <div class="box-header">
-        <h3 class="box-title"><?= $postType->label('all_items'); ?></h3>
+        <h3 class="box-title"><?= $postType->label('allItems'); ?></h3>
         <div class="box-tools">
         <?= $posts->links(); ?>
         </div>

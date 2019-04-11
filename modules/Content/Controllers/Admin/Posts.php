@@ -67,7 +67,7 @@ class Posts extends BaseController
             $type = 'post';
         }
 
-        $postType = PostType::make($type);
+        $postType = PostType::get($type);
 
         //
         $name = $postType->label('name');
@@ -89,7 +89,7 @@ class Posts extends BaseController
     {
         $authUser = Auth::user();
 
-        $postType = PostType::make($type);
+        $postType = PostType::get($type);
 
         $name = $postType->label('name');
 
@@ -171,7 +171,7 @@ class Posts extends BaseController
 
         $type = $post->type;
 
-        $postType = PostType::make($type);
+        $postType = PostType::get($type);
 
         // Handle the Metadata.
         $editLock = sprintf('%d:%d', time(), $authUser->id);
@@ -260,7 +260,7 @@ class Posts extends BaseController
             return Response::json(array('redirectTo' => 'refresh'), 400);
         }
 
-        $postType = PostType::make($post->type);
+        $postType = PostType::get($post->type);
 
         $creating = (bool) Arr::get($input, 'creating', 0);
 
@@ -434,7 +434,7 @@ class Posts extends BaseController
             return Redirect::back()->with('danger', __d('content', 'Record not found: #{0}', $id));
         }
 
-        $postType = PostType::make($post->type);
+        $postType = PostType::get($post->type);
 
         // Fire the starting event.
         Event::dispatch('content.post.deleting', array($post));
@@ -472,7 +472,7 @@ class Posts extends BaseController
 
         $post = $revision->parent;
 
-        $postType = PostType::make($post->type);
+        $postType = PostType::get($post->type);
 
         // Restore the Post's title, content and excerpt.
         $post->content = $revision->content;
@@ -506,7 +506,7 @@ class Posts extends BaseController
             return Redirect::back()->with('danger', __d('content', 'Record not found: #{0}', $id));
         }
 
-        $postType = PostType::make($post->type);
+        $postType = PostType::get($post->type);
 
         $revisions = $post->revision()
             ->orderBy('created_at', 'desc')

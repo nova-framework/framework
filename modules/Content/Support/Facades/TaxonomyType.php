@@ -4,7 +4,7 @@ namespace Modules\Content\Support\Facades;
 
 use Nova\Support\Facades\Facade;
 
-use Modules\Content\Platform\TaxonomyTypeManager;
+use Modules\Content\Platform\Types\TaxonomyManager;
 
 
 class TaxonomyType extends Facade
@@ -15,6 +15,6 @@ class TaxonomyType extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return TaxonomyTypeManager::class;
+        return TaxonomyManager::class;
     }
 }

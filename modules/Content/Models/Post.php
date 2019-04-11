@@ -213,7 +213,7 @@ class Post extends Model
 
             if (isset(static::$postTypes[$type])) {
                 $className = static::$postTypes[$type];
-            } else if (! is_null($model = PostType::getModel($type))) {
+            } else if (! is_null($model = PostType::getModelByType($type))) {
                 $className = $model;
             }
         }
@@ -229,7 +229,7 @@ class Post extends Model
             $type = $this->type ?: 'post';
         }
 
-        return PostType::make($type);
+        return PostType::get($type);
     }
 
     /**

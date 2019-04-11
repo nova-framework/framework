@@ -11,6 +11,8 @@ use Nova\Support\Arr;
 use Shared\Support\Facades\Widget;
 
 use Modules\Content\Models\Block;
+use Modules\Content\Support\Facades\PostType;
+use Modules\Content\Support\Facades\TaxonomyType;
 
 
 class ModuleServiceProvider extends ServiceProvider
@@ -23,7 +25,6 @@ class ModuleServiceProvider extends ServiceProvider
     protected $providers = array(
         'Modules\Content\Providers\AuthServiceProvider',
         'Modules\Content\Providers\EventServiceProvider',
-        'Modules\Content\Providers\PlatformServiceProvider',
         'Modules\Content\Providers\RouteServiceProvider',
     );
 
@@ -38,7 +39,7 @@ class ModuleServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        //$this->package('Modules/Content', 'content', $path);
+        $this->package('Modules/Content', 'content', $path);
 
         // Bootstrap the Package.
         $path = $path .DS .'Bootstrap.php';
@@ -68,14 +69,10 @@ class ModuleServiceProvider extends ServiceProvider
     {
         parent::register();
 
-        // Configure the Package.
-        $path = realpath(__DIR__ .'/../');
-
-        $this->package('Modules/Content', 'content', $path);
-
         // Register the Content Types.
-        // $this->registerPostTypes();
-        // $this->registerTaxonomyTypes();
+        $this->registerPostTypes();
+
+        $this->registerTaxonomyTypes();
     }
 
     /**

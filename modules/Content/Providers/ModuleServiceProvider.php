@@ -5,6 +5,8 @@ namespace Modules\Content\Providers;
 use Nova\Http\Request;
 use Nova\Packages\Support\Providers\ModuleServiceProvider as ServiceProvider;
 use Nova\Support\Facades\Cache;
+use Nova\Support\Facades\Config;
+use Nova\Support\Arr;
 
 use Shared\Support\Facades\Widget;
 
@@ -43,7 +45,13 @@ class ModuleServiceProvider extends ServiceProvider
 
         $this->bootstrapFrom($path);
 
-        // Register the Content Blocks.
+        //
+        // Conditionally register the Content Blocks.
+
+        if ($this->app->runningInConsole() || $request->ajax() || $request->wantsJson()) {
+            return;
+        }
+
         $this->registerContentBlocks($request);
     }
 
@@ -64,17 +72,61 @@ class ModuleServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         $this->package('Modules/Content', 'content', $path);
+
+        // Register the Content Types.
+        // $this->registerContentTypes();
+    }
+
+    /**
+     * Register the Content Types.
+     */
+    protected function registerContentTypes()
+    {
+        //
+        // Register the Post types.
+
+        $config = Config::get('content.types.posts', array(
+            'attachment' => array('type' => 'Modules\Content\Platform\Types\Posts\Attachment'),
+            'block'      => array('type' => 'Modules\Content\Platform\Types\Posts\Block'),
+            'customLink' => array('type' => 'Modules\Content\Platform\Types\Posts\CustomLink'),
+            'menuItem'   => array('type' => 'Modules\Content\Platform\Types\Posts\MenuItem'),
+            'page'       => array('type' => 'Modules\Content\Platform\Types\Posts\Page'),
+            'post'       => array('type' => 'Modules\Content\Platform\Types\Posts\Post'),
+        ));
+
+        array_walk($config, function ($data, $name)
+        {
+            $className = Arr::get($data, 'type');
+
+            PostType::register(
+                $className, Arr::get($data, 'options', array())
+            );
+        });
+
+        //
+        // Register the Taxonomy types.
+
+        $config = Config::get('content.types.taxonomies', array(
+            'category' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Category'),
+            'menu'     => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Menu'),
+            'tag'      => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Tag'),
+        ));
+
+        array_walk($config, function ($data, $name)
+        {
+            $className = Arr::get($data, 'type');
+
+            TaxonomyType::register(
+                $className, Arr::get($data, 'options', array())
+            );
+        });
     }
 
     /**
      * Register the Content Blocks to the Widgets Manager.
      */
-    protected function registerContentBlocks(Request $request)
+    protected function registerContentBlocks()
     {
-        if ($this->app->runningInConsole() || $request->ajax() || $request->wantsJson()) {
-            return;
-        }
-
         $blocks = Cache::remember('content.blocks', 1440, function ()
         {
             return Block::where('status', 'publish')->get();
@@ -83,7 +135,7 @@ class ModuleServiceProvider extends ServiceProvider
         foreach ($blocks as $block) {
             $position = $block->block_widget_position ?: 'content';
 
-            $name = 'content.block.' .$block->name;
+            $name = sprintf('content.block.%s', $block->name);
 
             Widget::register(
                 'Modules\Content\Widgets\BlockHandler', $name, $position, $block->menu_order, array($this->app, $block)

@@ -30,7 +30,7 @@ abstract class ContentTypeManager
         unset($this->types[$type]);
     }
 
-    public function get($type)
+    public function make($type)
     {
         if (isset($this->types[$type])) {
             return $this->types[$type];

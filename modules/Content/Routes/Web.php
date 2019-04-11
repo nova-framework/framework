@@ -109,7 +109,7 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     // The Posts listing.
     $types = PostType::getRouteSlugs();
 
-    Route::get('content/{type?}', 'Posts@index')->where('type', '(' .implode('|', $types) .')');
+    Route::get('content/{type}', 'Posts@index')->where('type', '(' .implode('|', $types) .')');
 
     // The Taxonomies CRUD.
     Route::post('taxonomies',              'Taxonomies@store');

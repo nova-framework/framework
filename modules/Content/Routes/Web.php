@@ -46,13 +46,8 @@ Route::post('content/{id}', 'Content@unlock')->where('id', '\d+');
 Route::post('content/{id}/comment', 'Comments@store')->where('id', '\d+');
 
 
-// The administration group's wheres.
-$wheres = array(
-    'id'  => '\d+',
-);
-
 // The Adminstration Routes.
-Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin', 'where' => $wheres), function ()
+Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin', 'where' => array('id'  => '\d+')), function ()
 {
     // The Media CRUD.
     Route::get( 'media',                'Attachments@index');
@@ -95,12 +90,12 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     Route::get('content/create/{type}',  'Posts@create')->where('type', '(' .implode('|', $types) .')');
 
     //
-    Route::get( 'content/{id}/edit',     'Posts@edit');
-    Route::post('content/{id}',          'Posts@update');
-    Route::post('content/{id}/restore',  'Posts@restore');
-    Route::post('content/{id}/destroy',  'Posts@destroy');
+    Route::get( 'content/{id}/edit',    'Posts@edit');
+    Route::post('content/{id}',         'Posts@update');
+    Route::post('content/{id}/restore', 'Posts@restore');
+    Route::post('content/{id}/destroy', 'Posts@destroy');
 
-    Route::get('content/{id}/revisions', 'Posts@revisions');
+    Route::get( 'content/{id}/revisions', 'Posts@revisions');
 
     Route::post('content/{id}/tags', 'Posts@addTags');
 

@@ -9,32 +9,8 @@ use Modules\Content\Platform\Types\Taxonomy;
 use InvalidArgumentException;
 
 
-class TaxonomyManager
+class TaxonomyManager extends ContentManager
 {
-    /**
-     * @var \Nova\Container\Container
-     */
-    protected $container;
-
-    /**
-     * @var array
-     */
-    protected $types = array();
-
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
-    public function get($type)
-    {
-        if (isset($this->types[$type])) {
-            return $this->types[$type];
-        }
-
-        throw new InvalidArgumentException('Invalid Taxonomy type specified');
-    }
 
     public function register($className, array $options = array())
     {
@@ -48,55 +24,11 @@ class TaxonomyManager
         $type = $taxonomyType->name();
 
         if (isset($this->types[$type])) {
-            throw new InvalidArgumentException("The Post type [{$type}] is already registered");
+            throw new InvalidArgumentException("The Taxonomy type [{$type}] is already registered");
         }
 
         $this->types[$type] = $taxonomyType;
 
         return $this;
-    }
-
-    public function forget($type)
-    {
-        unset($this->types[$type]);
-    }
-
-    public function getTypes()
-    {
-        return array_values($this->types);
-    }
-
-    public function getModel($type)
-    {
-        if (isset($this->types[$type])) {
-            $taxonomyType = $this->types[$type];
-
-            return $taxonomyType->model();
-        }
-
-        throw new InvalidArgumentException('Invalid Taxonomy type specified');
-    }
-
-    public function getRouteSlugs($plural = false)
-    {
-        return array_map(function ($type) use ($plural)
-        {
-            if (! $plural) {
-                return $type->name();
-            }
-
-            return $type->slug();
-
-        }, array_filter($this->getTypes(), function ($type)
-        {
-            return ! $type->isHidden();
-        }));
-    }
-
-    public function getCurrentLocale()
-    {
-        $languageManager = $this->container['language'];
-
-        return $languageManager->getLocale();
     }
 }

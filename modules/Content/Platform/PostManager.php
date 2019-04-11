@@ -9,32 +9,8 @@ use Modules\Content\Platform\Types\Post;
 use InvalidArgumentException;
 
 
-class PostManager
+class PostManager extends ContentManager
 {
-    /**
-     * @var \Nova\Container\Container
-     */
-    protected $container;
-
-    /**
-     * @var array
-     */
-    protected $types = array();
-
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
-    public function get($type)
-    {
-        if (isset($this->types[$type])) {
-            return $this->types[$type];
-        }
-
-        throw new InvalidArgumentException('Invalid Post type specified');
-    }
 
     public function register($className, array $options = array())
     {
@@ -54,49 +30,5 @@ class PostManager
         $this->types[$type] = $postType;
 
         return $this;
-    }
-
-    public function forget($type)
-    {
-        unset($this->types[$type]);
-    }
-
-    public function getTypes()
-    {
-        return array_values($this->types);
-    }
-
-    public function getModel($type)
-    {
-        if (isset($this->types[$type])) {
-            $postType = $this->types[$type];
-
-            return $postType->model();
-        }
-
-        throw new InvalidArgumentException('Invalid Post type specified');
-    }
-
-    public function getRouteSlugs($plural = false)
-    {
-        return array_map(function ($type) use ($plural)
-        {
-            if (! $plural) {
-                return $type->name();
-            }
-
-            return $type->slug();
-
-        }, array_filter($this->getTypes(), function ($type)
-        {
-            return ! $type->isHidden();
-        }));
-    }
-
-    public function getCurrentLocale()
-    {
-        $languageManager = $this->container['language'];
-
-        return $languageManager->getLocale();
     }
 }

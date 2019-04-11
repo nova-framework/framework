@@ -61,6 +61,8 @@ class Posts extends BaseController
 
     public function index(Request $request, $type)
     {
+        $type = Str::singular($type);
+
         $postType = PostType::make($type);
 
         //

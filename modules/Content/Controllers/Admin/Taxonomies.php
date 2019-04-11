@@ -56,6 +56,7 @@ class Taxonomies extends BaseController
     {
         $type = 'category';
 
+        //
         $name  = __d('content', 'Category');
         $title = __d('content', 'Categories');
 
@@ -72,6 +73,7 @@ class Taxonomies extends BaseController
     {
         $type = 'tag';
 
+        //
         $name  = __d('content', 'Tag');
         $title = __d('content', 'Tags');
 

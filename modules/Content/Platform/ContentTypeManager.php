@@ -49,7 +49,7 @@ abstract class ContentTypeManager
         }
     }
 
-    public function getRouteSlugs($plural = false)
+    public function getRouteSlugs($plural = true)
     {
         $result = array();
 

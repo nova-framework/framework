@@ -4,6 +4,7 @@ namespace Modules\Content\Platform;
 
 use Nova\Container\Container;
 
+use Modules\Content\Platform\ContentManager;
 use Modules\Content\Platform\Types\Taxonomy;
 
 use InvalidArgumentException;

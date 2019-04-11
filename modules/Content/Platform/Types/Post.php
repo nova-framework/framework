@@ -2,16 +2,12 @@
 
 namespace Modules\Content\Platform\Types;
 
+use Modules\Content\Platform\Types\Content;
 use Modules\Content\Platform\PostManager;
 
 
 abstract class Post extends Content
 {
-    /**
-     * @var \Modules\Content\Platform\PostManager
-     */
-    protected $manager;
-
     /**
      * @var string
      */

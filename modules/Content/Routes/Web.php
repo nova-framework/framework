@@ -12,6 +12,7 @@
 */
 
 use Modules\Content\Support\Facades\PostType;
+use Modules\Content\Support\Facades\TaxonomyType;
 
 
 // The Media Files serving.
@@ -31,7 +32,10 @@ Route::get('content/archive/{year}/{month}', array(
 
 Route::get('content/search', 'Content@search');
 
-Route::get('content/{type}/{slug}', array('uses' => 'Content@taxonomy'))->where('type', '(category|tag)');
+//
+$types = TaxonomyType::getRouteSlugs(false);
+
+Route::get('content/{type}/{slug}', array('uses' => 'Content@taxonomy'))->where('type', '(' .implode('|', $types) .')');
 
 Route::get('content/{slug?}', array('uses' => 'Content@index'))->where('slug', '(.*)');
 
@@ -106,12 +110,15 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     Route::get('content/categories',    'Taxonomies@index');
     Route::get('content/tags',          'Taxonomies@tags');
 
-    Route::get('content/{type}/{slug}', 'Posts@taxonomy')->where('type', '(category|tag)');
+    //
+    $types = TaxonomyType::getRouteSlugs(false);
+
+    Route::get('content/{type}/{slug}', 'Posts@taxonomy')->where('type', '(' .implode('|', $types) .')');
 
     // The Posts listing.
     $types = PostType::getRouteSlugs();
 
-    Route::get('content/{slug?}', 'Posts@index')->where('type', '(' .implode('|', $types) .')');
+    Route::get('content/{type?}', 'Posts@index')->where('type', '(' .implode('|', $types) .')');
 
     // The Taxonomies CRUD.
     Route::post('taxonomies',              'Taxonomies@store');

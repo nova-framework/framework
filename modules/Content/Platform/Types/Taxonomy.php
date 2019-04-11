@@ -6,7 +6,7 @@ use Modules\Content\Platform\ContentType;
 use Modules\Content\Platform\TaxonomyManager;
 
 
-abstract class Taxonomy extends Content
+abstract class Taxonomy extends ContentType
 {
 
     public function __construct(TaxonomyManager $manager, array $options)

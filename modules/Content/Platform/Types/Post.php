@@ -6,7 +6,7 @@ use Modules\Content\Platform\ContentType;
 use Modules\Content\Platform\PostManager;
 
 
-abstract class Post extends Content
+abstract class Post extends ContentType
 {
     /**
      * @var string

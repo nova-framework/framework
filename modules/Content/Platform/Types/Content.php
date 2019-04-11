@@ -70,7 +70,7 @@ abstract class Content
 
     public function label($name, $default = null)
     {
-        $locale = $this->getCurrentLocale();
+        $locale = $this->manager->getCurrentLocale();
 
         if (! isset($this->labels[$locale])) {
             $this->labels[$locale] = $this->labels();
@@ -122,10 +122,5 @@ abstract class Content
         }
 
         return $this->rewrite('slug');
-    }
-
-    protected function getCurrentLocale()
-    {
-        return $this->manager->getCurrentLocale();
     }
 }

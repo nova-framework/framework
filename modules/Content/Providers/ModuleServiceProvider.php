@@ -74,17 +74,15 @@ class ModuleServiceProvider extends ServiceProvider
         $this->package('Modules/Content', 'content', $path);
 
         // Register the Content Types.
-        // $this->registerContentTypes();
+        // $this->registerPostTypes();
+        // $this->registerTaxonomyTypes();
     }
 
     /**
-     * Register the Content Types.
+     * Register the Post Types.
      */
-    protected function registerContentTypes()
+    protected function registerPostTypes()
     {
-        //
-        // Register the Post types.
-
         $config = Config::get('content.types.posts', array(
             'attachment' => array('type' => 'Modules\Content\Platform\Types\Posts\Attachment'),
             'block'      => array('type' => 'Modules\Content\Platform\Types\Posts\Block'),
@@ -102,10 +100,13 @@ class ModuleServiceProvider extends ServiceProvider
                 $className, Arr::get($data, 'options', array())
             );
         });
+    }
 
-        //
-        // Register the Taxonomy types.
-
+    /**
+     * Register the Taxonomy Types.
+     */
+    protected function registerTaxonomyTypes()
+    {
         $config = Config::get('content.types.taxonomies', array(
             'category' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Category'),
             'menu'     => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Menu'),

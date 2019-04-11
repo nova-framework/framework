@@ -163,7 +163,7 @@ $(function () {
                     <div class="btn-group" role="group" aria-label="...">
                         <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-revision-dialog" data-id="<?= $revision->id; ?>" title="<?= __d('content', 'Delete this revision'); ?>" role="button"><i class="fa fa-remove"></i></a>
                         <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-restore-revision-dialog" data-id="<?= $revision->id; ?>" data-version="<?= $version; ?>" title="<?= __d('content', 'Restore this revision'); ?>" role="button"><i class="fa fa-repeat"></i></a>
-                        <a class="btn btn-sm btn-warning" href="<?= site_url('content/' .$revision->slug); ?>" title="<?= __d('content', 'View this revision'); ?>" target="_blank" role="button"><i class="fa fa-search"></i></a>
+                        <a class="btn btn-sm btn-warning" href="<?= site_url('content/{0}', $revision->slug); ?>" title="<?= __d('content', 'View this revision'); ?>" target="_blank" role="button"><i class="fa fa-search"></i></a>
                     </div>
                 </td>
             </tr>

@@ -117,10 +117,10 @@ abstract class ContentType
 
     public function slug($plural = true)
     {
-        if (! $plural) {
-            return Str::snake($this->name(), '-');
+        if ($plural) {
+            return $this->rewrite('slug');
         }
 
-        return $this->rewrite('slug');
+        return Str::snake($this->name(), '-');
     }
 }

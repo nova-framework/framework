@@ -119,12 +119,12 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     // For AJAX.
     Route::get('taxonomies/{id}/{parentId}', 'Taxonomies@categories')->where('parentId', '\d+');
 
-    // The Taxonomies listings.
-    Route::get('taxonomies/categories',    'Taxonomies@index');
-    Route::get('taxonomies/tags',          'Taxonomies@tags');
-
     //
     $types = TaxonomyType::getRouteSlugs(false);
 
     Route::get('taxonomies/{type}/{slug}', 'Posts@taxonomy')->where('type', '(' .implode('|', $types) .')');
+
+    // The Taxonomies listings.
+    Route::get('taxonomies/categories',    'Taxonomies@index');
+    Route::get('taxonomies/tags',          'Taxonomies@tags');
 });

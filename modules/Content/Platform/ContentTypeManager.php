@@ -5,7 +5,7 @@ namespace Modules\Content\Platform;
 use Nova\Container\Container;
 
 
-abstract class ContentManager
+abstract class ContentTypeManager
 {
     /**
      * @var \Nova\Container\Container

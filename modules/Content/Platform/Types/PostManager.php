@@ -4,13 +4,13 @@ namespace Modules\Content\Platform\Types;
 
 use Nova\Container\Container;
 
-use Modules\Content\Platform\ContentManager;
+use Modules\Content\Platform\ContentTypeManager;
 use Modules\Content\Platform\Types\Post;
 
 use InvalidArgumentException;
 
 
-class PostManager extends ContentManager
+class PostManager extends ContentTypeManager
 {
 
     public function register($className, array $options = array())

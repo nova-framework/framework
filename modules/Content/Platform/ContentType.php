@@ -5,14 +5,14 @@ namespace Modules\Content\Platform;
 use Nova\Support\Arr;
 use Nova\Support\Str;
 
-use Modules\Content\Platform\ContentManager;
+use Modules\Content\Platform\ContentTypeManager;
 use Modules\Content\Platform\PostManager;
 
 
 abstract class ContentType
 {
     /**
-     * @var \Modules\Content\Platform\ContentManager
+     * @var \Modules\Content\Platform\ContentTypeManager
      */
     protected $manager;
 
@@ -52,7 +52,7 @@ abstract class ContentType
     protected $labels = array();
 
 
-    public function __construct(ContentManager $manager, array $options)
+    public function __construct(ContentTypeManager $manager, array $options)
     {
         $this->manager = $manager;
 

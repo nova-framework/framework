@@ -4,6 +4,8 @@ namespace Modules\Content\Platform;
 
 use Nova\Container\Container;
 
+use InvalidArgumentException;
+
 
 abstract class ContentTypeManager
 {
@@ -35,6 +37,8 @@ abstract class ContentTypeManager
         if (isset($this->types[$type])) {
             return $this->types[$type];
         }
+
+        throw new InvalidArgumentException("The Content type [{$type}] is not registered");
     }
 
     public function getTypes()
@@ -44,8 +48,13 @@ abstract class ContentTypeManager
 
     public function getModelByType($type)
     {
-        if (! is_null($instance = $this->get($type))) {
+        try {
+            $instance = $this->make($type);
+
             return $instance->model();
+        }
+        catch (InvalidArgumentException $e) {
+            // Nothing to do.
         }
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Content\Platform\Types;
+namespace Modules\Content\Platform;
 
 use Nova\Support\Arr;
 use Nova\Support\Str;
@@ -9,7 +9,7 @@ use Modules\Content\Platform\ContentManager;
 use Modules\Content\Platform\PostManager;
 
 
-abstract class Content
+abstract class ContentType
 {
     /**
      * @var \Modules\Content\Platform\ContentManager

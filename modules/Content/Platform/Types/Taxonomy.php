@@ -2,7 +2,7 @@
 
 namespace Modules\Content\Platform\Types;
 
-use Modules\Content\Platform\Types\Content;
+use Modules\Content\Platform\ContentType;
 use Modules\Content\Platform\TaxonomyManager;
 
 

@@ -229,7 +229,7 @@ class Post extends Model
             $type = $this->type ?: 'post';
         }
 
-        return PostType::get($type);
+        return PostType::make($type);
     }
 
     /**

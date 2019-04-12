@@ -11,6 +11,7 @@ use Nova\Support\Arr;
 use Shared\Support\Facades\Widget;
 
 use Modules\Content\Models\Block;
+use Modules\Content\Support\Facades\ContentLabel;
 use Modules\Content\Support\Facades\PostType;
 use Modules\Content\Support\Facades\TaxonomyType;
 
@@ -95,6 +96,8 @@ class ModuleServiceProvider extends ServiceProvider
             PostType::register(
                 $type, Arr::get($data, 'options', array())
             );
+
+            ContentLabel::register($name, $type);
         }
     }
 
@@ -115,6 +118,8 @@ class ModuleServiceProvider extends ServiceProvider
             TaxonomyType::register(
                 $type, Arr::get($data, 'options', array())
             );
+
+            ContentLabel::register($name, $type);
         }
     }
 

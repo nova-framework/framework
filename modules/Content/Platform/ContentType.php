@@ -66,14 +66,14 @@ abstract class ContentType
 
     abstract public function description();
 
-    abstract public function labels();
+    abstract public static function labels();
 
     public function label($name, $default = null)
     {
         $locale = $this->manager->getCurrentLocale();
 
         if (! isset($this->labels[$locale])) {
-            $this->labels[$locale] = $this->labels();
+            $this->labels[$locale] = static::labels();
         }
 
         $key = sprintf('%s.%s', $locale, Str::camel($name));

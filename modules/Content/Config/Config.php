@@ -47,43 +47,10 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
-    | The Translated Names of the Post Types and Statuses
+    | The Translated Names of the Statuses
     |--------------------------------------------------------------------------
     |
     */
-
-    'labels' => array(
-
-        // Posts.
-        'post' => array(
-            'name'  => __d('content', 'Post'),
-            'title' => __d('content', 'Posts'),
-        ),
-        'page' => array(
-            'name'  => __d('content', 'Page'),
-            'title' => __d('content', 'Pages'),
-        ),
-        'block' => array(
-            'name'  => __d('content', 'Block'),
-            'title' => __d('content', 'Blocks'),
-        ),
-
-        // Taxonomies.
-        'category' => array(
-            'name'  => __d('content', 'Category'),
-            'title' => __d('content', 'Categories'),
-        ),
-        'tag' => array(
-            'name'  => __d('content', 'Tag'),
-            'title' => __d('content', 'Tags'),
-        ),
-
-        // Custom Link
-        'custom' => array(
-            'name'  => __d('content', 'Custom Link'),
-            'title' => __d('content', 'Custom Links'),
-        ),
-    ),
 
     'statuses' => array(
         'draft'           => __d('content', 'Draft'),

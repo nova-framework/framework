@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Content\Models\Post;
+use Modules\Content\Support\Facades\ContentLabel;
 
 // We will sort the items collection with the same algorithm as in the real widget.
 $items->sort(function ($a, $b)
@@ -22,7 +23,7 @@ $items->sort(function ($a, $b)
         <div class="dd-handle dd3-handle"> </div>
         <div class="dd3-content">
             <?php $type = $item->menu_item_object; ?>
-            <?php $name = Config::get("content::labels.{$type}.name", __d('content', 'Unknown: {0}', $type)); ?>
+            <?php $name = ContentLabel::get($type, 'name', __d('content', 'Unknown Content Type [{0}]', $type)); ?>
             <div class="pull-left" style="margin-top: 5px;"><?= $name; ?> : <?= $title; ?></div>
             <div class="btn-group pull-right" role="group" aria-label="...">
                 <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $item->id; ?>" title="<?= __d('content', 'Delete this Menu Item'); ?>" role="button"><i class="fa fa-remove"></i></a>

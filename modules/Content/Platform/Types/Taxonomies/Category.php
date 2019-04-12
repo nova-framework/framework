@@ -51,7 +51,7 @@ class Category extends Taxonomy
     /**
      * @return array
      */
-    public function labels()
+    public static function labels()
     {
         return array(
             'name'        => __d('content', 'Category'),
@@ -73,4 +73,3 @@ class Category extends Taxonomy
         );
     }
 }
-

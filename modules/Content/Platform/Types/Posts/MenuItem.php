@@ -61,7 +61,7 @@ class MenuItem extends BasePost
     /**
      * @return array
      */
-    public function labels()
+    public static function labels()
     {
         return array(
             'name'        => __d('content', 'Menu Item'),

@@ -301,7 +301,7 @@ return array (
   'URL' => '',
   'Unapprove' => '',
   'Unknown ({0})' => '',
-  'Unknown: {0}' => '',
+  'Unknown Content Type [{0}]' => '',
   'Unlock' => '',
   'Untitled' => '',
   'Update' => '',

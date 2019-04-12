@@ -51,7 +51,7 @@ class Tag extends Taxonomy
     /**
      * @return array
      */
-    public function labels()
+    public static function labels()
     {
         return array(
             'name'        => __d('content', 'Tag'),
@@ -73,4 +73,3 @@ class Tag extends Taxonomy
         );
     }
 }
-

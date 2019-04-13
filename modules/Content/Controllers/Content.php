@@ -47,13 +47,11 @@ class Content extends BaseController
     protected $layout = 'Content';
 
 
-    public function index($name = null)
+    public function show($name)
     {
-        if (is_null($name)) {
-            return $this->frontpage();
-        }
+        $cacheKey = sha1('posts.' .$name);
 
-        $post = Cache::remember('content.posts.' .$name, 1440, function () use ($name)
+        $post = Cache::section('content')->remember($cacheKey, 1440, function () use ($name)
         {
             $query = Post::with('author', 'thumbnail', 'taxonomies', 'comments')
                 ->where('type', '!=', 'block')
@@ -95,13 +93,15 @@ class Content extends BaseController
             ->shares('title', $post->title);
     }
 
-    public function homepage()
+    public function homepage($pageQuery = 'page/0')
     {
         if (is_null($name = Config::get('content::frontpage'))) {
-            return $this->frontpage();
+            return $this->frontpage($pageQuery);
         }
 
-        $post = Cache::remember('content.homepage', 1440, function () use ($name)
+        $cacheKey = sha1('homepage.' .$pageQuery);
+
+        $post = Cache::section('content')->remember($cacheKey, 1440, function () use ($name)
         {
             return Post::with('author', 'thumbnail')
                 ->where('type', 'page')
@@ -118,19 +118,24 @@ class Content extends BaseController
             ->shares('title', $post->title);
     }
 
-    public function frontpage()
+    public function frontpage($pageQuery = 'page/0')
     {
-        $posts = Post::with('author', 'thumbnail', 'taxonomies')
-            ->where('type', 'post')
-            ->whereIn('status', array('publish', 'password'))
-            ->orderBy('created_at', 'DESC')
-            ->paginate(5);
+        $cacheKey = sha1('frontpage.' .$pageQuery);
+
+        $posts = Cache::section('content')->remember($cacheKey, 1440, function ()
+        {
+            return Post::with('author', 'thumbnail', 'taxonomies')
+                ->where('type', 'post')
+                ->whereIn('status', array('publish', 'password'))
+                ->orderBy('created_at', 'DESC')
+                ->paginate(5);
+        });
 
         return $this->createView(compact('posts'), 'Index')
             ->shares('title', __d('content', 'Frontpage'));
     }
 
-    public function taxonomy($type, $slug)
+    public function taxonomy($type, $slug, $pageQuery = 'page/0')
     {
         $taxonomyType = TaxonomyType::findBySlug($type, 'category', false);
 
@@ -140,12 +145,17 @@ class Content extends BaseController
 
         })->where('taxonomy', $type)->firstOrFail();
 
-        $posts = $taxonomy->posts()
-            ->with('author', 'thumbnail', 'taxonomies')
-            ->where('type', 'post')
-            ->whereIn('status', array('publish', 'password'))
-            ->orderBy('created_at', 'DESC')
-            ->paginate(5);
+        $cacheKey = sha1('taxonomy.' .$type .'.' .$slug .'.' .$pageQuery);
+
+        $posts = Cache::section('content')->remember($cacheKey, 1440, function () use ($taxonomy)
+        {
+            return $taxonomy->posts()
+                ->with('author', 'thumbnail', 'taxonomies')
+                ->where('type', 'post')
+                ->whereIn('status', array('publish', 'password'))
+                ->orderBy('created_at', 'DESC')
+                ->paginate(5);
+        });
 
         $name = $taxonomyType->label('name');
 
@@ -153,15 +163,20 @@ class Content extends BaseController
             ->shares('title', $name .' : ' .$taxonomy->name);
     }
 
-    public function archive($year, $month)
+    public function archive($year, $month, $pageQuery = 'page/0')
     {
-        $posts = Post::with('author', 'thumbnail', 'taxonomies')
-            ->where('type', 'post')
-            ->whereIn('status', array('publish', 'password'))
-            ->whereYear('created_at', '=', $year)
-            ->whereMonth('created_at', '=', $month)
-            ->orderBy('created_at', 'DESC')
-            ->paginate(5);
+        $cacheKey = sha1('archives.' .$year .'.' .$month .'.' .$pageQuery);
+
+        $posts = Cache::section('content')->remember($cacheKey, 1440, function () use ($year, $month)
+        {
+            return Post::with('author', 'thumbnail', 'taxonomies')
+                ->where('type', 'post')
+                ->whereIn('status', array('publish', 'password'))
+                ->whereYear('created_at', '=', $year)
+                ->whereMonth('created_at', '=', $month)
+                ->orderBy('created_at', 'DESC')
+                ->paginate(5);
+        });
 
         $format = __d('content', '%B %Y');
 

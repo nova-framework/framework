@@ -18,8 +18,9 @@ use Modules\Content\Support\Facades\TaxonomyType;
 // The Media Files serving.
 Route::get('content/media/serve/{name}', 'Attachments@serve');
 
+
 // The Content dispatching.
-Route::get('content/archive/{year}/{month}', array(
+Route::paginate('content/archive/{year}/{month}', array(
     'uses' => 'Content@archive',
 
     'where' => array(
@@ -28,16 +29,18 @@ Route::get('content/archive/{year}/{month}', array(
     ),
 ));
 
-//Route::get('/', 'Content@homepage');
+//Route::paginate('/', 'Content@homepage');
 
-Route::get('content/search', 'Content@search');
+Route::paginate('content', array('uses' => 'Content@homepage'));
+
+Route::paginate('content/search', 'Content@search');
 
 //
 $types = TaxonomyType::getRouteSlugs(false);
 
-Route::get('content/{type}/{slug}', array('uses' => 'Content@taxonomy'))->where('type', '(' .implode('|', $types) .')');
+Route::paginate('content/{type}/{slug}', array('uses' => 'Content@taxonomy'))->where('type', '(' .implode('|', $types) .')');
 
-Route::get('content/{slug?}', array('uses' => 'Content@index'))->where('slug', '(.*)');
+Route::paginate('content/{slug?}', array('uses' => 'Content@show'))->where('slug', '(.*)');
 
 // Content unlocking for the Password Protected pages and posts.
 Route::post('content/{id}', 'Content@unlock')->where('id', '\d+');

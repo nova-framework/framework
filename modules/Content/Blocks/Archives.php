@@ -16,7 +16,7 @@ class Archives extends Block
 
     public function render()
     {
-        $items = Cache::remember('content.archives', 1440, function ()
+        $items = Cache::section('content')->remember('blocks.archives', 1440, function ()
         {
             $items = Post::where('type', 'post')
                 ->whereIn('status', array('publish', 'password'))

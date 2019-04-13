@@ -701,8 +701,7 @@ class Posts extends BaseController
 
     protected function clearContentCache()
     {
-        Cache::forget('content.categories');
-        Cache::forget('content.archives');
+        Cache::section('content')->flush();
     }
 
     protected function getDefaultThemeStylesheets()

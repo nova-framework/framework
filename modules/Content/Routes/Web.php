@@ -116,11 +116,11 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     Route::post('taxonomies/{id}',         'Taxonomies@update');
     Route::post('taxonomies/{id}/destroy', 'Taxonomies@destroy');
 
-    // For AJAX.
-    Route::get('taxonomies/{id}/{parentId}', 'Taxonomies@data')->where('parentId', '\d+');
-
     // The Taxonomies listings.
     $types = TaxonomyType::getRouteSlugs();
 
     Route::get('taxonomies/{type}', 'Taxonomies@index')->where('type', '(' .implode('|', $types) .')');
+
+    // For AJAX.
+    Route::get('taxonomies/{id}/{parentId}', 'Taxonomies@data')->where('parentId', '\d+');
 });

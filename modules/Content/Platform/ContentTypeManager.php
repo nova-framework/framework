@@ -47,6 +47,19 @@ abstract class ContentTypeManager
         return array_values($this->types);
     }
 
+    public function getNames()
+    {
+        $result = array();
+
+        foreach ($this->types as $name => $type) {
+            if (! $type->isHidden()) {
+                $result[] = $type->name();
+            }
+        }
+
+        return $result;
+    }
+
     public function findModelByType($type)
     {
         try {

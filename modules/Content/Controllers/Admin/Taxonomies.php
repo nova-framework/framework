@@ -22,6 +22,9 @@ class Taxonomies extends BaseController
 
     protected function validator(array $data, $id = null)
     {
+        $types = TaxonomyType::getNames();
+
+        //
         $ignore = ! is_null($id) ? ',' .intval($id) : '';
 
         // The Validation rules.
@@ -29,7 +32,7 @@ class Taxonomies extends BaseController
             'name'           => 'required|min:3|max:255|valid_text',
             'slug'           => 'min:4|max:100|alpha_dash|unique:terms,slug' .$ignore,
             'description'    => 'min:3|max:1000|valid_text',
-            'taxonomy'       => 'required|in:category,tag',
+            'taxonomy'       => 'required|in:' .implode(',', $types),
         );
 
         $messages = array(
@@ -123,7 +126,7 @@ class Taxonomies extends BaseController
         }
 
         // Invalidate the content caches.
-        $this->clearContentCache($type);
+        $this->clearContentCache($taxonomy->taxonomy);
 
         //
         $taxonomyType = TaxonomyType::make($taxonomy->taxonomy);

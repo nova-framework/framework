@@ -14,7 +14,7 @@ class Categories extends Block
 
     public function render()
     {
-        $categories = Cache::remember('content.categories', 1440, function ()
+        $categories = Cache::remember('content.taxonomies.category', 1440, function ()
         {
             return Taxonomy::where('taxonomy', 'category')->where('count', '>', 0)->get();
         });

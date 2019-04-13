@@ -9,6 +9,7 @@ use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Validator;
+use Nova\Support\Facades\View;
 use Nova\Support\Str;
 
 use Modules\Content\Models\Taxonomy;
@@ -235,7 +236,9 @@ class Taxonomies extends BaseController
         }
 
         foreach ($taxonomies as $taxonomy) {
-            $result .= '<div class="checkbox"><label><input class="' .$type .'-checkbox" name="taxonomy[]" value="' .$taxonomy->id .'" type="checkbox" ' .(in_array($taxonomy->id, $selected) ? ' checked="checked"' : '') .'> ' .trim(str_repeat('--', $level) .' ' .$taxonomy->name) .'</label></div>';
+            $label = trim(str_repeat('--', $level) .' ' .$taxonomy->name);
+
+            $result .= View::fetch('Modules/Content::Partials/TaxonomyCheckBox', compact('type', 'taxonomy', 'label', 'selected'));
 
             // Process the children.
             $taxonomy->load('children');
@@ -265,7 +268,9 @@ class Taxonomies extends BaseController
                 continue;
             }
 
-            $result .= '<option value="' .$taxonomy->id .'"' .($taxonomy->id == $parentId ? ' selected="selected"' : '') .'>' .trim(str_repeat('--', $level) .' ' .$taxonomy->name) .'</option>' ."\n";
+            $label = trim(str_repeat('--', $level) .' ' .$taxonomy->name);
+
+            $result .= View::fetch('Modules/Content::Partials/TaxonomySelectOption', compact('taxonomy', 'label', 'parentId'));
 
             // Process the children.
             $taxonomy->load('children');

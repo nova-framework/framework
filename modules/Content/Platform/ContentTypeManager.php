@@ -94,6 +94,13 @@ abstract class ContentTypeManager
         return $result;
     }
 
+    public function getRoutePattern($plural = true)
+    {
+        $types = static::getRouteSlugs($plural);
+
+        return '(' .implode('|', $types) .')';
+    }
+
     public function getCurrentLocale()
     {
         $languageManager = $this->container['language'];

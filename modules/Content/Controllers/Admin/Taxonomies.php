@@ -37,7 +37,7 @@ class Taxonomies extends BaseController
         );
 
         $messages = array(
-            'valid_text'      => __d('content', 'The :attribute field is not a valid text.'),
+            'valid_text' => __d('content', 'The :attribute field is not a valid text.'),
         );
 
         $attributes = array(

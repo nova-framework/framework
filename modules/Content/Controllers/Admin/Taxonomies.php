@@ -67,7 +67,7 @@ class Taxonomies extends BaseController
         $items = Taxonomy::where('taxonomy', $type)->paginate(15);
 
         if ($taxonomyType->isHierarchical()) {
-            $taxonomies = $this->generateTaxonomiesSelect($type);
+            $taxonomies = $this->generateTaxonomySelectOptions($type);
         } else {
             $taxonomies = '';
         }
@@ -120,7 +120,7 @@ class Taxonomies extends BaseController
 
             return Response::json(array(
                 'taxonomyId' => $taxonomy->id,
-                'taxonomies' => $this->generateTaxonomiesCheckBox($type, $taxonomies)
+                'taxonomies' => $this->generateTaxonomyCheckBoxes($type, $taxonomies)
 
             ), 200);
         }
@@ -221,12 +221,12 @@ class Taxonomies extends BaseController
     {
         $taxonomy = Taxonomy::findOrFail($id);
 
-        $result = $this->generateTaxonomiesSelect($taxonomy->taxonomy, $taxonomy->id, $parentId);
+        $result = $this->generateTaxonomySelectOptions($taxonomy->taxonomy, $taxonomy->id, $parentId);
 
         return Response::make($result, 200);
     }
 
-    protected function generateTaxonomiesCheckBox($type, array $selected = array(), $taxonomies = null, $level = 0)
+    protected function generateTaxonomyCheckBoxes($type, array $selected = array(), $taxonomies = null, $level = 0)
     {
         $result = '';
 
@@ -243,14 +243,14 @@ class Taxonomies extends BaseController
             if (! $taxonomy->children->isEmpty()) {
                 $level++;
 
-                $result .= $this->generateTaxonomiesCheckBox($type, $selected, $taxonomy->children, $level);
+                $result .= $this->generateTaxonomyCheckBoxes($type, $selected, $taxonomy->children, $level);
             }
         }
 
         return $result;
     }
 
-    protected function generateTaxonomiesSelect($type, $taxonomyId = 0, $parentId = 0, $taxonomies = null, $level = 0)
+    protected function generateTaxonomySelectOptions($type, $taxonomyId = 0, $parentId = 0, $taxonomies = null, $level = 0)
     {
         $result = '';
 
@@ -273,7 +273,7 @@ class Taxonomies extends BaseController
             if (! $taxonomy->children->isEmpty()) {
                 $level++;
 
-                $result .= $this->generateTaxonomiesSelect($type, $taxonomyId, $parentId, $taxonomy->children, $level);
+                $result .= $this->generateTaxonomySelectOptions($type, $taxonomyId, $parentId, $taxonomy->children, $level);
             }
         }
 

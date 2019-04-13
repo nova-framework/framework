@@ -218,12 +218,12 @@ class Taxonomies extends BaseController
     {
         $category = Taxonomy::findOrFail($id);
 
-        $result = $this->generateCategoriesSelect($category->id, $parent);
+        $result = $this->generateTaxonomiesSelect($category->id, $parent);
 
         return Response::make($result, 200);
     }
 
-    protected function generateCategories(array $categories = array(), $taxonomies = null, $level = 0)
+    protected function generateTaxonomies(array $categories = array(), $taxonomies = null, $level = 0)
     {
         $result = '';
 
@@ -240,7 +240,7 @@ class Taxonomies extends BaseController
             if (! $taxonomy->children->isEmpty()) {
                 $level++;
 
-                $result .= $this->generateCategories($categories, $taxonomy->children, $level);
+                $result .= $this->generateTaxonomies($categories, $taxonomy->children, $level);
             }
         }
 

@@ -132,7 +132,7 @@ class Content extends BaseController
 
     public function taxonomy($type, $slug)
     {
-        $taxonomyType = TaxonomyType::make($type);
+        $taxonomyType = TaxonomyType::findBySlug($type, 'category', false);
 
         $taxonomy = Taxonomy::whereHas('term', function ($query) use ($slug)
         {

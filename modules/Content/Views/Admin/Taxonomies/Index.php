@@ -89,7 +89,7 @@
                     <div class="btn-group" role="group" aria-label="...">
                         <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $item->id; ?>" title="<?= __d('content', 'Delete this {0}', $name); ?>" role="button"><i class="fa fa-remove"></i></a>
                         <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-edit-dialog" data-id="<?= $item->id; ?>" data-name="<?= $item->name; ?>" data-slug="<?= $item->slug; ?>" data-parent="<?= $item->parent_id; ?>" data-description="<?= $item->description; ?>" title="<?= __d('content', 'Edit this {0}', $name); ?>" role="button"><i class="fa fa-pencil"></i></a>
-                        <a class="btn btn-sm btn-warning" href="<?= site_url('admin/content/{0}/{1}', $type, $item->slug); ?>" title="<?= __d('content', 'View the Posts on this {0}', $name); ?>" target="_blank" role="button"><i class="fa fa-search"></i></a>
+                        <a class="btn btn-sm btn-warning" href="<?= site_url('admin/content/{0}/{1}', $taxonomyType->slug(false), $item->slug); ?>" title="<?= __d('content', 'View the Posts on this {0}', $name); ?>" target="_blank" role="button"><i class="fa fa-search"></i></a>
                     </div>
                 </td>
             </tr>

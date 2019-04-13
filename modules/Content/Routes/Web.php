@@ -117,7 +117,7 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     Route::post('taxonomies/{id}/destroy', 'Taxonomies@destroy');
 
     // For AJAX.
-    Route::get('taxonomies/{id}/{parentId}', 'Taxonomies@lists')->where('parentId', '\d+');
+    Route::get('taxonomies/{id}/{parentId}', 'Taxonomies@data')->where('parentId', '\d+');
 
     // The Taxonomies listings.
     $types = TaxonomyType::getRouteSlugs();

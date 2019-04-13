@@ -217,7 +217,7 @@ class Taxonomies extends BaseController
             ->with('success', __d('content', 'The {0} <b>{1}</b> was successfully deleted.', $name, $taxonomy->name));
     }
 
-    public function lists($id, $parent)
+    public function data($id, $parent)
     {
         $category = Taxonomy::findOrFail($id);
 

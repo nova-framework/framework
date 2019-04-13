@@ -256,7 +256,7 @@ class Taxonomies extends BaseController
         return $result;
     }
 
-    protected function generateTaxonomySelectOptions($type, $taxonomyId, $parentId, $taxonomies, $level = 0)
+    protected function generateTaxonomySelectOptions($type, $currentId, $parentId, $taxonomies, $level = 0)
     {
         if ($level === 0) {
             $result = '<option value="0">' .__d('content', 'None') .'</option>' ."\n";
@@ -265,7 +265,7 @@ class Taxonomies extends BaseController
         }
 
         foreach ($taxonomies as $taxonomy) {
-            if ($taxonomy->id == $taxonomyId) {
+            if ($taxonomy->id == $currentId) {
                 continue;
             }
 
@@ -277,7 +277,7 @@ class Taxonomies extends BaseController
             if (! $taxonomy->children->isEmpty()) {
                 $level++;
 
-                $result .= $this->generateTaxonomySelectOptions($type, $taxonomyId, $parentId, $taxonomy->children, $level);
+                $result .= $this->generateTaxonomySelectOptions($type, $currentId, $parentId, $taxonomy->children, $level);
             }
         }
 

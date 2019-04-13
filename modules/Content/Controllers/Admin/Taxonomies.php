@@ -66,27 +66,12 @@ class Taxonomies extends BaseController
         if ($taxonomyType->isHierarchical()) {
             $taxonomies = $this->generateTaxonomiesSelect();
         } else {
-            $taxonomies = array();
+            $taxonomies = '';
         }
 
         return $this->createView()
             ->shares('title', $taxonomyType->label('title'))
             ->with(compact('items', 'type', 'name', 'taxonomyType', 'taxonomies'));
-    }
-
-    public function tags()
-    {
-        $type = 'post_tag';
-
-        //
-        $name  = __d('content', 'Tag');
-        $title = __d('content', 'Tags');
-
-        $items = Taxonomy::where('taxonomy', 'post_tag')->paginate(15);
-
-        return $this->createView(compact('items', 'type', 'name'), 'Index')
-            ->shares('title', $title)
-            ->with('categories', '');
     }
 
     public function store(Request $request)
@@ -131,14 +116,14 @@ class Taxonomies extends BaseController
             $categories[] = $taxonomy->id;
 
             return Response::json(array(
-                'categoryId' => $taxonomy->id,
-                'categories' => $this->generateCategories($categories)
+                'taxonomyId' => $taxonomy->id,
+                'taxonomies' => $this->generateTaxonomies($categories)
 
             ), 200);
         }
 
         // Invalidate the content caches.
-        $this->clearContentCache();
+        $this->clearContentCache($type);
 
         //
         $taxonomyType = TaxonomyType::make($taxonomy->taxonomy);
@@ -186,7 +171,7 @@ class Taxonomies extends BaseController
         $term->save();
 
         // Invalidate the content caches.
-        $this->clearContentCache();
+        $this->clearContentCache($taxonomy->taxonomy);
 
         //
         $taxonomyType = TaxonomyType::make($taxonomy->taxonomy);
@@ -218,7 +203,7 @@ class Taxonomies extends BaseController
         $taxonomy->delete();
 
         // Invalidate the content caches.
-        $this->clearContentCache();
+        $this->clearContentCache($taxonomy->taxonomy);
 
         //
         $taxonomyType = TaxonomyType::make($taxonomy->taxonomy);
@@ -292,8 +277,8 @@ class Taxonomies extends BaseController
         return $result;
     }
 
-    protected function clearContentCache()
+    protected function clearContentCache($type)
     {
-        Cache::forget('content.categories');
+        Cache::forget('content.taxonomies.' .$type);
     }
 }

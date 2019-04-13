@@ -36,7 +36,6 @@
         <div class="form-group">
             <label class="control-label" for="slug"><?= __d('content', 'Parent {0}', $name); ?></label>
             <select name="parent" id="parent" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', 'Select a {0}', $name); ?>" style="width: 100%;" autocomplete="off">
-                <option value="0"><?= __d('content', 'None'); ?></option>
                 <?= $taxonomies; ?>
             </select>
         </div>

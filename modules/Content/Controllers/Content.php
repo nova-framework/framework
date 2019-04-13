@@ -139,13 +139,23 @@ class Content extends BaseController
     {
         $taxonomyType = TaxonomyType::findBySlug($type, 'category', false);
 
-        $taxonomy = Taxonomy::whereHas('term', function ($query) use ($slug)
+        //
+        $cacheKey = sha1('taxonomy.' .$type .'.' .$slug);
+
+        $taxonomy = Cache::section('content')->remember($cacheKey, 1440, function () use ($type, $slug)
         {
-            $query->where('slug', $slug);
+            return Taxonomy::whereHas('term', function ($query) use ($slug)
+            {
+                $query->where('slug', $slug);
 
-        })->where('taxonomy', $type)->firstOrFail();
+            })->where('taxonomy', $type)->first();
+        });
 
-        $cacheKey = sha1('taxonomy.' .$type .'.' .$slug .'.' .$pageQuery);
+        if (is_null($taxonomy)) {
+            App::abort(404);
+        }
+
+        $cacheKey = sha1('taxonomy.' .$type .'.' .$taxonomy->id .'.' .$pageQuery);
 
         $posts = Cache::section('content')->remember($cacheKey, 1440, function () use ($taxonomy)
         {

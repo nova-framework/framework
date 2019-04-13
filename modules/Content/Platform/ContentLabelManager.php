@@ -4,7 +4,6 @@ namespace Modules\Content\Platform;
 
 use Nova\Container\Container;
 use Nova\Support\Arr;
-use Nova\Support\Str;
 
 use Modules\Content\Platform\ContentType;
 
@@ -38,7 +37,7 @@ class ContentLabelManager
     public function register($type, $callback)
     {
         if ((! $callback instanceof Closure) && ! is_subclass_of($callback, $baseClass = ContentType::class)) {
-            throw new InvalidArgumentException("The Content Type class must be a subclass of [{$baseClass}]");
+            throw new InvalidArgumentException("The callback must be a a closure or a subclass of [{$baseClass}]");
         }
 
         //

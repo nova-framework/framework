@@ -139,6 +139,8 @@ class Content extends BaseController
     {
         $taxonomyType = TaxonomyType::findBySlug($type, 'category', false);
 
+        $type = $taxonomyType->name();
+
         //
         $cacheKey = sha1('taxonomy.' .$type .'.' .$slug);
 

@@ -22,7 +22,7 @@ class Taxonomies extends BaseController
 
     protected function validator(array $data, $id = null)
     {
-        $types = TaxonomyType::getNames();
+        $taxonomies = TaxonomyType::getNames();
 
         //
         $ignore = ! is_null($id) ? ',' .intval($id) : '';
@@ -32,7 +32,7 @@ class Taxonomies extends BaseController
             'name'           => 'required|min:3|max:255|valid_text',
             'slug'           => 'min:4|max:100|alpha_dash|unique:terms,slug' .$ignore,
             'description'    => 'min:3|max:1000|valid_text',
-            'taxonomy'       => 'required|in:' .implode(',', $types),
+            'taxonomy'       => 'required|in:' .implode(',', $taxonomies),
         );
 
         $messages = array(
@@ -126,10 +126,10 @@ class Taxonomies extends BaseController
         }
 
         // Invalidate the content caches.
-        $this->clearContentCache($taxonomy->taxonomy);
+        $this->clearContentCache($type = $taxonomy->taxonomy);
 
         //
-        $taxonomyType = TaxonomyType::make($taxonomy->taxonomy);
+        $taxonomyType = TaxonomyType::make($type);
 
         $name = $taxonomyType->label('name');
 
@@ -174,10 +174,10 @@ class Taxonomies extends BaseController
         $term->save();
 
         // Invalidate the content caches.
-        $this->clearContentCache($taxonomy->taxonomy);
+        $this->clearContentCache($type = $taxonomy->taxonomy);
 
         //
-        $taxonomyType = TaxonomyType::make($taxonomy->taxonomy);
+        $taxonomyType = TaxonomyType::make($type);
 
         $name = $taxonomyType->label('name');
 
@@ -206,10 +206,10 @@ class Taxonomies extends BaseController
         $taxonomy->delete();
 
         // Invalidate the content caches.
-        $this->clearContentCache($taxonomy->taxonomy);
+        $this->clearContentCache($type = $taxonomy->taxonomy);
 
         //
-        $taxonomyType = TaxonomyType::make($taxonomy->taxonomy);
+        $taxonomyType = TaxonomyType::make($type);
 
         $name = $taxonomyType->label('name');
 

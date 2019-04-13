@@ -67,7 +67,7 @@ class Taxonomies extends BaseController
         $items = Taxonomy::where('taxonomy', $type)->paginate(15);
 
         if ($taxonomyType->isHierarchical()) {
-            $taxonomies = $this->generateTaxonomiesSelect();
+            $taxonomies = $this->generateTaxonomiesSelect($type);
         } else {
             $taxonomies = '';
         }
@@ -106,27 +106,27 @@ class Taxonomies extends BaseController
         // Create the Taxonomy.
         $taxonomy = Taxonomy::create(array(
             'term_id'     => $term->id,
-            'taxonomy'    => $input['taxonomy'],
+            'taxonomy'    => $type = $input['taxonomy'],
             'description' => $input['description'],
             'parent_id'   => $parentId,
         ));
 
         if ($request->ajax() || $request->wantsJson()) {
             // The request was made by the Post Editor via AJAX, so we will return a fresh categories select.
-            $categories = $request->input('category', array());
+            $taxonomies = $request->input('taxonomy', array());
 
             // Add also the fresh category ID.
-            $categories[] = $taxonomy->id;
+            $taxonomies[] = $taxonomy->id;
 
             return Response::json(array(
                 'taxonomyId' => $taxonomy->id,
-                'taxonomies' => $this->generateTaxonomies($categories)
+                'taxonomies' => $this->generateTaxonomies($type, $taxonomies)
 
             ), 200);
         }
 
         // Invalidate the content caches.
-        $this->clearContentCache($type = $taxonomy->taxonomy);
+        $this->clearContentCache($type);
 
         //
         $taxonomyType = TaxonomyType::make($type);
@@ -145,7 +145,7 @@ class Taxonomies extends BaseController
             $taxonomy = Taxonomy::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->with('danger', __d('content', 'Field not found: #{0}', $id));
+            return Redirect::back()->with('danger', __d('content', 'Taxonomy not found: #{0}', $id));
         }
 
         $term = $taxonomy->term;
@@ -191,7 +191,7 @@ class Taxonomies extends BaseController
             $taxonomy = Taxonomy::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->with('danger', __d('content', 'Field not found: #{0}', $id));
+            return Redirect::back()->with('danger', __d('content', 'Taxonomy not found: #{0}', $id));
         }
 
         $taxonomy->children->each(function ($child) use ($taxonomy)
@@ -217,16 +217,16 @@ class Taxonomies extends BaseController
             ->with('success', __d('content', 'The {0} <b>{1}</b> was successfully deleted.', $name, $taxonomy->name));
     }
 
-    public function data($id, $parent)
+    public function data($id, $parentId)
     {
-        $category = Taxonomy::findOrFail($id);
+        $taxonomy = Taxonomy::findOrFail($id);
 
-        $result = $this->generateTaxonomiesSelect($category->id, $parent);
+        $result = $this->generateTaxonomiesSelect($taxonomy->taxonomy, $taxonomy->id, $parentId);
 
         return Response::make($result, 200);
     }
 
-    protected function generateTaxonomies(array $categories = array(), $taxonomies = null, $level = 0)
+    protected function generateTaxonomies($type, array $selected = array(), $taxonomies = null, $level = 0)
     {
         $result = '';
 
@@ -235,7 +235,7 @@ class Taxonomies extends BaseController
         }
 
         foreach ($taxonomies as $taxonomy) {
-            $result .= '<div class="checkbox"><label><input class="category-checkbox" name="category[]" value="' .$taxonomy->id .'" type="checkbox" ' .(in_array($taxonomy->id, $categories) ? ' checked="checked"' : '') .'> ' .trim(str_repeat('--', $level) .' ' .$taxonomy->name) .'</label></div>';
+            $result .= '<div class="checkbox"><label><input class="category-checkbox" name="category[]" value="' .$taxonomy->id .'" type="checkbox" ' .(in_array($taxonomy->id, $selected) ? ' checked="checked"' : '') .'> ' .trim(str_repeat('--', $level) .' ' .$taxonomy->name) .'</label></div>';
 
             // Process the children.
             $taxonomy->load('children');
@@ -243,37 +243,37 @@ class Taxonomies extends BaseController
             if (! $taxonomy->children->isEmpty()) {
                 $level++;
 
-                $result .= $this->generateTaxonomies($categories, $taxonomy->children, $level);
+                $result .= $this->generateTaxonomies($type, $selected, $taxonomy->children, $level);
             }
         }
 
         return $result;
     }
 
-    protected function generateTaxonomiesSelect($categoryId = 0, $parentId = 0, $categories = null, $level = 0)
+    protected function generateTaxonomiesSelect($type, $taxonomyId = 0, $parentId = 0, $taxonomies = null, $level = 0)
     {
         $result = '';
 
-        if (is_null($categories)) {
-            $categories = Taxonomy::with('children')->where('taxonomy', 'category')->where('parent_id', 0)->get();
+        if (is_null($taxonomies)) {
+            $taxonomies = Taxonomy::with('children')->where('taxonomy', $type)->where('parent_id', 0)->get();
 
             $result = '<option value="0">' .__d('content', 'None') .'</option>' ."\n";
         }
 
-        foreach ($categories as $category) {
-            if ($category->id == $categoryId) {
+        foreach ($taxonomies as $taxonomy) {
+            if ($taxonomy->id == $taxonomyId) {
                 continue;
             }
 
-            $result .= '<option value="' .$category->id .'"' .($category->id == $parentId ? ' selected="selected"' : '') .'>' .trim(str_repeat('--', $level) .' ' .$category->name) .'</option>' ."\n";
+            $result .= '<option value="' .$taxonomy->id .'"' .($taxonomy->id == $parentId ? ' selected="selected"' : '') .'>' .trim(str_repeat('--', $level) .' ' .$taxonomy->name) .'</option>' ."\n";
 
             // Process the children.
-            $category->load('children');
+            $taxonomy->load('children');
 
-            if (! $category->children->isEmpty()) {
+            if (! $taxonomy->children->isEmpty()) {
                 $level++;
 
-                $result .= $this->generateTaxonomiesSelect($categoryId, $parentId, $category->children, $level);
+                $result .= $this->generateTaxonomiesSelect($type, $taxonomyId, $parentId, $taxonomy->children, $level);
             }
         }
 

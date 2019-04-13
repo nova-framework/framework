@@ -99,7 +99,7 @@ class Content extends BaseController
             return $this->frontpage($pageQuery);
         }
 
-        $cacheKey = sha1('homepage.' .$pageQuery);
+        $cacheKey = sha1('homepage.' $name);
 
         $post = Cache::section('content')->remember($cacheKey, 1440, function () use ($name)
         {

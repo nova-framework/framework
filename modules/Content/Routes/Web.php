@@ -38,7 +38,7 @@ Route::paginate('content/search', 'Content@search');
 //
 Route::paginate('content/{type}/{slug}', array('uses' => 'Content@taxonomy'))->where('type', Taxonomies::routePattern(false));
 
-Route::paginate('content/{slug?}', array('uses' => 'Content@show'))->where('slug', '(.*)');
+Route::paginate('content/{slug}', array('uses' => 'Content@show'))->where('slug', '(.*)');
 
 // Content unlocking for the Password Protected pages and posts.
 Route::post('content/{id}', 'Content@unlock')->where('id', '\d+');

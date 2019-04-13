@@ -235,7 +235,7 @@ class Taxonomies extends BaseController
         }
 
         foreach ($taxonomies as $taxonomy) {
-            $result .= '<div class="checkbox"><label><input class="category-checkbox" name="taxonomy[]" value="' .$taxonomy->id .'" type="checkbox" ' .(in_array($taxonomy->id, $selected) ? ' checked="checked"' : '') .'> ' .trim(str_repeat('--', $level) .' ' .$taxonomy->name) .'</label></div>';
+            $result .= '<div class="checkbox"><label><input class="' .$type .'-checkbox" name="taxonomy[]" value="' .$taxonomy->id .'" type="checkbox" ' .(in_array($taxonomy->id, $selected) ? ' checked="checked"' : '') .'> ' .trim(str_repeat('--', $level) .' ' .$taxonomy->name) .'</label></div>';
 
             // Process the children.
             $taxonomy->load('children');

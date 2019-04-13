@@ -16,27 +16,12 @@ use Modules\Content\Models\Post;
  */
 Event::listen('content.post.updated', function (Post $post, $creating)
 {
-    // The Homepage.
-    if (! is_null($name = Config::get('content::frontpage')) && ($post->name == $name)) {
-        Cache::forget('content.homepage');
-    }
-
-    // The Blocks.
-    else if ($post->type === 'block') {
-        Cache::forget('content.blocks');
-    }
-
-    // The standard Posts and Pages.
-    else if (! empty($post->name)) {
-        Cache::forget('content.posts.' .$post->name);
-    }
+    Cache::section('content')->flush();
 });
 
 Event::listen('content.post.deleted', function (Post $post)
 {
-    if (! empty($post->name)) {
-        Cache::forget('content.posts.' .$post->name);
-    }
+    Cache::section('content')->flush();
 });
 
 /**

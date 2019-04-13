@@ -99,6 +99,9 @@ class ModuleServiceProvider extends ServiceProvider
             ContentLabel::register($name, $type);
         }
 
+        // The custom links uses a pseudo-type called 'custom' on a Menu Item record.
+        // That's why we will need to register it separatelly on the Content Labels.
+
         ContentLabel::register('custom', function ()
         {
             return array(

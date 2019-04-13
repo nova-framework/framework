@@ -61,7 +61,7 @@ class Posts extends BaseController
 
     public function index(Request $request, $slug)
     {
-        $postType = PostType::getTypeBySlug($slug, PostType::make('post'));
+        $postType = PostType::getTypeBySlug($slug);
 
         $type = $postType->name();
 

@@ -97,9 +97,11 @@ class Taxonomies extends BaseController
             return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
-        $slug = ! empty($input['slug']) ? $input['slug'] : Term::uniqueSlug($input['name'], $input['taxonomy']);
-
         $parentId = ! empty($input['parent']) ? (int) $input['parent'] : 0;
+
+        if (empty($slug = Arr::get($input, 'slug'))) {
+            $slug = Term::uniqueSlug($input['name'], $input['taxonomy']);
+        }
 
         // Create the Term.
         $term = Term::create(array(
@@ -165,9 +167,11 @@ class Taxonomies extends BaseController
             return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
-        $slug = ! empty($input['slug']) ? $input['slug'] : Term::uniqueSlug($input['name'], $input['taxonomy']);
-
         $parentId = ! empty($input['parent']) ? (int) $input['parent'] : 0;
+
+        if (empty($slug = Arr::get($input, 'slug'))) {
+            $slug = Term::uniqueSlug($input['name'], $input['taxonomy']);
+        }
 
         // Update the Taxonomy.
         $taxonomy->description = $input['description'];

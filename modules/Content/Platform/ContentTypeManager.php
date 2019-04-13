@@ -81,6 +81,13 @@ abstract class ContentTypeManager
         }, $default);
     }
 
+    public function routePattern($plural = true)
+    {
+        $types = static::getRouteSlugs($plural);
+
+        return '(' .implode('|', $types) .')';
+    }
+
     public function getRouteSlugs($plural = true)
     {
         $result = array();
@@ -92,13 +99,6 @@ abstract class ContentTypeManager
         }
 
         return $result;
-    }
-
-    public function getRoutePattern($plural = true)
-    {
-        $types = static::getRouteSlugs($plural);
-
-        return '(' .implode('|', $types) .')';
     }
 
     public function getCurrentLocale()

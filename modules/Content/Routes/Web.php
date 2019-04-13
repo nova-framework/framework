@@ -11,8 +11,8 @@
 |
 */
 
-use Modules\Content\Support\Facades\PostType;
-use Modules\Content\Support\Facades\TaxonomyType;
+use Modules\Content\Support\Facades\PostType as Posts;
+use Modules\Content\Support\Facades\TaxonomyType as Taxonomies;
 
 
 // The Media Files serving.
@@ -36,7 +36,7 @@ Route::paginate('content', array('uses' => 'Content@homepage'));
 Route::paginate('content/search', 'Content@search');
 
 //
-Route::paginate('content/{type}/{slug}', array('uses' => 'Content@taxonomy'))->where('type', TaxonomyType::getRoutePattern(false));
+Route::paginate('content/{type}/{slug}', array('uses' => 'Content@taxonomy'))->where('type', Taxonomies::routePattern(false));
 
 Route::paginate('content/{slug?}', array('uses' => 'Content@show'))->where('slug', '(.*)');
 
@@ -86,7 +86,7 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     Route::post('comments/{id}/unapprove', 'Comments@unapprove');
 
     // The Posts CRUD.
-    Route::get('content/create/{type}',  'Posts@create')->where('type', PostType::getRoutePattern(false));
+    Route::get('content/create/{type}',  'Posts@create')->where('type', Posts::routePattern(false));
 
     //
     Route::get( 'content/{id}/edit',    'Posts@edit');
@@ -101,10 +101,10 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     Route::post('content/{id}/tags/{tagId}/detach', 'Posts@detachTag')->where('tagId', '\d+');
 
     // The Posts listing.
-    Route::get('content/{type}', 'Posts@index')->where('type', PostType::getRoutePattern());
+    Route::get('content/{type}', 'Posts@index')->where('type', Posts::routePattern(true));
 
     //
-    Route::get('taxonomies/{type}/{slug}', 'Posts@taxonomy')->where('type', TaxonomyType::getRoutePattern(false));
+    Route::get('taxonomies/{type}/{slug}', 'Posts@taxonomy')->where('type', Taxonomies::routePattern(false));
 
     // The Taxonomies CRUD.
     Route::post('taxonomies',              'Taxonomies@store');
@@ -112,7 +112,7 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     Route::post('taxonomies/{id}/destroy', 'Taxonomies@destroy');
 
     // The Taxonomies listings.
-    Route::get('taxonomies/{type}', 'Taxonomies@index')->where('type', TaxonomyType::getRoutePattern());
+    Route::get('taxonomies/{type}', 'Taxonomies@index')->where('type', Taxonomies::routePattern(true));
 
     // For AJAX.
     Route::get('taxonomies/{id}/{parentId}', 'Taxonomies@data')->where('parentId', '\d+');

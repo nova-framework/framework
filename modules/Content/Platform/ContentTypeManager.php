@@ -47,7 +47,7 @@ abstract class ContentTypeManager
         return array_values($this->types);
     }
 
-    public function getModelByType($type)
+    public function findModelByType($type)
     {
         try {
             $instance = $this->make($type);
@@ -59,7 +59,7 @@ abstract class ContentTypeManager
         }
     }
 
-    public function getTypeBySlug($slug, $default = null, $plural = true)
+    public function findTypeBySlug($slug, $default = null, $plural = true)
     {
         return Arr::first($this->types, function ($name, $type) use ($slug, $plural)
         {

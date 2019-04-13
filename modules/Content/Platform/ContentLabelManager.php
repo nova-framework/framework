@@ -8,6 +8,7 @@ use Nova\Support\Str;
 
 use Modules\Content\Platform\ContentType;
 
+use Closure;
 use InvalidArgumentException;
 
 
@@ -34,11 +35,9 @@ class ContentLabelManager
         $this->container = $container;
     }
 
-    public function register($type, $className)
+    public function register($type, $callback)
     {
-        if (! is_subclass_of($className, $baseClass = ContentType::class)) {
-            dd($className, $baseClass);
-
+        if ((! $callback instanceof Closure) && ! is_subclass_of($callback, $baseClass = ContentType::class)) {
             throw new InvalidArgumentException("The Content Type class must be a subclass of [{$baseClass}]");
         }
 
@@ -47,7 +46,7 @@ class ContentLabelManager
             throw new InvalidArgumentException("The Content type [{$type}] is already registered");
         }
 
-        $this->types[$type] = $className;
+        $this->types[$type] = $callback;
 
         return $this;
     }
@@ -61,12 +60,14 @@ class ContentLabelManager
     {
         $key = sprintf('%s.%s', $type, $this->getCurrentLocale());
 
-        if (! Arr::has($this->labels, $key) && isset($this->types[$type])) {
-            $className = $this->types[$type];
+        if (! Arr::has($this->labels, $key) && ! is_null($callback = Arr::get($this->types, $type))) {
+            if ($callback instanceof Closure) {
+                $labels = call_user_func($callback);
+            } else {
+                $labels = forward_static_call(array($callback, 'labels'));
+            }
 
-            $labels = (array) forward_static_call(array($className, 'labels'));
-
-            Arr::set($this->labels, $key, $labels);
+            Arr::set($this->labels, $key, (array) $labels);
         }
 
         // The labels are already cached locally or the Content Type is not registered.

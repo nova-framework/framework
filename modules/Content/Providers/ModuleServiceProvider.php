@@ -84,7 +84,6 @@ class ModuleServiceProvider extends ServiceProvider
         $config = Config::get('content.types.posts', array(
             'attachment'    => array('type' => 'Modules\Content\Platform\Types\Posts\Attachment'),
             'block'         => array('type' => 'Modules\Content\Platform\Types\Posts\Block'),
-            'custom'        => array('type' => 'Modules\Content\Platform\Types\Posts\CustomLink'),
             'nav_menu_item' => array('type' => 'Modules\Content\Platform\Types\Posts\MenuItem'),
             'page'          => array('type' => 'Modules\Content\Platform\Types\Posts\Page'),
             'post'          => array('type' => 'Modules\Content\Platform\Types\Posts\Post'),
@@ -99,6 +98,14 @@ class ModuleServiceProvider extends ServiceProvider
 
             ContentLabel::register($name, $type);
         }
+
+        ContentLabel::register('custom', function ()
+        {
+            return array(
+                'name'  => __d('content', 'Custom Link'),
+                'title' => __d('content', 'Custom Links'),
+            );
+        });
     }
 
     /**

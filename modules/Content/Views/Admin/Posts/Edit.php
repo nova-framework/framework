@@ -554,7 +554,7 @@ $(function () {
                 $('#category-name').val('');
                 $('#category-parent').val('');
 
-                $('#categories-list').html(data.categories);
+                $('#categories-list').html(data.taxonomies);
 
                 // Update the iCheck.
                 $('input.category-checkbox').iCheck({

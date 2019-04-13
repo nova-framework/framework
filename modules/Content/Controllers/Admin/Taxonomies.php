@@ -68,7 +68,11 @@ class Taxonomies extends BaseController
         $items = Taxonomy::where('taxonomy', $type)->paginate(15);
 
         if ($taxonomyType->isHierarchical()) {
-            $taxonomies = $this->generateTaxonomySelectOptions($type);
+            $results = Taxonomy::with('children')->where('taxonomy', $type)->where('parent_id', 0)->get();
+
+            $result = $this->generateTaxonomySelectOptions($type, 0, 0, $results);
+
+            $taxonomies = '<option value="0">' .__d('content', 'None') .'</option>' ."\n" .$result;
         } else {
             $taxonomies = '';
         }
@@ -119,9 +123,12 @@ class Taxonomies extends BaseController
             // Add also the fresh category ID.
             $selected[] = $taxonomy->id;
 
+            //
+            $taxonomies = Taxonomy::with('children')->where('taxonomy', $type)->where('parent_id', 0)->get();
+
             return Response::json(array(
                 'taxonomyId' => $taxonomy->id,
-                'taxonomies' => $this->generateTaxonomyCheckBoxes($type, $selected)
+                'taxonomies' => $this->generateTaxonomyCheckBoxes($type, $selected, $taxonomies)
 
             ), 200);
         }
@@ -222,18 +229,19 @@ class Taxonomies extends BaseController
     {
         $taxonomy = Taxonomy::findOrFail($id);
 
-        $result = $this->generateTaxonomySelectOptions($taxonomy->taxonomy, $taxonomy->id, $parentId);
+        $results = Taxonomy::with('children')->where('taxonomy', $type = $taxonomy->taxonomy)->where('parent_id', 0)->get();
 
-        return Response::make($result, 200);
+        $result = $this->generateTaxonomySelectOptions($type, $id, $parentId, $results);
+
+        //
+        $taxonomies = '<option value="0">' .__d('content', 'None') .'</option>' ."\n" .$result;
+
+        return Response::make($taxonomies, 200);
     }
 
     protected function generateTaxonomyCheckBoxes($type, array $selected = array(), $taxonomies = null, $level = 0)
     {
         $result = '';
-
-        if (is_null($taxonomies)) {
-            $taxonomies = Taxonomy::with('children')->where('taxonomy', $type)->where('parent_id', 0)->get();
-        }
 
         foreach ($taxonomies as $taxonomy) {
             $label = trim(str_repeat('--', $level) .' ' .$taxonomy->name);
@@ -253,15 +261,9 @@ class Taxonomies extends BaseController
         return $result;
     }
 
-    protected function generateTaxonomySelectOptions($type, $taxonomyId = 0, $parentId = 0, $taxonomies = null, $level = 0)
+    protected function generateTaxonomySelectOptions($type, $taxonomyId, $parentId, $taxonomies, $level = 0)
     {
         $result = '';
-
-        if (is_null($taxonomies)) {
-            $taxonomies = Taxonomy::with('children')->where('taxonomy', $type)->where('parent_id', 0)->get();
-
-            $result = '<option value="0">' .__d('content', 'None') .'</option>' ."\n";
-        }
 
         foreach ($taxonomies as $taxonomy) {
             if ($taxonomy->id == $taxonomyId) {

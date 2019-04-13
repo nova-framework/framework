@@ -42,7 +42,7 @@ abstract class ContentTypeManager
         throw new InvalidArgumentException("The Content type [{$type}] is not registered");
     }
 
-    public function getTypes()
+    public function all()
     {
         return array_values($this->types);
     }
@@ -59,7 +59,7 @@ abstract class ContentTypeManager
         }
     }
 
-    public function findTypeBySlug($slug, $default = null, $plural = true)
+    public function findBySlug($slug, $default = null, $plural = true)
     {
         return Arr::first($this->types, function ($name, $type) use ($slug, $plural)
         {

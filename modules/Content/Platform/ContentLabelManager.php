@@ -55,6 +55,11 @@ class ContentLabelManager
         unset($this->types[$type]);
     }
 
+    public function all()
+    {
+        return array_values($this->types);
+    }
+
     public function get($type, $name, $default = null)
     {
         $key = sprintf('%s.%s', $type, $this->getCurrentLocale());

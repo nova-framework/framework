@@ -120,7 +120,7 @@ class Taxonomies extends BaseController
 
             return Response::json(array(
                 'taxonomyId' => $taxonomy->id,
-                'taxonomies' => $this->generateTaxonomies($type, $taxonomies)
+                'taxonomies' => $this->generateTaxonomiesCheckBox($type, $taxonomies)
 
             ), 200);
         }
@@ -226,16 +226,16 @@ class Taxonomies extends BaseController
         return Response::make($result, 200);
     }
 
-    protected function generateTaxonomies($type, array $selected = array(), $taxonomies = null, $level = 0)
+    protected function generateTaxonomiesCheckBox($type, array $selected = array(), $taxonomies = null, $level = 0)
     {
         $result = '';
 
         if (is_null($taxonomies)) {
-            $taxonomies = Taxonomy::with('children')->where('taxonomy', 'category')->where('parent_id', 0)->get();
+            $taxonomies = Taxonomy::with('children')->where('taxonomy', $type)->where('parent_id', 0)->get();
         }
 
         foreach ($taxonomies as $taxonomy) {
-            $result .= '<div class="checkbox"><label><input class="category-checkbox" name="category[]" value="' .$taxonomy->id .'" type="checkbox" ' .(in_array($taxonomy->id, $selected) ? ' checked="checked"' : '') .'> ' .trim(str_repeat('--', $level) .' ' .$taxonomy->name) .'</label></div>';
+            $result .= '<div class="checkbox"><label><input class="category-checkbox" name="taxonomy[]" value="' .$taxonomy->id .'" type="checkbox" ' .(in_array($taxonomy->id, $selected) ? ' checked="checked"' : '') .'> ' .trim(str_repeat('--', $level) .' ' .$taxonomy->name) .'</label></div>';
 
             // Process the children.
             $taxonomy->load('children');
@@ -243,7 +243,7 @@ class Taxonomies extends BaseController
             if (! $taxonomy->children->isEmpty()) {
                 $level++;
 
-                $result .= $this->generateTaxonomies($type, $selected, $taxonomy->children, $level);
+                $result .= $this->generateTaxonomiesCheckBox($type, $selected, $taxonomy->children, $level);
             }
         }
 

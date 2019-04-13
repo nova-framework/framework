@@ -10,7 +10,7 @@ class Menu extends Taxonomy
     /**
      * @var string
      */
-    protected $name = 'menu';
+    protected $name = 'nav_menu';
 
     /**
      * @var string

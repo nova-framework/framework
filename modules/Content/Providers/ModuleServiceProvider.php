@@ -108,7 +108,7 @@ class ModuleServiceProvider extends ServiceProvider
     {
         $config = Config::get('content.types.taxonomies', array(
             'category' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Category'),
-            'menu'     => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Menu'),
+            'nav_menu' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Menu'),
             'post_tag' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Tag'),
         ));
 

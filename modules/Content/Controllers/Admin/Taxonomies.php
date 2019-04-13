@@ -69,9 +69,7 @@ class Taxonomies extends BaseController
         if ($taxonomyType->isHierarchical()) {
             $results = Taxonomy::with('children')->where('taxonomy', $type)->where('parent_id', 0)->get();
 
-            $result = $this->generateTaxonomySelectOptions($type, 0, 0, $results);
-
-            $taxonomies = '<option value="0">' .__d('content', 'None') .'</option>' ."\n" .$result;
+            $taxonomies = $this->generateTaxonomySelectOptions($type, 0, 0, $results);
         } else {
             $taxonomies = '';
         }
@@ -121,18 +119,20 @@ class Taxonomies extends BaseController
         $this->clearContentCache($type);
 
         if ($ajaxRespose) {
-            // The request was made by the Post Editor via AJAX, so we will return a fresh categories select.
+            // The request was made by the Post Editor via AJAX, so we will return a fresh taxonomies selector.
             $selected = $request->input('taxonomy', array());
 
             // Add also the fresh category ID.
             $selected[] = $taxonomy->id;
 
             //
-            $taxonomies = Taxonomy::with('children')->where('taxonomy', $type)->where('parent_id', 0)->get();
+            $results = Taxonomy::with('children')->where('taxonomy', $type)->where('parent_id', 0)->get();
+
+            $taxonomies = $this->generateTaxonomyCheckBoxes($type, $selected, $results);
 
             return Response::json(array(
                 'taxonomyId' => $taxonomy->id,
-                'taxonomies' => $this->generateTaxonomyCheckBoxes($type, $selected, $taxonomies)
+                'taxonomies' => $taxonomies
 
             ), 200);
         }
@@ -231,10 +231,7 @@ class Taxonomies extends BaseController
 
         $results = Taxonomy::with('children')->where('taxonomy', $type = $taxonomy->taxonomy)->where('parent_id', 0)->get();
 
-        $result = $this->generateTaxonomySelectOptions($type, $id, $parentId, $results);
-
-        //
-        $taxonomies = '<option value="0">' .__d('content', 'None') .'</option>' ."\n" .$result;
+        $taxonomies = $this->generateTaxonomySelectOptions($type, $id, $parentId, $results);
 
         return Response::make($taxonomies, 200);
     }
@@ -263,7 +260,11 @@ class Taxonomies extends BaseController
 
     protected function generateTaxonomySelectOptions($type, $taxonomyId, $parentId, $taxonomies, $level = 0)
     {
-        $result = '';
+        if ($level === 0) {
+            $result = '<option value="0">' .__d('content', 'None') .'</option>' ."\n";
+        } else {
+            $result = '';
+        }
 
         foreach ($taxonomies as $taxonomy) {
             if ($taxonomy->id == $taxonomyId) {

@@ -185,9 +185,9 @@ class Menus extends BaseController
             ));
 
             $post->taxonomies()->attach($taxonomy);
-
-            $taxonomy->updateCount();
         }
+
+        $taxonomy->updateCount();
 
         // Invalidate the cached menu data.
         Cache::forget('content.menus.' .$taxonomy->slug);
@@ -238,9 +238,9 @@ class Menus extends BaseController
             ));
 
             $post->taxonomies()->attach($taxonomy);
-
-            $taxonomy->updateCount();
         }
+
+        $taxonomy->updateCount();
 
         // Invalidate the cached menu data.
         Cache::forget('content.menus.' .$taxonomy->slug);
@@ -355,6 +355,7 @@ class Menus extends BaseController
 
         $item->delete();
 
+        //
         $taxonomy->updateCount();
 
         // Invalidate the cached menu data.

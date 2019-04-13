@@ -241,9 +241,7 @@ class Taxonomies extends BaseController
         $result = '';
 
         foreach ($taxonomies as $taxonomy) {
-            $label = trim(str_repeat('--', $level) .' ' .$taxonomy->name);
-
-            $result .= View::fetch('Modules/Content::Partials/TaxonomyCheckBox', compact('type', 'taxonomy', 'label', 'selected'));
+            $result .= View::fetch('Modules/Content::Partials/TaxonomyCheckBox', compact('type', 'taxonomy', 'level', 'selected'));
 
             // Process the children.
             $taxonomy->load('children');
@@ -271,9 +269,7 @@ class Taxonomies extends BaseController
                 continue;
             }
 
-            $label = trim(str_repeat('--', $level) .' ' .$taxonomy->name);
-
-            $result .= View::fetch('Modules/Content::Partials/TaxonomySelectOption', compact('taxonomy', 'label', 'parentId'));
+            $result .= View::fetch('Modules/Content::Partials/TaxonomySelectOption', compact('taxonomy', 'level', 'parentId'));
 
             // Process the children.
             $taxonomy->load('children');

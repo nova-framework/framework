@@ -293,7 +293,7 @@ return array (
   'URL' => 'URL',
   'Unapprove' => 'Отозвать одобрение',
   'Unknown ({0})' => 'Неизвестный ({0})',
-  'Unknown Content Type [{0}]' => '',
+  'Unknown [{0}]' => '',
   'Unlock' => 'Разблокировать',
   'Untitled' => 'Без заголовка',
   'Update' => 'Обновить',

@@ -114,14 +114,14 @@ class Taxonomies extends BaseController
 
         if ($request->ajax() || $request->wantsJson()) {
             // The request was made by the Post Editor via AJAX, so we will return a fresh categories select.
-            $taxonomies = $request->input('taxonomy', array());
+            $selected = $request->input('taxonomy', array());
 
             // Add also the fresh category ID.
-            $taxonomies[] = $taxonomy->id;
+            $selected[] = $taxonomy->id;
 
             return Response::json(array(
                 'taxonomyId' => $taxonomy->id,
-                'taxonomies' => $this->generateTaxonomyCheckBoxes($type, $taxonomies)
+                'taxonomies' => $this->generateTaxonomyCheckBoxes($type, $selected)
 
             ), 200);
         }

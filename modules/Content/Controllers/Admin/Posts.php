@@ -59,11 +59,11 @@ class Posts extends BaseController
             ->shares('title', $title);
     }
 
-    public function index(Request $request, $type)
+    public function index(Request $request, $slug)
     {
-        $type = Str::singular($type);
+        $postType = PostType::getTypeBySlug($slug, PostType::make('post'));
 
-        $postType = PostType::make($type);
+        $type = $postType->name();
 
         //
         $name = $postType->label('name');

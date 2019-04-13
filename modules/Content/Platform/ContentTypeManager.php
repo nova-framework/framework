@@ -3,6 +3,7 @@
 namespace Modules\Content\Platform;
 
 use Nova\Container\Container;
+use Nova\Support\Arr;
 
 use InvalidArgumentException;
 
@@ -56,6 +57,15 @@ abstract class ContentTypeManager
         catch (InvalidArgumentException $e) {
             // Nothing to do.
         }
+    }
+
+    public function getTypeBySlug($slug, $default = null, $plural = true)
+    {
+        return Arr::first($this->types, function ($name, $type) use ($slug, $plural)
+        {
+            return ($slug === $type->slug($plural));
+
+        }, $default);
     }
 
     public function getRouteSlugs($plural = true)

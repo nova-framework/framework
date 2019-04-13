@@ -10,7 +10,7 @@ class CustomLink extends BasePost
     /**
      * @var string
      */
-    protected $name = 'customLink';
+    protected $name = 'custom';
 
     /**
      * @var string
@@ -46,7 +46,8 @@ class CustomLink extends BasePost
      * @var array
      */
     protected $rewrite = array(
-        'slug' => 'custom-links'
+        'item'  => 'custom-link',
+        'items' => 'custom-links'
     );
 
 

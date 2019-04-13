@@ -206,7 +206,7 @@ class Posts extends BaseController
         $categorySelect = $this->generateCategorySelect($ids);
 
         // The Tags.
-        $tags = $post->taxonomies()->where('taxonomy', 'tag')->get();
+        $tags = $post->taxonomies()->where('taxonomy', 'post_tag')->get();
 
         $tags = $tags->map(function ($tag)
         {
@@ -525,7 +525,7 @@ class Posts extends BaseController
         }
 
         // Get the actual Tag instances associated to this Post.
-        $items = $post->taxonomies()->where('taxonomy', 'tag')->get();
+        $items = $post->taxonomies()->where('taxonomy', 'post_tag')->get();
 
         // Get the names of the already associated tags.
         $existentTags = $items->map(function ($item)
@@ -552,7 +552,7 @@ class Posts extends BaseController
                 continue;
             }
 
-            $tag = Taxonomy::where('taxonomy', 'tag')->whereHas('term', function ($query) use ($name)
+            $tag = Taxonomy::where('taxonomy', 'post_tag')->whereHas('term', function ($query) use ($name)
             {
                 $query->where('name', $name);
 
@@ -564,7 +564,7 @@ class Posts extends BaseController
                 continue;
             }
 
-            $slug = Term::uniqueSlug($name, 'tag');
+            $slug = Term::uniqueSlug($name, 'post_tag');
 
             $term = Term::create(array(
                 'name'   => $name,
@@ -573,7 +573,7 @@ class Posts extends BaseController
 
             $tag = Taxonomy::create(array(
                 'term_id'     => $term->id,
-                'taxonomy'    => 'tag',
+                'taxonomy'    => 'post_tag',
                 'description' => '',
             ));
 

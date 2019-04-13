@@ -46,7 +46,8 @@ class Attachment extends BasePost
      * @var array
      */
     protected $rewrite = array(
-        'slug' => 'attachments'
+        'item'  => 'attachment',
+        'items' => 'attachments'
     );
 
 

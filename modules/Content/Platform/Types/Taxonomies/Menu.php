@@ -36,7 +36,8 @@ class Menu extends Taxonomy
      * @var array
      */
     protected $rewrite = array(
-        'slug' => 'menus'
+        'item'  => 'menu',
+        'items' => 'menus'
     );
 
 

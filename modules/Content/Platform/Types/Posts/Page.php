@@ -46,7 +46,8 @@ class Page extends BasePost
      * @var array
      */
     protected $rewrite = array(
-        'slug' => 'pages'
+        'item'  => 'page',
+        'items' => 'pages'
     );
 
 

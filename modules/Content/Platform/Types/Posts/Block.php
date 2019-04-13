@@ -46,7 +46,8 @@ class Block extends BasePost
      * @var array
      */
     protected $rewrite = array(
-        'slug' => 'blocks'
+        'item'  => 'block',
+        'items' => 'blocks'
     );
 
 

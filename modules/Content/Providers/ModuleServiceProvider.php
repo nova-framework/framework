@@ -82,12 +82,12 @@ class ModuleServiceProvider extends ServiceProvider
     protected function registerPostTypes()
     {
         $config = Config::get('content.types.posts', array(
-            'attachment' => array('type' => 'Modules\Content\Platform\Types\Posts\Attachment'),
-            'block'      => array('type' => 'Modules\Content\Platform\Types\Posts\Block'),
-            'customLink' => array('type' => 'Modules\Content\Platform\Types\Posts\CustomLink'),
-            'menuItem'   => array('type' => 'Modules\Content\Platform\Types\Posts\MenuItem'),
-            'page'       => array('type' => 'Modules\Content\Platform\Types\Posts\Page'),
-            'post'       => array('type' => 'Modules\Content\Platform\Types\Posts\Post'),
+            'attachment'    => array('type' => 'Modules\Content\Platform\Types\Posts\Attachment'),
+            'block'         => array('type' => 'Modules\Content\Platform\Types\Posts\Block'),
+            'custom'        => array('type' => 'Modules\Content\Platform\Types\Posts\CustomLink'),
+            'nav_menu_item' => array('type' => 'Modules\Content\Platform\Types\Posts\MenuItem'),
+            'page'          => array('type' => 'Modules\Content\Platform\Types\Posts\Page'),
+            'post'          => array('type' => 'Modules\Content\Platform\Types\Posts\Post'),
         ));
 
         foreach ($config as $name => $data) {
@@ -109,7 +109,7 @@ class ModuleServiceProvider extends ServiceProvider
         $config = Config::get('content.types.taxonomies', array(
             'category' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Category'),
             'menu'     => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Menu'),
-            'tag'      => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Tag'),
+            'post_tag' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Tag'),
         ));
 
         foreach ($config as $name => $data) {

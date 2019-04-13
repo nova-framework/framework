@@ -10,7 +10,7 @@ class Tag extends Taxonomy
     /**
      * @var string
      */
-    protected $name = 'tag';
+    protected $name = 'post_tag';
 
     /**
      * @var string
@@ -36,7 +36,8 @@ class Tag extends Taxonomy
      * @var array
      */
     protected $rewrite = array(
-        'slug' => 'tags'
+        'item'  => 'tag',
+        'items' => 'tags'
     );
 
 

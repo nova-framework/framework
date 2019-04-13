@@ -49,7 +49,7 @@
 
 <hr style="margin-bottom: 10px;">
 
-<?php $tags = $post->taxonomies->where('taxonomy', 'tag'); ?>
+<?php $tags = $post->taxonomies->where('taxonomy', 'post_tag'); ?>
 <?php if (! $tags->isEmpty()) { ?>
 <?php $count = 0; $html = ''; ?>
 <div class="pull-left"><i class="fa fa-tags"></i>

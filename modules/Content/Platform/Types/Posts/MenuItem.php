@@ -10,7 +10,7 @@ class MenuItem extends BasePost
     /**
      * @var string
      */
-    protected $name = 'menuItem';
+    protected $name = 'nav_menu_item';
 
     /**
      * @var string
@@ -46,7 +46,8 @@ class MenuItem extends BasePost
      * @var array
      */
     protected $rewrite = array(
-        'slug' => 'menu-items'
+        'item'  => 'menu-item',
+        'items' => 'menu-items'
     );
 
 

@@ -71,13 +71,13 @@ class Taxonomies extends BaseController
 
     public function tags()
     {
-        $type = 'tag';
+        $type = 'post_tag';
 
         //
         $name  = __d('content', 'Tag');
         $title = __d('content', 'Tags');
 
-        $items = Taxonomy::where('taxonomy', 'tag')->paginate(15);
+        $items = Taxonomy::where('taxonomy', 'post_tag')->paginate(15);
 
         return $this->createView(compact('items', 'type', 'name'), 'Index')
             ->shares('title', $title)

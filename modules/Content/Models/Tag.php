@@ -10,5 +10,5 @@ class Tag extends Taxonomy
     /**
      * @var string
      */
-    protected $taxonomy = 'tag';
+    protected $taxonomy = 'post_tag';
 }

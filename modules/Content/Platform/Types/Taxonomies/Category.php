@@ -36,7 +36,8 @@ class Category extends Taxonomy
      * @var array
      */
     protected $rewrite = array(
-        'slug' => 'categories'
+        'item'  => 'category',
+        'items' => 'categories'
     );
 
 

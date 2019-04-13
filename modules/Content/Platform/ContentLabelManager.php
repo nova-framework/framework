@@ -59,8 +59,6 @@ class ContentLabelManager
 
     public function get($type, $name, $default = null)
     {
-        $type = ($type !== 'custom') ? $type : 'customLink';
-
         $key = sprintf('%s.%s', $type, $this->getCurrentLocale());
 
         if (! Arr::has($this->labels, $key) && isset($this->types[$type])) {

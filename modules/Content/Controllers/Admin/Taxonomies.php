@@ -83,13 +83,15 @@ class Taxonomies extends BaseController
 
     public function store(Request $request)
     {
+        $ajaxRespose = ($request->ajax() || $request->wantsJson());
+
         $input = $request->all();
 
         // Validate the Input data.
         $validator = $this->validator($input);
 
         if ($validator->fails()) {
-            if ($request->ajax() || $request->wantsJson()) {
+            if ($ajaxRespose) {
                 // The request was made by the Post Editor via AJAX.
                 return Response::json(array('error' => $validator->errors()), 400);
             }
@@ -115,7 +117,10 @@ class Taxonomies extends BaseController
             'parent_id'   => $parentId,
         ));
 
-        if ($request->ajax() || $request->wantsJson()) {
+        // Invalidate the content caches.
+        $this->clearContentCache($type);
+
+        if ($ajaxRespose) {
             // The request was made by the Post Editor via AJAX, so we will return a fresh categories select.
             $selected = $request->input('taxonomy', array());
 
@@ -132,10 +137,6 @@ class Taxonomies extends BaseController
             ), 200);
         }
 
-        // Invalidate the content caches.
-        $this->clearContentCache($type);
-
-        //
         $taxonomyType = TaxonomyType::make($type);
 
         $name = $taxonomyType->label('name');

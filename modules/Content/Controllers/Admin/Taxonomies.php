@@ -233,6 +233,7 @@ class Taxonomies extends BaseController
     {
         $taxonomy = Taxonomy::findOrFail($id);
 
+        //
         $results = Taxonomy::with('children')->where('taxonomy', $type = $taxonomy->taxonomy)->where('parent_id', 0)->get();
 
         $taxonomies = $this->generateTaxonomySelectOptions($type, $id, $parentId, $results);

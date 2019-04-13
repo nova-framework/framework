@@ -37,14 +37,13 @@ class Taxonomies extends BaseController
         );
 
         $messages = array(
-            'valid_name'      => __d('content', 'The :attribute field is not a valid name.'),
-            'strong_password' => __d('content', 'The :attribute field is not strong enough.'),
+            'valid_text'      => __d('content', 'The :attribute field is not a valid text.'),
         );
 
         $attributes = array(
             'name'        => __d('content', 'Name'),
             'slug'        => __d('content', 'Slug'),
-            'description' => __d('content', 'E-Description'),
+            'description' => __d('content', 'Description'),
         );
 
         // Add the custom Validation Rule commands.

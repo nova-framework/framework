@@ -117,9 +117,10 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     Route::post('taxonomies/{id}/destroy', 'Taxonomies@destroy');
 
     // For AJAX.
-    Route::get('taxonomies/{id}/{parentId}', 'Taxonomies@categories')->where('parentId', '\d+');
+    Route::get('taxonomies/{id}/{parentId}', 'Taxonomies@lists')->where('parentId', '\d+');
 
     // The Taxonomies listings.
-    Route::get('taxonomies/categories',    'Taxonomies@index');
-    Route::get('taxonomies/tags',          'Taxonomies@tags');
+    $types = TaxonomyType::getRouteSlugs();
+
+    Route::get('taxonomies/{type}', 'Taxonomies@index')->where('type', '(' .implode('|', $types) .')');
 });

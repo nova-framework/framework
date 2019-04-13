@@ -25,7 +25,7 @@ class Block extends BasePost
     /**
      * @var bool
      */
-    protected $hidden = true;
+    protected $hidden = false;
 
     /**
      * @var bool

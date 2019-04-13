@@ -52,21 +52,26 @@ class Taxonomies extends BaseController
         return Validator::make($data, $rules, $messages, $attributes);
     }
 
-    public function index()
+    public function index(Request $request, $slug)
     {
-        $type = 'category';
+        $taxonomyType = TaxonomyType::findBySlug($slug);
+
+        $type = $taxonomyType->name();
 
         //
-        $name  = __d('content', 'Category');
-        $title = __d('content', 'Categories');
+        $name = $taxonomyType->label('name');
 
         $items = Taxonomy::where('taxonomy', $type)->paginate(15);
 
-        $categories = $this->generateCategoriesSelect();
+        if ($taxonomyType->isHierarchical()) {
+            $taxonomies = $this->generateTaxonomiesSelect();
+        } else {
+            $taxonomies = array();
+        }
 
         return $this->createView()
-            ->shares('title', $title)
-            ->with(compact('items', 'type', 'name', 'title', 'categories'));
+            ->shares('title', $taxonomyType->label('title'))
+            ->with(compact('items', 'type', 'name', 'taxonomyType', 'taxonomies'));
     }
 
     public function tags()
@@ -224,7 +229,7 @@ class Taxonomies extends BaseController
             ->with('success', __d('content', 'The {0} <b>{1}</b> was successfully deleted.', $name, $taxonomy->name));
     }
 
-    public function categories($id, $parent)
+    public function lists($id, $parent)
     {
         $category = Taxonomy::findOrFail($id);
 
@@ -257,7 +262,7 @@ class Taxonomies extends BaseController
         return $result;
     }
 
-    protected function generateCategoriesSelect($categoryId = 0, $parentId = 0, $categories = null, $level = 0)
+    protected function generateTaxonomiesSelect($categoryId = 0, $parentId = 0, $categories = null, $level = 0)
     {
         $result = '';
 
@@ -280,7 +285,7 @@ class Taxonomies extends BaseController
             if (! $category->children->isEmpty()) {
                 $level++;
 
-                $result .= $this->generateCategoriesSelect($categoryId, $parentId, $category->children, $level);
+                $result .= $this->generateTaxonomiesSelect($categoryId, $parentId, $category->children, $level);
             }
         }
 

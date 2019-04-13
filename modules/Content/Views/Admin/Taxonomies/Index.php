@@ -2,7 +2,7 @@
     <h1><?= $title; ?></h1>
     <ol class="breadcrumb">
         <li><a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <?= __d('content', 'Dashboard'); ?></a></li>
-        <li><?= __d('content', 'Content'); ?></li>
+        <li><?= $title; ?></li>
     </ol>
 </section>
 
@@ -32,12 +32,12 @@
             <label class="control-label" for="slug"><?= __d('content', 'Slug'); ?></label>
             <input name="slug" id="slug" type="text" class="form-control" value="<?= Input::old('slug'); ?>" placeholder="<?= __d('content', 'Slug'); ?>">
         </div>
-        <?php if ($type == 'category') { ?>
+        <?php if ($taxonomyType->isHierarchical()) { ?>
         <div class="form-group">
-            <label class="control-label" for="slug"><?= __d('content', 'Parent Category'); ?></label>
-            <select name="parent" id="parent" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', 'Select a Category'); ?>" style="width: 100%;" autocomplete="off">
+            <label class="control-label" for="slug"><?= __d('content', 'Parent {0}', $name); ?></label>
+            <select name="parent" id="parent" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', 'Select a {0}', $name); ?>" style="width: 100%;" autocomplete="off">
                 <option value="0"><?= __d('content', 'None'); ?></option>
-                <?= $categories; ?>
+                <?= $taxonomies; ?>
             </select>
         </div>
         <?php } ?>
@@ -90,7 +90,7 @@
                     <div class="btn-group" role="group" aria-label="...">
                         <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $item->id; ?>" title="<?= __d('content', 'Delete this {0}', $name); ?>" role="button"><i class="fa fa-remove"></i></a>
                         <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-edit-dialog" data-id="<?= $item->id; ?>" data-name="<?= $item->name; ?>" data-slug="<?= $item->slug; ?>" data-parent="<?= $item->parent_id; ?>" data-description="<?= $item->description; ?>" title="<?= __d('content', 'Edit this {0}', $name); ?>" role="button"><i class="fa fa-pencil"></i></a>
-                        <a class="btn btn-sm btn-warning" href="<?= site_url('admin/content/' .$type .'/' .$item->slug); ?>" title="<?= __d('content', 'View the Posts on this {0}', $name); ?>" target="_blank" role="button"><i class="fa fa-search"></i></a>
+                        <a class="btn btn-sm btn-warning" href="<?= site_url('admin/content/{0}/{1}', $type, $item->slug); ?>" title="<?= __d('content', 'View the Posts on this {0}', $name); ?>" target="_blank" role="button"><i class="fa fa-search"></i></a>
                     </div>
                 </td>
             </tr>
@@ -98,7 +98,7 @@
         </table>
         <?php } else { ?>
         <div class="alert alert-warning" style="margin: 0 5px 5px;">
-            <h4><i class="icon fa fa-warning"></i> <?= strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('content', 'No registered Posts'); ?></h4>
+            <h4><i class="icon fa fa-warning"></i> <?= strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('content', 'No registered {0}', $title); ?></h4>
             <?= __d('content', 'There are no registered Posts.'); ?>
         </div>
         <?php } ?>
@@ -180,10 +180,10 @@ $(function () {
                     <label class="control-label" for="slug"><?= __d('content', 'Slug'); ?></label>
                     <input name="slug" id="modal-edit-slug" type="text" class="form-control" value="<?= Input::old('slug'); ?>" placeholder="<?= __d('content', 'Slug'); ?>">
                 </div>
-                <?php if ($type == 'category') { ?>
+                <?php if ($taxonomyType->isHierarchical()) { ?>
                 <div class="form-group">
-                    <label class="control-label" for="slug"><?= __d('content', 'Parent Category'); ?></label>
-                    <select name="parent" id="modal-edit-parent" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', 'Select a Category'); ?>" style="width: 100%;" autocomplete="off">
+                    <label class="control-label" for="slug"><?= __d('content', 'Parent {0}', $name); ?></label>
+                    <select name="parent" id="modal-edit-parent" class="form-control select2" placeholder="" data-placeholder="<?= __d('content', 'Select a {0}', $name); ?>" style="width: 100%;" autocomplete="off">
                         <option></option>
                     </select>
                 </div>
@@ -224,7 +224,7 @@ $(function () {
         var slug        = button.data('slug');
         var description = button.data('description');
 
-<?php if ($type == 'category') { ?>
+<?php if ($taxonomyType->isHierarchical()) { ?>
 
        // Do an AJAX request to retrieve the Courses on the current Category.
         var parent = button.data('parent');

@@ -97,7 +97,6 @@ class Menus extends BaseController
         }
 
         $name = $menu->name;
-
         $slug = $menu->slug;
 
         $menu->items->each(function ($item) use ($menu)

@@ -305,15 +305,15 @@ class Menus extends BaseController
         return Redirect::back()->with('success', __d('content', 'The Menu Item(s) was successfully created.'));
     }
 
-    public function updateItem(Request $request, $id, $itemId)
+    public function updateItem(Request $request, $menuId, $itemId)
     {
         $authUser = Auth::user();
 
         try {
-            $taxonomy = Menu::findOrFail($id);
+            $taxonomy = Menu::findOrFail($menuId);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
+            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $menuId));
         }
 
         try {
@@ -333,15 +333,15 @@ class Menus extends BaseController
         return Redirect::back()->with('success', __d('content', 'The Menu Item was successfully updated.'));
     }
 
-    public function deleteItem(Request $request, $id, $itemId)
+    public function deleteItem(Request $request, $menuId, $itemId)
     {
         $authUser = Auth::user();
 
         try {
-            $taxonomy = Menu::findOrFail($id);
+            $taxonomy = Menu::findOrFail($menuId);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
+            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $menuId));
         }
 
         try {

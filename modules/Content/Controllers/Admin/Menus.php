@@ -131,7 +131,7 @@ class Menus extends BaseController
         $pages = $this->generatePostsListing('page');
         $posts = $this->generatePostsListing('post');
 
-        $categories = $this->generateCategoriesListing();
+        $categories = $this->generateTaxonomiesListing('category');
 
         return $this->createView()
             ->shares('title', __d('content', 'Manage a Menu'))
@@ -420,10 +420,6 @@ class Menus extends BaseController
         }
 
         foreach ($posts as $post) {
-            if ($post->type !== $type) {
-                continue;
-            }
-
             $result .= '<div class="checkbox" style="padding-left: ' .(($level > 0) ? ($level * 25) .'px' : '') .'"><label><input class="' .$type .'-checkbox" name="post[]" value="' .$post->id .'" type="checkbox">&nbsp;&nbsp;' .$post->title .'</label></div>';
 
             // Process the children.
@@ -442,32 +438,24 @@ class Menus extends BaseController
         return $result;
     }
 
-    protected function generateCategoriesListing($categories = null, $level = 0)
+    protected function generateTaxonomiesListing($type, $taxonomies = null, $level = 0)
     {
         $result = '';
 
-        if (is_null($categories)) {
-            $categories = Taxonomy::where('taxonomy', 'category')
-                ->where('parent_id', 0)
-                ->get();
+        if (is_null($taxonomies)) {
+            $taxonomies = Taxonomy::where('taxonomy', $type)->where('parent_id', 0)->get();
         }
 
-        foreach ($categories as $category) {
-            if ($category->taxonomy !== 'category') {
-                continue;
-            }
-
-            $result .= '<div class="checkbox" style="padding-left: ' .(($level > 0) ? ($level * 25) .'px' : '') .'"><label><input class="category-checkbox" name="category[]" value="' .$category->id .'" type="checkbox">&nbsp;&nbsp;' .$category->name .'</label></div>';
+        foreach ($taxonomies as $taxonomy) {
+            $result .= '<div class="checkbox" style="padding-left: ' .(($level > 0) ? ($level * 25) .'px' : '') .'"><label><input class="' .$type .'-checkbox" name="' .$type .'[]" value="' .$taxonomy->id .'" type="checkbox">&nbsp;&nbsp;' .$taxonomy->name .'</label></div>';
 
             // Process the children.
-            $children = $category->children()
-                ->where('taxonomy', 'category')
-                ->get();
+            $children = $taxonomy->children()->where('taxonomy', $type)->get();
 
             if (! $children->isEmpty()) {
                 $level++;
 
-                $result .= $this->generateCategoriesListing($children, $level);
+                $result .= $this->generateTaxonomiesListing($type, $children, $level);
             }
         }
 

@@ -72,7 +72,7 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     // The Menu Items CRUD.
     Route::get( 'menus/{id}',                        'MenuItems@index');
     Route::post('menus/{id}/items/{itemId}',         'MenuItems@update');
-    Route::post('menus/{id}/items/{itemId}/destroy', 'MenuItems@delete');
+    Route::post('menus/{id}/items/{itemId}/destroy', 'MenuItems@destroy');
 
     Route::post('menus/{id}/post',     'MenuItems@storePost');
     Route::post('menus/{id}/category', 'MenuItems@storeCategory');

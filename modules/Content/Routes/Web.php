@@ -55,26 +55,30 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     Route::post('media/update/{field}', 'Attachments@update');
     Route::post('media/delete',         'Attachments@destroy');
 
-    Route::post('media/upload',         'Attachments@upload');
-    Route::get( 'media/uploaded',       'Attachments@uploaded');
+    Route::post('media/upload',   'Attachments@upload');
+    Route::get( 'media/uploaded', 'Attachments@uploaded');
 
     // The Blocks positions.
     Route::get( 'blocks', 'Blocks@index');
     Route::post('blocks', 'Blocks@order');
 
     // The Menus CRUD.
-    Route::get( 'menus',               'Menus@index');
-    Route::post('menus',               'Menus@store');
-    Route::post('menus/{id}',          'Menus@update');
-    Route::post('menus/{id}/destroy',  'Menus@destroy');
+    Route::paginate( 'menus', 'Menus@index');
 
-    Route::get( 'menus/{id}',                        'Menus@items');
-    Route::post('menus/{id}/post',                   'Menus@addPost');
-    Route::post('menus/{id}/category',               'Menus@addCategory');
-    Route::post('menus/{id}/custom',                 'Menus@addCustom');
-    Route::post('menus/{id}/items',                  'Menus@itemsOrder');
-    Route::post('menus/{id}/items/{itemId}',         'Menus@updateItem');
-    Route::post('menus/{id}/items/{itemId}/destroy', 'Menus@deleteItem');
+    Route::post('menus',              'Menus@store');
+    Route::post('menus/{id}',         'Menus@update');
+    Route::post('menus/{id}/destroy', 'Menus@destroy');
+
+    // The Menu Items CRUD.
+    Route::get( 'menus/{id}',                        'MenuItems@index');
+    Route::post('menus/{id}/items/{itemId}',         'MenuItems@update');
+    Route::post('menus/{id}/items/{itemId}/destroy', 'MenuItems@delete');
+
+    Route::post('menus/{id}/post',     'MenuItems@storePost');
+    Route::post('menus/{id}/category', 'MenuItems@storeCategory');
+    Route::post('menus/{id}/custom',   'MenuItems@storeCustom');
+
+    Route::post('menus/{id}/items', 'MenuItems@order');
 
     // The Comments CRUD.
     Route::get( 'comments',                'Comments@index');

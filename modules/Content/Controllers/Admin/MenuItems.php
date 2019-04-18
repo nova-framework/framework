@@ -136,12 +136,14 @@ class MenuItems extends BaseController
 
     protected function createPostLinks(Request $request, Menu $menu, User $authUser)
     {
+        $ids = static::filterModelIds(
+            $request->input($type, array())
+        );
+
         $type = $request->input('type', 'post');
 
-        $ids = $request->input($type, array());
-
         //
-        $posts = Post::where('type', $type)->whereIn('id', static::filterModelIds($ids));
+        $posts = Post::where('type', $type)->whereIn('id', $ids);
 
         $posts->each(function ($post) use ($type, $menu, $authUser)
         {
@@ -176,12 +178,14 @@ class MenuItems extends BaseController
 
     protected function createTaxonomyLinks(Request $request, Menu $menu, User $authUser)
     {
+        $ids = static::filterModelIds(
+            $request->input($type, array())
+        );
+
         $type = $request->input('type', 'category');
 
-        $ids = $request->input($type, array());
-
         //
-        $taxonomies = Taxonomy::where('taxonomy', $type)->whereIn('id', static::filterModelIds($ids));
+        $taxonomies = Taxonomy::where('taxonomy', $type)->whereIn('id', $ids);
 
         $taxonomies->each(function ($taxonomy) use ($type, $menu, $authUser)
         {

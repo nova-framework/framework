@@ -58,7 +58,7 @@ class MenuItems extends BaseController
         }
 
         foreach ($posts as $post) {
-            $result .= '<div class="checkbox" style="padding-left: ' .(($level > 0) ? ($level * 25) .'px' : '') .'"><label><input class="' .$type .'-checkbox" name="post[]" value="' .$post->id .'" type="checkbox">&nbsp;&nbsp;' .$post->title .'</label></div>';
+            $result .= '<div class="checkbox" style="padding-left: ' .(($level > 0) ? ($level * 25) .'px' : '') .'"><label><input class="' .$type .'-checkbox" name="' .$type .'[]" value="' .$post->id .'" type="checkbox">&nbsp;&nbsp;' .$post->title .'</label></div>';
 
             // Process the children.
             $children = $post->children()
@@ -138,7 +138,7 @@ class MenuItems extends BaseController
     {
         $type = $request->input('type', 'post');
 
-        $posts = $request->input('post', array());
+        $posts = $request->input($type, array());
 
         foreach ($posts as $id) {
             $instance = Post::where('type', $type)->findOrFail($id);
@@ -176,9 +176,9 @@ class MenuItems extends BaseController
     {
         $type = $request->input('type', 'category');
 
-        $categories = $request->input('category', array());
+        $taxonomies = $request->input($type, array());
 
-        foreach ($categories as $id) {
+        foreach ($taxonomies as $id) {
             $instance = Taxonomy::where('taxonomy', $type)->findOrFail($id);
 
             $post = Post::create(array(

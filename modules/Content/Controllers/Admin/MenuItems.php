@@ -113,51 +113,18 @@ class MenuItems extends BaseController
 
         // Handle the Post-type links addition.
         if ($mode == 'posts') {
-            return $this->storePosts($request, $taxonomy, $authUser);
+            $this->storePosts($request, $taxonomy, $authUser);
         }
 
         // Handle the Taxonomy-type links addition.
         else if ($mode == 'taxonomies') {
-            return $this->storeTaxonomies($request, $taxonomy, $authUser);
+            $this->storeTaxonomies($request, $taxonomy, $authUser);
         }
 
         // Handle the custom links addition.
-        $name = $request->input('name');
-
-        $url = $request->input('link');
-
-        if ($request->has('local')) {
-            // The link field contains a local URI, not an absolute URL.
-            $url = site_url($url);
+        else {
+            $this->storeCustomLink($request, $taxonomy, $authUser);
         }
-
-        $post = Post::create(array(
-            'author_id'      => $authUser->id,
-            'title'          => $name,
-            'status'         => 'publish',
-            'menu_order'     => 0,
-            'type'           => 'nav_menu_item',
-            'comment_status' => 'closed',
-        ));
-
-        // We need to update this information.
-        $post->name = Post::uniqueName($name);
-
-        $post->guid = site_url('content/' .$post->id);
-
-        $post->save();
-
-        // Handle the Metadata.
-        $post->saveMeta(array(
-            'menu_item_type'             => 'custom',
-            'menu_item_menu_item_parent' => 0,
-            'menu_item_object'           => 'custom',
-            'menu_item_object_id'        => $post->id,
-            'menu_item_target'           => null,
-            'menu_item_url'              => $url,
-        ));
-
-        $post->taxonomies()->attach($taxonomy);
 
         $taxonomy->updateCount();
 
@@ -203,13 +170,6 @@ class MenuItems extends BaseController
 
             $post->taxonomies()->attach($taxonomy);
         }
-
-        $taxonomy->updateCount();
-
-        // Invalidate the cached menu data.
-        Cache::forget('content.menus.' .$taxonomy->slug);
-
-        return Redirect::back()->with('success', __d('content', 'The Menu Item(s) was successfully created.'));
     }
 
     protected function storeTaxonomies(Request $request, Menu $taxonomy, User $authUser)
@@ -249,13 +209,46 @@ class MenuItems extends BaseController
 
             $post->taxonomies()->attach($taxonomy);
         }
+    }
 
-        $taxonomy->updateCount();
+    protected function storeCustomLink(Request $request, Menu $taxonomy, User $authUser)
+    {
+        $name = $request->input('name');
 
-        // Invalidate the cached menu data.
-        Cache::forget('content.menus.' .$taxonomy->slug);
+        $url = $request->input('link');
 
-        return Redirect::back()->with('success', __d('content', 'The Menu Item(s) was successfully created.'));
+        if ($request->has('local')) {
+            // The link field contains a local URI, not an absolute URL.
+            $url = site_url($url);
+        }
+
+        $post = Post::create(array(
+            'author_id'      => $authUser->id,
+            'title'          => $name,
+            'status'         => 'publish',
+            'menu_order'     => 0,
+            'type'           => 'nav_menu_item',
+            'comment_status' => 'closed',
+        ));
+
+        // We need to update this information.
+        $post->name = Post::uniqueName($name);
+
+        $post->guid = site_url('content/' .$post->id);
+
+        $post->save();
+
+        // Handle the Metadata.
+        $post->saveMeta(array(
+            'menu_item_type'             => 'custom',
+            'menu_item_menu_item_parent' => 0,
+            'menu_item_object'           => 'custom',
+            'menu_item_object_id'        => $post->id,
+            'menu_item_target'           => null,
+            'menu_item_url'              => $url,
+        ));
+
+        $post->taxonomies()->attach($taxonomy);
     }
 
     public function update(Request $request, $menuId, $itemId)

@@ -138,13 +138,10 @@ class MenuItems extends BaseController
     {
         $type = $request->input('type', 'post');
 
-        $ids = array_map(function ($id)
-        {
-            return intval($id);
+        $ids = $request->input($type, array());
 
-        }, $request->input($type, array()));
-
-        $posts = Post::where('type', $type)->whereIn('id', $ids);
+        //
+        $posts = Post::where('type', $type)->whereIn('id', static::filterModelIds($ids));
 
         $posts->each(function ($post) use ($type, $menu, $authUser)
         {
@@ -181,13 +178,10 @@ class MenuItems extends BaseController
     {
         $type = $request->input('type', 'category');
 
-        $ids = array_map(function ($id)
-        {
-            return intval($id);
+        $ids = $request->input($type, array());
 
-        }, $request->input($type, array()));
-
-        $taxonomies = Taxonomy::where('taxonomy', $type)->whereIn('id', $ids);
+        //
+        $taxonomies = Taxonomy::where('taxonomy', $type)->whereIn('id', static::filterModelIds($ids));
 
         $taxonomies->each(function ($taxonomy) use ($type, $menu, $authUser)
         {
@@ -366,5 +360,19 @@ class MenuItems extends BaseController
                 }
             }
         }
+    }
+
+    protected static function filterModelIds($ids)
+    {
+        $items = array_map(function ($value)
+        {
+            return intval($value);
+
+        }, $ids);
+
+        return array_filter(array_unique($items, SORT_NUMERIC), function ($value)
+        {
+            return ($value > 0);
+        });
     }
 }

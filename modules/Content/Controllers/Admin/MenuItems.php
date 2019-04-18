@@ -144,7 +144,6 @@ class MenuItems extends BaseController
 
         }, $request->input($type, array()));
 
-        //
         $posts = Post::where('type', $type)->whereIn('id', $ids);
 
         $posts->each(function ($post) use ($type, $menu, $authUser)

@@ -131,7 +131,7 @@ class MenuItems extends BaseController
         // Invalidate the cached menu data.
         Cache::forget('content.menus.' .$taxonomy->slug);
 
-        return Redirect::back()->with('success', __d('content', 'The Menu Item was successfully created.'));
+        return Redirect::back()->with('success', __d('content', 'The Menu Item(s) was successfully created.'));
     }
 
     protected function storePosts(Request $request, Menu $taxonomy, User $authUser)

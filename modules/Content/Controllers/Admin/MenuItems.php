@@ -134,54 +134,65 @@ class MenuItems extends BaseController
         return Redirect::back()->with('success', __d('content', 'The Menu Item(s) was successfully created.'));
     }
 
-    protected function createPostLinks(Request $request, Menu $taxonomy, User $authUser)
+    protected function createPostLinks(Request $request, Menu $menu, User $authUser)
     {
         $type = $request->input('type', 'post');
 
-        $posts = $request->input($type, array());
+        $ids = array_map(function ($id)
+        {
+            return intval($id);
 
-        foreach ($posts as $id) {
-            $instance = Post::where('type', $type)->findOrFail($id);
+        }, $request->input($type, array()));
 
-            $post = Post::create(array(
+        //
+        $posts = Post::where('type', $type)->whereIn('id', $ids);
+
+        $posts->each(function ($post) use ($type, $menu, $authUser)
+        {
+            $menuLink = Post::create(array(
                 'author_id'      => $authUser->id,
                 'status'         => 'publish',
-                'menu_order'     => $instance->menu_order,
+                'menu_order'     => $post->menu_order,
                 'type'           => 'nav_menu_item',
                 'comment_status' => 'closed',
             ));
 
             // We need to update this information.
-            $post->name = $postId = $post->id;
+            $menuLink->name = $id = $menuLink->id;
 
-            $post->guid = site_url('content/' .$postId);
+            $menuLink->guid = site_url('content/' .$id);
 
-            $post->save();
+            $menuLink->save();
 
             // Handle the Metadata.
-            $post->saveMeta(array(
-                'menu_item_type'             => $type,
-                'menu_item_menu_item_parent' => $instance->parent_id,
+            $menuLink->saveMeta(array(
+                'menu_item_type'             => 'post',
+                'menu_item_menu_item_parent' => $post->parent_id,
                 'menu_item_object'           => $type,
-                'menu_item_object_id'        => $instance->id,
+                'menu_item_object_id'        => $post->id,
                 'menu_item_target'           => null,
                 'menu_item_url'              => null,
             ));
 
-            $post->taxonomies()->attach($taxonomy);
-        }
+            $menuLink->taxonomies()->attach($menu);
+        });
     }
 
-    protected function createTaxonomyLinks(Request $request, Menu $taxonomy, User $authUser)
+    protected function createTaxonomyLinks(Request $request, Menu $menu, User $authUser)
     {
         $type = $request->input('type', 'category');
 
-        $taxonomies = $request->input($type, array());
+        $ids = array_map(function ($id)
+        {
+            return intval($id);
 
-        foreach ($taxonomies as $id) {
-            $instance = Taxonomy::where('taxonomy', $type)->findOrFail($id);
+        }, $request->input($type, array()));
 
-            $post = Post::create(array(
+        $taxonomies = Taxonomy::where('taxonomy', $type)->whereIn('id', $ids);
+
+        $taxonomies->each(function ($taxonomy) use ($type, $menu, $authUser)
+        {
+            $menuLink = Post::create(array(
                 'author_id'      => $authUser->id,
                 'status'         => 'publish',
                 'menu_order'     => 0,
@@ -190,31 +201,32 @@ class MenuItems extends BaseController
             ));
 
             // We need to update this information.
-            $post->name = $postId = $post->id;
+            $menuLink->name = $id = $menuLink->id;
 
-            $post->guid = site_url('content/' .$postId);
+            $menuLink->guid = site_url('content/{0}', $id);
 
-            $post->save();
+            $menuLink->save();
 
             // Handle the Metadata.
-            $post->saveMeta(array(
+            $menuLink->saveMeta(array(
                 // Setup the Metadata.
                 'menu_item_type'             => 'taxonomy',
-                'menu_item_menu_item_parent' => $instance->parent_id,
+                'menu_item_menu_item_parent' => $taxonomy->parent_id,
                 'menu_item_object'           => $type,
-                'menu_item_object_id'        => $instance->id,
+                'menu_item_object_id'        => $taxonomy->id,
                 'menu_item_target'           => null,
                 'menu_item_url'              => null,
             ));
 
-            $post->taxonomies()->attach($taxonomy);
-        }
+            $menuLink->taxonomies()->attach($menu);
+        });
     }
 
-    protected function createCustomLink(Request $request, Menu $taxonomy, User $authUser)
+    protected function createCustomLink(Request $request, Menu $menu, User $authUser)
     {
-        $name = $request->input('name');
+        $type = 'custom';
 
+        //
         $url = $request->input('link');
 
         if ($request->has('local')) {
@@ -222,7 +234,10 @@ class MenuItems extends BaseController
             $url = site_url($url);
         }
 
-        $post = Post::create(array(
+        $name = $request->input('name');
+
+        // Create a Menu Link instance.
+        $menuLink = Post::create(array(
             'author_id'      => $authUser->id,
             'title'          => $name,
             'status'         => 'publish',
@@ -232,23 +247,23 @@ class MenuItems extends BaseController
         ));
 
         // We need to update this information.
-        $post->name = Post::uniqueName($name);
+        $menuLink->name = Post::uniqueName($name);
 
-        $post->guid = site_url('content/' .$post->id);
+        $menuLink->guid = site_url('content/{0}', $menuLink->id);
 
-        $post->save();
+        $menuLink->save();
 
         // Handle the Metadata.
-        $post->saveMeta(array(
+        $menuLink->saveMeta(array(
             'menu_item_type'             => 'custom',
             'menu_item_menu_item_parent' => 0,
-            'menu_item_object'           => 'custom',
+            'menu_item_object'           => $type,
             'menu_item_object_id'        => $post->id,
             'menu_item_target'           => null,
             'menu_item_url'              => $url,
         ));
 
-        $post->taxonomies()->attach($taxonomy);
+        $menuLink->taxonomies()->attach($menu);
     }
 
     public function update(Request $request, $menuId, $itemId)

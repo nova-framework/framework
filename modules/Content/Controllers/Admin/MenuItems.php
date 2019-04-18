@@ -113,17 +113,17 @@ class MenuItems extends BaseController
 
         // Handle the Post-type links addition.
         if ($mode == 'posts') {
-            $this->storePosts($request, $taxonomy, $authUser);
+            $this->createPostLinks($request, $taxonomy, $authUser);
         }
 
         // Handle the Taxonomy-type links addition.
         else if ($mode == 'taxonomies') {
-            $this->storeTaxonomies($request, $taxonomy, $authUser);
+            $this->createTaxonomyLinks($request, $taxonomy, $authUser);
         }
 
         // Handle the custom links addition.
         else {
-            $this->storeCustomLink($request, $taxonomy, $authUser);
+            $this->createCustomLink($request, $taxonomy, $authUser);
         }
 
         $taxonomy->updateCount();
@@ -134,7 +134,7 @@ class MenuItems extends BaseController
         return Redirect::back()->with('success', __d('content', 'The Menu Item(s) was successfully created.'));
     }
 
-    protected function storePosts(Request $request, Menu $taxonomy, User $authUser)
+    protected function createPostLinks(Request $request, Menu $taxonomy, User $authUser)
     {
         $type = $request->input('type', 'post');
 
@@ -172,7 +172,7 @@ class MenuItems extends BaseController
         }
     }
 
-    protected function storeTaxonomies(Request $request, Menu $taxonomy, User $authUser)
+    protected function createTaxonomyLinks(Request $request, Menu $taxonomy, User $authUser)
     {
         $type = $request->input('type', 'category');
 
@@ -211,7 +211,7 @@ class MenuItems extends BaseController
         }
     }
 
-    protected function storeCustomLink(Request $request, Menu $taxonomy, User $authUser)
+    protected function createCustomLink(Request $request, Menu $taxonomy, User $authUser)
     {
         $name = $request->input('name');
 

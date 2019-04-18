@@ -17,7 +17,7 @@
 
 <div class="col-md-4">
 
-<form id="page-form" action="<?= site_url('admin/menus/' .$menu->id .'/post'); ?>" method='POST' role="form">
+<form id="page-form" action="<?= site_url('admin/menus/' .$menu->id .'/posts'); ?>" method='POST' role="form">
 
 <div class="box box-default">
     <div class="box-header with-border">
@@ -36,7 +36,7 @@
 
 </form>
 
-<form id="page-form" action="<?= site_url('admin/menus/' .$menu->id .'/post'); ?>" method='POST' role="form">
+<form id="page-form" action="<?= site_url('admin/menus/{0}/posts', $menu->id); ?>" method='POST' role="form">
 
 <div class="box box-widget">
     <div class="box-header with-border">
@@ -55,7 +55,7 @@
 
 </form>
 
-<form id="page-form" action="<?= site_url('admin/menus/' .$menu->id .'/category'); ?>" method='POST' role="form">
+<form id="page-form" action="<?= site_url('admin/menus/{0}/taxonomies', $menu->id); ?>" method='POST' role="form">
 
 <div class="box box-widget">
     <div class="box-header with-border">
@@ -70,10 +70,11 @@
 </div>
 
 <input type="hidden" name="_token"   value="<?= csrf_token(); ?>" />
+<input type="hidden" name="type" value="category" />
 
 </form>
 
-<form id="page-form" action="<?= site_url('admin/menus/' .$menu->id .'/custom'); ?>" method='POST' role="form">
+<form id="page-form" action="<?= site_url('admin/menus/{0}/custom', $menu->id); ?>" method='POST' role="form">
 
 <div class="box box-widget">
     <div class="box-header with-border">

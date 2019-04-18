@@ -269,6 +269,7 @@ return array (
   'The Comment was unapproved.' => '',
   'The Menu <b>{0}</b> was successfully created.' => '',
   'The Menu <b>{0}</b> was successfully updated.' => '',
+  'The Menu Item was successfully created.' => '',
   'The Menu Item was successfully deleted.' => '',
   'The Menu Item was successfully updated.' => '',
   'The Menu Item(s) was successfully created.' => '',

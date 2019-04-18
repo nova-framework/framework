@@ -74,9 +74,7 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     Route::post('menus/{id}/items/{itemId}',         'MenuItems@update');
     Route::post('menus/{id}/items/{itemId}/destroy', 'MenuItems@destroy');
 
-    Route::post('menus/{id}/post',     'MenuItems@storePost');
-    Route::post('menus/{id}/category', 'MenuItems@storeCategory');
-    Route::post('menus/{id}/custom',   'MenuItems@storeCustom');
+    Route::post('menus/{id}/{mode}', 'MenuItems@store')->where('mode', '(posts|taxonomies|custom)');
 
     Route::post('menus/{id}/items', 'MenuItems@order');
 

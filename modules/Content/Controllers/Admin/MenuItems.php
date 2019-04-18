@@ -154,9 +154,9 @@ class MenuItems extends BaseController
             ));
 
             // We need to update this information.
-            $menuLink->name = $menuLink->id;
+            $menuLink->guid = site_url('content/{0}', $name = $menuLink->id);
 
-            $menuLink->guid = site_url('content/{0}', $menuLink->id);
+            $menuLink->name = $name;
 
             $menuLink->save();
 
@@ -194,9 +194,9 @@ class MenuItems extends BaseController
             ));
 
             // We need to update this information.
-            $menuLink->name = $menuLink->id;
+            $menuLink->guid = site_url('content/{0}', $name = $menuLink->id);
 
-            $menuLink->guid = site_url('content/{0}', $menuLink->id);
+            $menuLink->name = $name;
 
             $menuLink->save();
 

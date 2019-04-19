@@ -109,7 +109,7 @@ class MenuItems extends BaseController
             return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
-        $this->createMenuLinks($request, $menu, $mode);
+        $this->createMenuItems($request, $menu, $mode);
 
         $menu->updateCount();
 
@@ -119,7 +119,7 @@ class MenuItems extends BaseController
         return Redirect::back()->with('success', __d('content', 'The Menu Item(s) was successfully created.'));
     }
 
-    protected function createMenuLinks(Request $request, Menu $menu, $mode)
+    protected function createMenuItems(Request $request, Menu $menu, $mode)
     {
         $authUser = Auth::user();
 

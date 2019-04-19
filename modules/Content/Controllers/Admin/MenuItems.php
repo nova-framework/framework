@@ -244,9 +244,9 @@ class MenuItems extends BaseController
         ));
 
         // We need to update this information.
-        $menuLink->name = Post::uniqueName($name);
-
         $menuLink->guid = site_url('content/{0}', $menuLink->id);
+
+        $menuLink->name = Post::uniqueName($name);
 
         $menuLink->save();
 

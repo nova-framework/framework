@@ -187,7 +187,7 @@ class MenuItems extends BaseController
 
         // To match the behavior of other methods, we will return a Collection of Menu Links.
         return $menuLink->newCollection(
-            array($menuLink)
+            (array) $menuLink
         );
     }
 

@@ -103,35 +103,83 @@ class MenuItems extends BaseController
     public function store(Request $request, $id, $mode)
     {
         try {
-            $taxonomy = Menu::findOrFail($id);
+            $menu = Menu::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
             return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
-        $authUser = Auth::user();
+        $this->createMenuLinks($request, $menu, $mode);
 
-        // Handle the Post-type links addition.
-        if ($mode == 'posts') {
-            $this->createPostLinks($request, $taxonomy, $authUser);
-        }
-
-        // Handle the Taxonomy-type links addition.
-        else if ($mode == 'taxonomies') {
-            $this->createTaxonomyLinks($request, $taxonomy, $authUser);
-        }
-
-        // Handle the custom links addition.
-        else if ($mode == 'custom') {
-            $this->createCustomLink($request, $taxonomy, $authUser);
-        }
-
-        $taxonomy->updateCount();
+        $menu->updateCount();
 
         // Invalidate the cached menu data.
-        Cache::forget('content.menus.' .$taxonomy->slug);
+        Cache::forget('content.menus.' .$menu->slug);
 
         return Redirect::back()->with('success', __d('content', 'The Menu Item(s) was successfully created.'));
+    }
+
+    protected function createMenuLinks(Request $request, Menu $menu, $mode)
+    {
+        $authUser = Auth::user();
+
+        if ($mode == 'custom') {
+            // Here we should validate the custom links.
+
+            return $this->createCustomLink($request, $taxonomy, $authUser);
+        }
+
+        // Here we should validate the posts and taxonomies.
+
+        if ($mode == 'posts') {
+            return $this->createPostLinks($request, $taxonomy, $authUser);
+        }
+
+        return $this->createTaxonomyLinks($request, $taxonomy, $authUser);
+    }
+
+    protected function createCustomLink(Request $request, Menu $menu, User $authUser)
+    {
+        $type = 'custom';
+
+        //
+        $url = $request->input('link');
+
+        if ($request->has('local')) {
+            // The link field contains a local URI, not an absolute URL.
+            $url = site_url($url);
+        }
+
+        $name = $request->input('name');
+
+        // Create a Menu Link instance.
+        $menuLink = Post::create(array(
+            'author_id'      => $authUser->id,
+            'title'          => $name,
+            'status'         => 'publish',
+            'menu_order'     => 0,
+            'type'           => 'nav_menu_item',
+            'comment_status' => 'closed',
+        ));
+
+        // We need to update this information.
+        $menuLink->guid = site_url('content/{0}', $menuLink->id);
+
+        $menuLink->name = Post::uniqueName($name);
+
+        $menuLink->save();
+
+        // Handle the Metadata.
+        $menuLink->saveMeta(array(
+            'menu_item_type'             => 'custom',
+            'menu_item_menu_item_parent' => 0,
+            'menu_item_object'           => $type,
+            'menu_item_object_id'        => $post->id,
+            'menu_item_target'           => null,
+            'menu_item_url'              => $url,
+        ));
+
+        $menuLink->taxonomies()->attach($menu);
     }
 
     protected function createPostLinks(Request $request, Menu $menu, User $authUser)
@@ -217,50 +265,6 @@ class MenuItems extends BaseController
 
             $menuLink->taxonomies()->attach($menu);
         });
-    }
-
-    protected function createCustomLink(Request $request, Menu $menu, User $authUser)
-    {
-        $type = 'custom';
-
-        //
-        $url = $request->input('link');
-
-        if ($request->has('local')) {
-            // The link field contains a local URI, not an absolute URL.
-            $url = site_url($url);
-        }
-
-        $name = $request->input('name');
-
-        // Create a Menu Link instance.
-        $menuLink = Post::create(array(
-            'author_id'      => $authUser->id,
-            'title'          => $name,
-            'status'         => 'publish',
-            'menu_order'     => 0,
-            'type'           => 'nav_menu_item',
-            'comment_status' => 'closed',
-        ));
-
-        // We need to update this information.
-        $menuLink->guid = site_url('content/{0}', $menuLink->id);
-
-        $menuLink->name = Post::uniqueName($name);
-
-        $menuLink->save();
-
-        // Handle the Metadata.
-        $menuLink->saveMeta(array(
-            'menu_item_type'             => 'custom',
-            'menu_item_menu_item_parent' => 0,
-            'menu_item_object'           => $type,
-            'menu_item_object_id'        => $post->id,
-            'menu_item_target'           => null,
-            'menu_item_url'              => $url,
-        ));
-
-        $menuLink->taxonomies()->attach($menu);
     }
 
     public function update(Request $request, $menuId, $itemId)

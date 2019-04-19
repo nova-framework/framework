@@ -109,7 +109,11 @@ class MenuItems extends BaseController
             return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
-        $this->createMenuItems($request, $menu, $mode);
+        $menuItems = $this->createMenuItems($request, $menu, $mode);
+
+        if ($menuItems->isEmpty()) {
+            return Redirect::back()->with('warning', __d('content', 'No Menu Item(s) was created.'));
+        }
 
         $menu->updateCount();
 
@@ -180,6 +184,11 @@ class MenuItems extends BaseController
         ));
 
         $menuLink->taxonomies()->attach($menu);
+
+        //
+        $models = array($menuLink);
+
+        return $menuLink->newCollection($models);
     }
 
     protected function createPostLinks(Request $request, Menu $menu, User $authUser)
@@ -222,6 +231,8 @@ class MenuItems extends BaseController
 
             $menuLink->taxonomies()->attach($menu);
         });
+
+        return $posts;
     }
 
     protected function createTaxonomyLinks(Request $request, Menu $menu, User $authUser)
@@ -265,6 +276,8 @@ class MenuItems extends BaseController
 
             $menuLink->taxonomies()->attach($menu);
         });
+
+        return $taxonomies;
     }
 
     public function update(Request $request, $menuId, $itemId)

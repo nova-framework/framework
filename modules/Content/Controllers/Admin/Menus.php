@@ -35,10 +35,14 @@ class Menus extends BaseController
             'count'       => 0,
         ));
 
+        $name = $request->input('name');
+
+        $slug = Term::uniqueSlug($name, 'nav_menu');
+
         $term = Term::create(array(
             'id'     => 2,
-            'name'   => $name = $request->input('name'),
-            'slug'   => Term::uniqueSlug($name, 'nav_menu'),
+            'name'   => $name,
+            'slug'   => $slug,
             'group'  => 0,
         ));
 
@@ -68,7 +72,7 @@ class Menus extends BaseController
         // Update the Term.
         $term->name = $name = $request->input('name');
 
-        $term->slug = Term::uniqueSlug($name, 'nav_menu');
+        $term->slug = Term::uniqueSlug($name, 'nav_menu', $menu->id);
 
         $term->save();
 

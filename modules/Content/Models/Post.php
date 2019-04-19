@@ -408,12 +408,14 @@ class Post extends Model
 
         $count = 0;
 
-        $segments = explode('-', $slug);
+        if (count($segments = explode('-', $slug)) > 1) {
+            $last = end($segments);
 
-        if ((count($segments) > 1) && is_integer(end($segments))) {
-            $count = (int) array_pop($segments);
+            if (is_integer($last)) {
+                $count = (int) array_pop($segments);
 
-            $slug = implode('-', $segments);
+                $slug = implode('-', $segments);
+            }
         }
 
         do {

@@ -49,32 +49,43 @@ class Term extends Model
         return $this->hasOne('Modules\Content\Models\Taxonomy', 'term_id');
     }
 
-    public static function uniqueSlug($name, $taxonomy)
+    public static function uniqueSlug($name, $taxonomy, $id = null)
     {
-        $count = 0;
-
-        $segments = explode('-', Str::slug($name));
-
-        if ((count($segments) > 1) && is_integer(end($segments))) {
-            $count = (int) array_pop($segments);
-        }
-
-        $name = implode('-', $segments);
-
-        // Compute an unique slug.
-        $slugs = static::whereHas('taxonomy', function ($query) use ($taxonomy)
+        $query = static::whereHas('taxonomy', function ($query) use ($taxonomy)
         {
             $query->where('taxonomy', $taxonomy);
+        });
 
-        })->lists('slug');
+        if (! is_null($id)) {
+            $query->where('id', '!=', (int) $id);
+        }
+
+        $slugs = $query->lists('slug');
+
+        if (! in_array($slug = Str::slug($name), $slugs)) {
+            // The slug is unique, then no further processing is required.
+            return $slug;
+        }
+
+        $count = 0;
+
+        if (count($segments = explode('-', $slug)) > 1) {
+            $last = end($segments);
+
+            if (is_integer($last)) {
+                $count = (int) array_pop($segments);
+
+                $slug = implode('-', $segments);
+            }
+        }
 
         do {
-            $slug = ($count === 0) ? $name : $name .'-' .$count;
+            $value = ($count === 0) ? $slug : $slug .'-' .$count;
 
             $count++;
+        }
+        while (in_array($value, $slugs));
 
-        } while (in_array($slug, $slugs));
-
-        return $slug;
+        return $value;
     }
 }

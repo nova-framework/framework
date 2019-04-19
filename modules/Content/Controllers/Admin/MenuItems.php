@@ -185,7 +185,7 @@ class MenuItems extends BaseController
 
         $menuLink->taxonomies()->attach($menu);
 
-        //
+        // To match the behavior of other methods, we will return a Collection of Menu Links.
         $models = array($menuLink);
 
         return $menuLink->newCollection($models);

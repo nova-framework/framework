@@ -122,7 +122,7 @@ class MenuItems extends BaseController
         }
 
         // Handle the custom links addition.
-        else {
+        else if ($mode == 'custom') {
             $this->createCustomLink($request, $taxonomy, $authUser);
         }
 

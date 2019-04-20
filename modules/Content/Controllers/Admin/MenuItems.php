@@ -128,12 +128,12 @@ class MenuItems extends BaseController
         $authUser = Auth::user();
 
         if ($mode == 'custom') {
-            // Here we should validate the custom links.
+            // Here we will validate the custom links.
 
             return $this->createCustomLink($request, $taxonomy, $authUser);
         }
 
-        // Here we should validate the posts and taxonomies.
+        // Here we will validate the posts and taxonomies.
 
         if ($mode == 'posts') {
             return $this->createPostLinks($request, $taxonomy, $authUser);

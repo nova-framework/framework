@@ -10,17 +10,47 @@ use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
+use Nova\Support\Facades\Validator;
+use Nova\Support\Arr;
 
 use Modules\Content\Models\Menu;
 use Modules\Content\Models\MenuItem;
 use Modules\Content\Models\Post;
 use Modules\Content\Models\Taxonomy;
 use Modules\Content\Models\Term;
+use Modules\Content\Support\Facades\PostType;
+use Modules\Content\Support\Facades\TaxonomyType;
 use Modules\Platform\Controllers\Admin\BaseController;
+
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 
 class MenuItems extends BaseController
 {
+
+    protected function validator(array $data)
+    {
+        $rules = array(
+            'link' => 'required|valid_text',
+            'name' => 'required|valid_text',
+        );
+
+        $messages = array(
+            'valid_text' => __d('content', 'The :attribute field is not a valid text.'),
+        );
+
+        // Add the custom Validation Rule commands.
+        Validator::extend('valid_text', function($attribute, $value, $parameters)
+        {
+            return strip_tags($value) == $value;
+        });
+
+        return Validator::make($data, $rules, $messages, array(
+            'link'  => __d('content', 'URL'),
+            'name'  => __d('content', 'Name'),
+            'local' => __d('content', 'Local URI')
+        ));
+    }
 
     public function index($id)
     {
@@ -34,6 +64,7 @@ class MenuItems extends BaseController
         }
 
         $pages = $this->generatePostsListing('page');
+
         $posts = $this->generatePostsListing('post');
 
         $categories = $this->generateTaxonomiesListing('category');
@@ -58,7 +89,7 @@ class MenuItems extends BaseController
         }
 
         foreach ($posts as $post) {
-            $result .= '<div class="checkbox" style="padding-left: ' .(($level > 0) ? ($level * 25) .'px' : '') .'"><label><input class="' .$type .'-checkbox" name="' .$type .'[]" value="' .$post->id .'" type="checkbox">&nbsp;&nbsp;' .$post->title .'</label></div>';
+            $result .= '<div class="checkbox" style="padding-left: ' .(($level > 0) ? ($level * 25) .'px' : '') .'"><label><input class="' .$type .'-checkbox" name="items[]" value="' .$post->id .'" type="checkbox">&nbsp;&nbsp;' .$post->title .'</label></div>';
 
             // Process the children.
             $children = $post->children()
@@ -85,7 +116,7 @@ class MenuItems extends BaseController
         }
 
         foreach ($taxonomies as $taxonomy) {
-            $result .= '<div class="checkbox" style="padding-left: ' .(($level > 0) ? ($level * 25) .'px' : '') .'"><label><input class="' .$type .'-checkbox" name="' .$type .'[]" value="' .$taxonomy->id .'" type="checkbox">&nbsp;&nbsp;' .$taxonomy->name .'</label></div>';
+            $result .= '<div class="checkbox" style="padding-left: ' .(($level > 0) ? ($level * 25) .'px' : '') .'"><label><input class="' .$type .'-checkbox" name="items[]" value="' .$taxonomy->id .'" type="checkbox">&nbsp;&nbsp;' .$taxonomy->name .'</label></div>';
 
             // Process the children.
             $children = $taxonomy->children()->where('taxonomy', $type)->get();
@@ -109,9 +140,16 @@ class MenuItems extends BaseController
             return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
-        $menuItems = $this->createMenuItems($request, $menu, $mode);
+        $result = $this->createMenuItems($request, $menu, $mode);
 
-        if ($menuItems->isEmpty()) {
+        if ($result instanceof SymfonyResponse) {
+            // Most likelly there was validation errors.
+
+            return $result;
+        }
+
+        // No errors yet on processing, so we will check the created items count.
+        else if ($result->isEmpty()) {
             return Redirect::back()->with('warning', __d('content', 'No Menu Item(s) was created.'));
         }
 
@@ -127,34 +165,34 @@ class MenuItems extends BaseController
     {
         $authUser = Auth::user();
 
-        if ($mode == 'custom') {
-            // Here we will validate the custom links.
-
-            return $this->createCustomLink($request, $taxonomy, $authUser);
-        }
-
-        // Here we will validate the posts and taxonomies.
-
         if ($mode == 'posts') {
             return $this->createPostLinks($request, $taxonomy, $authUser);
         }
 
-        return $this->createTaxonomyLinks($request, $taxonomy, $authUser);
-    }
-
-    protected function createCustomLink(Request $request, Menu $menu, User $authUser)
-    {
-        $type = 'custom';
-
         //
-        $url = $request->input('link');
+        else if ($mode == 'posts') {
+            return $this->createTaxonomyLinks($request, $taxonomy, $authUser);
+        }
 
-        if ($request->has('local')) {
+        // The following logic will create a custom link.
+        else if ($mode != 'custom') {
+            return Redirect::back()->with('danger', __d('content', 'Invalid storing mode [{0}]', $mode));
+        }
+
+        $validator = $this->validator($input = $request->all());
+
+        if ($validator->fails()) {
+            return Redirect::back()->withInput()->withErrors($validator->errors());
+        }
+
+        $url = Arr::get($input, 'link');
+
+        if (Arr::has($input, 'local')) {
             // The link field contains a local URI, not an absolute URL.
             $url = site_url($url);
         }
 
-        $name = $request->input('name');
+        $name = Arr::get($input, 'name');
 
         // Create a Menu Link instance.
         $menuLink = Post::create(array(
@@ -177,7 +215,7 @@ class MenuItems extends BaseController
         $menuLink->saveMeta(array(
             'menu_item_type'             => 'custom',
             'menu_item_menu_item_parent' => 0,
-            'menu_item_object'           => $type,
+            'menu_item_object'           => 'custom',
             'menu_item_object_id'        => $post->id,
             'menu_item_target'           => null,
             'menu_item_url'              => $url,
@@ -193,14 +231,26 @@ class MenuItems extends BaseController
 
     protected function createPostLinks(Request $request, Menu $menu, User $authUser)
     {
-        $ids = static::filterModelIds(
-            $request->input($type, array())
+        $rules = array(
+            // The type contains a Post type.
+            'type'  => 'required|in:' . implode(',', PostType::getNames()),
+
+            // The items[] should contain an array of valid Post IDs.
+            'items' => 'required|array|exists:posts,id',
         );
 
-        $type = $request->input('type', 'post');
+        $validator = Validator::make($input = $request->all(), $rules, array(), array(
+            'type'  => __d('content', 'Post Type'),
+            'items' => __d('content', 'Posts')
+        ));
 
-        //
-        $posts = Post::where('type', $type)->whereIn('id', $ids);
+        if ($validator->fails()) {
+            return Redirect::back()->withInput()->withErrors($validator->errors());
+        }
+
+        $type = Arr::get($input, 'type', 'post');
+
+        $posts = Post::where('type', $type)->whereIn('id', Arr::get($input, 'items', array()));
 
         return $posts->map(function ($post) use ($type, $menu, $authUser)
         {
@@ -237,14 +287,26 @@ class MenuItems extends BaseController
 
     protected function createTaxonomyLinks(Request $request, Menu $menu, User $authUser)
     {
-        $ids = static::filterModelIds(
-            $request->input($type, array())
+        $rules = array(
+            // The type contains a Taxonomy type.
+            'type'  => 'required|in:' . implode(',', TaxonomyType::getNames()),
+
+            // The items[] contains an array of Taxonomies IDs.
+            'items' => 'required|array|exists:taxonomies,id',
         );
 
-        $type = $request->input('type', 'category');
+        $validator = Validator::make($input = $request->all(), $rules, array(), array(
+            'type'  => __d('content', 'Taxonomy Type'),
+            'items' => __d('content', 'Taxonomies')
+        ));
 
-        //
-        $taxonomies = Taxonomy::where('taxonomy', $type)->whereIn('id', $ids);
+        if ($validator->fails()) {
+            return Redirect::back()->withInput()->withErrors($validator->errors());
+        }
+
+        $type = Arr::get($input, 'type', 'category');
+
+        $taxonomies = Taxonomy::where('taxonomy', $type)->whereIn('id', Arr::get($input, 'items', array()));
 
         return $taxonomies->map(function ($taxonomy) use ($type, $menu, $authUser)
         {
@@ -381,19 +443,5 @@ class MenuItems extends BaseController
                 }
             }
         }
-    }
-
-    protected static function filterModelIds($ids)
-    {
-        $items = array_map(function ($value)
-        {
-            return intval($value);
-
-        }, $ids);
-
-        return array_filter(array_unique($items, SORT_NUMERIC), function ($value)
-        {
-            return ($value > 0);
-        });
     }
 }

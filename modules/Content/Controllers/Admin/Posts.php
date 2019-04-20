@@ -27,8 +27,6 @@ use Modules\Content\Support\Facades\TaxonomyType;
 use Modules\Platform\Controllers\Admin\BaseController;
 use Modules\Users\Models\User;
 
-use Faker\Factory as FakerFactory;
-
 
 class Posts extends BaseController
 {

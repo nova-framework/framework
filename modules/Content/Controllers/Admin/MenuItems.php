@@ -143,12 +143,10 @@ class MenuItems extends BaseController
         $result = $this->createMenuItems($request, $menu, $mode);
 
         if ($result instanceof SymfonyResponse) {
-            // Most likelly there was validation errors.
-
             return $result;
         }
 
-        // No errors yet on processing, so we will check the created items count.
+        // There are no errors on processing, so next we will check the created items count.
         else if ($result->isEmpty()) {
             return Redirect::back()->with('warning', __d('content', 'No Menu Item(s) was created.'));
         }

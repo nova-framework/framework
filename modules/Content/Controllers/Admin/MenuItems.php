@@ -202,7 +202,7 @@ class MenuItems extends BaseController
         //
         $posts = Post::where('type', $type)->whereIn('id', $ids);
 
-        $posts->each(function ($post) use ($type, $menu, $authUser)
+        return $posts->map(function ($post) use ($type, $menu, $authUser)
         {
             $menuLink = Post::create(array(
                 'author_id'      => $authUser->id,
@@ -230,9 +230,9 @@ class MenuItems extends BaseController
             ));
 
             $menuLink->taxonomies()->attach($menu);
-        });
 
-        return $posts;
+            return $menuLink;
+        });
     }
 
     protected function createTaxonomyLinks(Request $request, Menu $menu, User $authUser)
@@ -246,7 +246,7 @@ class MenuItems extends BaseController
         //
         $taxonomies = Taxonomy::where('taxonomy', $type)->whereIn('id', $ids);
 
-        $taxonomies->each(function ($taxonomy) use ($type, $menu, $authUser)
+        return $taxonomies->map(function ($taxonomy) use ($type, $menu, $authUser)
         {
             $menuLink = Post::create(array(
                 'author_id'      => $authUser->id,
@@ -275,9 +275,9 @@ class MenuItems extends BaseController
             ));
 
             $menuLink->taxonomies()->attach($menu);
-        });
 
-        return $taxonomies;
+            return $menuLink;
+        });
     }
 
     public function update(Request $request, $menuId, $itemId)

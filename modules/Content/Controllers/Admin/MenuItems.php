@@ -180,8 +180,9 @@ class MenuItems extends BaseController
 
         $url = Arr::get($input, 'link');
 
-        if (Arr::has($input, 'local')) {
-            // The link field contains a local URI, not an absolute URL.
+        $local = Arr::has($input, 'local', false); // Whether or not the link field contains a local URI.
+
+        if ($local) {
             $url = site_url($url);
         }
 

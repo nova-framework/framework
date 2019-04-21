@@ -146,11 +146,6 @@ class MenuItems extends BaseController
             return $result;
         }
 
-        // There are no errors on processing, so next we will check the created items count.
-        else if ($result->isEmpty()) {
-            return Redirect::back()->with('warning', __d('content', 'No Menu Item(s) was created.'));
-        }
-
         $menu->updateCount();
 
         // Invalidate the cached menu data.
@@ -172,7 +167,7 @@ class MenuItems extends BaseController
             return $this->createTaxonomyLinks($request, $taxonomy, $authUser);
         }
 
-        // The following logic will create a custom link.
+        // The logic bellow will create a custom link.
         else if ($mode != 'custom') {
             return Redirect::back()->with('danger', __d('content', 'Invalid storing mode [{0}]', $mode));
         }
@@ -221,9 +216,9 @@ class MenuItems extends BaseController
 
         $menuLink->taxonomies()->attach($menu);
 
-        // We will return a Collection of models, just like the other storing methods.
+        // We will return a Collection of Models, just like the other storing methods.
         return $menuLink->newCollection(
-            (array) $menuLink
+            array($menuLink)
         );
     }
 
@@ -248,7 +243,10 @@ class MenuItems extends BaseController
 
         $type = Arr::get($input, 'type', 'post');
 
-        $posts = Post::where('type', $type)->whereIn('id', Arr::get($input, 'items', array()));
+        $items = Arr::get($input, 'items', array());
+
+        //
+        $posts = Post::where('type', $type)->whereIn('id', $items);
 
         return $posts->map(function ($post) use ($type, $menu, $authUser)
         {
@@ -304,7 +302,10 @@ class MenuItems extends BaseController
 
         $type = Arr::get($input, 'type', 'category');
 
-        $taxonomies = Taxonomy::where('taxonomy', $type)->whereIn('id', Arr::get($input, 'items', array()));
+        $items = Arr::get($input, 'items', array());
+
+        //
+        $taxonomies = Taxonomy::where('taxonomy', $type)->whereIn('id', $items);
 
         return $taxonomies->map(function ($taxonomy) use ($type, $menu, $authUser)
         {

@@ -222,11 +222,6 @@ class MenuItems extends BaseController
         ));
 
         $menuLink->taxonomies()->attach($menu);
-
-        // We will return a Collection of Models, just like the other storing methods.
-        return $menuLink->newCollection(
-            array($menuLink)
-        );
     }
 
     protected function createPostLinks(Request $request, Menu $menu, User $authUser)
@@ -255,7 +250,7 @@ class MenuItems extends BaseController
         //
         $posts = Post::where('type', $type)->whereIn('id', $items);
 
-        return $posts->map(function ($post) use ($type, $menu, $authUser)
+        $posts->each(function ($post) use ($type, $menu, $authUser)
         {
             $menuLink = Post::create(array(
                 'author_id'      => $authUser->id,
@@ -283,8 +278,6 @@ class MenuItems extends BaseController
             ));
 
             $menuLink->taxonomies()->attach($menu);
-
-            return $menuLink;
         });
     }
 
@@ -314,7 +307,7 @@ class MenuItems extends BaseController
         //
         $taxonomies = Taxonomy::where('taxonomy', $type)->whereIn('id', $items);
 
-        return $taxonomies->map(function ($taxonomy) use ($type, $menu, $authUser)
+        $taxonomies->each(function ($taxonomy) use ($type, $menu, $authUser)
         {
             $menuLink = Post::create(array(
                 'author_id'      => $authUser->id,
@@ -343,8 +336,6 @@ class MenuItems extends BaseController
             ));
 
             $menuLink->taxonomies()->attach($menu);
-
-            return $menuLink;
         });
     }
 

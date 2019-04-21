@@ -28,12 +28,10 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 class MenuItems extends BaseController
 {
 
-    protected function validator(array $data)
+    protected function validator(array $data, $local)
     {
-        $linkRules = Arr::has($data, 'local') ? 'required|valid_uri' : 'required|url';
-
         $rules = array(
-            'link' => $linkRules,
+            'link' => 'required|' . ($local ? 'valid_uri' : 'url'),
             'name' => 'required|valid_text',
         );
 
@@ -182,7 +180,9 @@ class MenuItems extends BaseController
             return Redirect::back()->with('danger', __d('content', 'Invalid storing mode [{0}]', $mode));
         }
 
-        $validator = $this->validator($input = $request->all());
+        $validator = $this->validator(
+            $input = $request->all(), $local = $request->has('local')
+        );
 
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withErrors($validator->errors());
@@ -191,8 +191,6 @@ class MenuItems extends BaseController
         $name = Arr::get($input, 'name');
 
         $url = Arr::get($input, 'link');
-
-        $local = Arr::has($input, 'local'); // Whether or not the link field contains a local URI.
 
         // Create a Menu Link instance.
         $menuLink = Post::create(array(

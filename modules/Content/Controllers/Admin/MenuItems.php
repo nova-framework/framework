@@ -163,7 +163,7 @@ class MenuItems extends BaseController
         }
 
         //
-        else if ($mode == 'posts') {
+        else if ($mode == 'taxonomies') {
             return $this->createTaxonomyLinks($request, $taxonomy, $authUser);
         }
 

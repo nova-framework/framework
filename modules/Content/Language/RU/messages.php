@@ -174,7 +174,6 @@ return array (
   'New comment submitted' => 'Новый комментарий',
   'No Comments' => 'Нет комментариев',
   'No Files' => 'Нет файлов',
-  'No Menu Item(s) was created.' => '',
   'No attachments found' => '',
   'No blocks found' => 'Блоков не найдено',
   'No comment has been added yet!' => 'Комментариев еще нет!',

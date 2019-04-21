@@ -174,7 +174,6 @@ return array (
   'New comment submitted' => '',
   'No Comments' => '',
   'No Files' => '',
-  'No Menu Item(s) was created.' => '',
   'No attachments found' => '',
   'No blocks found' => '',
   'No comment has been added yet!' => '',

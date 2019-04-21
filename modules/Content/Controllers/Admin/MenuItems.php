@@ -30,17 +30,25 @@ class MenuItems extends BaseController
 
     protected function validator(array $data)
     {
+        $linkRules = Arr::has($data, 'local') ? 'required|valid_uri' : 'required|url';
+
         $rules = array(
-            'link' => 'required|valid_text',
+            'link' => $linkRules,
             'name' => 'required|valid_text',
         );
 
         $messages = array(
-            'valid_text' => __d('content', 'The :attribute field is not a valid text.'),
+            'valid_uri'  => __d('content', 'The :attribute field is not a valid URI.'),
+            'valid_name' => __d('content', 'The :attribute field is not a valid name.'),
         );
 
         // Add the custom Validation Rule commands.
-        Validator::extend('valid_text', function($attribute, $value, $parameters)
+        Validator::extend('valid_uri', function ($attribute, $value, $parameters)
+        {
+            return preg_match('/^[\pL\pM\pN\/_-]+$/u', $value);
+        });
+
+        Validator::extend('valid_name', function ($attribute, $value, $parameters)
         {
             return strip_tags($value) == $value;
         });
@@ -48,7 +56,7 @@ class MenuItems extends BaseController
         return Validator::make($data, $rules, $messages, array(
             'link'  => __d('content', 'URL'),
             'name'  => __d('content', 'Name'),
-            'local' => __d('content', 'Local URI')
+            'local' => __d('content', 'Local')
         ));
     }
 

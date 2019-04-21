@@ -50,7 +50,7 @@ class MenuItems extends BaseController
 
         Validator::extend('valid_name', function ($attribute, $value, $parameters)
         {
-            return strip_tags($value) == $value;
+            return (strip_tags($value) == $value);
         });
 
         return Validator::make($data, $rules, $messages, array(

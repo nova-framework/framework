@@ -178,15 +178,11 @@ class MenuItems extends BaseController
             return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
+        $name = Arr::get($input, 'name');
+
         $url = Arr::get($input, 'link');
 
-        $local = Arr::has($input, 'local', false); // Whether or not the link field contains a local URI.
-
-        if ($local) {
-            $url = site_url($url);
-        }
-
-        $name = Arr::get($input, 'name');
+        $local = Arr::has($input, 'local'); // Whether or not the link field contains a local URI.
 
         // Create a Menu Link instance.
         $menuLink = Post::create(array(
@@ -212,7 +208,7 @@ class MenuItems extends BaseController
             'menu_item_object'           => 'custom',
             'menu_item_object_id'        => $post->id,
             'menu_item_target'           => null,
-            'menu_item_url'              => $url,
+            'menu_item_url'              => $local ? site_url($url) : $url,
         ));
 
         $menuLink->taxonomies()->attach($menu);

@@ -175,7 +175,9 @@ class MenuItems extends BaseController
             return $this->createTaxonomyLinks($request, $taxonomy, $authUser);
         }
 
-        // The logic bellow will create a custom link.
+        //
+        // Handle the custom links.
+
         else if ($mode != 'custom') {
             return Redirect::back()->with('danger', __d('content', 'Invalid storing mode [{0}]', $mode));
         }

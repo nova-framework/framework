@@ -113,9 +113,9 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     Route::post('taxonomies/{id}',         'Taxonomies@update');
     Route::post('taxonomies/{id}/destroy', 'Taxonomies@destroy');
 
-    // The Taxonomies listings.
-    Route::get('taxonomies/{type}', 'Taxonomies@index')->where('type', Taxonomies::routePattern(true));
-
     // For AJAX.
     Route::get('taxonomies/{id}/{parentId}', 'Taxonomies@data')->where('parentId', '\d+');
+
+    // The Taxonomies listings.
+    Route::get('taxonomies/{type}', 'Taxonomies@index')->where('type', Taxonomies::routePattern(true));
 });

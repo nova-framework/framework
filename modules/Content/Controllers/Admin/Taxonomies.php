@@ -246,16 +246,18 @@ class Taxonomies extends BaseController
         $result = '';
 
         foreach ($taxonomies as $taxonomy) {
-            $result .= View::fetch('Modules/Content::Partials/TaxonomyCheckBox', compact('type', 'taxonomy', 'level', 'selected'));
+            $data = compact('type', 'taxonomy', 'level', 'selected');
+
+            $result .= View::make('Modules/Content::Partials/TaxonomyCheckBox', $data)->render();
 
             // Process the children.
             $taxonomy->load('children');
 
-            if (! $taxonomy->children->isEmpty()) {
-                $level++;
-
-                $result .= $this->generateTaxonomyCheckBoxes($type, $selected, $taxonomy->children, $level);
+            if ($taxonomy->children->isEmpty()) {
+                continue;
             }
+
+            $result .= $this->generateTaxonomyCheckBoxes($type, $selected, $taxonomy->children, $level + 1);
         }
 
         return $result;
@@ -274,16 +276,18 @@ class Taxonomies extends BaseController
                 continue;
             }
 
-            $result .= View::fetch('Modules/Content::Partials/TaxonomySelectOption', compact('taxonomy', 'level', 'parentId'));
+            $data = compact('taxonomy', 'level', 'parentId');
+
+            $result .= View::make('Modules/Content::Partials/TaxonomySelectOption', $data)->render();
 
             // Process the children.
             $taxonomy->load('children');
 
-            if (! $taxonomy->children->isEmpty()) {
-                $level++;
-
-                $result .= $this->generateTaxonomySelectOptions($type, $currentId, $parentId, $taxonomy->children, $level);
+            if ($taxonomy->children->isEmpty()) {
+                continue;
             }
+
+            $result .= $this->generateTaxonomySelectOptions($type, $currentId, $parentId, $taxonomy->children, $level + 1);
         }
 
         return $result;

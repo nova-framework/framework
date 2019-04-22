@@ -104,9 +104,7 @@ class MenuItems extends BaseController
                 ->get();
 
             if (! $children->isEmpty()) {
-                $level++;
-
-                $result .= $this->generatePostsListing($type, $children, $level);
+                $result .= $this->generatePostsListing($type, $children, $level + 1);
             }
         }
 
@@ -128,9 +126,7 @@ class MenuItems extends BaseController
             $children = $taxonomy->children()->where('taxonomy', $type)->get();
 
             if (! $children->isEmpty()) {
-                $level++;
-
-                $result .= $this->generateTaxonomiesListing($type, $children, $level);
+                $result .= $this->generateTaxonomiesListing($type, $children, $level + 1);
             }
         }
 

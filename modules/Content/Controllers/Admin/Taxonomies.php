@@ -268,9 +268,10 @@ class Taxonomies extends BaseController
     {
         $view = 'Modules/Content::Partials/TaxonomySelectOption';
 
-        if ($level === 0) {
-            $taxonomy = null;
+        //
+        $taxonomy = null;
 
+        if ($level === 0) {
             $result = View::make($view, compact('taxonomy', 'level', 'parentId'))->render();
         } else {
             $result = '';

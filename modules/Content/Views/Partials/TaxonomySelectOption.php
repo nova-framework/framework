@@ -12,4 +12,3 @@ if (! is_null($taxonomy)) {
 <option value="<?= $id; ?>" <?= ($id == $parentId) ? ' selected="selected"' : ''; ?>>
     <?= trim(str_repeat('--', $level) .' ' .$name); ?>
 </option>
-

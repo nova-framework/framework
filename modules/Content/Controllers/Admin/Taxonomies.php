@@ -243,12 +243,13 @@ class Taxonomies extends BaseController
 
     protected function generateTaxonomyCheckBoxes($type, array $selected = array(), $taxonomies = null, $level = 0)
     {
+        $view = 'Modules/Content::Partials/TaxonomyCheckBox';
+
+        //
         $result = '';
 
         foreach ($taxonomies as $taxonomy) {
-            $data = compact('type', 'taxonomy', 'level', 'selected');
-
-            $result .= View::make('Modules/Content::Partials/TaxonomyCheckBox', $data)->render();
+            $result .= View::make($view, compact('type', 'taxonomy', 'level', 'selected'))->render();
 
             // Process the children.
             $taxonomy->load('children');
@@ -265,8 +266,12 @@ class Taxonomies extends BaseController
 
     protected function generateTaxonomySelectOptions($type, $currentId, $parentId, $taxonomies, $level = 0)
     {
+        $view = 'Modules/Content::Partials/TaxonomySelectOption';
+
         if ($level === 0) {
-            $result = '<option value="0">' .__d('content', 'None') .'</option>' ."\n";
+            $taxonomy = null;
+
+            $result = View::make($view, compact('taxonomy', 'level', 'parentId'))->render();
         } else {
             $result = '';
         }
@@ -276,9 +281,7 @@ class Taxonomies extends BaseController
                 continue;
             }
 
-            $data = compact('taxonomy', 'level', 'parentId');
-
-            $result .= View::make('Modules/Content::Partials/TaxonomySelectOption', $data)->render();
+            $result .= View::make($view, compact('taxonomy', 'level', 'parentId'))->render();
 
             // Process the children.
             $taxonomy->load('children');

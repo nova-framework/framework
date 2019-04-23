@@ -37,7 +37,7 @@ class FlushTagFromFileCache implements ShouldQueueInterface
      */
     public function handle()
     {
-        $cache = Cache::driver('tagged_file');
+        $cache = Cache::driver('taggedFile');
 
         foreach ($this->tagIds as $id) {
             $cache->flushOldTag($id);

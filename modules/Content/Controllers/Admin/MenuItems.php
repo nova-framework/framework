@@ -70,7 +70,7 @@ class MenuItems extends BaseController
             return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
-        $blocks = array_map(function ($postType) use ($menu)
+        $posts = array_map(function ($postType) use ($menu)
         {
             $type = $postType->name();
 
@@ -89,7 +89,7 @@ class MenuItems extends BaseController
 
         }));
 
-        $blocks = array_merge($blocks, array_map(function ($taxonomyType) use ($menu)
+        $taxonomies = array_map(function ($taxonomyType) use ($menu)
         {
             $type = $taxonomyType->name();
 
@@ -106,12 +106,12 @@ class MenuItems extends BaseController
         {
             return $type->isPublic() && ! $type->isHidden();
 
-        })));
+        }));
 
         return $this->createView()
             ->shares('title', __d('content', 'Manage a Menu'))
             ->with('menu', $menu)
-            ->with('blocks', implode("\n", $blocks));
+            ->with('blocks', array_merge($posts, $taxonomies));
     }
 
     protected function generatePostsListing($type, $posts, $level = 0)

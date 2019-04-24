@@ -17,7 +17,7 @@
 
 <div class="col-md-4">
 
-<?= $blocks; ?>
+<?= implode("\n", $blocks); ?>
 
 <form id="page-form" action="<?= site_url('admin/menus/{0}/custom', $menu->id); ?>" method='POST' role="form">
 

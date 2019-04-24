@@ -65,7 +65,7 @@
     <div class="box-body" style="min-height: 550px;">
         <div class="dd">
             <?php $items = $menu->items->where('parent_id', 0); ?>
-            <?= View::fetch('Modules/Content::Partials/MenuItemsNestable', array('menu' => $menu, 'items' => $items)); ?>
+            <?= View::make('Modules/Content::Partials/Admin/MenuItems/MenuItemsNestable', compact('menu', 'items'))->render(); ?>
         </div>
     </div>
     <div class="box-footer">

@@ -1,12 +1,3 @@
-<?php
-
-if (! is_null($taxonomy)) {
-    $id   = $taxonomy->id;
-    $name = $taxonomy->name;
-} else {
-    $id   = 0;
-    $name = __d('content', 'None');
-}
-
-?>
-<option value="<?= $id; ?>"<?= ($id == $parentId) ? ' selected="selected"' : ''; ?>><?= trim(str_repeat('--', $level) .' ' .$name); ?></option>
+<?php $padding = str_repeat('--', $level); ?>
+<?php $name = isset($taxonomy) ? e($taxonomy->name) : __d('content', 'None'); ?>
+<option value="<?= $itemId = isset($taxonomy) ? $taxonomy->id : 0; ?>"<?= ($itemId == $parentId) ? ' selected="selected"' : ''; ?>><?= trim($padding .' ' .$name); ?></option>

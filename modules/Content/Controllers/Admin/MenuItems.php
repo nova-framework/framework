@@ -206,7 +206,7 @@ class MenuItems extends BaseController
             $request->get('items')
         );
 
-        $this->updateOrder($items, 0);
+        $this->updateMenuItemsOrder($items, 0);
 
         // Invalidate the cached menu data.
         Cache::forget('content.menus.' .$taxonomy->slug);
@@ -214,7 +214,7 @@ class MenuItems extends BaseController
         return Redirect::back()->with('success', __d('content', 'The Menu Items order was successfully updated.'));
     }
 
-    protected function updateOrder(array $items, $parentId = 0)
+    protected function updateMenuItemsOrder(array $items, $parentId = 0)
     {
         foreach ($items as $order => $item) {
             $menuItem = MenuItem::find($item->id);
@@ -227,7 +227,7 @@ class MenuItems extends BaseController
                 $menuItem->save();
 
                 if (isset($item->children) && ! empty($item->children)) {
-                    $this->updateOrder($item->children, $menuItem->id);
+                    $this->updateMenuItemsOrder($item->children, $menuItem->id);
                 }
             }
         }

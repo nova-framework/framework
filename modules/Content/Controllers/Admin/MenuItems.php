@@ -98,78 +98,6 @@ class MenuItems extends BaseController
             ->with('blocks', array_merge($posts, $taxonomies));
     }
 
-    protected function generatePostsForm(ContentType $postType, Menu $menu)
-    {
-        $type = $postType->name();
-
-        $posts = Post::where('type', $type)->where('parent_id', 0)->whereIn('status', array('publish', 'password'))->get();
-
-        $items = $this->generatePostsListing($type, $posts);
-
-        //
-        $data = compact('menu', 'type', 'items', 'postType');
-
-        return View::make('Modules/Content::Partials/Admin/MenuItems/PostsForm', $data)->render();
-    }
-
-    protected function generatePostsListing($type, Collection $posts, $level = 0)
-    {
-        $results = array_map(function ($post) use ($type, $level)
-        {
-            $data = compact('type', 'post', 'level');
-
-            $result = View::make('Modules/Content::Partials/Admin/MenuItems/PostCheckBox', $data)->render();
-
-            // Process the children.
-            $children = $post->children()->where('type', $type)->whereIn('status', array('publish', 'password'))->get();
-
-            if (! $children->isEmpty()) {
-                $result .= $this->generatePostsListing($type, $children, $level + 1);
-            }
-
-            return $result;
-
-        }, $posts->all());
-
-        return implode("\n", $results);
-    }
-
-    protected function generateTaxonomiesForm(ContentType $taxonomyType, Menu $menu)
-    {
-        $type = $taxonomyType->name();
-
-        $taxonomies = Taxonomy::where('taxonomy', $type)->where('parent_id', 0)->get();
-
-        $items = $this->generateTaxonomiesListing($type, $taxonomies);
-
-        //
-        $data = compact('menu', 'type', 'items', 'taxonomyType');
-
-        return View::make('Modules/Content::Partials/Admin/MenuItems/TaxonomiesForm', $data)->render();
-    }
-
-    protected function generateTaxonomiesListing($type, Collection $taxonomies, $level = 0)
-    {
-        $results = array_map(function ($taxonomy) use ($type, $level)
-        {
-            $data = compact('type', 'taxonomy', 'level');
-
-            $result = View::make('Modules/Content::Partials/Admin/MenuItems/TaxonomyCheckBox', $data)->render();
-
-            // Process the children.
-            $children = $taxonomy->children()->where('taxonomy', $type)->get();
-
-            if (! $children->isEmpty()) {
-                $result .= $this->generateTaxonomiesListing($type, $children, $level + 1);
-            }
-
-            return $result;
-
-        }, $taxonomies->all());
-
-        return implode("\n", $results);
-    }
-
     public function store(Request $request, $id, $mode)
     {
         try {
@@ -191,6 +119,105 @@ class MenuItems extends BaseController
         Cache::forget('content.menus.' .$menu->slug);
 
         return Redirect::back()->with('success', __d('content', 'The Menu Item(s) was successfully created.'));
+    }
+
+    public function update(Request $request, $menuId, $itemId)
+    {
+        $authUser = Auth::user();
+
+        try {
+            $taxonomy = Menu::findOrFail($menuId);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $menuId));
+        }
+
+        try {
+            $item = MenuItem::findOrFail($itemId);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->with('danger', __d('content', 'Menu Item not found: #{0}', $itemId));
+        }
+
+        $item->title = $request->input('name');
+
+        $item->save();
+
+        // Invalidate the cached menu data.
+        Cache::forget('content.menus.' .$taxonomy->slug);
+
+        return Redirect::back()->with('success', __d('content', 'The Menu Item was successfully updated.'));
+    }
+
+    public function destroy(Request $request, $menuId, $itemId)
+    {
+        $authUser = Auth::user();
+
+        try {
+            $taxonomy = Menu::findOrFail($menuId);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $menuId));
+        }
+
+        try {
+            $item = MenuItem::findOrFail($itemId);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->with('danger', __d('content', 'Menu Item not found: #{0}', $itemId));
+        }
+
+        $item->taxonomies()->detach($taxonomy);
+
+        $item->delete();
+
+        //
+        $taxonomy->updateCount();
+
+        // Invalidate the cached menu data.
+        Cache::forget('content.menus.' .$taxonomy->slug);
+
+        return Redirect::back()->with('success', __d('content', 'The Menu Item was successfully deleted.'));
+    }
+
+    public function order(Request $request, $id)
+    {
+        try {
+            $taxonomy = Menu::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
+        }
+
+        $items = json_decode(
+            $request->get('items')
+        );
+
+        $this->updateOrder($items, 0);
+
+        // Invalidate the cached menu data.
+        Cache::forget('content.menus.' .$taxonomy->slug);
+
+        return Redirect::back()->with('success', __d('content', 'The Menu Items order was successfully updated.'));
+    }
+
+    protected function updateOrder(array $items, $parentId = 0)
+    {
+        foreach ($items as $order => $item) {
+            $menuItem = MenuItem::find($item->id);
+
+            if (! is_null($menuItem)) {
+                $menuItem->parent_id = $parentId;
+
+                $menuItem->menu_order = $order;
+
+                $menuItem->save();
+
+                if (isset($item->children) && ! empty($item->children)) {
+                    $this->updateOrder($item->children, $menuItem->id);
+                }
+            }
+        }
     }
 
     protected function createMenuItems(Request $request, Menu $menu, $mode)
@@ -370,106 +397,75 @@ class MenuItems extends BaseController
         });
     }
 
-    public function update(Request $request, $menuId, $itemId)
+    protected function generatePostsForm(ContentType $postType, Menu $menu)
     {
-        $authUser = Auth::user();
+        $type = $postType->name();
 
-        try {
-            $taxonomy = Menu::findOrFail($menuId);
-        }
-        catch (ModelNotFoundException $e) {
-            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $menuId));
-        }
+        $posts = Post::where('type', $type)->where('parent_id', 0)->whereIn('status', array('publish', 'password'))->get();
 
-        try {
-            $item = MenuItem::findOrFail($itemId);
-        }
-        catch (ModelNotFoundException $e) {
-            return Redirect::back()->with('danger', __d('content', 'Menu Item not found: #{0}', $itemId));
-        }
-
-        $item->title = $request->input('name');
-
-        $item->save();
-
-        // Invalidate the cached menu data.
-        Cache::forget('content.menus.' .$taxonomy->slug);
-
-        return Redirect::back()->with('success', __d('content', 'The Menu Item was successfully updated.'));
-    }
-
-    public function destroy(Request $request, $menuId, $itemId)
-    {
-        $authUser = Auth::user();
-
-        try {
-            $taxonomy = Menu::findOrFail($menuId);
-        }
-        catch (ModelNotFoundException $e) {
-            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $menuId));
-        }
-
-        try {
-            $item = MenuItem::findOrFail($itemId);
-        }
-        catch (ModelNotFoundException $e) {
-            return Redirect::back()->with('danger', __d('content', 'Menu Item not found: #{0}', $itemId));
-        }
-
-        $item->taxonomies()->detach($taxonomy);
-
-        $item->delete();
+        $items = $this->generatePostsListing($type, $posts);
 
         //
-        $taxonomy->updateCount();
+        $data = compact('menu', 'type', 'items', 'postType');
 
-        // Invalidate the cached menu data.
-        Cache::forget('content.menus.' .$taxonomy->slug);
-
-        return Redirect::back()->with('success', __d('content', 'The Menu Item was successfully deleted.'));
+        return View::make('Modules/Content::Partials/Admin/MenuItems/PostsForm', $data)->render();
     }
 
-    public function order(Request $request, $id)
+    protected function generateTaxonomiesForm(ContentType $taxonomyType, Menu $menu)
     {
-        try {
-            $taxonomy = Menu::findOrFail($id);
-        }
-        catch (ModelNotFoundException $e) {
-            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
-        }
+        $type = $taxonomyType->name();
 
-        $items = json_decode(
-            $request->get('items')
-        );
+        $taxonomies = Taxonomy::where('taxonomy', $type)->where('parent_id', 0)->get();
 
-        $this->updateOrder($items, 0);
+        $items = $this->generateTaxonomiesListing($type, $taxonomies);
 
-        // Invalidate the cached menu data.
-        Cache::forget('content.menus.' .$taxonomy->slug);
+        //
+        $data = compact('menu', 'type', 'items', 'taxonomyType');
 
-        return Redirect::back()->with('success', __d('content', 'The Menu Items order was successfully updated.'));
+        return View::make('Modules/Content::Partials/Admin/MenuItems/TaxonomiesForm', $data)->render();
     }
 
-    /**
-     * Update the Items order in a Menu.
-     *
-     */
-    protected function updateOrder(array $items, $parentId = 0)
+    protected function generatePostsListing($type, Collection $posts, $level = 0)
     {
-        foreach ($items as $order => $item) {
-            $menuItem = MenuItem::find($item->id);
+        $results = array_map(function ($post) use ($type, $level)
+        {
+            $data = compact('type', 'post', 'level');
 
-            if (! is_null($menuItem)) {
-                $menuItem->parent_id = $parentId;
+            $result = View::make('Modules/Content::Partials/Admin/MenuItems/PostCheckBox', $data)->render();
 
-                $menuItem->menu_order = $order;
+            // Process the children.
+            $children = $post->children()->where('type', $type)->whereIn('status', array('publish', 'password'))->get();
 
-                $menuItem->save();
-
-                if (isset($item->children) && ! empty($item->children)) {
-                    $this->updateOrder($item->children, $menuItem->id);
-                }
+            if (! $children->isEmpty()) {
+                $result .= $this->generatePostsListing($type, $children, $level + 1);
             }
-        }
+
+            return $result;
+
+        }, $posts->all());
+
+        return implode("\n", $results);
+    }
+
+    protected function generateTaxonomiesListing($type, Collection $taxonomies, $level = 0)
+    {
+        $results = array_map(function ($taxonomy) use ($type, $level)
+        {
+            $data = compact('type', 'taxonomy', 'level');
+
+            $result = View::make('Modules/Content::Partials/Admin/MenuItems/TaxonomyCheckBox', $data)->render();
+
+            // Process the children.
+            $children = $taxonomy->children()->where('taxonomy', $type)->get();
+
+            if (! $children->isEmpty()) {
+                $result .= $this->generateTaxonomiesListing($type, $children, $level + 1);
+            }
+
+            return $result;
+
+        }, $taxonomies->all());
+
+        return implode("\n", $results);
     }
 }

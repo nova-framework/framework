@@ -202,11 +202,11 @@ class MenuItems extends BaseController
             return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
-        $items = json_decode(
-            $request->get('items')
-        );
+        $items = $request->get('items');
 
-        $this->updateMenuItemsOrder($items, 0);
+        $this->updateMenuItemsOrder(
+            json_decode($items)
+        );
 
         // Invalidate the cached menu data.
         Cache::forget('content.menus.' .$taxonomy->slug);
@@ -217,18 +217,18 @@ class MenuItems extends BaseController
     protected function updateMenuItemsOrder(array $items, $parentId = 0)
     {
         foreach ($items as $order => $item) {
-            $menuItem = MenuItem::find($item->id);
+            if (is_null($menuItem = MenuItem::find($item->id))) {
+                continue;
+            }
 
-            if (! is_null($menuItem)) {
-                $menuItem->parent_id = $parentId;
+            $menuItem->parent_id = $parentId;
 
-                $menuItem->menu_order = $order;
+            $menuItem->menu_order = $order;
 
-                $menuItem->save();
+            $menuItem->save();
 
-                if (isset($item->children) && ! empty($item->children)) {
-                    $this->updateMenuItemsOrder($item->children, $menuItem->id);
-                }
+            if (isset($item->children) && ! empty($item->children)) {
+                $this->updateMenuItemsOrder($item->children, $menuItem->id);
             }
         }
     }

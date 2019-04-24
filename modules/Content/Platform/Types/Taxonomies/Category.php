@@ -30,6 +30,16 @@ class Category extends Taxonomy
     /**
      * @var bool
      */
+    protected $showInMenu = false;
+
+    /**
+     * @var bool
+     */
+    protected $showInNavMenus = true;
+
+    /**
+     * @var bool
+     */
     protected $hierarchical = true;
 
     /**

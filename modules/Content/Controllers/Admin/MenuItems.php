@@ -85,7 +85,7 @@ class MenuItems extends BaseController
 
         }, PostType::get(function ($type)
         {
-            return $type->isPublic() && ! $type->isHidden();
+            return $type->showInNavMenus();
 
         }));
 
@@ -104,7 +104,7 @@ class MenuItems extends BaseController
 
         }, TaxonomyType::get(function ($type)
         {
-            return $type->isPublic() && ! $type->isHidden();
+            return $type->showInNavMenus();
 
         }));
 

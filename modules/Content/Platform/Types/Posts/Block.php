@@ -35,6 +35,16 @@ class Block extends BasePost
     /**
      * @var bool
      */
+    protected $showInMenu = true;
+
+    /**
+     * @var bool
+     */
+    protected $showInNavMenus = false;
+
+    /**
+     * @var bool
+     */
     protected $hierarchical = false;
 
     /**

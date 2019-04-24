@@ -39,6 +39,16 @@ abstract class ContentType
     /**
      * @var bool
      */
+    protected $showInMenu = true;
+
+    /**
+     * @var bool
+     */
+    protected $showInNavMenus = true;
+
+    /**
+     * @var bool
+     */
     protected $hierarchical = false;
 
     /**
@@ -104,6 +114,16 @@ abstract class ContentType
     public function isHierarchical()
     {
         return $this->hierarchical;
+    }
+
+    public function showInMenu()
+    {
+        return $this->showInMenu;
+    }
+
+    public function showInNavMenus()
+    {
+        return $this->showInNavMenus;
     }
 
     public function rewrite($key = null, $default = null)

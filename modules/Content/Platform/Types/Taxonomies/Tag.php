@@ -30,6 +30,16 @@ class Tag extends Taxonomy
     /**
      * @var bool
      */
+    protected $showInMenu = false;
+
+    /**
+     * @var bool
+     */
+    protected $showInNavMenus = false;
+
+    /**
+     * @var bool
+     */
     protected $hierarchical = false;
 
     /**

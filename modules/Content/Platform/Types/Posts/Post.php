@@ -35,6 +35,16 @@ class Post extends BasePost
     /**
      * @var bool
      */
+    protected $showInMenu = true;
+
+    /**
+     * @var bool
+     */
+    protected $showInNavMenus = true;
+
+    /**
+     * @var bool
+     */
     protected $hierarchical = false;
 
     /**

@@ -5,6 +5,7 @@ namespace Modules\Content\Platform;
 use Nova\Container\Container;
 use Nova\Support\Arr;
 
+use Closure;
 use InvalidArgumentException;
 
 
@@ -47,17 +48,27 @@ abstract class ContentTypeManager
         return array_values($this->types);
     }
 
-    public function getNames()
+    public function get(Closure $callback = null)
     {
-        $result = array();
+        if (is_null($callback)) {
+            // By default we will filter out all the hidden types.
 
-        foreach ($this->types as $name => $type) {
-            if (! $type->isHidden()) {
-                $result[] = $type->name();
-            }
+            $callback = function ($type)
+            {
+                return ! $type->isHidden();
+            };
         }
 
-        return $result;
+        return array_filter($this->all(), $callback);
+    }
+
+    public function getNames()
+    {
+        return array_map(function ($type)
+        {
+            return $type->name();
+
+        }, $this->get());
     }
 
     public function findModelByType($type)
@@ -83,22 +94,18 @@ abstract class ContentTypeManager
 
     public function routePattern($plural = true)
     {
-        $types = static::getRouteSlugs($plural);
+        $types = $this->getRouteSlugs($plural);
 
         return '(' .implode('|', $types) .')';
     }
 
     public function getRouteSlugs($plural = true)
     {
-        $result = array();
+        return array_map(function ($type) use ($plural)
+        {
+            return $type->slug($plural);
 
-        foreach ($this->types as $name => $type) {
-            if (! $type->isHidden()) {
-                $result[] = $type->slug($plural);
-            }
-        }
-
-        return $result;
+        }, $this->get());
     }
 
     public function getCurrentLocale()

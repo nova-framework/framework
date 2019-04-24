@@ -11,6 +11,7 @@ use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Validator;
+use Nova\Support\Facades\View;
 use Nova\Support\Arr;
 
 use Modules\Content\Models\Menu;
@@ -69,39 +70,62 @@ class MenuItems extends BaseController
             return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
-        $pages = $this->generatePostsListing('page');
+        $types = PostType::get(function ($type)
+        {
+            return $type->isPublic() && ! $type->isHidden();
+        });
 
-        $posts = $this->generatePostsListing('post');
+        $posts = array_map(function ($postType) use ($menu)
+        {
+            $type = $postType->name();
 
-        $categories = $this->generateTaxonomiesListing('category');
+            $posts = Post::where('type', $type)->where('parent_id', 0)->whereIn('status', array('publish', 'password'))->get();
+
+            $items = $this->generatePostsListing($type, $posts);
+
+            //
+            $data = compact('menu', 'type', 'items', 'postType');
+
+            return View::make('Modules/Content::Partials/Admin/MenuItems/Posts', $data)->render();
+
+        }, $types);
+
+        $types = TaxonomyType::get(function ($type)
+        {
+            return $type->isPublic() && ! $type->isHidden();
+        });
+
+        $taxonomies = array_map(function ($taxonomyType) use ($menu)
+        {
+            $type = $taxonomyType->name();
+
+            $taxonomies = Taxonomy::where('taxonomy', $type)->where('parent_id', 0)->get();
+
+            $items = $this->generateTaxonomiesListing($type, $taxonomies);
+
+            //
+            $data = compact('menu', 'type', 'items', 'taxonomyType');
+
+            return View::make('Modules/Content::Partials/Admin/MenuItems/Taxonomies', $data)->render();
+
+        }, $types);
 
         return $this->createView()
             ->shares('title', __d('content', 'Manage a Menu'))
             ->with('menu', $menu)
-            ->with('pages', $pages)
             ->with('posts', $posts)
-            ->with('categories', $categories);
+            ->with('taxonomies', $taxonomies);
     }
 
-    protected function generatePostsListing($type, $posts = null, $level = 0)
+    protected function generatePostsListing($type, $posts, $level = 0)
     {
         $result = '';
-
-        if (is_null($posts)) {
-            $posts = Post::where('type', $type)
-                ->where('parent_id', 0)
-                ->whereIn('status', array('publish', 'password'))
-                ->get();
-        }
 
         foreach ($posts as $post) {
             $result .= '<div class="checkbox" style="padding-left: ' .(($level > 0) ? ($level * 25) .'px' : '') .'"><label><input class="' .$type .'-checkbox" name="items[]" value="' .$post->id .'" type="checkbox">&nbsp;&nbsp;' .$post->title .'</label></div>';
 
             // Process the children.
-            $children = $post->children()
-                ->where('type', $type)
-                ->whereIn('status', array('publish', 'password'))
-                ->get();
+            $children = $post->children()->where('type', $type)->whereIn('status', array('publish', 'password'))->get();
 
             if (! $children->isEmpty()) {
                 $result .= $this->generatePostsListing($type, $children, $level + 1);
@@ -111,13 +135,9 @@ class MenuItems extends BaseController
         return $result;
     }
 
-    protected function generateTaxonomiesListing($type, $taxonomies = null, $level = 0)
+    protected function generateTaxonomiesListing($type, $taxonomies, $level = 0)
     {
         $result = '';
-
-        if (is_null($taxonomies)) {
-            $taxonomies = Taxonomy::where('taxonomy', $type)->where('parent_id', 0)->get();
-        }
 
         foreach ($taxonomies as $taxonomy) {
             $result .= '<div class="checkbox" style="padding-left: ' .(($level > 0) ? ($level * 25) .'px' : '') .'"><label><input class="' .$type .'-checkbox" name="items[]" value="' .$taxonomy->id .'" type="checkbox">&nbsp;&nbsp;' .$taxonomy->name .'</label></div>';

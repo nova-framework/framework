@@ -17,62 +17,8 @@
 
 <div class="col-md-4">
 
-<form id="page-form" action="<?= site_url('admin/menus/' .$menu->id .'/posts'); ?>" method='POST' role="form">
-
-<div class="box box-default">
-    <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('content', 'Pages'); ?></h3>
-    </div>
-    <div class="box-body" style="min-height: 150px; max-height: 270px; padding-bottom: 20px;">
-    <?= $pages; ?>
-    </div>
-    <div class="box-footer">
-        <input type="submit" name="submit" class="btn btn-primary col-sm-5 pull-right" value="<?= __d('content', 'Add to Menu'); ?>" />
-    </div>
-</div>
-
-<input type="hidden" name="_token"   value="<?= csrf_token(); ?>" />
-<input type="hidden" name="type" value="page" />
-
-</form>
-
-<form id="page-form" action="<?= site_url('admin/menus/{0}/posts', $menu->id); ?>" method='POST' role="form">
-
-<div class="box box-widget">
-    <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('content', 'Posts'); ?></h3>
-    </div>
-    <div class="box-body" style="min-height: 150px; max-height: 270px; padding-bottom: 20px;">
-    <?= $posts; ?>
-    </div>
-    <div class="box-footer">
-        <input type="submit" name="submit" class="btn btn-primary col-sm-5 pull-right" value="<?= __d('content', 'Add to Menu'); ?>" />
-    </div>
-</div>
-
-<input type="hidden" name="_token"   value="<?= csrf_token(); ?>" />
-<input type="hidden" name="type" value="post" />
-
-</form>
-
-<form id="page-form" action="<?= site_url('admin/menus/{0}/taxonomies', $menu->id); ?>" method='POST' role="form">
-
-<div class="box box-widget">
-    <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('content', 'Categories'); ?></h3>
-    </div>
-    <div class="box-body" style="min-height: 150px; max-height: 270px; padding-bottom: 20px;">
-    <?= $categories; ?>
-    </div>
-    <div class="box-footer">
-        <input type="submit" name="submit" class="btn btn-primary col-sm-5 pull-right" value="<?= __d('content', 'Add to Menu'); ?>" />
-    </div>
-</div>
-
-<input type="hidden" name="_token"   value="<?= csrf_token(); ?>" />
-<input type="hidden" name="type" value="category" />
-
-</form>
+<?= implode("\n", $posts); ?>
+<?= implode("\n", $taxonomies); ?>
 
 <form id="page-form" action="<?= site_url('admin/menus/{0}/custom', $menu->id); ?>" method='POST' role="form">
 

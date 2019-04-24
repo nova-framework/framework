@@ -81,7 +81,7 @@ class MenuItems extends BaseController
             //
             $data = compact('menu', 'type', 'items', 'postType');
 
-            return View::make('Modules/Content::Partials/Admin/MenuItems/Posts', $data)->render();
+            return View::make('Modules/Content::Partials/Admin/MenuItems/PostsForm', $data)->render();
 
         }, PostType::get(function ($type)
         {
@@ -100,7 +100,7 @@ class MenuItems extends BaseController
             //
             $data = compact('menu', 'type', 'items', 'taxonomyType');
 
-            return View::make('Modules/Content::Partials/Admin/MenuItems/Taxonomies', $data)->render();
+            return View::make('Modules/Content::Partials/Admin/MenuItems/TaxonomiesForm', $data)->render();
 
         }, TaxonomyType::get(function ($type)
         {
@@ -116,10 +116,11 @@ class MenuItems extends BaseController
 
     protected function generatePostsListing($type, $posts, $level = 0)
     {
-        $result = '';
+        $results = array_map(function ($post) use ($type, $level)
+        {
+            $data = compact('type', 'post', 'level');
 
-        foreach ($posts as $post) {
-            $result .= '<div class="checkbox" style="padding-left: ' .(($level > 0) ? ($level * 25) .'px' : '') .'"><label><input class="' .$type .'-checkbox" name="items[]" value="' .$post->id .'" type="checkbox">&nbsp;&nbsp;' .$post->title .'</label></div>';
+            $result = View::make('Modules/Content::Partials/Admin/MenuItems/PostCheckBox', $data)->render();
 
             // Process the children.
             $children = $post->children()->where('type', $type)->whereIn('status', array('publish', 'password'))->get();
@@ -127,17 +128,21 @@ class MenuItems extends BaseController
             if (! $children->isEmpty()) {
                 $result .= $this->generatePostsListing($type, $children, $level + 1);
             }
-        }
 
-        return $result;
+            return $result;
+
+        }, $posts->all());
+
+        return implode("\n", $results);
     }
 
     protected function generateTaxonomiesListing($type, $taxonomies, $level = 0)
     {
-        $result = '';
+        $results = array_map(function ($taxonomy) use ($type, $level)
+        {
+            $data = compact('type', 'taxonomy', 'level');
 
-        foreach ($taxonomies as $taxonomy) {
-            $result .= '<div class="checkbox" style="padding-left: ' .(($level > 0) ? ($level * 25) .'px' : '') .'"><label><input class="' .$type .'-checkbox" name="items[]" value="' .$taxonomy->id .'" type="checkbox">&nbsp;&nbsp;' .$taxonomy->name .'</label></div>';
+            $result = View::make('Modules/Content::Partials/Admin/MenuItems/TaxonomyCheckBox', $data)->render();
 
             // Process the children.
             $children = $taxonomy->children()->where('taxonomy', $type)->get();
@@ -145,9 +150,12 @@ class MenuItems extends BaseController
             if (! $children->isEmpty()) {
                 $result .= $this->generateTaxonomiesListing($type, $children, $level + 1);
             }
-        }
 
-        return $result;
+            return $result;
+
+        }, $taxonomies->all());
+
+        return implode("\n", $results);
     }
 
     public function store(Request $request, $id, $mode)

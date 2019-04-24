@@ -123,6 +123,21 @@ class MenuItems extends BaseController
 
     public function update(Request $request, $menuId, $itemId)
     {
+        Validator::extend('valid_name', function ($attribute, $value, $parameters)
+        {
+            return (strip_tags($value) == $value);
+        });
+
+        $validator = Validator::make($input = $request->all(),
+            array('name'       => 'required|valid_name'),
+            array('valid_name' => __d('content', 'The :attribute field is not a valid name.')),
+            array('name'       => __d('content', 'Name'))
+        );
+
+        if ($validator->fails()) {
+            return Redirect::back()->withInput()->withErrors($validator->errors());
+        }
+
         $authUser = Auth::user();
 
         try {
@@ -137,21 +152,6 @@ class MenuItems extends BaseController
         }
         catch (ModelNotFoundException $e) {
             return Redirect::back()->with('danger', __d('content', 'Menu Item not found: #{0}', $itemId));
-        }
-
-        Validator::extend('valid_name', function ($attribute, $value, $parameters)
-        {
-            return (strip_tags($value) == $value);
-        });
-
-        $validator = Validator::make($input = $request->all(),
-            array('name'       => 'required|valid_name'),
-            array('valid_name' => __d('content', 'The :attribute field is not a valid name.')),
-            array('name'       => __d('content', 'Name'))
-        );
-
-        if ($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
         $item->title = Arr::get($input, 'name');

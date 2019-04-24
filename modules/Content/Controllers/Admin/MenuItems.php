@@ -70,12 +70,7 @@ class MenuItems extends BaseController
             return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
-        $types = PostType::get(function ($type)
-        {
-            return $type->isPublic() && ! $type->isHidden();
-        });
-
-        $posts = array_map(function ($postType) use ($menu)
+        $blocks = array_map(function ($postType) use ($menu)
         {
             $type = $postType->name();
 
@@ -88,14 +83,13 @@ class MenuItems extends BaseController
 
             return View::make('Modules/Content::Partials/Admin/MenuItems/Posts', $data)->render();
 
-        }, $types);
-
-        $types = TaxonomyType::get(function ($type)
+        }, PostType::get(function ($type)
         {
             return $type->isPublic() && ! $type->isHidden();
-        });
 
-        $taxonomies = array_map(function ($taxonomyType) use ($menu)
+        }));
+
+        $blocks = array_merge($blocks, array_map(function ($taxonomyType) use ($menu)
         {
             $type = $taxonomyType->name();
 
@@ -108,13 +102,16 @@ class MenuItems extends BaseController
 
             return View::make('Modules/Content::Partials/Admin/MenuItems/Taxonomies', $data)->render();
 
-        }, $types);
+        }, TaxonomyType::get(function ($type)
+        {
+            return $type->isPublic() && ! $type->isHidden();
+
+        })));
 
         return $this->createView()
             ->shares('title', __d('content', 'Manage a Menu'))
             ->with('menu', $menu)
-            ->with('posts', $posts)
-            ->with('taxonomies', $taxonomies);
+            ->with('blocks', implode("\n", $blocks));
     }
 
     protected function generatePostsListing($type, $posts, $level = 0)

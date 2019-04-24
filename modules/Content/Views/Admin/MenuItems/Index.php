@@ -17,8 +17,7 @@
 
 <div class="col-md-4">
 
-<?= implode("\n", $posts); ?>
-<?= implode("\n", $taxonomies); ?>
+<?= $blocks; ?>
 
 <form id="page-form" action="<?= site_url('admin/menus/{0}/custom', $menu->id); ?>" method='POST' role="form">
 
@@ -57,7 +56,7 @@
 
 <div class="col-md-8">
 
-<form id="menu-items-form" action="<?= site_url('admin/menus/' .$menu->id .'/items'); ?>" method='POST' role="form">
+<form id="menu-items-form" action="<?= site_url('admin/menus/{0}/items', $menu->id); ?>" method='POST' role="form">
 
 <div class="box box-default">
     <div class="box-header with-border">

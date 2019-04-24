@@ -243,7 +243,7 @@ class Taxonomies extends BaseController
 
     protected function generateTaxonomyCheckBoxes($type, array $selected = array(), $taxonomies = null, $level = 0)
     {
-        $view = 'Modules/Content::Partials/TaxonomyCheckBox';
+        $view = 'Modules/Content::Partials/Admin/Taxonomies/TaxonomyCheckBox';
 
         //
         $result = '';
@@ -266,7 +266,7 @@ class Taxonomies extends BaseController
 
     protected function generateTaxonomySelectOptions($type, $currentId, $parentId, $taxonomies, $level = 0)
     {
-        $view = 'Modules/Content::Partials/TaxonomySelectOption';
+        $view = 'Modules/Content::Partials/Admin/Taxonomies/TaxonomySelectOption';
 
         //
         $taxonomy = null;

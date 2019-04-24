@@ -13,6 +13,7 @@ use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 use Nova\Support\Arr;
+use Nova\Support\Collection;
 
 use Modules\Content\Models\Menu;
 use Modules\Content\Models\MenuItem;
@@ -111,7 +112,7 @@ class MenuItems extends BaseController
         return View::make('Modules/Content::Partials/Admin/MenuItems/PostsForm', $data)->render();
     }
 
-    protected function generatePostsListing($type, $posts, $level = 0)
+    protected function generatePostsListing($type, Collection $posts, $level = 0)
     {
         $results = array_map(function ($post) use ($type, $level)
         {
@@ -147,7 +148,7 @@ class MenuItems extends BaseController
         return View::make('Modules/Content::Partials/Admin/MenuItems/TaxonomiesForm', $data)->render();
     }
 
-    protected function generateTaxonomiesListing($type, $taxonomies, $level = 0)
+    protected function generateTaxonomiesListing($type, Collection $taxonomies, $level = 0)
     {
         $results = array_map(function ($taxonomy) use ($type, $level)
         {

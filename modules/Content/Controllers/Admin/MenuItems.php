@@ -32,7 +32,7 @@ class MenuItems extends BaseController
     {
         $rules = array(
             'link' => 'required|' . ($local ? 'valid_uri' : 'url'),
-            'name' => 'required|valid_text',
+            'name' => 'required|valid_name',
         );
 
         $messages = array(

@@ -123,6 +123,20 @@ class MenuItems extends BaseController
 
     public function update(Request $request, $menuId, $itemId)
     {
+        try {
+            $menu = Menu::findOrFail($menuId);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $menuId));
+        }
+
+        try {
+            $item = MenuItem::findOrFail($itemId);
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()->with('danger', __d('content', 'Menu Item not found: #{0}', $itemId));
+        }
+
         Validator::extend('valid_name', function ($attribute, $value, $parameters)
         {
             return (strip_tags($value) == $value);
@@ -138,28 +152,12 @@ class MenuItems extends BaseController
             return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
-        $authUser = Auth::user();
-
-        try {
-            $taxonomy = Menu::findOrFail($menuId);
-        }
-        catch (ModelNotFoundException $e) {
-            return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $menuId));
-        }
-
-        try {
-            $item = MenuItem::findOrFail($itemId);
-        }
-        catch (ModelNotFoundException $e) {
-            return Redirect::back()->with('danger', __d('content', 'Menu Item not found: #{0}', $itemId));
-        }
-
         $item->title = Arr::get($input, 'name');
 
         $item->save();
 
         // Invalidate the cached menu data.
-        Cache::forget('content.menus.' .$taxonomy->slug);
+        Cache::forget('content.menus.' .$menu->slug);
 
         return Redirect::back()->with('success', __d('content', 'The Menu Item was successfully updated.'));
     }

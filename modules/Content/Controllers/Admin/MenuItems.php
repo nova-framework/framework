@@ -19,6 +19,7 @@ use Modules\Content\Models\MenuItem;
 use Modules\Content\Models\Post;
 use Modules\Content\Models\Taxonomy;
 use Modules\Content\Models\Term;
+use Modules\Content\Platform\ContentType;
 use Modules\Content\Support\Facades\PostType;
 use Modules\Content\Support\Facades\TaxonomyType;
 use Modules\Platform\Controllers\Admin\BaseController;
@@ -70,18 +71,9 @@ class MenuItems extends BaseController
             return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
-        $posts = array_map(function ($postType) use ($menu)
+        $posts = array_map(function ($type) use ($menu)
         {
-            $type = $postType->name();
-
-            $posts = Post::where('type', $type)->where('parent_id', 0)->whereIn('status', array('publish', 'password'))->get();
-
-            $items = $this->generatePostsListing($type, $posts);
-
-            //
-            $data = compact('menu', 'type', 'items', 'postType');
-
-            return View::make('Modules/Content::Partials/Admin/MenuItems/PostsForm', $data)->render();
+            return $this->generatePostsForm($type, $menu);
 
         }, PostType::get(function ($type)
         {
@@ -89,18 +81,9 @@ class MenuItems extends BaseController
 
         }));
 
-        $taxonomies = array_map(function ($taxonomyType) use ($menu)
+        $taxonomies = array_map(function ($type) use ($menu)
         {
-            $type = $taxonomyType->name();
-
-            $taxonomies = Taxonomy::where('taxonomy', $type)->where('parent_id', 0)->get();
-
-            $items = $this->generateTaxonomiesListing($type, $taxonomies);
-
-            //
-            $data = compact('menu', 'type', 'items', 'taxonomyType');
-
-            return View::make('Modules/Content::Partials/Admin/MenuItems/TaxonomiesForm', $data)->render();
+            return $this->generateTaxonomiesForm($type, $menu);
 
         }, TaxonomyType::get(function ($type)
         {
@@ -112,6 +95,20 @@ class MenuItems extends BaseController
             ->shares('title', __d('content', 'Manage a Menu'))
             ->with('menu', $menu)
             ->with('blocks', array_merge($posts, $taxonomies));
+    }
+
+    protected function generatePostsForm(ContentType $postType, Menu $menu)
+    {
+        $type = $postType->name();
+
+        $posts = Post::where('type', $type)->where('parent_id', 0)->whereIn('status', array('publish', 'password'))->get();
+
+        $items = $this->generatePostsListing($type, $posts);
+
+        //
+        $data = compact('menu', 'type', 'items', 'postType');
+
+        return View::make('Modules/Content::Partials/Admin/MenuItems/PostsForm', $data)->render();
     }
 
     protected function generatePostsListing($type, $posts, $level = 0)
@@ -134,6 +131,20 @@ class MenuItems extends BaseController
         }, $posts->all());
 
         return implode("\n", $results);
+    }
+
+    protected function generateTaxonomiesForm(ContentType $taxonomyType, Menu $menu)
+    {
+        $type = $taxonomyType->name();
+
+        $taxonomies = Taxonomy::where('taxonomy', $type)->where('parent_id', 0)->get();
+
+        $items = $this->generateTaxonomiesListing($type, $taxonomies);
+
+        //
+        $data = compact('menu', 'type', 'items', 'taxonomyType');
+
+        return View::make('Modules/Content::Partials/Admin/MenuItems/TaxonomiesForm', $data)->render();
     }
 
     protected function generateTaxonomiesListing($type, $taxonomies, $level = 0)

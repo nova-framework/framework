@@ -147,7 +147,7 @@ class Posts extends BaseController
         $data = compact('post', 'postType', 'status', 'visibility', 'type', 'name', 'categories', 'revisions');
 
         return $this->createView($data, 'Edit')
-            ->shares('title', $postType->label('add_new_item'))
+            ->shares('title', $postType->label('addNewItem'))
             ->with(compact('categorySelect', 'menuSelect', 'lastEditor', 'tags', 'stylesheets'))
             ->with('creating', true);
     }
@@ -233,7 +233,7 @@ class Posts extends BaseController
         $data = compact('post', 'postType', 'status', 'visibility', 'type', 'name', 'categories', 'revisions');
 
         return $this->createView($data, 'Edit')
-            ->shares('title', $postType->label('edit_item'))
+            ->shares('title', $postType->label('editItem'))
             ->with(compact('categorySelect', 'menuSelect', 'lastEditor', 'tags', 'stylesheets'))
             ->with('creating', false);
     }

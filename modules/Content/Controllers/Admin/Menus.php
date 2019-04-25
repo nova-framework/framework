@@ -7,6 +7,7 @@ use Nova\Http\Request;
 use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
+use Nova\Support\Facades\Validator;
 
 use Modules\Content\Models\Menu;
 use Modules\Content\Models\Taxonomy;
@@ -16,6 +17,31 @@ use Modules\Platform\Controllers\Admin\BaseController;
 
 class Menus extends BaseController
 {
+
+    protected function validator(Request $request)
+    {
+        $rules = array(
+            'name'        => 'required|valid_text',
+            'description' => 'required|valid_text',
+        );
+
+        $messages = array(
+            'valid_text' => __d('content', 'The :attribute field is not a valid text.'),
+        );
+
+        $attributes = array(
+            'name'        => __d('content', 'Name'),
+            'description' => __d('content', 'Description'),
+        );
+
+        // Add the custom Validation Rule commands.
+        Validator::extend('valid_text', function ($attribute, $value, $parameters)
+        {
+            return (strip_tags($value) == $value);
+        });
+
+        return Validator::make($request->all(), $rules, $messages, $attributes);
+    }
 
     public function index()
     {
@@ -28,27 +54,29 @@ class Menus extends BaseController
 
     public function store(Request $request)
     {
-        $taxonomy = Taxonomy::create(array(
-            'taxonomy'    => 'nav_menu',
-            'description' => $request->input('description'),
-            'parent_id'   => 0,
-            'count'       => 0,
-        ));
+        $validator = $this->validator($request);
+
+        if ($validator->fails()) {
+            return Redirect::back()->withErrors($validator->errors());
+        }
 
         $name = $request->input('name');
 
         $slug = Term::uniqueSlug($name, 'nav_menu');
 
         $term = Term::create(array(
-            'id'     => 2,
             'name'   => $name,
             'slug'   => $slug,
             'group'  => 0,
         ));
 
-        $taxonomy->term_id = $term->id;
-
-        $taxonomy->save();
+        $taxonomy = Taxonomy::create(array(
+            'term_id'     => $term->id,
+            'taxonomy'    => 'nav_menu',
+            'description' => $request->input('description'),
+            'parent_id'   => 0,
+            'count'       => 0,
+        ));
 
         return Redirect::back()->with('success', __d('content', 'The Menu <b>{0}</b> was successfully created.', $name));
     }
@@ -60,6 +88,12 @@ class Menus extends BaseController
         }
         catch (ModelNotFoundException $e) {
             return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
+        }
+
+        $validator = $this->validator($request);
+
+        if ($validator->fails()) {
+            return Redirect::back()->withErrors($validator->errors());
         }
 
         $term = $menu->term()->first();

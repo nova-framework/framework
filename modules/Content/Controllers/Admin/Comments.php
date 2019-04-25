@@ -54,7 +54,7 @@ class Comments extends BaseController
         $input = $request->all();
 
         try {
-            $comment = Comment::findOrFail($id);
+            $comment = Comment::with('post')->findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
             return Redirect::back()->with('danger', __d('content', 'Comment not found: #{0}', $id));
@@ -108,7 +108,7 @@ class Comments extends BaseController
     public function approve($id)
     {
         try {
-            $comment = Comment::findOrFail($id);
+            $comment = Comment::with('post')->findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
             return Redirect::back()->with('danger', __d('content', 'Comment not found: #{0}', $id));
@@ -127,7 +127,7 @@ class Comments extends BaseController
     public function unapprove($id)
     {
         try {
-            $comment = Comment::findOrFail($id);
+            $comment = Comment::with('post')->findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
             return Redirect::back()->with('danger', __d('content', 'Comment not found: #{0}', $id));

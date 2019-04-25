@@ -36,13 +36,13 @@ class Blocks extends BaseController
         );
 
         foreach ($items as $order => $item) {
-            if (is_null($block = Block::find($item->id))) {
-                continue;
+            $block = Block::find($item->id);
+
+            if (! is_null($block)) {
+                $block->menu_order = $order;
+
+                $block->save();
             }
-
-            $block->menu_order = $order;
-
-            $block->save();
         }
 
         // Invalidate the cached menu data.

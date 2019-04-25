@@ -37,7 +37,7 @@ class Menus extends BaseController
         // Add the custom Validation Rule commands.
         Validator::extend('valid_text', function ($attribute, $value, $parameters)
         {
-            return (strip_tags($value) == $value);
+            return ($value == strip_tags($value));
         });
 
         return Validator::make($request->all(), $rules, $messages, $attributes);

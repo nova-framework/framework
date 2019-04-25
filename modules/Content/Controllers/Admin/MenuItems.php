@@ -51,7 +51,7 @@ class MenuItems extends BaseController
 
         Validator::extend('valid_name', function ($attribute, $value, $parameters)
         {
-            return (strip_tags($value) == $value);
+            return ($value == strip_tags($value));
         });
 
         return Validator::make($data, $rules, $messages, array(
@@ -123,7 +123,7 @@ class MenuItems extends BaseController
 
         Validator::extend('valid_name', function ($attribute, $value, $parameters)
         {
-            return (strip_tags($value) == $value);
+            return ($value == strip_tags($value));
         });
 
         $validator = Validator::make($input = $request->all(),

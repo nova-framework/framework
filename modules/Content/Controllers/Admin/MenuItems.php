@@ -72,30 +72,14 @@ class MenuItems extends BaseController
             return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
-        $posts = array_map(function ($type) use ($menu)
-        {
-            return $this->generatePostsForm($type, $menu);
-
-        }, PostType::get(function ($type)
-        {
-            return $type->showInNavMenus();
-
-        }));
-
-        $taxonomies = array_map(function ($type) use ($menu)
-        {
-            return $this->generateTaxonomiesForm($type, $menu);
-
-        }, TaxonomyType::get(function ($type)
-        {
-            return $type->showInNavMenus();
-
-        }));
+        $blocks = array_merge(
+            $this->generatePostForms($menu), $this->generateTaxonomyForms($menu)
+        );
 
         return $this->createView()
             ->shares('title', __d('content', 'Manage a Menu'))
             ->with('menu', $menu)
-            ->with('blocks', array_merge($posts, $taxonomies));
+            ->with('blocks', $blocks);
     }
 
     public function store(Request $request, $id, $mode)
@@ -411,35 +395,53 @@ class MenuItems extends BaseController
         });
     }
 
-    protected function generatePostsForm(ContentType $postType, Menu $menu)
+    protected function generatePostForms(Menu $menu)
     {
-        $type = $postType->name();
+        $types = PostType::get(function ($type)
+        {
+            return $type->showInNavMenus();
+        });
 
-        $posts = Post::where('type', $type)->where('parent_id', 0)->whereIn('status', array('publish', 'password'))->get();
+        return array_map(function ($postType) use ($menu)
+        {
+            $type = $postType->name();
 
-        $items = $this->generatePostsListing($type, $posts);
+            $posts = Post::where('type', $type)->where('parent_id', 0)->whereIn('status', array('publish', 'password'))->get();
 
-        //
-        $data = compact('menu', 'type', 'items', 'postType');
+            $items = $this->generatePostListings($type, $posts);
 
-        return View::make('Modules/Content::Partials/Admin/MenuItems/PostsForm', $data)->render();
+            //
+            $data = compact('menu', 'type', 'items', 'postType');
+
+            return View::make('Modules/Content::Partials/Admin/MenuItems/PostsForm', $data)->render();
+
+        }, $types);
     }
 
-    protected function generateTaxonomiesForm(ContentType $taxonomyType, Menu $menu)
+    protected function generateTaxonomyForms(Menu $menu)
     {
-        $type = $taxonomyType->name();
+        $types = TaxonomyType::get(function ($type)
+        {
+            return $type->showInNavMenus();
+        });
 
-        $taxonomies = Taxonomy::where('taxonomy', $type)->where('parent_id', 0)->get();
+        return array_map(function ($taxonomyType) use ($menu)
+        {
+            $type = $taxonomyType->name();
 
-        $items = $this->generateTaxonomiesListing($type, $taxonomies);
+            $taxonomies = Taxonomy::where('taxonomy', $type)->where('parent_id', 0)->get();
 
-        //
-        $data = compact('menu', 'type', 'items', 'taxonomyType');
+            $items = $this->generateTaxonomyListings($type, $taxonomies);
 
-        return View::make('Modules/Content::Partials/Admin/MenuItems/TaxonomiesForm', $data)->render();
+            //
+            $data = compact('menu', 'type', 'items', 'taxonomyType');
+
+            return View::make('Modules/Content::Partials/Admin/MenuItems/TaxonomiesForm', $data)->render();
+
+        }, $types);
     }
 
-    protected function generatePostsListing($type, Collection $posts, $level = 0)
+    protected function generatePostListings($type, Collection $posts, $level = 0)
     {
         $results = array_map(function ($post) use ($type, $level)
         {
@@ -451,7 +453,7 @@ class MenuItems extends BaseController
             $children = $post->children()->where('type', $type)->whereIn('status', array('publish', 'password'))->get();
 
             if (! $children->isEmpty()) {
-                $result .= $this->generatePostsListing($type, $children, $level + 1);
+                $result .= $this->generatePostListings($type, $children, $level + 1);
             }
 
             return $result;
@@ -461,7 +463,7 @@ class MenuItems extends BaseController
         return implode("\n", $results);
     }
 
-    protected function generateTaxonomiesListing($type, Collection $taxonomies, $level = 0)
+    protected function generateTaxonomyListings($type, Collection $taxonomies, $level = 0)
     {
         $results = array_map(function ($taxonomy) use ($type, $level)
         {
@@ -473,7 +475,7 @@ class MenuItems extends BaseController
             $children = $taxonomy->children()->where('taxonomy', $type)->get();
 
             if (! $children->isEmpty()) {
-                $result .= $this->generateTaxonomiesListing($type, $children, $level + 1);
+                $result .= $this->generateTaxonomyListings($type, $children, $level + 1);
             }
 
             return $result;

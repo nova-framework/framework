@@ -306,7 +306,7 @@ class MenuItems extends BaseController
         //
         $posts = Post::where('type', $type)->whereIn('id', $items)->get();
 
-        $posts->each(function ($post) use ($type, $menu, $authUser)
+        $posts->each(function ($post) use ($menu, $authUser)
         {
             $menuLink = Post::create(array(
                 'author_id'      => $authUser->id,
@@ -328,7 +328,7 @@ class MenuItems extends BaseController
             $menuLink->saveMeta(array(
                 'menu_item_type'             => 'post',
                 'menu_item_menu_item_parent' => $post->parent_id,
-                'menu_item_object'           => $type,
+                'menu_item_object'           => $post->type,
                 'menu_item_object_id'        => $post->id,
                 'menu_item_target'           => null,
                 'menu_item_url'              => null,
@@ -364,7 +364,7 @@ class MenuItems extends BaseController
         //
         $taxonomies = Taxonomy::where('taxonomy', $type)->whereIn('id', $items)->get();
 
-        $taxonomies->each(function ($taxonomy) use ($type, $menu, $authUser)
+        $taxonomies->each(function ($taxonomy) use ($menu, $authUser)
         {
             $menuLink = Post::create(array(
                 'author_id'      => $authUser->id,
@@ -387,7 +387,7 @@ class MenuItems extends BaseController
                 // Setup the Metadata.
                 'menu_item_type'             => 'taxonomy',
                 'menu_item_menu_item_parent' => $taxonomy->parent_id,
-                'menu_item_object'           => $type,
+                'menu_item_object'           => $taxonomy->taxonomy,
                 'menu_item_object_id'        => $taxonomy->id,
                 'menu_item_target'           => null,
                 'menu_item_url'              => null,

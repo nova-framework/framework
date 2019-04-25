@@ -18,7 +18,10 @@ class MenuItem extends Post
      * @var array
      */
     private static $instanceRelations = array(
-        'custom' => 'Modules\Content\Models\CustomLink',
+        //'post'     => 'Modules\Content\Models\Post',
+        //'page'     => 'Modules\Content\Models\Page',
+        'custom'   => 'Modules\Content\Models\CustomLink',
+        //'category' => 'Modules\Content\Models\Taxonomy',
     );
 
 

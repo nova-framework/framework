@@ -60,9 +60,7 @@ class Menus extends BaseController
             return Redirect::back()->withErrors($validator->errors());
         }
 
-        $name = $request->input('name');
-
-        $slug = Term::uniqueSlug($name, 'nav_menu');
+        $slug = Term::uniqueSlug($name = $request->input('name'), 'nav_menu');
 
         $term = Term::create(array(
             'name'   => $name,

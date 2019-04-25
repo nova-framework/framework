@@ -272,7 +272,7 @@ class MenuItems extends BaseController
             'menu_item_type'             => 'custom',
             'menu_item_menu_item_parent' => 0,
             'menu_item_object'           => 'custom',
-            'menu_item_object_id'        => $post->id,
+            'menu_item_object_id'        => $menuLink->id,
             'menu_item_target'           => null,
             'menu_item_url'              => $local ? site_url($url) : $url,
         ));

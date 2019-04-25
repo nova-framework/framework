@@ -5,6 +5,8 @@ namespace Modules\Content\Platform;
 use Nova\Container\Container;
 use Nova\Support\Arr;
 
+use Modules\Content\Models\MenuItem;
+
 use Closure;
 use InvalidArgumentException;
 
@@ -32,6 +34,9 @@ abstract class ContentTypeManager
     public function forget($type)
     {
         unset($this->types[$type]);
+
+        //
+        MenuItem::forgetInstanceRelation($type);
     }
 
     public function make($type)

@@ -4,6 +4,7 @@ namespace Modules\Content\Platform\Types;
 
 use Nova\Container\Container;
 
+use Modules\Content\Models\MenuItem;
 use Modules\Content\Platform\ContentTypeManager;
 use Modules\Content\Platform\Types\Taxonomy;
 
@@ -32,6 +33,7 @@ class TaxonomyManager extends ContentTypeManager
 
         $this->types[$type] = $taxonomyType;
 
-        return $this;
+        //
+        MenuItem::registerInstanceRelation($type, $taxonomyType->model());
     }
 }

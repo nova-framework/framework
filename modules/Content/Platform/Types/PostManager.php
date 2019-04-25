@@ -4,6 +4,7 @@ namespace Modules\Content\Platform\Types;
 
 use Nova\Container\Container;
 
+use Modules\Content\Models\MenuItem;
 use Modules\Content\Platform\ContentTypeManager;
 use Modules\Content\Platform\Types\Post;
 
@@ -30,6 +31,7 @@ class PostManager extends ContentTypeManager
 
         $this->types[$type] = $postType;
 
-        return $this;
+        //
+        MenuItem::registerInstanceRelation($type, $postType->model());
     }
 }

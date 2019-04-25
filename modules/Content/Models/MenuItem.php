@@ -17,12 +17,29 @@ class MenuItem extends Post
     /**
      * @var array
      */
-    private $instanceRelations = array(
-        'post'     => 'Modules\Content\Models\Post',
-        'page'     => 'Modules\Content\Models\Page',
+    private static $instanceRelations = array(
+        //'post'     => 'Modules\Content\Models\Post',
+        //'page'     => 'Modules\Content\Models\Page',
         'custom'   => 'Modules\Content\Models\CustomLink',
-        'category' => 'Modules\Content\Models\Taxonomy',
+        //'category' => 'Modules\Content\Models\Taxonomy',
     );
+
+
+    /**
+     * @return void
+     */
+    public static function registerInstanceRelation($type, $model)
+    {
+        static::$instanceRelations[$type] = $model;
+    }
+
+    /**
+     * @return void
+     */
+    public static function forgetInstanceRelation($type)
+    {
+        unset(static::$instanceRelations[$type]);
+    }
 
     /**
      * @return Post|Page|CustomLink|Taxonomy
@@ -30,7 +47,9 @@ class MenuItem extends Post
     public function parent()
     {
         if (! is_null($className = $this->getClassName())) {
-            return with(new $className)->newQuery()->find($this->meta->menu_item_menu_item_parent);
+            $parentId = $this->meta->menu_item_menu_item_parent;
+
+            return with(new $className)->newQuery()->find($parentId);
         }
     }
 
@@ -48,7 +67,9 @@ class MenuItem extends Post
     public function instance()
     {
         if (! is_null($className = $this->getClassName())) {
-            return with(new $className)->newQuery()->find($this->meta->menu_item_object_id);
+            $objectId = $this->meta->menu_item_object_id;
+
+            return with(new $className)->newQuery()->find($objectId);
         }
     }
 
@@ -57,6 +78,8 @@ class MenuItem extends Post
      */
     private function getClassName()
     {
-        return Arr::get($this->instanceRelations, $this->meta->menu_item_object);
+        $type = $this->meta->menu_item_object;
+
+        return Arr::get(static::$instanceRelations, $type);
     }
 }

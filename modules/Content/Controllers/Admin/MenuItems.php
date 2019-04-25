@@ -133,7 +133,7 @@ class MenuItems extends BaseController
         );
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator->errors());
+            return Redirect::back()->withErrors($validator->errors());
         }
 
         $item->title = Arr::get($input, 'name');
@@ -243,7 +243,7 @@ class MenuItems extends BaseController
         );
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator->errors());
+            return Redirect::back()->withErrors($validator->errors());
         }
 
         $name = Arr::get($input, 'name');
@@ -296,7 +296,7 @@ class MenuItems extends BaseController
         ));
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator->errors());
+            return Redirect::back()->withErrors($validator->errors());
         }
 
         $type = Arr::get($input, 'type', 'post');
@@ -353,7 +353,7 @@ class MenuItems extends BaseController
         ));
 
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator->errors());
+            return Redirect::back()->withErrors($validator->errors());
         }
 
         $type = Arr::get($input, 'type', 'category');

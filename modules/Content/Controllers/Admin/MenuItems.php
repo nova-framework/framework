@@ -311,6 +311,7 @@ class MenuItems extends BaseController
             $menuLink = Post::create(array(
                 'author_id'      => $authUser->id,
                 'status'         => 'publish',
+                'title'          => $post->title,
                 'menu_order'     => $post->menu_order,
                 'type'           => 'nav_menu_item',
                 'comment_status' => 'closed',
@@ -344,7 +345,7 @@ class MenuItems extends BaseController
             'type'  => 'required|in:' . implode(',', TaxonomyType::getNames()),
 
             // The items[] contains an array of Taxonomies IDs.
-            'items' => 'required|array|exists:taxonomies,id',
+            'items' => 'required|array|exists:term_taxonomy,id',
         );
 
         $validator = Validator::make($input = $request->all(), $rules, array(), array(
@@ -368,6 +369,7 @@ class MenuItems extends BaseController
             $menuLink = Post::create(array(
                 'author_id'      => $authUser->id,
                 'status'         => 'publish',
+                'title'          => $taxonomy->name,
                 'menu_order'     => 0,
                 'type'           => 'nav_menu_item',
                 'comment_status' => 'closed',

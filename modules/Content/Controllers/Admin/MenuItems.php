@@ -311,7 +311,7 @@ class MenuItems extends BaseController
             $menuLink = Post::create(array(
                 'author_id'      => $authUser->id,
                 'status'         => 'publish',
-                'title'          => $post->title,
+                //'title'          => $post->title,
                 'menu_order'     => $post->menu_order,
                 'type'           => 'nav_menu_item',
                 'comment_status' => 'closed',
@@ -369,7 +369,7 @@ class MenuItems extends BaseController
             $menuLink = Post::create(array(
                 'author_id'      => $authUser->id,
                 'status'         => 'publish',
-                'title'          => $taxonomy->name,
+                //'title'          => $taxonomy->name,
                 'menu_order'     => 0,
                 'type'           => 'nav_menu_item',
                 'comment_status' => 'closed',

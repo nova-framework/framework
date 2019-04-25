@@ -89,7 +89,7 @@ class PostsTableSeeder extends Seeder
         $menuItem = Post::create(array(
             'author_id'      => 1,
             'content'        => null,
-            'title'          => $title,
+            //'title'          => $title,
             'excerpt'        => null,
             'status'         => 'publish',
             'menu_order'     => 1,

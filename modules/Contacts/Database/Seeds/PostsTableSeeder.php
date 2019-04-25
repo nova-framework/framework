@@ -32,7 +32,7 @@ class PostsTableSeeder extends Seeder
             'comment_status' => 'closed',
         ));
 
-        $block->guid = url('content', $block->id);
+        $block->guid = site_url('content/{0}', $block->id);
 
         // Setup the Metadata.
         $block->saveMeta(array(
@@ -63,7 +63,9 @@ class PostsTableSeeder extends Seeder
             'comment_status' => 'closed',
         ));
 
-        $page->guid = url('content', $page->name);
+        $page->guid = site_url('content/{0}', $page->name);
+
+        $page->save();
 
         $page->saveMeta('page_template', 'default');
 
@@ -87,7 +89,7 @@ class PostsTableSeeder extends Seeder
         $menuItem = Post::create(array(
             'author_id'      => 1,
             'content'        => null,
-            'title'          => null,
+            'title'          => $title,
             'excerpt'        => null,
             'status'         => 'publish',
             'menu_order'     => 1,
@@ -95,9 +97,11 @@ class PostsTableSeeder extends Seeder
             'comment_status' => 'closed',
         ));
 
-        $menuItem->name = $id = $menuItem->id;
+        $menuItem->guid = site_url('content/{0}', $name = $menuItem->id);
 
-        $menuItem->guid = url('content', $id);
+        $menuItem->name = $name;
+
+        $menuItem->save();
 
         // Setup the Metadata.
         $menuItem->saveMeta(array(

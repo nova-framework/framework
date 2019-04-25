@@ -2,7 +2,7 @@
 
 namespace Modules\Content\Controllers\Admin;
 
-use Nova\Auth\UserInteface as User;
+use Nova\Auth\UserInterface as User;
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Http\Request;
 use Nova\Support\Facades\Auth;
@@ -66,7 +66,7 @@ class MenuItems extends BaseController
         $authUser = Auth::user();
 
         try {
-            $menu = Menu::findOrFail($id);
+            $menu = Menu::with('items')->findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
             return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
@@ -200,7 +200,7 @@ class MenuItems extends BaseController
 
     protected function updateMenuItemsOrder(array $items, $parentId = 0)
     {
-        array_walk($items, function ($item, $order)
+        array_walk($items, function ($item, $order) use ($parentId)
         {
             $menuItem = MenuItem::find($item->id);
 
@@ -223,12 +223,12 @@ class MenuItems extends BaseController
         $authUser = Auth::user();
 
         if ($mode == 'posts') {
-            return $this->createPostLinks($request, $taxonomy, $authUser);
+            return $this->createPostLinks($request, $menu, $authUser);
         }
 
         //
         else if ($mode == 'taxonomies') {
-            return $this->createTaxonomyLinks($request, $taxonomy, $authUser);
+            return $this->createTaxonomyLinks($request, $menu, $authUser);
         }
 
         //
@@ -304,7 +304,7 @@ class MenuItems extends BaseController
         $items = Arr::get($input, 'items', array());
 
         //
-        $posts = Post::where('type', $type)->whereIn('id', $items);
+        $posts = Post::where('type', $type)->whereIn('id', $items)->get();
 
         $posts->each(function ($post) use ($type, $menu, $authUser)
         {
@@ -361,7 +361,7 @@ class MenuItems extends BaseController
         $items = Arr::get($input, 'items', array());
 
         //
-        $taxonomies = Taxonomy::where('taxonomy', $type)->whereIn('id', $items);
+        $taxonomies = Taxonomy::where('taxonomy', $type)->whereIn('id', $items)->get();
 
         $taxonomies->each(function ($taxonomy) use ($type, $menu, $authUser)
         {

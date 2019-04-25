@@ -18,8 +18,7 @@ $items->sort(function ($a, $b)
 <ol class="dd-list">
     <?php foreach ($items as $item) { ?>
     <?php $name = ContentLabel::get($type = $item->menu_item_object, 'name', __d('content', 'Unknown [{0}]', $type)); ?>
-    <?php if (empty($title = $item->title)) { ?>
-    <?php $instance = $item->instance(); ?>
+    <?php if (empty($title = $item->title) && ! is_null($instance = $item->instance())) { ?>
     <?php $title = ($instance instanceof Taxonomy) ? $instance->name : $instance->title; ?>
     <?php } ?>
     <li class="dd-item dd3-item" data-id="<?= $itemId = $item->id; ?>">

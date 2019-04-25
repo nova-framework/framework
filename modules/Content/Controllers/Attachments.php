@@ -63,9 +63,7 @@ class Attachments extends BaseController
             $path = $filePath;
         }
 
-        $download = $request->input('download');
-
-        $disposition = isset($download) ? 'attachment' : 'inline';
+        $disposition = $request->has('download') ? 'attachment' : 'inline';
 
         // Create a Assets Dispatcher instance.
         $dispatcher = App::make('assets.dispatcher');

@@ -99,9 +99,8 @@ class Menus extends BaseController
         $term = $menu->term()->first();
 
         // Get the original information of the Term.
-        $original = $term->name;
-
-        $slug = $term->slug;
+        $lastName = $term->name;
+        $lastSlug = $term->slug;
 
         // Update the Term.
         $term->name = $name = $request->input('name');
@@ -116,9 +115,9 @@ class Menus extends BaseController
         $menu->save();
 
         // Invalidate the cached menu data.
-        Cache::forget('content.menus.' .$slug);
+        Cache::forget('content.menus.' .$lastSlug);
 
-        return Redirect::back()->with('success', __d('content', 'The Menu <b>{0}</b> was successfully updated.', $original));
+        return Redirect::back()->with('success', __d('content', 'The Menu <b>{0}</b> was successfully updated.', $lastName));
     }
 
     public function destroy($id)

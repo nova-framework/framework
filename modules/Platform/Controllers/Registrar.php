@@ -18,6 +18,7 @@ use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Str;
+use Carbon\Carbon;
 
 use Shared\Support\ReCaptcha;
 
@@ -246,7 +247,8 @@ class Registrar extends BaseController
         }
 
         $validity = Config::get('platform::tokens.activation.validity', 60); // In minutes.
-
+        
+        // FatalThrowableError (E_ERROR) = Class 'Modules\Platform\Controllers\Carbon' not found
         $oldest = Carbon::parse('-' .$validity .' minutes');
 
         try {

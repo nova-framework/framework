@@ -248,7 +248,6 @@ class Registrar extends BaseController
 
         $validity = Config::get('platform::tokens.activation.validity', 60); // In minutes.
         
-        // FatalThrowableError (E_ERROR) = Class 'Modules\Platform\Controllers\Carbon' not found
         $oldest = Carbon::parse('-' .$validity .' minutes');
 
         try {

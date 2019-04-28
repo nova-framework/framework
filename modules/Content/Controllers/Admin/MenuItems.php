@@ -76,10 +76,13 @@ class MenuItems extends BaseController
             $this->generatePostForms($menu), $this->generateTaxonomyForms($menu)
         );
 
+        $items = $menu->items->where('parent_id', 0);
+
         return $this->createView()
             ->shares('title', __d('content', 'Manage a Menu'))
             ->with('menu', $menu)
-            ->with('blocks', $blocks);
+            ->with('blocks', $blocks)
+            ->with('items', $items);
     }
 
     public function store(Request $request, $id, $mode)

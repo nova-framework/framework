@@ -1,3 +1,8 @@
+<?php
+
+use Modules\Content\Support\MenuItemsNestable;
+
+?>
 <link rel="stylesheet" type="text/css" href="<?= asset_url('css/jquery.nestable.css', 'modules/content'); ?>">
 
 <section class="content-header">
@@ -64,8 +69,7 @@
     </div>
     <div class="box-body" style="min-height: 550px;">
         <div class="dd">
-            <?php $items = $menu->items->where('parent_id', 0); ?>
-            <?= View::make('Modules/Content::Partials/Admin/MenuItems/MenuItemsNestable', compact('menu', 'items'))->render(); ?>
+            <?= MenuItemsNestable::render($items); ?>
         </div>
     </div>
     <div class="box-footer">

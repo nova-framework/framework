@@ -1,6 +1,6 @@
 <?php
 
-use Modules\Content\Support\MenuItemsNestable;
+use Modules\Content\Support\MenuItemsNestable as Nestable;
 
 ?>
 <link rel="stylesheet" type="text/css" href="<?= asset_url('css/jquery.nestable.css', 'modules/content'); ?>">
@@ -69,7 +69,7 @@ use Modules\Content\Support\MenuItemsNestable;
     </div>
     <div class="box-body" style="min-height: 550px;">
         <div class="dd">
-            <?= MenuItemsNestable::render($items); ?>
+            <?= Nestable::render($items); ?>
         </div>
     </div>
     <div class="box-footer">

@@ -69,7 +69,9 @@ use Modules\Content\Support\MenuItemsNestable;
     </div>
     <div class="box-body" style="min-height: 550px;">
         <div class="dd">
+            <?php if (! $items->isEmpty()) { ?>
             <?= MenuItemsNestable::render($items); ?>
+            <?php } ?>
         </div>
     </div>
     <div class="box-footer">

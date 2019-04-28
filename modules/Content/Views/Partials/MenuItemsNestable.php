@@ -20,7 +20,9 @@ use Modules\Content\Support\MenuItemsNestable as Nestable;
                 <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-edit-dialog" data-id="<?= $itemId; ?>" data-name="<?= $title; ?>" title="<?= __d('content', 'Edit this Menu Item'); ?>" role="button"><i class="fa fa-pencil"></i></a>
             </div>
         </div>
-        <?= Nestable::render($item->children); ?>
+        <?php if (! with($children = $item->children)->isEmpty()) { ?>
+        <?= Nestable::render($children); ?>
+        <?php } ?>
     </li>
     <?php } ?>
 </ol>

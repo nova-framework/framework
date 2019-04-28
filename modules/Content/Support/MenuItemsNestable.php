@@ -11,6 +11,10 @@ class MenuItemsNestable
 
     public static function render(Collection $items)
     {
+        if ($items->isEmpty()) {
+            return '';
+        }
+
         $items->load('children');
 
         // We will sort the items collection with the same algorithm as in the real widget.

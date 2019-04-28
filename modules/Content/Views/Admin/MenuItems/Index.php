@@ -69,7 +69,7 @@ use Modules\Content\Support\MenuItemsNestable as Nestable;
     </div>
     <div class="box-body" style="min-height: 550px;">
         <div class="dd">
-            <?= Nestable::render($items); ?>
+        <?= Nestable::render($items); ?>
         </div>
     </div>
     <div class="box-footer">

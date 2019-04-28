@@ -8,15 +8,27 @@ use Nova\Support\Facades\View;
 
 class MenuItemsNestable
 {
+    /**
+     * The view used for rendering.
+     *
+     * @var string
+     */
+    protected static $view = 'Modules/Content::Partials/MenuItemsNestable';
+
 
     public static function render(Collection $items)
     {
-        if ($items->isEmpty()) {
-            return '';
+        if (! $items->isEmpty()) {
+            $items->load('children');
+
+            $view = View::make(static::$view)->with('items', static::sortItems($items));
+
+            return $view->render();
         }
+    }
 
-        $items->load('children');
-
+    protected static function sortItems(Collection $items)
+    {
         // We will sort the items collection with the same algorithm as in the real widget.
         $items->sort(function ($a, $b)
         {
@@ -27,6 +39,6 @@ class MenuItemsNestable
             return ($a->menu_order < $b->menu_order) ? -1 : 1;
         });
 
-        return View::make('Modules/Content::Partials/MenuItemsNestable', compact('items'))->render();
+        return $items;
     }
 }

@@ -121,11 +121,13 @@ class MenuItems extends BaseController
             return Redirect::back()->withErrors($validator->errors());
         }
 
+        $type = Arr::get($input, 'type');
+
         $item->title = Arr::get($input, 'name');
 
         $item->save();
 
-        if ($item->menu_item_type == 'custom') {
+        if (($type == 'custom') && ($item->menu_item_type == 'custom')) {
             $item->saveMeta('menu_item_url', Arr::get($input, 'link'));
         }
 

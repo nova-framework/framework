@@ -43,17 +43,19 @@ class MenuItems extends BaseController
             'valid_name' => __d('content', 'The :attribute field is not a valid name.'),
         );
 
+        $attributes = array(
+            'name'  => __d('content', 'Name'),
+            'link'  => __d('content', 'URL'),
+            'type'  => __d('content', 'Type'),
+        );
+
         // Add the custom Validation Rule commands.
         Validator::extend('valid_name', function ($attribute, $value, $parameters)
         {
             return ($value == strip_tags($value));
         });
 
-        return Validator::make($data, $rules, $messages, array(
-            'name'  => __d('content', 'Name'),
-            'link'  => __d('content', 'URL'),
-            'type'  => __d('content', 'Type'),
-        ));
+        return Validator::make($data, $rules, $messages, $attributes);
     }
 
     public function index($id)

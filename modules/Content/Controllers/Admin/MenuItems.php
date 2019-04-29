@@ -31,9 +31,7 @@ class MenuItems extends BaseController
 
     protected function validator(array $data)
     {
-        $types = array_keys(
-            MenuItem::getInstanceRelations()
-        );
+        $types = MenuItem::getInstanceRelationTypes();
 
         $rules = array(
             'name' => 'required|valid_name',

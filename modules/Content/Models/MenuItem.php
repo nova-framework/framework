@@ -44,9 +44,9 @@ class MenuItem extends Post
     /**
      * @return array
      */
-    public static function getInstanceRelations()
+    public static function getInstanceRelationTypes()
     {
-        return static::$instanceRelations;
+        return array_keys(static::$instanceRelations);
     }
 
     /**

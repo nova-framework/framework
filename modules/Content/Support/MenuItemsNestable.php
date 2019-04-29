@@ -21,15 +21,15 @@ class MenuItemsNestable
         if (! $items->isEmpty()) {
             $items->load('children');
 
-            $view = View::make(static::$view)->with('items', static::sortItems($items));
+            // We will sort the items collection with the same algorithm as in the real widget.
+            static::sortItems($items);
 
-            return $view->render();
+            return View::make(static::$view, compact('items'))->render();
         }
     }
 
     protected static function sortItems(Collection $items)
     {
-        // We will sort the items collection with the same algorithm as in the real widget.
         $items->sort(function ($a, $b)
         {
             if ($a->menu_order === $b->menu_order) {

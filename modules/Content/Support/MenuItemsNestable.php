@@ -38,7 +38,5 @@ class MenuItemsNestable
 
             return ($a->menu_order < $b->menu_order) ? -1 : 1;
         });
-
-        return $items;
     }
 }

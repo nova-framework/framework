@@ -29,33 +29,26 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 class MenuItems extends BaseController
 {
 
-    protected function validator(array $data, $local)
+    protected function validator(array $data)
     {
         $rules = array(
-            'link' => 'required|' . ($local ? 'valid_uri' : 'url'),
             'name' => 'required|valid_name',
+            'link' => 'required|url',
         );
 
         $messages = array(
-            'valid_uri'  => __d('content', 'The :attribute field is not a valid URI.'),
             'valid_name' => __d('content', 'The :attribute field is not a valid name.'),
         );
 
         // Add the custom Validation Rule commands.
-        Validator::extend('valid_uri', function ($attribute, $value, $parameters)
-        {
-            return preg_match('/^[\pL\pM\pN\/_-]+$/u', $value);
-        });
-
         Validator::extend('valid_name', function ($attribute, $value, $parameters)
         {
             return ($value == strip_tags($value));
         });
 
         return Validator::make($data, $rules, $messages, array(
-            'link'  => __d('content', 'URL'),
             'name'  => __d('content', 'Name'),
-            'local' => __d('content', 'Local')
+            'link'  => __d('content', 'URL'),
         ));
     }
 
@@ -122,16 +115,7 @@ class MenuItems extends BaseController
             return Redirect::back()->with('danger', __d('content', 'Menu Item not found: #{0}', $itemId));
         }
 
-        Validator::extend('valid_name', function ($attribute, $value, $parameters)
-        {
-            return ($value == strip_tags($value));
-        });
-
-        $validator = Validator::make($input = $request->all(),
-            array('name'       => 'required|valid_name'),
-            array('valid_name' => __d('content', 'The :attribute field is not a valid name.')),
-            array('name'       => __d('content', 'Name'))
-        );
+        $validator = $this->validator($input = $request->all());
 
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator->errors());
@@ -140,6 +124,10 @@ class MenuItems extends BaseController
         $item->title = Arr::get($input, 'name');
 
         $item->save();
+
+        if ($item->menu_item_type == 'custom') {
+            $item->saveMeta('menu_item_url', Arr::get($input, 'link'));
+        }
 
         // Invalidate the cached menu data.
         Cache::forget('content.menus.' .$menu->slug);
@@ -239,17 +227,14 @@ class MenuItems extends BaseController
             return Redirect::back()->with('danger', __d('content', 'Invalid storing mode [{0}]', $mode));
         }
 
-        $validator = $this->validator(
-            $input = $request->all(), $local = $request->has('local')
-        );
+        $validator = $this->validator($input = $request->all());
 
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator->errors());
         }
 
         $name = Arr::get($input, 'name');
-
-        $url = Arr::get($input, 'link');
+        $url  = Arr::get($input, 'link');
 
         // Create a Menu Link instance.
         $menuLink = Post::create(array(
@@ -275,7 +260,7 @@ class MenuItems extends BaseController
             'menu_item_object'           => 'custom',
             'menu_item_object_id'        => $menuLink->id,
             'menu_item_target'           => null,
-            'menu_item_url'              => $local ? site_url($url) : $url,
+            'menu_item_url'              => $url,
         ));
 
         $menuLink->taxonomies()->attach($menu);

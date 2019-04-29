@@ -17,7 +17,7 @@ use Modules\Content\Support\MenuItemsNestable as Nestable;
             <div class="pull-left" style="margin-top: 5px;"><?= $label; ?> : <?= $title; ?></div>
             <div class="btn-group pull-right" role="group" aria-label="...">
                 <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $itemId; ?>" title="<?= __d('content', 'Delete this Menu Item'); ?>" role="button"><i class="fa fa-remove"></i></a>
-                <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-edit-dialog" data-id="<?= $itemId; ?>" data-name="<?= $title; ?>" title="<?= __d('content', 'Edit this Menu Item'); ?>" role="button"><i class="fa fa-pencil"></i></a>
+                <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-edit-dialog" data-id="<?= $itemId; ?>" data-name="<?= $title; ?>" data-type="<?= $item->menu_item_type; ?>" data-link="<?= $item->menu_item_url; ?>" title="<?= __d('content', 'Edit this Menu Item'); ?>" role="button"><i class="fa fa-pencil"></i></a>
             </div>
         </div>
         <?= Nestable::render($item->children); ?>

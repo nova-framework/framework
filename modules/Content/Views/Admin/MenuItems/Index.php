@@ -39,14 +39,6 @@ use Modules\Content\Support\MenuItemsNestable as Nestable;
             <label class="control-label" for="link"><?= __d('content', 'URL'); ?></label>
             <input name="link" id="custom-link" type="text" class="form-control" value="<?= Input::old('link'); ?>" placeholder="<?= __d('content', 'URL'); ?>">
         </div>
-            <div class="form-group">
-                <div class="col-md-1" style="padding: 0;">
-                    <input type="checkbox" name="local" id="custom-local" value="1" <?= (1 == Input::old('local')) ? 'checked="checked"' : ''; ?> />
-                </div>
-                <div class="col-md-11" style="padding: 2px 10px;">
-                    <label class="control-label" for="custom-local" style="margin-right: 10px;"><?= __d('content', 'Use a local URI'); ?></label>
-                </div>
-            </div>
     </div>
     <div class="box-footer">
         <input type="submit" name="submit" class="btn btn-primary col-sm-5 pull-right" value="<?= __d('content', 'Add to Menu'); ?>" />
@@ -127,7 +119,7 @@ $(function() {
             <div class="modal-header">
                 <button aria-label="Close" data-dismiss="modal" class="close" type="button">
                 <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title"><?= __d('content', 'Edit a Menu Item'); ?></h4>
+                <h4 class="modal-title modal-edit-title"><?= __d('content', 'Edit a Menu Item'); ?></h4>
             </div>
             <div class="modal-body">
                 <div class="col-md-12">
@@ -135,6 +127,11 @@ $(function() {
                 <div class="form-group">
                     <label class="control-label" for="name"><?= __d('content', 'Name'); ?></label>
                     <input name="name" id="modal-edit-name" type="text" class="form-control" value="" placeholder="<?= __d('content', 'Name'); ?>">
+                </div>
+
+                <div class="form-group" id="modal-link-form-group">
+                    <label class="control-label" for="name"><?= __d('content', 'URL'); ?></label>
+                    <input name="link" id="modal-edit-link" type="text" class="form-control" value="" placeholder="<?= __d('content', 'URL'); ?>">
                 </div>
 
                 </div>
@@ -146,6 +143,7 @@ $(function() {
                 <input type="submit" name="button" class="update-item-button btn btn-success col-md-3 pull-right" value="<?= __d('content', 'Save'); ?>" />
             </div>
 
+            <input type="hidden" name="type" id="modal-edit-type" value="" />
             <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
 
             </form>
@@ -159,10 +157,23 @@ $(function () {
     $('#modal-edit-dialog').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal
 
-        var id          = button.data('id');
-        var name        = button.data('name');
+        var id   = button.data('id');
+        var type = button.data('type');
+        var name = button.data('name');
+        var link = button.data('link');
 
+        $('#modal-edit-type').val(type);
         $('#modal-edit-name').val(name);
+
+        if (type === 'custom') {
+            $('#modal-edit-link').val(link);
+
+            $('#modal-link-form-group').show();
+        } else {
+            $('#modal-edit-link').val('<?= site_url(); ?>'); // For the sake of validation - the value is ignored for standard items.
+
+            $('#modal-link-form-group').hide();
+        }
 
         // The title.
         var title = sprintf("<?= __d('content', 'Edit the Menu Item : <b>%s</b>'); ?>", name);

@@ -3,6 +3,7 @@
 namespace Modules\Content\Controllers\Admin;
 
 use Nova\Auth\UserInterface as User;
+use Nova\Database\ORM\Collection;
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Http\Request;
 use Nova\Support\Facades\Auth;
@@ -13,7 +14,6 @@ use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 use Nova\Support\Arr;
-use Nova\Support\Collection;
 
 use Modules\Content\Models\Menu;
 use Modules\Content\Models\MenuItem;

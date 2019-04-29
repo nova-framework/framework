@@ -42,6 +42,14 @@ class MenuItem extends Post
     }
 
     /**
+     * @return array
+     */
+    public static function getInstanceRelations()
+    {
+        return static::$instanceRelations;
+    }
+
+    /**
      * @return Post|Page|CustomLink|Taxonomy
      */
     public function parent()

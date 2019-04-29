@@ -31,9 +31,14 @@ class MenuItems extends BaseController
 
     protected function validator(array $data)
     {
+        $types = array_keys(
+            MenuItem::getInstanceRelations()
+        );
+
         $rules = array(
             'name' => 'required|valid_name',
             'link' => 'required|url',
+            'type' => 'required|in:' .implode(',', $types),
         );
 
         $messages = array(
@@ -49,6 +54,7 @@ class MenuItems extends BaseController
         return Validator::make($data, $rules, $messages, array(
             'name'  => __d('content', 'Name'),
             'link'  => __d('content', 'URL'),
+            'type'  => __d('content', 'Type'),
         ));
     }
 
@@ -123,6 +129,7 @@ class MenuItems extends BaseController
 
         $type = Arr::get($input, 'type');
 
+        // Save the item title.
         $item->title = Arr::get($input, 'name');
 
         $item->save();

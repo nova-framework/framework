@@ -129,7 +129,7 @@ class MenuItems extends BaseController
 
         $type = Arr::get($input, 'type');
 
-        // Save the item title.
+        // Update the Menu Item.
         $item->title = Arr::get($input, 'name');
 
         $item->save();

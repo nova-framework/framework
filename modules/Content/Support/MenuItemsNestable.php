@@ -21,7 +21,7 @@ class MenuItemsNestable
         if (! $items->isEmpty()) {
             $items->load('children');
 
-            // We will sort the items collection with the same algorithm as in the real widget.
+            // We will sort the items collection with the algorithm used on real widget.
             static::sortItems($items);
 
             return View::make(static::$view, compact('items'))->render();

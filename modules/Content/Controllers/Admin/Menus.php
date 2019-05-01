@@ -13,6 +13,7 @@ use Nova\Support\Arr;
 use Modules\Content\Models\Menu;
 use Modules\Content\Models\Taxonomy;
 use Modules\Content\Models\Term;
+use Modules\Content\Support\Facades\TaxonomyType;
 use Modules\Platform\Controllers\Admin\BaseController;
 
 

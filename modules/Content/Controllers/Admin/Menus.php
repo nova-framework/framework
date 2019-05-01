@@ -109,15 +109,15 @@ class Menus extends BaseController
             return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
+        $term = $menu->term;
+
+        // Validate the Input data.
         $validator = $this->validator($request, $menu->id);
 
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator->errors());
         }
 
-        $term = $menu->term()->first();
-
-        //
         $name = $request->input('name');
 
         if (empty($slug = $request->input('slug'))) {

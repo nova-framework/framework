@@ -96,7 +96,8 @@ class Menus extends BaseController
             'count'       => 0,
         ));
 
-        return Redirect::back()->with('success', __d('content', 'The Menu <b>{0}</b> was successfully created.', $name));
+        return Redirect::back()
+            ->with('success', __d('content', 'The Menu <b>{0}</b> was successfully created.', $name));
     }
 
     public function update(Request $request, $id)
@@ -141,7 +142,8 @@ class Menus extends BaseController
         // Invalidate the cached menu data.
         Cache::forget('content.menus.' .$lastSlug);
 
-        return Redirect::back()->with('success', __d('content', 'The Menu <b>{0}</b> was successfully updated.', $lastName));
+        return Redirect::back()
+            ->with('success', __d('content', 'The Menu <b>{0}</b> was successfully updated.', $lastName));
     }
 
     public function destroy($id)
@@ -155,6 +157,9 @@ class Menus extends BaseController
 
         $name = $menu->name;
         $slug = $menu->slug;
+
+        //
+        // Delete the Menu together with its items and Term.
 
         $menu->items->each(function ($item) use ($menu)
         {
@@ -170,6 +175,7 @@ class Menus extends BaseController
         // Invalidate the cached menu data.
         Cache::forget('content.menus.' .$slug);
 
-        return Redirect::back()->with('success', __d('content', 'The Menu {0} was successfully deleted.', $name));
+        return Redirect::back()
+            ->with('success', __d('content', 'The Menu {0} was successfully deleted.', $name));
     }
 }

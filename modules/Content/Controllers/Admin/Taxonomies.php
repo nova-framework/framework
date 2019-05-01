@@ -160,10 +160,8 @@ class Taxonomies extends BaseController
 
         $taxonomyType = TaxonomyType::make($type);
 
-        $name = $taxonomyType->label('name');
-
         return Redirect::back()
-            ->with('success', __d('content', 'The {0} <b>{1}</b> was successfully created.', $name, $input['name']));
+            ->with('success', __d('content', 'The {0} <b>{1}</b> was successfully created.', $taxonomyType->label('name'), $name));
     }
 
     public function update(Request $request, $id)
@@ -177,6 +175,7 @@ class Taxonomies extends BaseController
             return Redirect::back()->with('danger', __d('content', 'Taxonomy not found: #{0}', $id));
         }
 
+        $type = $taxonomy->taxonomy;
         $term = $taxonomy->term;
 
         // Validate the Input data.
@@ -189,18 +188,11 @@ class Taxonomies extends BaseController
         $parentId = ! empty($input['parent']) ? (int) $input['parent'] : 0;
 
         //
-        $type = $input['taxonomy']
         $name = $input['name'];
 
         if (empty($slug = Arr::get($input, 'slug'))) {
             $slug = Term::uniqueSlug($name, $type, $taxonomy->id);
         }
-
-        // Update the Taxonomy.
-        $taxonomy->description = $input['description'];
-        $taxonomy->parent_id   = $parentId;
-
-        $taxonomy->save();
 
         // Update the Term.
         $term->name = $name;
@@ -208,16 +200,20 @@ class Taxonomies extends BaseController
 
         $term->save();
 
+        // Update the Taxonomy.
+        $taxonomy->description = $input['description'];
+        $taxonomy->parent_id   = $parentId;
+
+        $taxonomy->save();
+
         // Invalidate the content caches.
-        $this->clearContentCache($type = $taxonomy->taxonomy);
+        $this->clearContentCache($type);
 
         //
         $taxonomyType = TaxonomyType::make($type);
 
-        $name = $taxonomyType->label('name');
-
         return Redirect::back()
-            ->with('success', __d('content', 'The {0} <b>{1}</b> was successfully updated.', $name, $input['name']));
+            ->with('success', __d('content', 'The {0} <b>{1}</b> was successfully updated.', $taxonomyType->label('name'), $name));
     }
 
     public function destroy($id)

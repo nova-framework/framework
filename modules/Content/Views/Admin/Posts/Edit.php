@@ -580,7 +580,7 @@ $(function () {
         <h3 class="box-title"><?= __d('content', 'Tags'); ?></h3>
     </div>
     <div class="box-body" style="padding-bottom: 20px;">
-        <form id="create-tags-form" action="<?= site_url('admin/content/' .$post->id .'/tags'); ?>" method='POST' role="form">
+        <form id="create-tags-form" action="<?= site_url('admin/content/{0}/tags', $post->id); ?>" method='POST' role="form">
 
         <div class="form-group">
             <div class="input-group">
@@ -590,6 +590,8 @@ $(function () {
                 </span>
             </div>
         </div>
+
+        <input type="hidden" name="taxonomy" value="post_tag" />
 
         </form>
         <p class="text-muted"><?= __d('content', 'Separate tags with commas.'); ?></p>

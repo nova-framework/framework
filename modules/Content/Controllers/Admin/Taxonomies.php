@@ -10,6 +10,7 @@ use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
+use Nova\Support\Arr;
 use Nova\Support\Str;
 
 use Modules\Content\Models\Taxonomy;
@@ -112,11 +113,12 @@ class Taxonomies extends BaseController
             return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
-        $parentId = ! empty($input['parent']) ? (int) $input['parent'] : 0;
+        $type = Arr::get($input, 'taxonomy');
 
         //
-        $type = $input['taxonomy']
-        $name = $input['name'];
+        $name = Arr::get($input, 'name');
+
+        $parentId = (int) Arr::get($input, 'parent', 0);
 
         if (empty($slug = Arr::get($input, 'slug'))) {
             $slug = Term::uniqueSlug($name, $type);
@@ -141,7 +143,7 @@ class Taxonomies extends BaseController
 
         if ($ajaxRespose) {
             // The request was made by the Post Editor via AJAX, so we will return a fresh taxonomies selector.
-            $selected = $request->input('taxonomy', array());
+            $selected = Arr::get($input, $type, array());
 
             // Add also the fresh category ID.
             $selected[] = $taxonomy->id;
@@ -154,8 +156,7 @@ class Taxonomies extends BaseController
             return Response::json(array(
                 'taxonomyId' => $taxonomy->id,
                 'taxonomies' => $taxonomies
-
-            ), 200);
+            ));
         }
 
         $taxonomyType = TaxonomyType::make($type);
@@ -175,7 +176,6 @@ class Taxonomies extends BaseController
             return Redirect::back()->with('danger', __d('content', 'Taxonomy not found: #{0}', $id));
         }
 
-        $type = $taxonomy->taxonomy;
         $term = $taxonomy->term;
 
         // Validate the Input data.
@@ -185,10 +185,13 @@ class Taxonomies extends BaseController
             return Redirect::back()->withInput()->withErrors($validator->errors());
         }
 
-        $parentId = ! empty($input['parent']) ? (int) $input['parent'] : 0;
+        $type = Arr::get($input, 'taxonomy');
 
-        //
-        $name = $input['name'];
+        if ($type !== $taxonomy->taxonomy) {
+            return Redirect::back()->with('danger', __d('content', 'The requested Taxonomy type [{0}] does not match.', $type));
+        }
+
+        $name = Arr::get($input, 'name');
 
         if (empty($slug = Arr::get($input, 'slug'))) {
             $slug = Term::uniqueSlug($name, $type, $taxonomy->id);
@@ -201,8 +204,9 @@ class Taxonomies extends BaseController
         $term->save();
 
         // Update the Taxonomy.
-        $taxonomy->description = $input['description'];
-        $taxonomy->parent_id   = $parentId;
+        $taxonomy->description = Arr::get($input, 'description');
+
+        $taxonomy->parent_id = (int) Arr::get($input, 'parent', 0);
 
         $taxonomy->save();
 

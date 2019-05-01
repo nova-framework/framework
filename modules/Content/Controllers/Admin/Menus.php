@@ -8,6 +8,7 @@ use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Validator;
+use Nova\Support\Arr;
 
 use Modules\Content\Models\Menu;
 use Modules\Content\Models\Taxonomy;
@@ -18,7 +19,7 @@ use Modules\Platform\Controllers\Admin\BaseController;
 class Menus extends BaseController
 {
 
-    protected function validator(Request $request, $id = 0)
+    protected function validator(array $data, $id = 0)
     {
         $rules = array(
             'name'        => 'required|valid_text',
@@ -56,7 +57,7 @@ class Menus extends BaseController
             return ($value == strip_tags($value));
         });
 
-        return Validator::make($request->all(), $rules, $messages, $attributes);
+        return Validator::make($data, $rules, $messages, $attributes);
     }
 
     public function index()
@@ -73,15 +74,18 @@ class Menus extends BaseController
 
     public function store(Request $request)
     {
-        $validator = $this->validator($request);
+        $input = $request->all();
+
+        // Validate the Input data.
+        $validator = $this->validator($input);
 
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator->errors());
         }
 
-        $name = $request->input('name');
+        $name = Arr::get($input, 'name');
 
-        if (empty($slug = $request->input('slug'))) {
+        if (empty($slug = Arr::get($input, 'slug'))) {
             $slug = Term::uniqueSlug($name, 'nav_menu');
         }
 
@@ -94,7 +98,7 @@ class Menus extends BaseController
         $taxonomy = Taxonomy::create(array(
             'term_id'     => $term->id,
             'taxonomy'    => 'nav_menu',
-            'description' => $request->input('description'),
+            'description' => Arr::get($input, 'description'),
             'parent_id'   => 0,
             'count'       => 0,
         ));
@@ -105,6 +109,8 @@ class Menus extends BaseController
 
     public function update(Request $request, $id)
     {
+        $input = $request->all();
+
         try {
             $menu = Menu::with('term')->findOrFail($id);
         }
@@ -115,15 +121,15 @@ class Menus extends BaseController
         $term = $menu->term;
 
         // Validate the Input data.
-        $validator = $this->validator($request, $menu->id);
+        $validator = $this->validator($input, $menu->id);
 
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator->errors());
         }
 
-        $name = $request->input('name');
+        $name = Arr::get($input, 'name');
 
-        if (empty($slug = $request->input('slug'))) {
+        if (empty($slug = Arr::get($input, 'slug'))) {
             $slug = Term::uniqueSlug($name, 'nav_menu', $menu->id);
         }
 
@@ -138,7 +144,7 @@ class Menus extends BaseController
         $term->save();
 
         // Update the Taxonomy.
-        $menu->description = $request->input('description');
+        $menu->description = Arr::get($input, 'description');
 
         $menu->save();
 

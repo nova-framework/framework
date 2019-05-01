@@ -76,7 +76,11 @@ class Menus extends BaseController
             return Redirect::back()->withErrors($validator->errors());
         }
 
-        $slug = Term::uniqueSlug($name = $request->input('name'), 'nav_menu');
+        $name = $request->input('name');
+
+        if (empty($slug = $request->input('slug'))) {
+            $slug = Term::uniqueSlug($name, 'nav_menu');
+        }
 
         $term = Term::create(array(
             'name'   => $name,
@@ -112,14 +116,20 @@ class Menus extends BaseController
 
         $term = $menu->term()->first();
 
+        //
+        $name = $request->input('name');
+
+        if (empty($slug = $request->input('slug'))) {
+            $slug = Term::uniqueSlug($name, 'nav_menu', $menu->id);
+        }
+
         // Get the original information of the Term.
         $lastName = $term->name;
         $lastSlug = $term->slug;
 
         // Update the Term.
-        $term->name = $name = $request->input('name');
-
-        $term->slug = Term::uniqueSlug($name, 'nav_menu', $menu->id);
+        $term->name = $name;
+        $term->slug = $slug;
 
         $term->save();
 

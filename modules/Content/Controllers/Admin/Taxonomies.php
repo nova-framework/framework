@@ -55,7 +55,7 @@ class Taxonomies extends BaseController
 
             $query = Taxonomy::where('taxonomy', $taxonomy)->whereHas('term', function ($query) use ($value)
             {
-                $query->where('name', $value);
+                $query->where('slug', $value);
 
             })->where('id', '<>', (int) $id);
 
@@ -114,20 +114,24 @@ class Taxonomies extends BaseController
 
         $parentId = ! empty($input['parent']) ? (int) $input['parent'] : 0;
 
+        //
+        $type = $input['taxonomy']
+        $name = $input['name'];
+
         if (empty($slug = Arr::get($input, 'slug'))) {
-            $slug = Term::uniqueSlug($input['name'], $input['taxonomy']);
+            $slug = Term::uniqueSlug($name, $type);
         }
 
         // Create the Term.
         $term = Term::create(array(
-            'name' => $input['name'],
+            'name' => $name,
             'slug' => $slug,
         ));
 
         // Create the Taxonomy.
         $taxonomy = Taxonomy::create(array(
             'term_id'     => $term->id,
-            'taxonomy'    => $type = $input['taxonomy'],
+            'taxonomy'    => $type,
             'description' => $input['description'],
             'parent_id'   => $parentId,
         ));
@@ -184,8 +188,12 @@ class Taxonomies extends BaseController
 
         $parentId = ! empty($input['parent']) ? (int) $input['parent'] : 0;
 
+        //
+        $type = $input['taxonomy']
+        $name = $input['name'];
+
         if (empty($slug = Arr::get($input, 'slug'))) {
-            $slug = Term::uniqueSlug($input['name'], $input['taxonomy']);
+            $slug = Term::uniqueSlug($name, $type, $taxonomy->id);
         }
 
         // Update the Taxonomy.
@@ -195,7 +203,7 @@ class Taxonomies extends BaseController
         $taxonomy->save();
 
         // Update the Term.
-        $term->name = $input['name'];
+        $term->name = $name;
         $term->slug = $slug;
 
         $term->save();

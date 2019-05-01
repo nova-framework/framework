@@ -21,32 +21,47 @@ use Modules\Platform\Controllers\Admin\BaseController;
 class Taxonomies extends BaseController
 {
 
-    protected function validator(array $data, $id = null)
+    protected function validator(array $data, $id = 0)
     {
-        $taxonomies = TaxonomyType::getNames();
+        $taxonomies = implode(',', TaxonomyType::getNames());
 
         //
-        $ignore = ! is_null($id) ? ',' .intval($id) : '';
+        $taxonomy = Arr::get($data, 'taxonomy', 'unknown');
 
         // The Validation rules.
         $rules = array(
-            'name'           => 'required|min:3|max:255|valid_text',
-            'slug'           => 'min:4|max:100|alpha_dash|unique:terms,slug' .$ignore,
-            'description'    => 'min:3|max:1000|valid_text',
-            'taxonomy'       => 'required|in:' .implode(',', $taxonomies),
+            'taxonomy'    => 'required|in:' .$taxonomies,
+            'name'        => 'required|min:3|max:255|valid_text',
+            'slug'        => 'min:4|max:100|alpha_dash|unique_slug:' .$taxonomy .',' .intval($id),
+            'description' => 'min:3|max:1000|valid_text',
         );
 
         $messages = array(
-            'valid_text' => __d('content', 'The :attribute field is not a valid text.'),
+            'unique_slug' => __d('content', 'The :attribute field is not an unique Taxonomy slug.'),
+            'valid_text'  => __d('content', 'The :attribute field is not a valid text.'),
         );
 
         $attributes = array(
+            'taxonomy'    => __d('content', 'Taxonomy'),
             'name'        => __d('content', 'Name'),
             'slug'        => __d('content', 'Slug'),
             'description' => __d('content', 'Description'),
         );
 
         // Add the custom Validation Rule commands.
+        Validator::extend('unique_slug', function ($attribute, $value, $parameters)
+        {
+            list ($taxonomy, $id) = array_pad($parameters, 2, null);
+
+            $query = Taxonomy::where('taxonomy', $taxonomy)->whereHas('term', function ($query) use ($value)
+            {
+                $query->where('name', $value);
+
+            })->where('id', '<>', (int) $id);
+
+            return ! $query->exists();
+        });
+
         Validator::extend('valid_text', function($attribute, $value, $parameters)
         {
             return ($value == strip_tags($value));

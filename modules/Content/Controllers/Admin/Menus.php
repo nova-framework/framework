@@ -18,23 +18,39 @@ use Modules\Platform\Controllers\Admin\BaseController;
 class Menus extends BaseController
 {
 
-    protected function validator(Request $request)
+    protected function validator(Request $request, $id = 0)
     {
         $rules = array(
             'name'        => 'required|valid_text',
+            'slug'        => 'min:4|max:100|alpha_dash|unique_slug:' .intval($id),
             'description' => 'required|valid_text',
         );
 
         $messages = array(
-            'valid_text' => __d('content', 'The :attribute field is not a valid text.'),
+            'unique_slug' => __d('content', 'The :attribute field is not an unique Menu slug.'),
+            'valid_text'  => __d('content', 'The :attribute field is not a valid text.'),
         );
 
         $attributes = array(
             'name'        => __d('content', 'Name'),
+            'slug'        => __d('content', 'Slug'),
             'description' => __d('content', 'Description'),
         );
 
         // Add the custom Validation Rule commands.
+        Validator::extend('unique_slug', function ($attribute, $value, $parameters)
+        {
+            $id = array_shift($parameters);
+
+            $query = Taxonomy::where('taxonomy', 'nav_menu')->whereHas('term', function ($query) use ($value)
+            {
+                $query->where('name', $value);
+
+            })->where('id', '<>', (int) $id);
+
+            return ! $query->exists();
+        });
+
         Validator::extend('valid_text', function ($attribute, $value, $parameters)
         {
             return ($value == strip_tags($value));

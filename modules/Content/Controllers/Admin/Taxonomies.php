@@ -180,7 +180,7 @@ class Taxonomies extends BaseController
         $term = $taxonomy->term;
 
         // Validate the Input data.
-        $validator = $this->validator($input, $term->id);
+        $validator = $this->validator($input, $taxonomy->id);
 
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withErrors($validator->errors());

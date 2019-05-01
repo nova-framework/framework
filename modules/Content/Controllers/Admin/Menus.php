@@ -108,7 +108,7 @@ class Menus extends BaseController
             return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
         }
 
-        $validator = $this->validator($request);
+        $validator = $this->validator($request, $menu->id);
 
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator->errors());

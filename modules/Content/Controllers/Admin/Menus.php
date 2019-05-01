@@ -61,10 +61,13 @@ class Menus extends BaseController
 
     public function index()
     {
+        $taxonomyType = TaxonomyType::make('nav_menu');
+
+        //
         $menus = Menu::paginate(15);
 
         return $this->createView()
-            ->shares('title', __d('content', 'Menus'))
+            ->shares('title', $taxonomyType->label('title'))
             ->with('menus', $menus);
     }
 

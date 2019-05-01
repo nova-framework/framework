@@ -26,6 +26,10 @@
             <label class="control-label" for="name"><?= __d('content', 'Name'); ?></label>
             <input name="name" id="name" type="text" class="form-control" value="<?= Input::old('name'); ?>" placeholder="<?= __d('content', 'Name'); ?>">
         </div>
+        <div class="form-group">
+            <label class="control-label" for="slug"><?= __d('content', 'Slug'); ?></label>
+            <input name="slug" id="slug" type="text" class="form-control" value="<?= Input::old('slug'); ?>" placeholder="<?= __d('content', 'Slug'); ?>">
+        </div>
         <div class="form-group" style=" margin-bottom: 0;">
             <label class="control-label" for="description"><?= __d('content', 'Description'); ?></label>
             <textarea name="description" id="description" class="form-control" rows="8" style="resize: none;" placeholder="<?= __d('content', 'Description'); ?>"><?= Input::old('description'); ?></textarea>
@@ -69,7 +73,7 @@
                 <td style="text-align: right; vertical-align: middle;" width="20%">
                     <div class="btn-group" role="group" aria-label="...">
                         <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#modal-delete-dialog" data-id="<?= $menu->id; ?>" title="<?= __d('content', 'Delete this Menu'); ?>" role="button"><i class="fa fa-remove"></i></a>
-                        <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-edit-dialog" data-id="<?= $menu->id; ?>" data-name="<?= $menu->name; ?>" data-description="<?= $menu->description; ?>" title="<?= __d('content', 'Edit this Menu'); ?>" role="button"><i class="fa fa-pencil"></i></a>
+                        <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#modal-edit-dialog" data-id="<?= $menu->id; ?>" data-name="<?= $menu->name; ?>" data-slug="<?= $menu->slug; ?>" data-description="<?= $menu->description; ?>" title="<?= __d('content', 'Edit this Menu'); ?>" role="button"><i class="fa fa-pencil"></i></a>
                         <a class="btn btn-sm btn-warning" href="<?= site_url('admin/menus/' .$menu->id); ?>" title="<?= __d('content', 'Manage the Items on this Menu'); ?>" role="button"><i class="fa fa-search"></i></a>
                     </div>
                 </td>
@@ -99,7 +103,7 @@
             <div class="modal-header">
                 <button aria-label="Close" data-dismiss="modal" class="close" type="button">
                 <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title"><?= __d('content', 'Edit a Menu Item'); ?></h4>
+                <h4 class="modal-title modal-edit-title"><?= __d('content', 'Edit a Menu Item'); ?></h4>
             </div>
             <div class="modal-body">
                 <div class="col-md-12">
@@ -107,6 +111,10 @@
                 <div class="form-group">
                     <label class="control-label" for="name"><?= __d('content', 'Name'); ?></label>
                     <input name="name" id="modal-edit-name" type="text" class="form-control" value="" placeholder="<?= __d('content', 'Name'); ?>">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="slug"><?= __d('content', 'Slug'); ?></label>
+                    <input name="slug" id="modal-edit-slug" type="text" class="form-control" value="" placeholder="<?= __d('content', 'Slug'); ?>">
                 </div>
                 <div class="form-group" style=" margin-bottom: 0;">
                     <label class="control-label" for="description"><?= __d('content', 'Description'); ?></label>
@@ -137,9 +145,11 @@ $(function () {
 
         var id   = button.data('id');
         var name = button.data('name');
+        var slug = button.data('slug');
         var text = button.data('description');
 
         $('#modal-edit-name').val(name);
+        $('#modal-edit-slug').val(slug);
         $('#modal-edit-description').val(text);
 
         // The title.

@@ -173,11 +173,11 @@ $(function () {
 
                 <div class="form-group">
                     <label class="control-label" for="name"><?= __d('content', 'Name'); ?></label>
-                    <input name="name" id="modal-edit-name" type="text" class="form-control" value="<?= Input::old('name'); ?>" placeholder="<?= __d('content', 'Name'); ?>">
+                    <input name="name" id="modal-edit-name" type="text" class="form-control" value="" placeholder="<?= __d('content', 'Name'); ?>">
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="slug"><?= __d('content', 'Slug'); ?></label>
-                    <input name="slug" id="modal-edit-slug" type="text" class="form-control" value="<?= Input::old('slug'); ?>" placeholder="<?= __d('content', 'Slug'); ?>">
+                    <input name="slug" id="modal-edit-slug" type="text" class="form-control" value="" placeholder="<?= __d('content', 'Slug'); ?>">
                 </div>
                 <?php if ($taxonomyType->isHierarchical()) { ?>
                 <div class="form-group">
@@ -189,7 +189,7 @@ $(function () {
                 <?php } ?>
                 <div class="form-group" style=" margin-bottom: 0;">
                     <label class="control-label" for="description"><?= __d('content', 'Description'); ?></label>
-                    <textarea name="description" id="modal-edit-description" class="form-control" rows="8" style="resize: none;" placeholder="<?= __d('content', 'Description'); ?>"><?= Input::old('description'); ?></textarea>
+                    <textarea name="description" id="modal-edit-description" class="form-control" rows="8" style="resize: none;" placeholder="<?= __d('content', 'Description'); ?>"></textarea>
                 </div>
 
                 </div>

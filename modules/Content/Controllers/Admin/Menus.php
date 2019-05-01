@@ -103,7 +103,7 @@ class Menus extends BaseController
     public function update(Request $request, $id)
     {
         try {
-            $menu = Menu::findOrFail($id);
+            $menu = Menu::with('term')->findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
             return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));
@@ -149,7 +149,7 @@ class Menus extends BaseController
     public function destroy($id)
     {
         try {
-            $menu = Menu::with('items')->findOrFail($id);
+            $menu = Menu::with('term', 'items')->findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
             return Redirect::back()->with('danger', __d('content', 'Menu not found: #{0}', $id));

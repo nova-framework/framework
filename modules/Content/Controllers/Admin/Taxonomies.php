@@ -169,7 +169,7 @@ class Taxonomies extends BaseController
         $input = $request->all();
 
         try {
-            $taxonomy = Taxonomy::findOrFail($id);
+            $taxonomy = Taxonomy::with('term')->findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
             return Redirect::back()->with('danger', __d('content', 'Taxonomy not found: #{0}', $id));
@@ -219,7 +219,7 @@ class Taxonomies extends BaseController
     public function destroy($id)
     {
         try {
-            $taxonomy = Taxonomy::findOrFail($id);
+            $taxonomy = Taxonomy::with('term', 'children')->findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
             return Redirect::back()->with('danger', __d('content', 'Taxonomy not found: #{0}', $id));

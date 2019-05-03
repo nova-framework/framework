@@ -118,13 +118,13 @@ class Taxonomies extends BaseController
         //
         $name = Arr::get($input, 'name');
 
-        $parentId = (int) Arr::get($input, 'parent', 0);
-
         if (empty($slug = Arr::get($input, 'slug'))) {
             $slug = Term::uniqueSlug($name, $type);
         }
 
         $description = Arr::get($input, 'description');
+
+        $parentId = (int) Arr::get($input, 'parent', 0);
 
         // Create the Term.
         $term = Term::create(array(

@@ -124,6 +124,8 @@ class Taxonomies extends BaseController
             $slug = Term::uniqueSlug($name, $type);
         }
 
+        $description = Arr::get($input, 'description');
+
         // Create the Term.
         $term = Term::create(array(
             'name' => $name,
@@ -134,7 +136,7 @@ class Taxonomies extends BaseController
         $taxonomy = Taxonomy::create(array(
             'term_id'     => $term->id,
             'taxonomy'    => $type,
-            'description' => $input['description'],
+            'description' => $description,
             'parent_id'   => $parentId,
         ));
 

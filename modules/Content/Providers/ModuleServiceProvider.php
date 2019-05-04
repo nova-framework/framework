@@ -32,18 +32,19 @@ class ModuleServiceProvider extends ServiceProvider
     /**
      * The available content types and taxonomies.
      */
-    protected $postTypes = array(
-        'attachment'    => array('type' => 'Modules\Content\Platform\Types\Posts\Attachment'),
-        'block'         => array('type' => 'Modules\Content\Platform\Types\Posts\Block'),
-        'nav_menu_item' => array('type' => 'Modules\Content\Platform\Types\Posts\MenuItem'),
-        'page'          => array('type' => 'Modules\Content\Platform\Types\Posts\Page'),
-        'post'          => array('type' => 'Modules\Content\Platform\Types\Posts\Post'),
-    );
-
-    protected $taxonomyTypes = array(
-        'category' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Category'),
-        'nav_menu' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Menu'),
-        'post_tag' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Tag'),
+    protected $contentTypes = array(
+        'posts' => array(
+            'attachment'    => array('type' => 'Modules\Content\Platform\Types\Posts\Attachment'),
+            'block'         => array('type' => 'Modules\Content\Platform\Types\Posts\Block'),
+            'nav_menu_item' => array('type' => 'Modules\Content\Platform\Types\Posts\MenuItem'),
+            'page'          => array('type' => 'Modules\Content\Platform\Types\Posts\Page'),
+            'post'          => array('type' => 'Modules\Content\Platform\Types\Posts\Post'),
+        ),
+        'taxonomies' => array(
+            'category' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Category'),
+            'nav_menu' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Menu'),
+            'post_tag' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Tag'),
+        ),
     );
 
 
@@ -100,7 +101,7 @@ class ModuleServiceProvider extends ServiceProvider
      */
     protected function registerPostTypes()
     {
-        $config = Config::get('content.types.posts', $this->postTypes);
+        $config = $this->getConfiguredContentTypes('posts');
 
         foreach ($config as $name => $data) {
             $type = Arr::get($data, 'type');
@@ -117,7 +118,7 @@ class ModuleServiceProvider extends ServiceProvider
      */
     protected function registerTaxonomyTypes()
     {
-        $config = Config::get('content.types.taxonomies', $this->taxonomyTypes);
+        $config = $this->getConfiguredContentTypes('taxonomies');
 
         foreach ($config as $name => $data) {
             $type = Arr::get($data, 'type');
@@ -165,5 +166,18 @@ class ModuleServiceProvider extends ServiceProvider
                 'Modules\Content\Widgets\BlockHandler', $name, $position, $block->menu_order, array($this->app, $block)
             );
         }
+    }
+
+    /**
+     * Returns the configured content types from the specified family.
+     *
+     * @param  string  $family
+     * @return array
+     */
+    protected function getConfiguredContentTypes($family)
+    {
+        $default = Arr::get($this->contentTypes, $family, array());
+
+        return Config::get("content.types.{$family}", $default);
     }
 }

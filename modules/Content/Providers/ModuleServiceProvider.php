@@ -178,7 +178,9 @@ class ModuleServiceProvider extends ServiceProvider
     {
         $default = Arr::get($this->contentTypes, $family, array());
 
-        $config = array_map(function ($value)
+        $config = Config::get("content.types.{$family}", $default);
+
+        return array_filter(array_map(function ($value)
         {
             if (is_array($value) && Arr::has($value, 'uses')) {
                 return $value;
@@ -189,8 +191,6 @@ class ModuleServiceProvider extends ServiceProvider
                 return array('uses' => $value);
             }
 
-        }, Config::get("content.types.{$family}", $default));
-
-        return array_filter($config);
+        }, $config));
     }
 }

@@ -171,30 +171,34 @@ class ModuleServiceProvider extends ServiceProvider
     /**
      * Returns the configured content types from the specified family.
      *
-     * @param  string  $type
+     * @param  string  $family
      * @return array
      */
-    protected function getContentTypesConfig($type)
+    protected function getContentTypesConfig($family)
     {
-        $options = array_replace_recursive(
-            Arr::get($this->contentTypes, $type, array()), Config::get("content.types.{$type}", array())
+        $config = array_replace_recursive(
+            Arr::get($this->contentTypes, $family), Config::get("content.types.{$family}", array())
         );
 
-        return array_filter(array_map(function ($value)
+        $options = array_map(function ($value)
         {
-            if (is_array($value)) {
-                $type = Arr::get($value, 'uses');
-
-                if (is_string($type) && ! empty($type)) {
-                    return $value;
-                }
-            }
-
-            //
-            else if (is_string($value) && ! empty($value)) {
+            if (is_string($value) && ! empty($value)) {
                 return array('uses' => $value);
             }
 
-        }, $options));
+            return $value;
+
+        }, $config);
+
+        return array_filter($options, function ($option)
+        {
+            if (! is_array($option)) {
+                return false;
+            }
+
+            $typeClass = Arr::get($option, 'uses');
+
+            return is_string($typeClass) && ! empty($typeClass);
+        });
     }
 }

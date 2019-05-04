@@ -177,7 +177,7 @@ class ModuleServiceProvider extends ServiceProvider
     protected function getContentTypesConfig($family)
     {
         $config = array_replace_recursive(
-            Arr::get($this->contentTypes, $family), Config::get("content.types.{$family}", array())
+            Arr::get($this->contentTypes, $family, array()), Config::get("content.types.{$family}", array())
         );
 
         $options = array_map(function ($value)

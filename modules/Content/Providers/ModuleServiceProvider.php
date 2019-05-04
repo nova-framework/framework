@@ -30,7 +30,7 @@ class ModuleServiceProvider extends ServiceProvider
     );
 
     /**
-     * The available content types and taxonomies.
+     * The available content types.
      */
     protected $contentTypes = array(
         'posts' => array(

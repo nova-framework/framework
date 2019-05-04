@@ -34,16 +34,16 @@ class ModuleServiceProvider extends ServiceProvider
      */
     protected $contentTypes = array(
         'posts' => array(
-            'attachment'    => array('type' => 'Modules\Content\Platform\Types\Posts\Attachment'),
-            'block'         => array('type' => 'Modules\Content\Platform\Types\Posts\Block'),
-            'nav_menu_item' => array('type' => 'Modules\Content\Platform\Types\Posts\MenuItem'),
-            'page'          => array('type' => 'Modules\Content\Platform\Types\Posts\Page'),
-            'post'          => array('type' => 'Modules\Content\Platform\Types\Posts\Post'),
+            'attachment'    => 'Modules\Content\Platform\Types\Posts\Attachment',
+            'block'         => 'Modules\Content\Platform\Types\Posts\Block',
+            'nav_menu_item' => 'Modules\Content\Platform\Types\Posts\MenuItem',
+            'page'          => 'Modules\Content\Platform\Types\Posts\Page',
+            'post'          => 'Modules\Content\Platform\Types\Posts\Post',
         ),
         'taxonomies' => array(
-            'category' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Category'),
-            'nav_menu' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Menu'),
-            'post_tag' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Tag'),
+            'category' => 'Modules\Content\Platform\Types\Taxonomies\Category',
+            'nav_menu' => 'Modules\Content\Platform\Types\Taxonomies\Menu',
+            'post_tag' => 'Modules\Content\Platform\Types\Taxonomies\Tag',
         ),
     );
 
@@ -176,7 +176,16 @@ class ModuleServiceProvider extends ServiceProvider
      */
     protected function getContentTypesConfig($family)
     {
-        $default = Arr::get($this->contentTypes, $family, array());
+        // We will convert the local configuration to the site-wide style.
+
+        $default = array_map(function ($value)
+        {
+            return array(
+                'type'    => $value,
+                'options' => array(),
+            );
+
+        }, Arr::get($this->contentTypes, $family, array()));
 
         return Config::get("content.types.{$family}", $default);
     }

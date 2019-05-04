@@ -106,9 +106,11 @@ class ModuleServiceProvider extends ServiceProvider
         foreach ($config as $name => $data) {
             $type = Arr::get($data, 'type');
 
-            PostType::register($type, Arr::get($data, 'options', array()));
+            $options = Arr::get($data, 'options', array());
 
             //
+            PostType::register($type, $options);
+
             ContentLabel::register($name, $type);
         }
     }
@@ -123,9 +125,11 @@ class ModuleServiceProvider extends ServiceProvider
         foreach ($config as $name => $data) {
             $type = Arr::get($data, 'type');
 
-            TaxonomyType::register($type, Arr::get($data, 'options', array()));
+            $options = Arr::get($data, 'options', array());
 
             //
+            TaxonomyType::register($type, $options);
+
             ContentLabel::register($name, $type);
         }
     }

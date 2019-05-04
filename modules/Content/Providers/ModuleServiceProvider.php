@@ -182,7 +182,7 @@ class ModuleServiceProvider extends ServiceProvider
 
         return array_filter(array_map(function ($value)
         {
-            if (is_array($value) {
+            if (is_array($value)) {
                 $type = Arr::get($value, 'uses');
 
                 if (is_string($type) && ! empty($type)) {

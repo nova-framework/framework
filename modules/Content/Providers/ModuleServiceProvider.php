@@ -29,6 +29,23 @@ class ModuleServiceProvider extends ServiceProvider
         'Modules\Content\Providers\RouteServiceProvider',
     );
 
+    /**
+     * The available content types and taxonomies.
+     */
+    protected $postTypes = array(
+        'attachment'    => array('type' => 'Modules\Content\Platform\Types\Posts\Attachment'),
+        'block'         => array('type' => 'Modules\Content\Platform\Types\Posts\Block'),
+        'nav_menu_item' => array('type' => 'Modules\Content\Platform\Types\Posts\MenuItem'),
+        'page'          => array('type' => 'Modules\Content\Platform\Types\Posts\Page'),
+        'post'          => array('type' => 'Modules\Content\Platform\Types\Posts\Post'),
+    );
+
+    protected $taxonomyTypes = array(
+        'category' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Category'),
+        'nav_menu' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Menu'),
+        'post_tag' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Tag'),
+    );
+
 
     /**
      * Bootstrap the Application Events.
@@ -83,13 +100,7 @@ class ModuleServiceProvider extends ServiceProvider
      */
     protected function registerPostTypes()
     {
-        $config = Config::get('content.types.posts', array(
-            'attachment'    => array('type' => 'Modules\Content\Platform\Types\Posts\Attachment'),
-            'block'         => array('type' => 'Modules\Content\Platform\Types\Posts\Block'),
-            'nav_menu_item' => array('type' => 'Modules\Content\Platform\Types\Posts\MenuItem'),
-            'page'          => array('type' => 'Modules\Content\Platform\Types\Posts\Page'),
-            'post'          => array('type' => 'Modules\Content\Platform\Types\Posts\Post'),
-        ));
+        $config = Config::get('content.types.posts', $this->postTypes);
 
         foreach ($config as $name => $data) {
             $type = Arr::get($data, 'type');
@@ -106,11 +117,7 @@ class ModuleServiceProvider extends ServiceProvider
      */
     protected function registerTaxonomyTypes()
     {
-        $config = Config::get('content.types.taxonomies', array(
-            'category' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Category'),
-            'nav_menu' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Menu'),
-            'post_tag' => array('type' => 'Modules\Content\Platform\Types\Taxonomies\Tag'),
-        ));
+        $config = Config::get('content.types.taxonomies', $this->taxonomyTypes);
 
         foreach ($config as $name => $data) {
             $type = Arr::get($data, 'type');

@@ -103,10 +103,8 @@ class ModuleServiceProvider extends ServiceProvider
     {
         $config = $this->getContentTypesConfig('posts');
 
-        foreach ($config as $name => $data) {
-            $type = Arr::get($data, 'type');
-
-            $options = Arr::get($data, 'options', array());
+        foreach ($config as $name => $options) {
+            $type = Arr::pull($options, 'uses');
 
             //
             PostType::register($type, $options);
@@ -122,10 +120,8 @@ class ModuleServiceProvider extends ServiceProvider
     {
         $config = $this->getContentTypesConfig('taxonomies');
 
-        foreach ($config as $name => $data) {
-            $type = Arr::get($data, 'type');
-
-            $options = Arr::get($data, 'options', array());
+        foreach ($config as $name => $options) {
+            $type = Arr::pull($options, 'uses');
 
             //
             TaxonomyType::register($type, $options);
@@ -180,17 +176,21 @@ class ModuleServiceProvider extends ServiceProvider
      */
     protected function getContentTypesConfig($family)
     {
-        // Before using it, we will convert the local configuration to the site-wide style.
+        $default = Arr::get($this->contentTypes, $family, array());
 
-        $default = array_map(function ($value)
+        $config = array_map(function ($value)
         {
-            return array(
-                'type'    => $value,
-                'options' => array(),
-            );
+            if (is_array($value) && Arr::has($value, 'uses')) {
+                return $value;
+            }
 
-        }, Arr::get($this->contentTypes, $family, array()));
+            //
+            else if (is_string($value) && ! empty($value)) {
+                return array('uses' => $value);
+            }
 
-        return Config::get("content.types.{$family}", $default);
+        }, Config::get("content.types.{$family}", $default));
+
+        return array_filter($config);
     }
 }

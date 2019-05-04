@@ -182,7 +182,7 @@ class ModuleServiceProvider extends ServiceProvider
 
         $options = array_map(function ($value)
         {
-            if (is_string($value) && ! empty($value)) {
+            if (is_string($value)) {
                 return array('uses' => $value);
             }
 
@@ -196,9 +196,9 @@ class ModuleServiceProvider extends ServiceProvider
                 return false;
             }
 
-            $typeClass = Arr::get($option, 'uses');
+            $className = Arr::get($option, 'uses');
 
-            return is_string($typeClass) && ! empty($typeClass);
+            return is_string($className) && ! empty($className);
         });
     }
 }

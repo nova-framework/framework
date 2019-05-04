@@ -101,7 +101,7 @@ class ModuleServiceProvider extends ServiceProvider
      */
     protected function registerPostTypes()
     {
-        $config = $this->getConfiguredContentTypes('posts');
+        $config = $this->getContentTypesConfig('posts');
 
         foreach ($config as $name => $data) {
             $type = Arr::get($data, 'type');
@@ -118,7 +118,7 @@ class ModuleServiceProvider extends ServiceProvider
      */
     protected function registerTaxonomyTypes()
     {
-        $config = $this->getConfiguredContentTypes('taxonomies');
+        $config = $this->getContentTypesConfig('taxonomies');
 
         foreach ($config as $name => $data) {
             $type = Arr::get($data, 'type');
@@ -174,7 +174,7 @@ class ModuleServiceProvider extends ServiceProvider
      * @param  string  $family
      * @return array
      */
-    protected function getConfiguredContentTypes($family)
+    protected function getContentTypesConfig($family)
     {
         $default = Arr::get($this->contentTypes, $family, array());
 

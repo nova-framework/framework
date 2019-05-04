@@ -70,10 +70,12 @@ class ModuleServiceProvider extends ServiceProvider
     {
         parent::register();
 
-        // Register the Content Types.
+        //
         $this->registerPostTypes();
 
         $this->registerTaxonomyTypes();
+
+        $this->registerContentLabels();
     }
 
     /**
@@ -97,17 +99,6 @@ class ModuleServiceProvider extends ServiceProvider
             //
             ContentLabel::register($name, $type);
         }
-
-        //
-        // The custom links uses a pseudo-type called 'custom' on a Menu Item record.
-
-        ContentLabel::register('custom', function ()
-        {
-            return array(
-                'name'  => __d('content', 'Custom Link'),
-                'title' => __d('content', 'Custom Links'),
-            );
-        });
     }
 
     /**
@@ -129,6 +120,23 @@ class ModuleServiceProvider extends ServiceProvider
             //
             ContentLabel::register($name, $type);
         }
+    }
+
+    /**
+     * Register the additional Content Labels.
+     */
+    protected function registerContentLabels()
+    {
+        //
+        // The custom links uses a pseudo-type called 'custom' on the Menu Items.
+
+        ContentLabel::register('custom', function ()
+        {
+            return array(
+                'name'  => __d('content', 'Custom Link'),
+                'title' => __d('content', 'Custom Links'),
+            );
+        });
     }
 
     /**

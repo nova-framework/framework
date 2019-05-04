@@ -171,14 +171,14 @@ class ModuleServiceProvider extends ServiceProvider
     /**
      * Returns the configured content types from the specified family.
      *
-     * @param  string  $family
+     * @param  string  $type
      * @return array
      */
-    protected function getContentTypesConfig($family)
+    protected function getContentTypesConfig($type)
     {
-        $default = Arr::get($this->contentTypes, $family, array());
-
-        $config = Config::get("content.types.{$family}", $default);
+        $options = array_replace_recursive(
+            Arr::get($this->contentTypes, $type, array()), Config::get("content.types.{$type}", array())
+        );
 
         return array_filter(array_map(function ($value)
         {
@@ -195,6 +195,6 @@ class ModuleServiceProvider extends ServiceProvider
                 return array('uses' => $value);
             }
 
-        }, $config));
+        }, $options));
     }
 }

@@ -176,7 +176,7 @@ class ModuleServiceProvider extends ServiceProvider
      */
     protected function getContentTypesConfig($family)
     {
-        // We will convert the local configuration to the site-wide style.
+        // Before using it, we will convert the local configuration to the site-wide style.
 
         $default = array_map(function ($value)
         {

@@ -182,11 +182,12 @@ class ModuleServiceProvider extends ServiceProvider
 
         $options = array_map(function ($value)
         {
-            if (is_string($value)) {
-                return array('uses' => $value);
+            if (! is_string($value)) {
+                return $value;
+
             }
 
-            return $value;
+            return array('uses' => $value);
 
         }, $config);
 

@@ -176,11 +176,12 @@ class ModuleServiceProvider extends ServiceProvider
      */
     protected function getContentTypesConfig($family)
     {
-        $config = array_replace_recursive(
-            Arr::get($this->contentTypes, $family, array()), Config::get("content.types.{$family}", array())
-        );
+        $config = Arr::get($this->contentTypes, $family, array());
 
-        $options = array_map(function ($value)
+        // Merge the local configuration with the site-wide one.
+        $config = array_replace_recursive($config, Config::get("content.types.{$family}", array()));
+
+        $config = array_map(function ($value)
         {
             if (! is_string($value)) {
                 return $value;
@@ -191,7 +192,7 @@ class ModuleServiceProvider extends ServiceProvider
 
         }, $config);
 
-        return array_filter($options, function ($option)
+        return array_filter($config, function ($option)
         {
             if (! is_array($option)) {
                 return false;

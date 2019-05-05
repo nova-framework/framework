@@ -178,29 +178,24 @@ class ModuleServiceProvider extends ServiceProvider
     {
         $config = Arr::get($this->contentTypes, $family, array());
 
-        // Merge the local configuration with the site-wide one.
-        $config = array_replace_recursive($config, Config::get("content.types.{$family}", array()));
+        //
+        $options = array_replace_recursive($config, Config::get("content.types.{$family}", array()));
 
-        $config = array_map(function ($value)
+        return array_filter(array_map(function ($option)
         {
-            if (! is_string($value)) {
-                return $value;
-
+            if (is_string($option)) {
+                return array('uses' => $option);
             }
 
-            return array('uses' => $value);
+            return $option;
 
-        }, $config);
-
-        return array_filter($config, function ($option)
+        }, $options), function ($option)
         {
             if (! is_array($option)) {
                 return false;
             }
 
-            $className = Arr::get($option, 'uses');
-
-            return is_string($className) && ! empty($className);
+            return ! empty($value = Arr::get($option, 'uses')) && is_string($value);
         });
     }
 }

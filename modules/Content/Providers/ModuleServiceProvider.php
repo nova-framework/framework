@@ -157,15 +157,18 @@ class ModuleServiceProvider extends ServiceProvider
             return Block::where('status', 'publish')->get();
         });
 
-        foreach ($blocks as $block) {
-            $position = $block->block_widget_position ?: 'content';
-
+        $blocks->each(function ($block)
+        {
             $name = sprintf('content.block.%s', $block->name);
 
+            $position = $block->block_widget_position ?: 'content';
+
+            $parameters = array($this->app, $block);
+
             Widget::register(
-                'Modules\Content\Widgets\BlockHandler', $name, $position, $block->menu_order, array($this->app, $block)
+                'Modules\Content\Widgets\BlockHandler', $name, $position, $block->menu_order, $parameters
             );
-        }
+        });
     }
 
     /**

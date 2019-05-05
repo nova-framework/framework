@@ -75,7 +75,7 @@ class FieldItems extends BaseController
         $items = FieldItem::all();
 
         return $this->createView()
-            ->shares('title', __d('contacts', 'Custom Fields for Users'))
+            ->shares('title', __d('users', 'Custom Fields for Users'))
             ->with('items', $items);
     }
 
@@ -238,7 +238,7 @@ class FieldItems extends BaseController
         }
 
         return $this->createView()
-            ->shares('title', __d('contacts', 'Edit Field'))
+            ->shares('title', __d('users', 'Edit Field'))
             ->with(compact('item', 'placeholder', 'default', 'rows', 'choices'));
     }
 

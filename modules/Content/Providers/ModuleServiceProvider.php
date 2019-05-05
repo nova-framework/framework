@@ -53,7 +53,7 @@ class ModuleServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot(Request $request)
+    public function boot()
     {
         $path = realpath(__DIR__ .'/../');
 
@@ -66,11 +66,9 @@ class ModuleServiceProvider extends ServiceProvider
         $this->bootstrapFrom($path);
 
         //
-        // Conditionally register the Content Blocks.
+        // Register the Content Blocks.
 
-        if (! $this->app->runningInConsole() && ! $request->ajax() && ! $request->wantsJson()) {
-            $this->registerContentBlocks();
-        }
+        $this->registerContentBlocks();
     }
 
     /**
@@ -150,6 +148,10 @@ class ModuleServiceProvider extends ServiceProvider
      */
     protected function registerContentBlocks()
     {
+        if ($this->app->runningInConsole()) {
+            return;
+        }
+
         $blocks = Cache::remember('content.blocks', 1440, function ()
         {
             return Block::where('status', 'publish')->get();

@@ -17,8 +17,6 @@ class TaxonomyTypeManager extends ContentTypeManager
     public function register($className, array $options = array())
     {
         if (! is_subclass_of($className, $baseClass = Taxonomy::class)) {
-            dd($className, $baseClass);
-
             throw new InvalidArgumentException("The Taxonomy Type class must be a subclass of [{$baseClass}]");
         }
 

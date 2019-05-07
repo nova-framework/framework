@@ -3,7 +3,7 @@
 namespace Modules\Content\Platform\Types;
 
 use Modules\Content\Platform\ContentType;
-use Modules\Content\Platform\Types\PostManager;
+use Modules\Content\Platform\PostTypeManager;
 
 
 abstract class Post extends ContentType
@@ -19,7 +19,7 @@ abstract class Post extends ContentType
     protected $hasArchive = true;
 
 
-    public function __construct(PostManager $manager, array $options)
+    public function __construct(PostTypeManager $manager, array $options)
     {
         parent::__construct($manager, $options);
     }

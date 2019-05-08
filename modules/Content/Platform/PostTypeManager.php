@@ -6,7 +6,7 @@ use Nova\Container\Container;
 
 use Modules\Content\Models\MenuItem;
 use Modules\Content\Platform\ContentTypeManager;
-use Modules\Content\Platform\Types\Post;
+use Modules\Content\Platform\ContentTypes\Post;
 
 use InvalidArgumentException;
 

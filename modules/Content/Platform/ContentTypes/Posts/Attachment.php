@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Content\Platform\Types\Posts;
+namespace Modules\Content\Platform\ContentTypes\Posts;
 
-use Modules\Content\Platform\Types\Post as BasePost;
+use Modules\Content\Platform\ContentTypes\Post as BasePost;
 
 
 class Attachment extends BasePost

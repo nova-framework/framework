@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Content\Platform\Types;
+namespace Modules\Content\Platform\ContentTypes;
 
 use Modules\Content\Platform\ContentType;
 use Modules\Content\Platform\PostTypeManager;

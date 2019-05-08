@@ -34,16 +34,16 @@ class ModuleServiceProvider extends ServiceProvider
      */
     protected $contentTypes = array(
         'posts' => array(
-            'attachment'    => 'Modules\Content\Platform\Types\Posts\Attachment',
-            'block'         => 'Modules\Content\Platform\Types\Posts\Block',
-            'nav_menu_item' => 'Modules\Content\Platform\Types\Posts\MenuItem',
-            'page'          => 'Modules\Content\Platform\Types\Posts\Page',
-            'post'          => 'Modules\Content\Platform\Types\Posts\Post',
+            'attachment'    => 'Modules\Content\Platform\ContentTypes\Posts\Attachment',
+            'block'         => 'Modules\Content\Platform\ContentTypes\Posts\Block',
+            'nav_menu_item' => 'Modules\Content\Platform\ContentTypes\Posts\MenuItem',
+            'page'          => 'Modules\Content\Platform\ContentTypes\Posts\Page',
+            'post'          => 'Modules\Content\Platform\ContentTypes\Posts\Post',
         ),
         'taxonomies' => array(
-            'category' => 'Modules\Content\Platform\Types\Taxonomies\Category',
-            'nav_menu' => 'Modules\Content\Platform\Types\Taxonomies\Menu',
-            'post_tag' => 'Modules\Content\Platform\Types\Taxonomies\Tag',
+            'category' => 'Modules\Content\Platform\ContentTypes\Taxonomies\Category',
+            'nav_menu' => 'Modules\Content\Platform\ContentTypes\Taxonomies\Menu',
+            'post_tag' => 'Modules\Content\Platform\ContentTypes\Taxonomies\Tag',
         ),
     );
 

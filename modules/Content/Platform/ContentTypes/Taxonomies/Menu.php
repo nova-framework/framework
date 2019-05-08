@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Content\Platform\Types\Taxonomies;
+namespace Modules\Content\Platform\ContentTypes\Taxonomies;
 
-use Modules\Content\Platform\Types\Taxonomy;
+use Modules\Content\Platform\ContentTypes\Taxonomy;
 
 
 class Menu extends Taxonomy

@@ -285,6 +285,7 @@ return array (
   'The password is not valid.' => '',
   'The reCaptcha verification failed.' => '',
   'The registered {0}' => '',
+  'The requested Taxonomy type [{0}] does not match.' => '',
   'The {0} <b>#{1}</b> was successfully deleted.' => '',
   'The {0} <b>#{1}</b> was successfully restored to the revision: <b>{2}</b>' => '',
   'The {0} <b>#{1}</b> was successfully saved.' => '',

@@ -76,7 +76,7 @@
     </div>
     <div class="box-footer">
         <div class="pull-left" style="padding: 7px 10px 0 10px;">
-            <?= __d('contacts', 'Group Order: <b>{0}</b>' , $group->order); ?>
+            <?= __d('contacts', 'Group Order: <b>{0}</b>', $group->order); ?>
         </div>
         <a class="btn btn-success col-sm-2 pull-right" href="<?= site_url('admin/contacts/field-groups/{0}/items/create', $group->id); ?>">
             <?= __d('contacts', 'Create a new Field Item'); ?>

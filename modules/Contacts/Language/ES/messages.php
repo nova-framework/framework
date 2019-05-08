@@ -60,9 +60,7 @@ return array (
   'Field Item : <b>{0}</b>' => '',
   'Field Item not found: #{0}' => '',
   'File' => '',
-  'Group Order: <b>{0}</b>\' , $group->order); ?>
-        </div>
-        <a class="btn btn-success col-sm-2 pull-right" href="<?= site_url(\'admin/contacts/field-groups/{0}/items/create' => '',
+  'Group Order: <b>{0}</b>' => '',
   'ID' => '',
   'Information' => '',
   'Label' => '',

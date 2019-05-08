@@ -61,14 +61,16 @@
         <table id="left" class="table table-striped table-hover responsive">
             <tr class="bg-navy disabled">
                 <th style="text-align: left; vertical-align: middle;"><?= __d('content', 'Name'); ?></th>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('content', 'Slug'); ?></th>
                 <th style="text-align: left; vertical-align: middle;"><?= __d('content', 'Description'); ?></th>
                 <th style="text-align: center; vertical-align: middle;"><?= __d('content', 'Count'); ?></th>
                 <th style="text-align: right; vertical-align: middle;"><?= __d('content', 'Operations'); ?></th>
             </tr>
             <?php foreach ($menus as $menu) { ?>
             <tr>
-                <td style="text-align: left; vertical-align: middle;" width="35%"><?= $menu->name; ?></td>
-                <td style="text-align: left; vertical-align: middle;" width="40%"><?= $menu->description ?: __d('content', 'No description'); ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="20%"><?= $menu->name; ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="20%"><?= $menu->slug; ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="35%"><?= $menu->description ?: __d('content', 'No description'); ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="5%"><?= $menu->count; ?></td>
                 <td style="text-align: right; vertical-align: middle;" width="20%">
                     <div class="btn-group" role="group" aria-label="...">

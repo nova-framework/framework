@@ -4,8 +4,6 @@ namespace Modules\Messages\Policies;
 
 use Modules\Users\Models\User;
 
-use App\Models\Option;
-
 use Nova\Auth\Access\HandlesAuthorizationTrait;
 
 

@@ -25,7 +25,7 @@ use Modules\Platform\Controllers\BaseController;
 use Carbon\Carbon;
 
 
-class Reminders extends BaseController
+class PasswordReminders extends BaseController
 {
     protected $layout = 'Default';
 
@@ -106,7 +106,7 @@ class Reminders extends BaseController
 
         $data = $token .'|' .$remoteIp .'|' .$timestamp;
 
-        if (! hash_equals($hash, hash_hmac('sha256', $data, $hashKey)) || ($timestamp <= $oldest->timestamp)) {
+        if (! hash_equals($hash, hash_hmac('sha256', $data, $hashKey)) || ($oldest->timestamp > hexdec($timestamp))) {
             $limiter->hit($throttleKey, $lockoutTime);
 
             return Redirect::to('password/remind')

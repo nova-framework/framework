@@ -27,6 +27,8 @@ use Modules\Users\Models\User;
 
 use Carbon\Carbon;
 
+use InvalidArgumentException;
+
 
 class Authorize extends BaseController
 {
@@ -163,12 +165,35 @@ class Authorize extends BaseController
      */
     public function tokenProcess(Request $request)
     {
+        $remoteIp = $request->ip();
+
+        // Get the limiter constraints.
+        $maxAttempts = Config::get('platform::throttle.maxAttempts', 5);
+        $lockoutTime = Config::get('platform::throttle.lockoutTime', 1); // In minutes.
+
+        // Compute the throttle key.
+        $throttleKey = 'users.tokenProcess|' .$remoteIp;
+
+        // Make a Rate Limiter instance, via Container.
+        $limiter = App::make('Nova\Cache\RateLimiter');
+
+        if ($limiter->tooManyAttempts($throttleKey, $maxAttempts, $lockoutTime)) {
+            $seconds = $limiter->availableIn($throttleKey);
+
+            return Redirect::to('authorize')
+                ->with('danger', __d('platform', 'Too many attempts, please try again in {0} seconds.', $seconds));
+        }
+
         // Create a Validator instance.
         $validator = $this->validator($request);
 
         if ($validator->fails()) {
+            $limiter->hit($throttleKey, $lockoutTime);
+
             return Redirect::back()->withErrors($validator->errors());
         }
+
+        $limiter->clear($throttleKey);
 
         $loginToken = LoginToken::create(array(
             'email' => $email = $request->input('email'),
@@ -179,9 +204,9 @@ class Authorize extends BaseController
 
         $hashKey = Config::get('app.key');
 
-        $timestamp = time();
+        $timestamp = dechex(time());
 
-        $hash = hash_hmac('sha256', $token .'|' .$request->ip() .'|' .$timestamp, $hashKey);
+        $hash = hash_hmac('sha256', $token .'|' .$remoteIp .'|' .$timestamp, $hashKey);
 
         //
         $user = User::where('email', $email)->first();
@@ -227,14 +252,13 @@ class Authorize extends BaseController
 
         $data = $token .'|' .$remoteIp .'|' .$timestamp;
 
-        if (! hash_equals($hash, hash_hmac('sha256', $data, $hashKey)) || ($timestamp <= $oldest->timestamp)) {
-            $limiter->hit($throttleKey, $lockoutTime);
-
-            return Redirect::to('authorize')
-                ->with('danger', __d('platform', 'Link is invalid, please request a new link.'));
-        }
-
         try {
+            if ($oldest->timestamp > hexdec($timestamp))) {
+                throw new InvalidArgumentException('The timestamp is too old');
+            } else if (! hash_equals($hash, hash_hmac('sha256', $data, $hashKey)) {
+                throw new InvalidArgumentException('Invalid authorization hash');
+            }
+
             $loginToken = LoginToken::with('user')->whereHas('user', function ($query)
             {
                 $query->where('activated', 1);
@@ -242,8 +266,8 @@ class Authorize extends BaseController
             })->where('token', $token)->where('created_at', '>', $oldest)->firstOrFail();
         }
 
-        // Catch the ORM exceptions.
-        catch (ModelNotFoundException $e) {
+        // Catch the exceptions.
+        catch (InvalidArgumentException | ModelNotFoundException $e) {
             $limiter->hit($throttleKey, $lockoutTime);
 
             return Redirect::to('authorize')

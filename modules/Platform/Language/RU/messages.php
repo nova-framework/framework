@@ -126,6 +126,7 @@ return array (
   'The selected notification(s) was successfully marked as read.' => 'Выбранное уведомление (ы) было успешно отмечено как прочитанное.',
   'There are no Users on-line.' => 'Нет пользователей в режиме онлайн.',
   'This password reset token is invalid.' => 'Неправильный токен сброса пароля',
+  'Too many attempts, please try again in {0} seconds.' => '',
   'Too many login attempts, please try again in {0} seconds.' => 'Слишком много попыток входа в систему, повторите попытку через {0} секунд.',
   'Too many verification attempts, please try again in {0} seconds.' => 'Слишком много попыток проверки, повторите попытку через {0} секунд.',
   'URL' => 'URL',

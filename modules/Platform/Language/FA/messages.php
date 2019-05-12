@@ -126,6 +126,7 @@ return array (
   'The selected notification(s) was successfully marked as read.' => '',
   'There are no Users on-line.' => '',
   'This password reset token is invalid.' => 'کلید بازنشانی رمزعبور نامعتبر است.',
+  'Too many attempts, please try again in {0} seconds.' => '',
   'Too many login attempts, please try again in {0} seconds.' => '',
   'Too many verification attempts, please try again in {0} seconds.' => '',
   'URL' => '',

@@ -18,9 +18,9 @@ Route::group(array('middleware' => 'auth'), function ()
     Route::get( 'messages',            'Messages@index');
     Route::get( 'messages/create',     'Messages@create');
     Route::post('messages',            'Messages@store');
-    Route::get( 'messages/{threadId}', 'Messages@show');
+    Route::get( 'messages/{threadId}', 'Messages@show')->where('id', '\d+');
 
     //Route::post('messages/{postId}/destroy', 'Messages@destroy');
 
-    Route::post('messages/{threadId}', 'Messages@reply');
+    Route::post('messages/{threadId}', 'Messages@reply')->where('id', '\d+');
 });

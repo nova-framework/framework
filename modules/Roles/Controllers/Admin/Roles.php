@@ -66,7 +66,7 @@ class Roles extends BaseController
 
     protected function dataTable()
     {
-        $format = __d('users', '%d %b %Y, %H:%M');
+        $format = __d('roles', '%d %b %Y, %H:%M');
 
         // Create a DataTable instance.
         $dataTable = DataTable::make();

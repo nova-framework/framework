@@ -43,7 +43,7 @@ return array(
     // Database Backup
     'backup' => array(
         // The path where database dumps are stored.
-        'path'  => APPPATH .'Database' .DS .'Backup',
+        'path'  => STORAGE_PATH .'backup',
 
         // The paths to the MySQL tools used by Forge.
         'mysql' => array(

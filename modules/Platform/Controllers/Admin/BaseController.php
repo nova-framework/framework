@@ -5,7 +5,6 @@ namespace Modules\Platform\Controllers\Admin;
 use Nova\Auth\Access\AuthorizationException;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Gate;
-use Nova\Support\Facades\Request;
 use Nova\Support\Facades\View;
 
 use App\Controllers\BaseController as Controller;
@@ -39,9 +38,9 @@ abstract class BaseController extends Controller
         parent::initialize();
 
         // Update the User Activity.
-        $request = Request::instance();
-
-        Activity::updateCurrent($request);
+        Activity::updateCurrent(
+            $request = $this->getRequest()
+        );
 
         // Authorize the current User.
         if (Gate::denies('platform.backend.manage')) {

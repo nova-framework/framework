@@ -3,6 +3,11 @@
 
 return array(
     /*
+     * The routes sorting configuration.
+     */
+    'sortRoutes' => true,
+
+    /*
      * The Asset Files Serving configuration.
      */
     'assets' => array(

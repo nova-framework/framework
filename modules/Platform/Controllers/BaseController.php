@@ -3,7 +3,6 @@
 namespace Modules\Platform\Controllers;
 
 use Nova\Support\Facades\Auth;
-use Nova\Support\Facades\Request;
 use Nova\Support\Facades\View;
 
 use App\Controllers\BaseController as Controller;
@@ -37,9 +36,9 @@ abstract class BaseController extends Controller
         parent::initialize();
 
         // Update the User Activity.
-        $request = Request::instance();
-
-        Activity::updateCurrent($request);
+        Activity::updateCurrent(
+            $request = $this->getRequest()
+        );
 
         // Update the Frontend Menus.
         if (! is_null($user = Auth::user())) {

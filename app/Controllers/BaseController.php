@@ -5,6 +5,7 @@ namespace App\Controllers;
 use Nova\Foundation\Auth\Access\AuthorizesRequestsTrait;
 use Nova\Foundation\Bus\DispatchesJobsTrait;
 use Nova\Foundation\Validation\ValidatesRequestsTrait;
+use Nova\Http\Request;
 use Nova\Routing\Controller;
 use Nova\Support\Contracts\RenderableInterface;
 use Nova\Support\Facades\App;
@@ -21,11 +22,25 @@ class BaseController extends Controller
     use DispatchesJobsTrait, AuthorizesRequestsTrait, ValidatesRequestsTrait;
 
     /**
+     * The current Request instance.
+     *
+     * @var \Nova\Http\Request
+     */
+    protected $request;
+
+    /**
      * The currently called action.
      *
      * @var string
      */
     protected $action;
+
+    /**
+     * The current call parameters.
+     *
+     * @var array
+     */
+    protected $parameters;
 
     /**
      * The currently used Theme.
@@ -99,13 +114,16 @@ class BaseController extends Controller
     /**
      * Execute an action on the controller.
      *
+     * @param \Nova\Http\Request  $request
      * @param string  $method
      * @param array   $params
      * @return mixed
      */
-    public function callAction($method, array $parameters)
+    public function callAction(Request $request, $method, array $parameters)
     {
-        $this->action = $method;
+        $this->request    = $request;
+        $this->action     = $method;
+        $this->parameters = $parameters;
 
         //
         $this->initialize();
@@ -286,6 +304,18 @@ class BaseController extends Controller
     }
 
     /**
+     * Return the current Request instance.
+     *
+     * NOTE: this information is available after Controller initialization.
+     *
+     * @return \Nova\Http\Request
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
      * Return the current called action
      *
      * NOTE: this information is available after Controller initialization.
@@ -295,6 +325,18 @@ class BaseController extends Controller
     public function getAction()
     {
         return $this->action;
+    }
+
+    /**
+     * Return the current call parameters
+     *
+     * NOTE: this information is available after Controller initialization.
+     *
+     * @return array
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
     }
 
     /**

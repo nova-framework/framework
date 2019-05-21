@@ -3,9 +3,9 @@
 
 return array(
     /*
-     * The routes sorting configuration.
+     * The registered Routes sorting configuration.
      */
-    'sortRoutes' => true,
+    'sorting' => false,
 
     /*
      * The Asset Files Serving configuration.

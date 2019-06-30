@@ -231,8 +231,8 @@ class Registrar extends BaseController
         $remoteIp = $request->ip();
 
         // Get the limiter constraints.
-        $maxAttempts = Config::get('platform::throttle.maxAttempts', 5);
-        $lockoutTime = Config::get('platform::throttle.lockoutTime', 1); // In minutes.
+        $maxAttempts = Config::get('users::throttle.maxAttempts', 5);
+        $lockoutTime = Config::get('users::throttle.lockoutTime', 1); // In minutes.
 
         // Compute the throttle key.
         $throttleKey = 'registrar.verify|' .$remoteIp;
@@ -247,7 +247,7 @@ class Registrar extends BaseController
                 ->with('danger', __d('users', 'Too many verification attempts, please try again in {0} seconds.', $seconds));
         }
 
-        $validity = Config::get('platform::tokens.activation.validity', 60); // In minutes.
+        $validity = Config::get('users::tokens.activation.validity', 60); // In minutes.
 
         $oldest = Carbon::parse('-' .$validity .' minutes');
 

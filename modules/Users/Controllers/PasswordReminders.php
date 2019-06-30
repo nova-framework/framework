@@ -79,8 +79,8 @@ class PasswordReminders extends BaseController
         $remoteIp = $request->ip();
 
         // Get the limiter constraints.
-        $maxAttempts = Config::get('platform::throttle.maxAttempts', 5);
-        $lockoutTime = Config::get('platform::throttle.lockoutTime', 1); // In minutes.
+        $maxAttempts = Config::get('users::throttle.maxAttempts', 5);
+        $lockoutTime = Config::get('users::throttle.lockoutTime', 1); // In minutes.
 
         // Compute the throttle key.
         $throttleKey = $this->getGuard() .'|reminders|' .$remoteIp;
@@ -157,7 +157,7 @@ class PasswordReminders extends BaseController
             $this->resetPassword($user, $password);
         });
 
-        $message = Config::get('platform::reminders.messages.' .$response);
+        $message = Config::get('users::reminders.messages.' .$response);
 
         // Calculate the User's Dashboard URI.
         $guard = $this->getGuard();

@@ -94,8 +94,8 @@ class LoginTokens extends BaseController
         $remoteIp = $request->ip();
 
         // Get the limiter constraints.
-        $maxAttempts = Config::get('platform::throttle.maxAttempts', 5);
-        $lockoutTime = Config::get('platform::throttle.lockoutTime', 1); // In minutes.
+        $maxAttempts = Config::get('users::throttle.maxAttempts', 5);
+        $lockoutTime = Config::get('users::throttle.lockoutTime', 1); // In minutes.
 
         // Compute the throttle key.
         $throttleKey = 'users.tokenProcess|' .$remoteIp;
@@ -153,8 +153,8 @@ class LoginTokens extends BaseController
         $remoteIp = $request->ip();
 
         // Get the limiter constraints.
-        $maxAttempts = Config::get('platform::throttle.maxAttempts', 5);
-        $lockoutTime = Config::get('platform::throttle.lockoutTime', 1); // In minutes.
+        $maxAttempts = Config::get('users::throttle.maxAttempts', 5);
+        $lockoutTime = Config::get('users::throttle.lockoutTime', 1); // In minutes.
 
         // Compute the throttle key.
         $throttleKey = 'users.tokenLogin|' .$remoteIp;
@@ -169,7 +169,7 @@ class LoginTokens extends BaseController
                 ->with('danger', __d('users', 'Too many attempts, please try again in {0} seconds.', $seconds));
         }
 
-        $validity = Config::get('platform::tokens.login.validity', 15); // In minutes.
+        $validity = Config::get('users::tokens.login.validity', 15); // In minutes.
 
         $oldest = Carbon::parse('-' .$validity .' minutes');
 

@@ -1,27 +1,33 @@
 <?php
 
-namespace Modules\Platform\Notifications;
+namespace Modules\Users\Notifications;
 
 use Nova\Bus\QueueableTrait;
 use Nova\Notifications\Notification;
 use Nova\Notifications\Messages\MailMessage;
 use Nova\Queue\ShouldQueueInterface;
-use Nova\Support\Facades\Config;
 
 
-class AccountActivation extends Notification implements ShouldQueueInterface
+class AuthenticationToken extends Notification implements ShouldQueueInterface
 {
     use QueueableTrait;
 
     /**
-     * The account activation hash.
+     * The login hash.
      *
      * @var string
      */
     public $hash;
 
     /**
-     * The account activation token.
+     * The login timestamp.
+     *
+     * @var string
+     */
+    public $timestamp;
+
+    /**
+     * The login token.
      *
      * @var string
      */
@@ -36,10 +42,11 @@ class AccountActivation extends Notification implements ShouldQueueInterface
      * @param  string   $token
      * @return void
      */
-    public function __construct($hash, $token)
+    public function __construct($hash, $timestamp, $token)
     {
-        $this->hash  = $hash;
-        $this->token = $token;
+        $this->hash      = $hash;
+        $this->timestamp = $timestamp;
+        $this->token     = $token;
     }
 
     /**
@@ -62,9 +69,9 @@ class AccountActivation extends Notification implements ShouldQueueInterface
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject(__d('platform', 'Account Activation'))
-            ->line(__d('platform', 'Thanks for creating an Account with the {0}.', Config::get('app.name')))
-            ->action(__d('platform', 'Activate your Account'), url('register', array($this->hash, $this->token)))
-            ->line(__d('platform', 'If you did not made an account registration, no further action is required.'));
+            ->subject(__d('users', 'Authentication Token'))
+            ->line(__d('users', 'You are receiving this email because we received an one-time login request for your account.'))
+            ->action(__d('users', 'Login'), url('authorize', array($this->hash, $this->timestamp, $this->token)))
+            ->line(__d('users', 'If you did not request an one-time login, no further action is required.'));
     }
 }

@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Modules\Platform\Controllers;
+namespace Modules\Users\Controllers;
 
 use Nova\Database\ORM\Collection;
 use Nova\Http\Request;
@@ -45,14 +45,14 @@ class Account extends BaseController
         );
 
         $messages = array(
-            'valid_name'      => __d('platform', 'The :attribute field is not a valid name.'),
-            'strong_password' => __d('platform', 'The :attribute field is not strong enough.'),
+            'valid_name'      => __d('users', 'The :attribute field is not a valid name.'),
+            'strong_password' => __d('users', 'The :attribute field is not strong enough.'),
         );
 
         $attributes = array(
-            'password'              => __d('platform', 'New Password'),
-            'password_confirmation' => __d('platform', 'Password Confirmation'),
-            'realname'              => __d('platform', 'Name and Surname'),
+            'password'              => __d('users', 'New Password'),
+            'password_confirmation' => __d('users', 'Password Confirmation'),
+            'realname'              => __d('users', 'Name and Surname'),
         );
 
         // Prepare the dynamic rules and attributes for Field Items.
@@ -70,15 +70,14 @@ class Account extends BaseController
             $options = $item->options ?: array();
 
             if ($item->type == 'checkbox') {
-                $choices = array_filter(explode("\n", trim(
+                $choices = explode("\n", trim(
                     Arr::get($options, 'choices')
+                ));
 
-                )), function ($value)
+                $count = count($choices = array_filter($choices, function ($value)
                 {
                     return ! empty($value);
-                });
-
-                $count = count($choices);
+                }));
 
                 if ($count > 1) {
                     foreach (range(0, $count - 1) as $index) {
@@ -90,11 +89,7 @@ class Account extends BaseController
                         $attributes[$name] = $item->title;
                     }
 
-                    if (Str::contains($rule, 'required')) {
-                        $rule = 'required|array';
-                    } else {
-                        $rule = 'array';
-                    }
+                    $rule = Str::contains($rule, 'required') ? 'required|array' : 'array';
                 }
             }
 
@@ -131,7 +126,7 @@ class Account extends BaseController
         $items = FieldItem::all();
 
         return $this->createView()
-            ->shares('title',  __d('platform', 'Account'))
+            ->shares('title',  __d('users', 'Account'))
             ->with(compact('user', 'items'));
     }
 
@@ -168,10 +163,35 @@ class Account extends BaseController
         $user->save();
 
         //
+        // Update the Custom Fields.
+
+        foreach ($items as $item) {
+            $value = Arr::get($input, $name = $item->name);
+
+            if (! is_null($field = $user->fields->findBy('name', $name))) {
+                $field->value = $value;
+
+                $field->save();
+
+                continue;
+            }
+
+            $field = Field::create(array(
+                'name'  => $name,
+                'type'  => $item->type,
+                'value' => $value,
+
+                // Resolve the relationships.
+                'field_item_id' => $item->id,
+                'user_id'       => $user->id,
+            ));
+        }
+
+        //
         // Use a Redirect to avoid the reposting the data.
 
         return Redirect::back()
-            ->with('success', __d('platform', 'You have successfully updated your Account information.'));
+            ->with('success', __d('users', 'You have successfully updated your Account information.'));
     }
 
     public function picture(Request $request)
@@ -183,7 +203,7 @@ class Account extends BaseController
             $request->only('image'),
             array('image' => 'required|max:1024|mimes:png,jpg,jpeg,gif'),
             array(),
-            array('image' => __d('platform', 'Image'))
+            array('image' => __d('users', 'Image'))
         );
 
         // Validate the Input.
@@ -196,7 +216,7 @@ class Account extends BaseController
         $user->save();
 
         // Prepare the flash message.
-        $status = __d('platform', 'The Profile Picture was successfully updated.');
+        $status = __d('users', 'The Profile Picture was successfully updated.');
 
         return Redirect::to('account')->withStatus($status);
     }

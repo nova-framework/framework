@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Modules\Platform\Controllers;
+namespace Modules\Users\Controllers;
 
 use Nova\Http\Request;
 use Nova\Support\Facades\App;
@@ -38,7 +38,7 @@ class PasswordReminders extends BaseController
     public function remind()
     {
         return $this->createView()
-            ->shares('title', __d('platform', 'Password Recovery'));
+            ->shares('title', __d('users', 'Password Recovery'));
     }
 
     /**
@@ -52,7 +52,7 @@ class PasswordReminders extends BaseController
 
         // Verify the reCAPTCHA
         if(! ReCaptcha::check($request->input('g-recaptcha-response'), $remoteIp)) {
-            return Redirect::back()->with('danger', __d('platform', 'The reCaptcha verification failed.'));
+            return Redirect::back()->with('danger', __d('users', 'The reCaptcha verification failed.'));
         }
 
         $credentials = $request->only('email');
@@ -60,11 +60,11 @@ class PasswordReminders extends BaseController
         switch ($response = Password::remind($credentials, $remoteIp)) {
             case Password::INVALID_USER:
                 return Redirect::back()
-                    ->with('danger', __d('platform', 'We can\'t find an User with that e-mail address.'));
+                    ->with('danger', __d('users', 'We can\'t find an User with that e-mail address.'));
 
             case Password::REMINDER_SENT:
                 return Redirect::back()
-                    ->with('success', __d('platform', 'Reset instructions have been sent to your email address.'));
+                    ->with('success', __d('users', 'Reset instructions have been sent to your email address.'));
         }
     }
 
@@ -92,7 +92,7 @@ class PasswordReminders extends BaseController
             $seconds = $limiter->availableIn($throttleKey);
 
             return Redirect::to('password/remind')
-                ->with('danger', __d('platform', 'Too many login attempts, please try again in {0} seconds.', $seconds));
+                ->with('danger', __d('users', 'Too many login attempts, please try again in {0} seconds.', $seconds));
         }
 
         $reminder = Config::get('auth.defaults.reminder', 'users');
@@ -110,7 +110,7 @@ class PasswordReminders extends BaseController
             $limiter->hit($throttleKey, $lockoutTime);
 
             return Redirect::to('password/remind')
-                ->with('danger', __d('platform', 'Link is invalid, please request a new link.'));
+                ->with('danger', __d('users', 'Link is invalid, please request a new link.'));
         }
 
         $reminder = DB::table('password_reminders')
@@ -122,13 +122,13 @@ class PasswordReminders extends BaseController
             $limiter->hit($throttleKey, $lockoutTime);
 
             return Redirect::to('password/remind')
-                ->with('danger', __d('platform', 'Link is invalid, please request a new link.'));
+                ->with('danger', __d('users', 'Link is invalid, please request a new link.'));
         }
 
         $limiter->clear($throttleKey);
 
         return $this->createView()
-            ->shares('title', __d('platform', 'Password Reset'))
+            ->shares('title', __d('users', 'Password Reset'))
             ->with('email', $reminder->email)
             ->with('token', $token);
     }

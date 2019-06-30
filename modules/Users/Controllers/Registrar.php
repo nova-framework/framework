@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Modules\Platform\Controllers;
+namespace Modules\Users\Controllers;
 
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Http\Request;
@@ -22,12 +22,14 @@ use Carbon\Carbon;
 
 use Shared\Support\ReCaptcha;
 
-use Modules\Platform\Models\VerifyToken;
-use Modules\Platform\Notifications\AccountActivation as AccountActivationNotification;
+use Modules\Users\Models\VerifyToken;
+use Modules\Users\Notifications\AccountActivation as AccountActivationNotification;
 use Modules\Roles\Models\Role;
 use Modules\Users\Models\User;
 
 use Modules\Platform\Controllers\BaseController;
+
+use InvalidArgumentException;
 
 
 class Registrar extends BaseController
@@ -45,16 +47,16 @@ class Registrar extends BaseController
         );
 
         $messages = array(
-            'recaptcha'       => __d('platform', 'The reCaptcha verification failed.'),
-            'valid_name'      => __d('platform', 'The :attribute field is not a valid name.'),
-            'strong_password' => __d('platform', 'The :attribute field is not strong enough.'),
+            'recaptcha'       => __d('users', 'The reCaptcha verification failed.'),
+            'valid_name'      => __d('users', 'The :attribute field is not a valid name.'),
+            'strong_password' => __d('users', 'The :attribute field is not strong enough.'),
         );
 
         $attributes = array(
-            'username'             => __d('platform', 'Username'),
-            'email'                => __d('platform', 'E-mail'),
-            'password'             => __d('platform', 'Password'),
-            'g-recaptcha-response' => __d('platform', 'ReCaptcha'),
+            'username'             => __d('users', 'Username'),
+            'email'                => __d('users', 'E-mail'),
+            'password'             => __d('users', 'Password'),
+            'g-recaptcha-response' => __d('users', 'ReCaptcha'),
         );
 
         // Create a Validator instance.
@@ -84,7 +86,7 @@ class Registrar extends BaseController
     public function create()
     {
         return $this->createView()
-            ->shares('title', __d('platform', 'User Registration'));
+            ->shares('title', __d('users', 'User Registration'));
     }
 
     /**
@@ -96,6 +98,8 @@ class Registrar extends BaseController
      */
     public function store(Request $request)
     {
+        $remoteIp = $request->ip();
+
         // Create a Validator instance.
         $validator = $this->validator($request);
 
@@ -131,12 +135,14 @@ class Registrar extends BaseController
         // Send the associated Activation Notification.
         $hashKey = Config::get('app.key');
 
-        $hash = hash_hmac('sha256', $token, $hashKey);
+        $timestamp = dechex(time());
 
-        $user->notify(new AccountActivationNotification($hash, $token));
+        $hash = hash_hmac('sha256', $token .'|' .$remoteIp .'|' .$timestamp, $hashKey);
+
+        $user->notify(new AccountActivationNotification($hash, $timestamp, $token));
 
         return Redirect::to('register/status')
-            ->with('success', __d('platform', 'Your Account has been created. Activation instructions have been sent to your email address.'));
+            ->with('success', __d('users', 'Your Account has been created. Activation instructions have been sent to your email address.'));
     }
 
     /**
@@ -147,7 +153,7 @@ class Registrar extends BaseController
     public function verify()
     {
         return $this->createView()
-            ->shares('title', __d('platform', 'Account Verification'));
+            ->shares('title', __d('users', 'Account Verification'));
     }
 
     /**
@@ -157,6 +163,8 @@ class Registrar extends BaseController
      */
     public function verifyPost(Request $request)
     {
+        $remoteIp = $request->ip();
+
         // Create a Validator instance.
         $validator = Validator::make(
             $request->only('email', 'g-recaptcha-response'),
@@ -165,12 +173,12 @@ class Registrar extends BaseController
                 'g-recaptcha-response' => 'required|min:1|recaptcha'
             ),
             array(
-                'valid_email' => __d('platform', 'The :attribute field is not a valid email address.'),
-                'recaptcha'   => __d('platform', 'The reCaptcha verification failed.'),
+                'valid_email' => __d('users', 'The :attribute field is not a valid email address.'),
+                'recaptcha'   => __d('users', 'The reCaptcha verification failed.'),
             ),
             array(
-                'email'                => __d('platform', 'E-mail'),
-                'g-recaptcha-response' => __d('platform', 'ReCaptcha'),
+                'email'                => __d('users', 'E-mail'),
+                'g-recaptcha-response' => __d('users', 'ReCaptcha'),
             )
         );
 
@@ -200,15 +208,17 @@ class Registrar extends BaseController
         // Send the associated Activation Notification.
         $hashKey = Config::get('app.key');
 
-        $hash = hash_hmac('sha256', $token, $hashKey);
+        $timestamp = dechex(time());
+
+        $hash = hash_hmac('sha256', $token .'|' .$remoteIp .'|' .$timestamp, $hashKey);
 
         //
         $user = User::where('email', $email)->first();
 
-        $user->notify(new AccountActivationNotification($hash, $token));
+        $user->notify(new AccountActivationNotification($hash, $timestamp, $token));
 
         return Redirect::to('register/status')
-            ->with('success', __d('platform', 'Activation instructions have been sent to your email address.'));
+            ->with('success', __d('users', 'Activation instructions have been sent to your email address.'));
     }
 
     /**
@@ -216,7 +226,7 @@ class Registrar extends BaseController
      *
      * @return \Nova\Http\RedirectResponse
      */
-    public function tokenVerify(Request $request, $hash, $token)
+    public function tokenVerify(Request $request, $hash, $timestamp, $token)
     {
         $remoteIp = $request->ip();
 
@@ -234,23 +244,23 @@ class Registrar extends BaseController
             $seconds = $limiter->availableIn($throttleKey);
 
             return Redirect::to('register/status')
-                ->with('danger', __d('platform', 'Too many verification attempts, please try again in {0} seconds.', $seconds));
-        }
-
-        $hashKey = Config::get('app.key');
-
-        if (! hash_equals($hash, hash_hmac('sha256', $token, $hashKey))) {
-            $limiter->hit($throttleKey, $lockoutTime);
-
-            return Redirect::to('register/verify')
-                ->with('danger', __d('platform', 'Link is invalid, please request a new link.'));
+                ->with('danger', __d('users', 'Too many verification attempts, please try again in {0} seconds.', $seconds));
         }
 
         $validity = Config::get('platform::tokens.activation.validity', 60); // In minutes.
-        
+
         $oldest = Carbon::parse('-' .$validity .' minutes');
 
+        //
+        $hashKey = Config::get('app.key');
+
+        $data = $token .'|' .$remoteIp .'|' .$timestamp;
+
         try {
+            if (! hash_equals($hash, hash_hmac('sha256', $data, $hashKey)) || ($oldest->timestamp > hexdec($timestamp))) {
+                throw new InvalidArgumentException('Invalid authorization atempt');
+            }
+
             $verifyToken = VerifyToken::whereHas('user', function ($query)
             {
                 $query->where('activated', 0);
@@ -259,11 +269,11 @@ class Registrar extends BaseController
         }
 
         // Catch the ORM exceptions.
-        catch (ModelNotFoundException $e) {
+        catch (InvalidArgumentException | ModelNotFoundException $e) {
             $limiter->hit($throttleKey, $lockoutTime);
 
             return Redirect::to('password/verify')
-                ->with('danger', __d('platform', 'Link is invalid, please request a new link.'));
+                ->with('danger', __d('users', 'Link is invalid, please request a new link.'));
         }
 
         // Delete all stored verification Tokens for this User.
@@ -283,7 +293,7 @@ class Registrar extends BaseController
         $uri = Config::get("auth.guards.{$guard}.authorize", 'login');
 
         return Redirect::to($uri)
-            ->with('success', __d('platform', 'Your Account was activated. You can now sign in!'));
+            ->with('success', __d('users', 'Your Account was activated. You can now sign in!'));
     }
 
     /**
@@ -294,6 +304,6 @@ class Registrar extends BaseController
     public function status()
     {
         return $this->createView()
-            ->shares('title', __d('platform', 'Registration Status'));
+            ->shares('title', __d('users', 'Registration Status'));
     }
 }

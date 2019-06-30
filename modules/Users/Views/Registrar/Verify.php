@@ -1,5 +1,5 @@
 <section class="content-header">
-    <h2 style="margin-top: 25px; padding-bottom: 10px; border-bottom: 1px solid #FFF;"><?= __d('platform', 'Account Verification'); ?></h2>
+    <h2 style="margin-top: 25px; padding-bottom: 10px; border-bottom: 1px solid #FFF;"><?= __d('users', 'Account Verification'); ?></h2>
 </section>
 
 <!-- Main content -->
@@ -11,13 +11,13 @@
     <div style="margin-top: 50px" class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
         <div class="panel panel-primary" >
             <div class="panel-heading">
-                <div class="panel-title"><?= __d('platform', 'Account Verification for <b>{0}</b>', Config::get('app.name')); ?></div>
+                <div class="panel-title"><?= __d('users', 'Account Verification for <b>{0}</b>', Config::get('app.name')); ?></div>
             </div>
             <div class="panel-body">
                 <form method='POST' role="form">
 
                 <div class="form-group">
-                    <p><input type="text" name="email" id="email" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('platform', 'Email'); ?>" value="<?= Input::old('email'); ?>"><br><br></p>
+                    <p><input type="text" name="email" id="email" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Email'); ?>" value="<?= Input::old('email'); ?>"><br><br></p>
                 </div>
                 <?php if (Config::get('reCaptcha.active') === true) { ?>
                 <div class="row pull-right" style="margin-right: 0; margin-top: 15px;">
@@ -30,10 +30,10 @@
                 <?php } ?>
                 <div class="form-group" style="margin-top: 22px;">
                     <div class="col-xs-6 col-sm-6 col-md-6">
-                        <input type="submit" name="submit" class="btn btn-success col-sm-8" value="<?= __d('platform', 'Send'); ?>">
+                        <input type="submit" name="submit" class="btn btn-success col-sm-8" value="<?= __d('users', 'Send'); ?>">
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6">
-                        <a href="<?= site_url('login'); ?>" class="btn btn-link pull-right"><?= __d('platform', 'Login'); ?></a>
+                        <a href="<?= site_url('login'); ?>" class="btn btn-link pull-right"><?= __d('users', 'Login'); ?></a>
                     </div>
                 </div>
 

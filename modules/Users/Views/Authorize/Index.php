@@ -1,32 +1,29 @@
 <section class="content-header">
-    <h2 style="margin-top: 25px; padding-bottom: 10px; border-bottom: 1px solid #FFF;"><?= __d('platform', 'User Registration'); ?></h2>
+    <h2 style="margin-top: 25px; padding-bottom: 10px; border-bottom: 1px solid #FFF;"><?= __d('users', 'User Login'); ?></h2>
 </section>
 
 <!-- Main content -->
 <section class="content">
 
-<?= View::fetch('Partials/Messages'); ?>
-
 <div class="row">
+    <?= View::fetch('Partials/Messages'); ?>
+
     <div style="margin-top: 50px" class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
         <div class="panel panel-primary" >
             <div class="panel-heading">
-                <div class="panel-title"><?= __d('platform', 'Register to <b>{0}</b>', Config::get('app.name')); ?></div>
+                <div class="panel-title"><?= __d('users', 'Login to <b>{0}</b>', Config::get('app.name')); ?></div>
             </div>
             <div class="panel-body">
                 <form method='post' role="form">
 
                 <div class="form-group">
-                    <p><input type="text" name="username" id="username" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('platform', 'Username'); ?>"><br><br></p>
+                    <p><input type="text" name="username" id="username" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Username'); ?>"><br><br></p>
                 </div>
                 <div class="form-group">
-                    <p><input type="password" name="password" id="password" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('platform', 'Password'); ?>"><br><br></p>
+                    <p><input type="password" name="password" id="password" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Password'); ?>"><br><br></p>
                 </div>
-                <div class="form-group">
-                    <p><input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('platform', 'Password confirmation'); ?>"><br><br></p>
-                </div>
-                <div class="form-group">
-                    <p><input type="text" name="email" id="email" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('platform', 'E-Mail'); ?>"><br><br></p>
+                <div class="form-group" style="margin-top: 20px; margin-left: 10px;">
+                    <p><label><input name="remember" type="checkbox"> <?= __d('users', 'Remember me'); ?></label></p>
                 </div>
                 <hr>
                 <?php if (Config::get('reCaptcha.active') === true) { ?>
@@ -35,15 +32,13 @@
                 </div>
                 <div class="clearfix"></div>
                 <hr>
-                <?php } else { ?>
-                <input type="hidden" name="g-recaptcha-response" value="dummy" />
                 <?php } ?>
                 <div class="form-group" style="margin-top: 22px;">
                     <div class="col-xs-6 col-sm-6 col-md-6">
-                        <input type="submit" name="submit" class="btn btn-success col-sm-8" value="<?= __d('platform', 'Sign up'); ?>">
+                        <input type="submit" name="submit" class="btn btn-success col-sm-8" value="<?= __d('users', 'Login'); ?>">
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6">
-                        <a href="<?= site_url('login'); ?>" class="btn btn-link pull-right"><?= __d('platform', 'Login'); ?></a>
+                        <a href="<?= site_url('authorize'); ?>" class="btn btn-link pull-right"><?= __d('users', 'Get an <b>One-Time Login</b> link'); ?></a>
                     </div>
                 </div>
 
@@ -70,4 +65,3 @@ var captchaCallback = function() {
 <script src="//www.google.com/recaptcha/api.js?onload=captchaCallback&render=explicit&hl=<?= Language::code(); ?>" async defer></script>
 
 <?php } ?>
-

@@ -1,14 +1,14 @@
 <?php
 
-namespace Modules\Platform\Models;
+namespace Modules\Users\Models;
 
 use Nova\Database\ORM\Model as BaseModel;
 use Nova\Support\Str;
 
 
-class UserLoginToken extends BaseModel
+class VerifyToken extends BaseModel
 {
-    protected $table = 'user_login_tokens';
+    protected $table = 'user_verify_tokens';
 
     protected $primaryKey = 'id';
 

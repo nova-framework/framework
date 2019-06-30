@@ -1,33 +1,34 @@
 <?php
 
-namespace Modules\Platform\Notifications;
+namespace Modules\Users\Notifications;
 
 use Nova\Bus\QueueableTrait;
 use Nova\Notifications\Notification;
 use Nova\Notifications\Messages\MailMessage;
 use Nova\Queue\ShouldQueueInterface;
+use Nova\Support\Facades\Config;
 
 
-class AuthenticationToken extends Notification implements ShouldQueueInterface
+class AccountActivation extends Notification implements ShouldQueueInterface
 {
     use QueueableTrait;
 
     /**
-     * The login hash.
+     * The account activation hash.
      *
      * @var string
      */
     public $hash;
 
     /**
-     * The login timestamp.
+     * The activation timestamp.
      *
      * @var string
      */
     public $timestamp;
 
     /**
-     * The login token.
+     * The account activation token.
      *
      * @var string
      */
@@ -69,9 +70,9 @@ class AuthenticationToken extends Notification implements ShouldQueueInterface
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject(__d('platform', 'Authentication Token'))
-            ->line(__d('platform', 'You are receiving this email because we received an one-time login request for your account.'))
-            ->action(__d('platform', 'Login'), url('authorize', array($this->hash, $this->timestamp, $this->token)))
-            ->line(__d('platform', 'If you did not request an one-time login, no further action is required.'));
+            ->subject(__d('users', 'Account Activation'))
+            ->line(__d('users', 'Thanks for creating an Account with the {0}.', Config::get('app.name')))
+            ->action(__d('users', 'Activate your Account'), url('register', array($this->hash, $this->timestamp, $this->token)))
+            ->line(__d('users', 'If you did not made an account registration, no further action is required.'));
     }
 }

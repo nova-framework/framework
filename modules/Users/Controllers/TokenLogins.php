@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Modules\Platform\Controllers;
+namespace Modules\Users\Controllers;
 
 use Nova\Http\Request;
 use Nova\Support\Facades\App;
@@ -19,8 +19,8 @@ use Nova\Support\Facades\Validator;
 use Shared\Support\ReCaptcha;
 
 use Modules\Platform\Controllers\BaseController;
-use Modules\Platform\Models\LoginToken;
-use Modules\Platform\Notifications\AuthenticationToken as TokenNotification;
+use Modules\Users\Models\LoginToken;
+use Modules\Users\Notifications\AuthenticationToken as TokenNotification;
 use Modules\Users\Models\User;
 
 use Carbon\Carbon;
@@ -46,13 +46,13 @@ class TokenLogins extends BaseController
         );
 
         $messages = array(
-                'valid_email' => __d('platform', 'The :attribute field is not a valid email address.'),
-                'recaptcha'   => __d('platform', 'The reCaptcha verification failed.'),
+                'valid_email' => __d('users', 'The :attribute field is not a valid email address.'),
+                'recaptcha'   => __d('users', 'The reCaptcha verification failed.'),
         );
 
         $attributes = array(
-            'email'                => __d('platform', 'E-mail'),
-            'g-recaptcha-response' => __d('platform', 'ReCaptcha'),
+            'email'                => __d('users', 'E-mail'),
+            'g-recaptcha-response' => __d('users', 'ReCaptcha'),
         );
 
         // Create a Validator instance.
@@ -80,7 +80,7 @@ class TokenLogins extends BaseController
     public function index()
     {
         return $this->createView()
-            ->shares('title', __d('platform', 'One-Time Login'))
+            ->shares('title', __d('users', 'One-Time Login'))
             ->shares('guard', 'web');
     }
 
@@ -107,7 +107,7 @@ class TokenLogins extends BaseController
             $seconds = $limiter->availableIn($throttleKey);
 
             return Redirect::to('authorize')
-                ->with('danger', __d('platform', 'Too many attempts, please try again in {0} seconds.', $seconds));
+                ->with('danger', __d('users', 'Too many attempts, please try again in {0} seconds.', $seconds));
         }
 
         // Create a Validator instance.
@@ -140,7 +140,7 @@ class TokenLogins extends BaseController
         $user->notify(new TokenNotification($hash, $timestamp, $token));
 
         return Redirect::back()
-            ->with('success', __d('platform', 'Login instructions have been sent to your email address.'));
+            ->with('success', __d('users', 'Login instructions have been sent to your email address.'));
     }
 
     /**
@@ -166,7 +166,7 @@ class TokenLogins extends BaseController
             $seconds = $limiter->availableIn($throttleKey);
 
             return Redirect::to('authorize')
-                ->with('danger', __d('platform', 'Too many attempts, please try again in {0} seconds.', $seconds));
+                ->with('danger', __d('users', 'Too many attempts, please try again in {0} seconds.', $seconds));
         }
 
         $validity = Config::get('platform::tokens.login.validity', 15); // In minutes.
@@ -195,7 +195,7 @@ class TokenLogins extends BaseController
             $limiter->hit($throttleKey, $lockoutTime);
 
             return Redirect::to('authorize')
-                ->with('danger', __d('platform', 'Link is invalid, please request a new link.'));
+                ->with('danger', __d('users', 'Link is invalid, please request a new link.'));
         }
 
         $limiter->clear($throttleKey);
@@ -203,10 +203,19 @@ class TokenLogins extends BaseController
         // Delete all stored login Tokens for this User.
         LoginToken::where('email', $loginToken->email)->delete();
 
+        //
+        $user = $loginToken->user;
+
+        if ($user->activated == 0) {
+            return Redirect::to('register/verify')
+                ->withInput(array('email' => $user->email))
+                ->with('danger', __d('users', 'Please activate your Account!'));
+        }
+
         // Authenticate the User instance from login Token.
-        Auth::login($user = $loginToken->user, false /* do not remember this login */);
+        Auth::login($user, false /* do not remember this login */);
 
         return Redirect::to('dashboard')
-            ->with('success', __d('platform', '<b>{0}</b>, you have successfully logged in.', $user->username));
+            ->with('success', __d('users', '<b>{0}</b>, you have successfully logged in.', $user->username));
     }
 }

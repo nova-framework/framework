@@ -93,15 +93,14 @@ class Users extends BaseController
             $options = $item->options ?: array();
 
             if ($item->type == 'checkbox') {
-                $choices = array_filter(explode("\n", trim(
+                $choices = explode("\n", trim(
                     Arr::get($options, 'choices')
+                ));
 
-                )), function ($value)
+                $count = count($choices = array_filter($choices, function ($value)
                 {
                     return ! empty($value);
-                });
-
-                $count = count($choices);
+                }));
 
                 if ($count > 1) {
                     foreach (range(0, $count - 1) as $index) {
@@ -113,11 +112,7 @@ class Users extends BaseController
                         $attributes[$name] = $item->title;
                     }
 
-                    if (Str::contains($rule, 'required')) {
-                        $rule = 'required|array';
-                    } else {
-                        $rule = 'array';
-                    }
+                    $rule = Str::contains($rule, 'required') ? 'required|array' : 'array';
                 }
             }
 
@@ -271,7 +266,7 @@ class Users extends BaseController
 
         // Update the Custom Fields.
         foreach ($items as $item) {
-            $value = Arr::get($input, $name = $item->getAttribute('name'));
+            $value = Arr::get($input, $name = $item->name);
 
             $field = Field::create(array(
                 'name'  => $name,
@@ -391,13 +386,13 @@ class Users extends BaseController
         // Sync the Roles.
         $user->roles()->sync($input['roles']);
 
+        //
         // Update the Custom Fields.
+
         foreach ($items as $item) {
-            $value = Arr::get($input, $name = $item->getAttribute('name'));
+            $value = Arr::get($input, $name = $item->name);
 
-            $field = $user->fields->findBy('name', $name);
-
-            if (! is_null($field)) {
+            if (! is_null($field = $user->fields->findBy('name', $name))) {
                 $field->value = $value;
 
                 $field->save();

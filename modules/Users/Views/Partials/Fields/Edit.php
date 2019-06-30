@@ -27,7 +27,7 @@
     <?php } else if ($type == 'textarea') { ?>
         <textarea name="<?= $name; ?>" id="<?= $id; ?>" rows="<?= array_get($options, 'rows', 10); ?>" class="form-control" style="resize: none;" placeholder="<?= $placeholder; ?>"><?= Input::old($name, $value); ?></textarea>
     <?php } else if ($type == 'select') { ?>
-        <select name="<?= $name; ?>" id="<?= $id; ?>" placeholder="" data-placeholder="<?= array_get($options, 'placeholder') ?: __d('platform', '- Choose an option -'); ?>" class="form-control select2">
+        <select name="<?= $name; ?>" id="<?= $id; ?>" placeholder="" data-placeholder="<?= array_get($options, 'placeholder') ?: __d('users', '- Choose an option -'); ?>" class="form-control select2">
 <option></option>
 <?php $selected = Input::old($name, $value); ?>
 <?php $choices = explode("\n", trim(array_get($options, 'choices'))); ?>

@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Modules\Platform\Controllers;
+namespace Modules\Users\Controllers;
 
 use Nova\Http\Request;
 use Nova\Support\Facades\App;
@@ -39,7 +39,7 @@ class Authorize extends BaseController
     public function index()
     {
         return $this->createView()
-            ->shares('title', __d('platform', 'User Login'));
+            ->shares('title', __d('users', 'User Login'));
     }
 
     /**
@@ -51,7 +51,7 @@ class Authorize extends BaseController
     {
         // Verify the submitted reCAPTCHA
         if(! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {
-            return Redirect::back()->with('danger', __d('platform', 'The reCaptcha verification failed.'));
+            return Redirect::back()->with('danger', __d('users', 'The reCaptcha verification failed.'));
         }
 
         // Retrieve the Authentication credentials.
@@ -59,7 +59,7 @@ class Authorize extends BaseController
 
         // Make an attempt to login the Guest with the given credentials.
         if(! Auth::attempt($credentials, $request->has('remember'))) {
-            return Redirect::back()->with('danger', __d('platform', 'Wrong username or password.'));
+            return Redirect::back()->with('danger', __d('users', 'Wrong username or password.'));
         }
 
         // The User is authenticated now; retrieve his Model instance.
@@ -71,7 +71,7 @@ class Authorize extends BaseController
             // User not activated; logout and redirect him to account activation page.
             return Redirect::to('register/verify')
                 ->withInput(array('email' => $user->email))
-                ->with('danger', __d('platform', 'Please activate your Account!'));
+                ->with('danger', __d('users', 'Please activate your Account!'));
         }
 
         // If the User's password needs rehash.
@@ -83,7 +83,7 @@ class Authorize extends BaseController
 
         // Redirect to the User's Dashboard.
         return Redirect::intended('dashboard')
-            ->with('success', __d('platform', '<b>{0}</b>, you have successfully logged in.', $user->username));
+            ->with('success', __d('users', '<b>{0}</b>, you have successfully logged in.', $user->username));
     }
 
     /**
@@ -100,6 +100,6 @@ class Authorize extends BaseController
 
         $uri = Config::get("auth.guards.{$guard}.authorize", 'login');
 
-        return Redirect::to($uri)->with('success', __d('platform', 'You have successfully logged out.'));
+        return Redirect::to($uri)->with('success', __d('users', 'You have successfully logged out.'));
     }
 }

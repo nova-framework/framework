@@ -117,7 +117,7 @@ class PasswordBroker
         $token = $this->reminders->create($user);
 
         // Create the token timestamp and hash.
-        $timestamp = time();
+        $timestamp = dechex(time());
 
         $hash = hash_hmac('sha256', $token .'|' .$remoteIp .'|' .$timestamp, $this->hashKey);
 

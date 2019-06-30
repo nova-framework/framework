@@ -28,7 +28,7 @@ use Carbon\Carbon;
 use InvalidArgumentException;
 
 
-class TokenLogins extends BaseController
+class LoginTokens extends BaseController
 {
     /**
      * The currently used Layout.

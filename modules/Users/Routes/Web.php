@@ -21,10 +21,10 @@ Route::post('logout', array('middleware' => 'auth',  'uses' => 'Authorize@logout
 Route::group(array('middleware' => 'guest'), function ()
 {
     // The One-Time Authentication.
-    Route::get( 'authorize', 'TokenLogins@index');
-    Route::post('authorize', 'TokenLogins@process');
+    Route::get( 'authorize', 'LoginTokens@index');
+    Route::post('authorize', 'LoginTokens@process');
 
-    Route::get('authorize/{hash}/{time}/{token}', 'TokenLogins@login');
+    Route::get('authorize/{hash}/{time}/{token}', 'LoginTokens@login');
 
     // The Password Reminder.
     Route::get( 'password/remind', 'PasswordReminders@remind');

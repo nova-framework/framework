@@ -11,8 +11,9 @@ use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 
+use App\Models\Option;
+
 use Modules\Platform\Controllers\Admin\BaseController;
-use Modules\Platform\Models\Option;
 
 
 class Settings extends BaseController

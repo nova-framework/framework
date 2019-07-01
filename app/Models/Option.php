@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Platform\Models;
+namespace App\Models;
 
 use Nova\Database\ORM\Model as BaseModel;
 use Nova\Database\QueryException;
@@ -57,10 +57,7 @@ class Option extends BaseModel
         try {
             return $instance->newQuery()->get();
         }
-        catch (QueryException $e) {
-            //
-        }
-        catch (PDOException $e) {
+        catch (PDOException | QueryException $e) {
             //
         }
 
@@ -69,7 +66,7 @@ class Option extends BaseModel
 
     public static function set($key, $value)
     {
-        list($namespace, $group, $item) = static::getItemResolver()->parseKey($key);
+        list ($namespace, $group, $item) = static::getItemResolver()->parseKey($key);
 
         return static::updateOrCreate(
             compact('namespace', 'group', 'item'), compact('value')
@@ -94,7 +91,9 @@ class Option extends BaseModel
      */
     protected function maybeDecode($original, $assoc = true)
     {
-        if (is_numeric($original)) return $original;
+        if (is_numeric($original)) {
+            return $original;
+        }
 
         $data = json_decode($original, $assoc);
 

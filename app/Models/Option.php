@@ -33,35 +33,31 @@ class Option extends BaseModel
         $this->attributes['value'] = $this->maybeEncode($value);
     }
 
-    public function getConfigItem()
+    public function getConfigKey()
     {
         if (! empty($namespace = $this->getAttribute('namespace'))) {
-            $key = $namespace .'::';
-        } else {
-            $key = '';
+            $namespace .= '::';
         }
 
-        $key .= $this->getAttribute('group');
+        $key = $namespace .$this->getAttribute('group');
 
         if (! empty($item = $this->getAttribute('item'))) {
-            $key .= '.' .$item;
+            return $key .'.' .$item;
         }
 
-        return array($key, $this->getAttribute('value'));
+        return $key;
     }
 
-    public static function getResults()
+    public static function all($columns = array('*'))
     {
-        $instance = new static();
-
         try {
-            return $instance->newQuery()->get();
+            return parent::all($columns);
         }
         catch (PDOException | QueryException $e) {
             //
         }
 
-        return $instance->newCollection();
+        return with(new static())->newCollection();
     }
 
     public static function set($key, $value)
@@ -75,11 +71,11 @@ class Option extends BaseModel
 
     protected static function getItemResolver()
     {
-        if (! isset(static::$itemResolver)) {
-            return static::$itemResolver = new NamespacedItemResolver();
+        if (isset(static::$itemResolver)) {
+            return static::$itemResolver;
         }
 
-        return static::$itemResolver;
+        return static::$itemResolver = new NamespacedItemResolver();
     }
 
     /**

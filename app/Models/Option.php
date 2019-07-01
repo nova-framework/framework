@@ -52,7 +52,7 @@ class Option extends BaseModel
 
     public static function getResults()
     {
-        $instance = new static;
+        $instance = new static();
 
         try {
             return $instance->newQuery()->get();

@@ -2,8 +2,6 @@
 
 namespace Modules\Platform\Policies;
 
-use App\Models\Option;
-
 use Modules\Users\Models\User;
 
 use Nova\Auth\Access\HandlesAuthorizationTrait;

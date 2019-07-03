@@ -24,7 +24,7 @@ class Messages extends Widget
             'title' => $count,
             'content' => __d('messages', 'Messages'),
             'icon'    => 'envelope',
-            'url'     => site_url('admin/messages')
+            'url'     => site_url('messages')
         );
 
         return View::make('Modules/Platform::Widgets/DashboardStatBox', $data)->render();

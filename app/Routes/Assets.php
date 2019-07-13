@@ -5,7 +5,7 @@ use Nova\Http\Response;
 
 
 // Register the route for assets from main assets folder.
-$dispatcher->route('assets/(.*)', function (Request $request, $path) use ($dispatcher)
+$dispatcher->route('assets/(:all)', function (Request $request, $path) use ($dispatcher)
 {
     $basePath = Config::get('routing.assets.path', BASEPATH .'assets');
 
@@ -15,7 +15,7 @@ $dispatcher->route('assets/(.*)', function (Request $request, $path) use ($dispa
 });
 
 // Register the route for assets from Packages, Modules and Themes.
-$dispatcher->route('packages/([^/]+)/([^/]+)/(.*)', function (Request $request, $vendor, $package, $path) use ($dispatcher)
+$dispatcher->route('packages/(:any)/(:any)/(:all)', function (Request $request, $vendor, $package, $path) use ($dispatcher)
 {
     $namespace = $vendor .'/' .$package;
 
@@ -29,7 +29,7 @@ $dispatcher->route('packages/([^/]+)/([^/]+)/(.*)', function (Request $request, 
 });
 
 // Register the route for assets from Vendor.
-$dispatcher->route('vendor/(.*)', function (Request $request, $path) use ($dispatcher)
+$dispatcher->route('vendor/(:all)', function (Request $request, $path) use ($dispatcher)
 {
     $paths = $dispatcher->getVendorPaths();
 

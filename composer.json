@@ -29,7 +29,7 @@
         }
     ],
     "require": {
-        "php": "^7.1.3",
+        "php": "^7.1.8",
         "nova-framework/package-installer": "*",
         "nova-framework/system": "4.1.*",
         "almasaeed2010/adminlte": "^2.4",

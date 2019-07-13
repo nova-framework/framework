@@ -7,7 +7,7 @@ use Nova\Http\Response;
 // Register the route for assets from main assets folder.
 $dispatcher->route('assets/(.*)', function (Request $request, $path) use ($dispatcher)
 {
-    $basePath = Config::get('routing.assets.path', base_path('assets'));
+    $basePath = Config::get('routing.assets.path', BASEPATH .'assets');
 
     $path = $basePath .DS .str_replace('/', DS, $path);
 

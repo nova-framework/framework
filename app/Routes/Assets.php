@@ -8,9 +8,7 @@ $dispatcher->route('assets/(:all)', function (Request $request, $path) use ($dis
 {
     $basePath = Config::get('routing.assets.path', BASEPATH .'assets');
 
-    $path = $basePath .DS .str_replace('/', DS, $path);
-
-    return $dispatcher->serve($path, $request);
+    return $basePath .DS .str_replace('/', DS, $path);
 });
 
 // Register the route for assets from Packages, Modules and Themes.
@@ -22,9 +20,7 @@ $dispatcher->route('packages/(:any)/(:any)/(:all)', function (Request $request, 
         return Response::make('File Not Found', 404);
     }
 
-    $path = $packagePath .str_replace('/', DS, $path);
-
-    return $dispatcher->serve($path, $request);
+    return $packagePath .str_replace('/', DS, $path);
 });
 
 // Register the route for assets from Vendor.
@@ -36,7 +32,5 @@ $dispatcher->route('vendor/(:all)', function (Request $request, $path) use ($dis
         return Response::make('File Not Found', 404);
     }
 
-    $path = BASEPATH .'vendor' .DS .str_replace('/', DS, $path);
-
-    return $dispatcher->serve($path, $request);
+    return BASEPATH .'vendor' .DS .str_replace('/', DS, $path);
 });

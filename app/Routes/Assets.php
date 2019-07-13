@@ -1,7 +1,6 @@
 <?php
 
 use Nova\Http\Request;
-use Nova\Http\Response;
 
 
 // Register the route for assets from main assets folder.
@@ -20,7 +19,7 @@ $dispatcher->route('packages/(:any)/(:any)/(:all)', function (Request $request, 
     $namespace = $vendor .'/' .$package;
 
     if (is_null($packagePath = $dispatcher->getPackagePath($namespace))) {
-        return new Response('File Not Found', 404);
+        return Response::make('File Not Found', 404);
     }
 
     $path = $packagePath .str_replace('/', DS, $path);
@@ -34,7 +33,7 @@ $dispatcher->route('vendor/(:all)', function (Request $request, $path) use ($dis
     $paths = $dispatcher->getVendorPaths();
 
     if (! Str::startsWith($path, $paths)) {
-        return new Response('File Not Found', 404);
+        return Response::make('File Not Found', 404);
     }
 
     $path = BASEPATH .'vendor' .DS .str_replace('/', DS, $path);

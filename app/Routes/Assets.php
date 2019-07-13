@@ -14,9 +14,7 @@ $dispatcher->route('assets/(:all)', function (Request $request, $path) use ($dis
 // Register the route for assets from Packages, Modules and Themes.
 $dispatcher->route('packages/(:any)/(:any)/(:all)', function (Request $request, $vendor, $package, $path) use ($dispatcher)
 {
-    $namespace = $vendor .'/' .$package;
-
-    if (is_null($packagePath = $dispatcher->getPackagePath($namespace))) {
+    if (is_null($packagePath = $dispatcher->getPackagePath($vendor, $package))) {
         return Response::make('File Not Found', 404);
     }
 
@@ -26,9 +24,7 @@ $dispatcher->route('packages/(:any)/(:any)/(:all)', function (Request $request, 
 // Register the route for assets from Vendor.
 $dispatcher->route('vendor/(:all)', function (Request $request, $path) use ($dispatcher)
 {
-    $paths = $dispatcher->getVendorPaths();
-
-    if (! Str::startsWith($path, $paths)) {
+    if (! Str::startsWith($path, $dispatcher->getVendorPaths())) {
         return Response::make('File Not Found', 404);
     }
 

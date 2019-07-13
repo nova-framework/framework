@@ -27,7 +27,7 @@ if (Config::get('app.debug') !== true) {
 
         <ul class="list-unstyled">
 
-            <?php if (version_compare(PHP_VERSION, '7.1.3', '>=')) { ?>
+            <?php if (version_compare(PHP_VERSION, '7.1.8', '>=')) { ?>
             <li><i class='fa fa-check text-success'></i> Your version of PHP is 7.1.3 or higher (detected <b><?= PHP_VERSION; ?></b>).</li>
             <?php } else { ?>
             <li><i class='fa fa-close text-danger'></i> Your version of PHP is too low. You need PHP 7.1.3 or higher to use Mini Nova (detected <b><?= PHP_VERSION; ?></b>).</li>

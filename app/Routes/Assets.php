@@ -24,7 +24,7 @@ $dispatcher->route('packages/(:any)/(:any)/(:all)', function (Request $request, 
 // Register the route for assets from Vendor.
 $dispatcher->route('vendor/(:all)', function (Request $request, $path) use ($dispatcher)
 {
-    $basePath = BASEPATH .'vendor' .DS;
+    $basePath = BASEPATH .'vendor';
 
     if (! Str::startsWith($path, $dispatcher->getVendorPaths())) {
         return Response::make('File Not Found', 404);

@@ -112,7 +112,7 @@ return array(
         'Nova\Auth\AuthServiceProvider',
         'Nova\Bus\BusServiceProvider',
         'Nova\Cache\CacheServiceProvider',
-        'Nova\Assets\AssetServiceProvider',
+        'Nova\Routing\Assets\AssetServiceProvider',
         'Nova\Routing\RoutingServiceProvider',
         'Nova\Cookie\CookieServiceProvider',
         'Nova\Packages\PackageServiceProvider',

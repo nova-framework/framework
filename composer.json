@@ -31,7 +31,7 @@
     "require": {
         "php": "^7.1.8",
         "nova-framework/package-installer": "*",
-        "nova-framework/system": "4.1.*",
+        "nova-framework/system": "4.2.*",
         "almasaeed2010/adminlte": "^2.4",
         "twbs/bootstrap": "^3.3",
         "ramsey/uuid": "~3.0",

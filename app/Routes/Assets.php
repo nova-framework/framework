@@ -38,7 +38,7 @@ $dispatcher->route('files/(:any)/(:any)/(:all)', function (Request $request, $ha
 
     $localHash = hash_hmac('sha256', $path .'|' .$timestamp .'|' .$request->ip(), Config::get('app.key'));
 
-    if (! File::isDirectory($basePath = Config::get('routing.files.path', BASEPATH .'files')) {
+    if (! File::isDirectory($basePath = Config::get('routing.files.path', BASEPATH .'files'))) {
         return Response::make('File Not Found', 404);
     }
 

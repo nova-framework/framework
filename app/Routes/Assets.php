@@ -16,7 +16,9 @@ $dispatcher->route('assets/(:all)', function (Request $request, $path) use ($dis
 // Register the route for assets from Packages, Modules and Themes.
 $dispatcher->route('packages/(:any)/(:any)/(:all)', function (Request $request, $vendor, $package, $path) use ($dispatcher)
 {
-    return $dispatcher->servePackageFile($vendor, $package, $path, $request);
+    $namespace = $vendor .'/' .$package;
+
+    return $dispatcher->servePackageFile($namespace, $path, $request);
 });
 
 // Register the route for assets from Vendor.

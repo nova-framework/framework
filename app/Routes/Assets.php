@@ -32,19 +32,19 @@ $dispatcher->route('vendor/(:all)', function (Request $request, $path) use ($dis
 // Register the route for files from protected folder.
 $dispatcher->route('files/(:any)/(:any)/(:all)', function (Request $request, $hash, $timestamp, $path) use ($dispatcher)
 {
-    $validity = Carbon::now()->subMinutes(
+    $oldest = Carbon::now()->subMinutes(
         Config::get('routing.files.validity', 180) // In minutes.
     );
 
     $localHash = hash_hmac('sha256', $path .'|' .$timestamp .'|' .$request->ip(), Config::get('app.key'));
 
-    if (! File::isDirectory($basePath = Config::get('routing.files.path', BASEPATH .'files'))) {
-        return Response::make('File Not Found', 404);
+    if (! hash_equals($hash, $localHash) || ($oldest->timestamp > hexdec($timestamp))) {
+        return Response::make('Forbidden', 403);
     }
 
     //
-    else if (! hash_equals($hash, $localHash) || ($validity->timestamp > hexdec($timestamp))) {
-        return Response::make('Forbidden', 403);
+    else if (! File::isDirectory($basePath = Config::get('routing.files.path', BASEPATH .'files'))) {
+        return Response::make('File Not Found', 404);
     }
 
     $path = $basePath .DS .str_replace('/', DS, $path);

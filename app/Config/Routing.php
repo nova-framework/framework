@@ -40,4 +40,15 @@ return array(
             'twbs/bootstrap' => 'dist',
         ),
     ),
+
+    /*
+     * The Protected Files Serving configuration.
+     */
+    'files' => array(
+        // The path to the protected files.
+        'path' => BASEPATH .'files',
+
+        // The access token validity - in minutes.
+        'validity' => 180,
+    ),
 );

@@ -22,8 +22,8 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => '
     Route::get( 'roles',              'Roles@index');
     Route::get( 'roles/create',       'Roles@create');
     Route::post('roles',              'Roles@store');
-    Route::get( 'roles/{id}',         'Roles@show')->where('id', '\d+');
-    Route::get( 'roles/{id}/edit',    'Roles@edit')->where('id', '\d+');
-    Route::post('roles/{id}',         'Roles@update')->where('id', '\d+');
-    Route::post('roles/{id}/destroy', 'Roles@destroy')->where('id', '\d+');
+    Route::get( 'roles/{id}',         'Roles@show')->where('id', '(\d+)');
+    Route::get( 'roles/{id}/edit',    'Roles@edit')->where('id', '(\d+)');
+    Route::post('roles/{id}',         'Roles@update')->where('id', '(\d+)');
+    Route::post('roles/{id}/destroy', 'Roles@destroy')->where('id', '(\d+)');
 });

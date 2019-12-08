@@ -55,7 +55,7 @@ Forge::command('queue:monitor', function ()
     $command = sprintf('%s %s queue:work --daemon --tries=3 >/dev/null & echo $!', PHP_BINARY, base_path('forge'));
 
     // Store the Queue Worker PID for later checking.
-    file_put_contents($path, exec($command));
+    file_put_contents($path, (int) exec($command));
 
 })->describe('Monitor the Queue Worker execution');
 

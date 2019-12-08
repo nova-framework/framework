@@ -27,6 +27,7 @@ Forge::command('app:install', function ()
 
 })->describe('Run all database migrations and seed it with records');
 
+
 Forge::command('app:refresh', function ()
 {
     $this->call('migrate:refresh', array('--seed' => true));
@@ -38,12 +39,13 @@ Forge::command('app:refresh', function ()
 
 })->describe('Reset and re-run all database migrations, then seed it with records');
 
+
 Forge::command('queue:monitor', function ()
 {
     $path = storage_path('queue.pid');
 
     if (is_readable($path) && ! empty($pid = file_get_contents($path))) {
-        $command = sprintf("ps -p %d --no-heading | awk '{print $1}'", $pid);
+        $command = sprintf("ps -p %d --no-heading | awk '{print $1}'", (int) $pid);
 
         if (! empty($result = exec($command)) && ($result == $pid)) {
             return;

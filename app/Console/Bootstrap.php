@@ -44,10 +44,10 @@ Forge::command('queue:monitor', function ()
 {
     $path = storage_path('queue.pid');
 
-    if (is_readable($path) && ! empty($pid = file_get_contents($path))) {
-        $command = sprintf("ps -p %d --no-heading | awk '{print $1}'", (int) $pid);
+    if (is_readable($path) && ! empty($pid = (int) file_get_contents($path))) {
+        $command = sprintf("ps -p %d --no-heading | awk '{print $1}'", $pid);
 
-        if (! empty($result = exec($command)) && ($result == $pid)) {
+        if (! empty($result = (int) exec($command)) && ($pid == $result)) {
             return;
         }
     }

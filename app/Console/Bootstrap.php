@@ -44,10 +44,10 @@ Forge::command('queue:monitor', function ()
 {
     $path = storage_path('queue.pid');
 
-    if (is_readable($path) && ! empty($pid = (int) file_get_contents($path))) {
-        $command = sprintf("ps -p %d --no-heading | awk '{print $1}'", $pid);
+    if (is_readable($path) && ! empty($result = file_get_contents($path))) {
+        $command = sprintf("ps -p %d --no-heading | awk '{print $1}'", $pid = (int) $result);
 
-        if (! empty($result = (int) exec($command)) && ($pid == $result)) {
+        if (! empty($result = exec($command)) && ($pid == (int) $result)) {
             return;
         }
     }
@@ -55,7 +55,7 @@ Forge::command('queue:monitor', function ()
     $command = sprintf('%s %s queue:work --daemon --tries=3 >/dev/null & echo $!', PHP_BINARY, base_path('forge'));
 
     // Store the Queue Worker PID for later checking.
-    file_put_contents($path, (int) exec($command));
+    file_put_contents($path, exec($command));
 
 })->describe('Monitor the Queue Worker execution');
 

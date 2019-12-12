@@ -121,8 +121,9 @@ class BaseController extends Controller
      */
     public function callAction(Request $request, $method, array $parameters)
     {
-        $this->request    = $request;
-        $this->action     = $method;
+        $this->request = $request;
+        $this->action  = $method;
+
         $this->parameters = $parameters;
 
         //
@@ -306,7 +307,7 @@ class BaseController extends Controller
     /**
      * Return the current Request instance.
      *
-     * NOTE: this information is available after Controller initialization.
+     * NOTE: this information is available after calling the Action.
      *
      * @return \Nova\Http\Request
      */
@@ -318,7 +319,7 @@ class BaseController extends Controller
     /**
      * Return the current called action
      *
-     * NOTE: this information is available after Controller initialization.
+     * NOTE: this information is available after calling the Action.
      *
      * @return string
      */
@@ -330,7 +331,7 @@ class BaseController extends Controller
     /**
      * Return the current call parameters
      *
-     * NOTE: this information is available after Controller initialization.
+     * NOTE: this information is available after calling the Action.
      *
      * @return array
      */

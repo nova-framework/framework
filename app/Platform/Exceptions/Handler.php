@@ -99,7 +99,6 @@ class Handler extends ExceptionHandler
     /**
      * Convert the given exception into a Response instance which contains an error page.
      *
-     * @param  int $status
      * @param  \Symfony\Component\HttpKernel\Exception\HttpException  $e
      * @param  \Nova\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response

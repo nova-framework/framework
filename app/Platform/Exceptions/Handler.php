@@ -98,14 +98,28 @@ class Handler extends ExceptionHandler
 
         // If exists a View for this HTTP error.
         else if (View::exists("Errors/{$status}")) {
-            $view = View::make('Layouts/Default')
-                ->shares('title', "Error {$status}")
-                ->nest('content', "Errors/{$status}", array('exception' => $e));
-
-            return Response::make($view->render(), $status, $e->getHeaders());
+            return $this->createErrorResponse($status, $e);
         }
 
         return parent::renderHttpException($e, $request);
+    }
+
+    /**
+     * Convert the given exception into a Response instance which contains an error page.
+     *
+     * @param  int $status
+     * @param  \Exception  $exception
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function createErrorResponse($status, Exception $e)
+    {
+        $exception = FlattenException::create($e, $status);
+
+        $view = View::make('Layouts/Default')
+            ->shares('title', "Error {$status}")
+            ->nest('content', "Errors/{$status}", compact('exception'));
+
+        return Response::make($view->render(), $status, $exception->getHeaders());
     }
 
     /**
@@ -116,19 +130,12 @@ class Handler extends ExceptionHandler
      */
     protected function convertExceptionToResponse(Exception $e, Request $request)
     {
-        $debug = Config::get('app.debug');
-
-        if (! $debug) {
-            $e = FlattenException::create($e);
-
+        if (! Config::get('app.debug', false)) {
             if ($request->ajax() || $request->wantsJson()) {
                 return Response::json('Internal Server Error', 500);
             }
 
-            // Not an AJAX request.
-            else if (View::exists('Errors/500')) {
-                return $this->renderHttpException($e, $request);
-            }
+            return $this->createErrorResponse(500, new Exception('Internal Server Error'));
         }
 
         // We will instruct Whoops to not exit after it displays the exception as it
@@ -146,10 +153,13 @@ class Handler extends ExceptionHandler
 
         $whoops->pushHandler($handler);
 
-        // Compute the status code and headers.
-        $status = ($e instanceof HttpExceptionInterface) ? $e->getStatusCode() : 500;
-
-        $headers = ($e instanceof HttpExceptionInterface) ? $e->getHeaders() : array();
+        if ($e instanceof HttpExceptionInterface) {
+            $status  = $e->getStatusCode();
+            $headers = $e->getHeaders();
+        } else {
+            $status  = 500;
+            $headers = array();
+        }
 
         return Response::make($whoops->handleException($e), $status, $headers);
     }

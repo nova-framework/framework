@@ -84,21 +84,13 @@ class Handler extends ExceptionHandler
      * Render the given HttpException.
      *
      * @param  \Symfony\Component\HttpKernel\Exception\HttpException  $e
+     * @param  \Nova\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function renderHttpException(HttpException $e, Request $request)
     {
-        $status = $e->getStatusCode();
-
-        if ($request->ajax() || $request->wantsJson()) {
-            $e = FlattenException::create($e, $status);
-
-            return Response::json($e->toArray(), $status, $e->getHeaders());
-        }
-
-        // If exists a View for this HTTP error.
-        else if (View::exists("Errors/{$status}")) {
-            return $this->createErrorResponse($status, $e);
+        if (! is_null($response = $this->createResponse($e, $request))) {
+            return $response;
         }
 
         return parent::renderHttpException($e, $request);
@@ -108,18 +100,30 @@ class Handler extends ExceptionHandler
      * Convert the given exception into a Response instance which contains an error page.
      *
      * @param  int $status
-     * @param  \Exception  $exception
+     * @param  \Symfony\Component\HttpKernel\Exception\HttpException  $e
+     * @param  \Nova\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function createErrorResponse($status, Exception $e)
+    protected function createErrorResponse(HttpException $e, Request $request)
     {
-        $exception = FlattenException::create($e, $status);
+        $status = $e->getStatusCode();
+
+        $e = FlattenException::create($e, $status);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return Response::json($e->toArray(), $status, $e->getHeaders());
+        }
+
+        //
+        else if (! View::exists("Errors/{$status}")) {
+            return;
+        }
 
         $view = View::make('Layouts/Default')
             ->shares('title', "Error {$status}")
-            ->nest('content', "Errors/{$status}", compact('exception'));
+            ->nest('content', "Errors/{$status}", array('exception' => $e));
 
-        return Response::make($view->render(), $status, $exception->getHeaders());
+        return Response::make($view->render(), $status, $e->getHeaders());
     }
 
     /**
@@ -131,11 +135,9 @@ class Handler extends ExceptionHandler
     protected function convertExceptionToResponse(Exception $e, Request $request)
     {
         if (! Config::get('app.debug', false)) {
-            if ($request->ajax() || $request->wantsJson()) {
-                return Response::json('Internal Server Error', 500);
-            }
+            $exception = new HttpException(500, 'Internal Server Error');
 
-            return $this->createErrorResponse(500, new Exception('Internal Server Error'));
+            return $this->createErrorResponse($exception, $request);
         }
 
         // We will instruct Whoops to not exit after it displays the exception as it

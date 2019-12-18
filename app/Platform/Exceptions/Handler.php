@@ -89,7 +89,7 @@ class Handler extends ExceptionHandler
      */
     protected function renderHttpException(HttpException $e, Request $request)
     {
-        if (! is_null($response = $this->createResponse($e, $request))) {
+        if (! is_null($response = $this->createErrorResponse($e, $request))) {
             return $response;
         }
 

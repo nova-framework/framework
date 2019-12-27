@@ -129,6 +129,7 @@ class Handler extends ExceptionHandler
      * Convert the given exception into a Response instance.
      *
      * @param  \Exception  $e
+     * @param  \Nova\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function convertExceptionToResponse(Exception $e, Request $request)
@@ -139,9 +140,18 @@ class Handler extends ExceptionHandler
             return $this->createErrorResponse($exception, $request);
         }
 
-        // We will instruct Whoops to not exit after it displays the exception as it
-        // will otherwise run out before we can do anything else. We just want to
-        // let the framework go ahead and finish a request on this end instead.
+        return $this->renderExceptionWithWhoops($e, $request);
+    }
+
+    /**
+     * Render an exception to a string using "Whoops".
+     *
+     * @param  \Exception  $e
+     * @param  \Nova\Http\Request  $request
+     * @return string
+     */
+    protected function renderExceptionWithWhoops(Exception $e, Request $request)
+    {
         with($whoops = new WhoopsRun())->allowQuit(false);
 
         $whoops->writeToOutput(false);
@@ -149,7 +159,9 @@ class Handler extends ExceptionHandler
         if ($request->ajax() || $request->wantsJson()) {
             $handler = new WhoopsJsonResponseHandler();
         } else {
-            with($handler = new WhoopsPrettyPageHandler())->setEditor('sublime');
+            $handler = new WhoopsPrettyPageHandler();
+
+            $handler->setEditor('sublime');
         }
 
         $whoops->pushHandler($handler);

@@ -152,8 +152,10 @@ class Handler extends ExceptionHandler
      */
     protected function renderExceptionWithWhoops(Exception $e, Request $request)
     {
-        with($whoops = new WhoopsRun())->allowQuit(false);
+        $whoops = new WhoopsRun();
 
+        //
+        $whoops->allowQuit(false);
         $whoops->writeToOutput(false);
 
         if ($request->ajax() || $request->wantsJson()) {

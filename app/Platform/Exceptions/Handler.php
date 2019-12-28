@@ -109,7 +109,7 @@ class Handler extends ExceptionHandler
 
         $e = FlattenException::create($e, $status);
 
-        if ($request->ajax() || $request->wantsJson()) {
+        if ($this->isAjaxRequest($request)) {
             return Response::json($e->toArray(), $status, $e->getHeaders());
         }
 
@@ -123,6 +123,17 @@ class Handler extends ExceptionHandler
             ->nest('content', "Errors/{$status}", array('exception' => $e));
 
         return Response::make($view->render(), $status, $e->getHeaders());
+    }
+
+    /**
+     * Returns true if the given Request instance is AJAX.
+     *
+     * @param  \Nova\Http\Request  $request
+     * @return bool
+     */
+    protected function isAjaxRequest(Request $request)
+    {
+        return ($request->ajax() || $request->wantsJson());
     }
 
     /**
@@ -154,11 +165,13 @@ class Handler extends ExceptionHandler
     {
         $whoops = new WhoopsRun();
 
-        //
+        // We will instruct Whoops to not exit after it displays the exception as it
+        // will otherwise run out before we can do anything else. We just want to
+        // let the framework go ahead and finish a request on this end instead.
         $whoops->allowQuit(false);
         $whoops->writeToOutput(false);
 
-        if ($request->ajax() || $request->wantsJson()) {
+        if ($this->isAjaxRequest($request)) {
             $handler = new WhoopsJsonResponseHandler();
         } else {
             $handler = new WhoopsPrettyPageHandler();
@@ -188,7 +201,7 @@ class Handler extends ExceptionHandler
      */
     protected function unauthenticated(Request $request, AuthenticationException $exception)
     {
-        if ($request->ajax() || $request->wantsJson() || $request->is('api/*')) {
+        if ($this->isAjaxRequest($request) || $request->is('api/*')) {
             return Response::json(array('error' => 'Unauthenticated.'), 401);
         }
 

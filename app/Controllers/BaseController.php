@@ -114,12 +114,12 @@ class BaseController extends Controller
     /**
      * Execute an action on the controller.
      *
-     * @param \Nova\Http\Request  $request
      * @param string  $method
      * @param array   $params
+     * @param \Nova\Http\Request  $request
      * @return mixed
      */
-    public function callAction(Request $request, $method, array $parameters)
+    public function callAction($method, array $parameters, Request $request)
     {
         $this->request = $request;
         $this->action  = $method;

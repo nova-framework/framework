@@ -105,9 +105,7 @@ class Handler extends ExceptionHandler
      */
     protected function createErrorResponse(HttpException $e, Request $request)
     {
-        $status = $e->getStatusCode();
-
-        $e = FlattenException::create($e, $status);
+        $e = FlattenException::create($e, $status = $e->getStatusCode());
 
         if ($this->isAjaxRequest($request)) {
             return Response::json($e->toArray(), $status, $e->getHeaders());

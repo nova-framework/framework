@@ -273,7 +273,7 @@ $(function () {
                 $('li.notifications-menu > a.dropdown-toggle > span.label').hide();
 
                 // Header.
-                var title = "<?= __d('system', 'You have no notifications'); ?>";
+                var title = "<?= __d('admin_lite', 'You have no notifications'); ?>";
 
                 $('#notifications-header').find('.title').html(title);
 
@@ -346,7 +346,7 @@ $(function () {
         menuLabel.show();
 
         // Handle the dropdown header.
-        var title = sprintf("<?= __d('system', 'You have %d notification(s)'); ?>", count);
+        var title = sprintf("<?= __d('admin_lite', 'You have %d notification(s)'); ?>", count);
 
         notificationsHeader.find('.title').html(title);
 

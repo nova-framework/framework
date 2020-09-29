@@ -97,12 +97,14 @@ class BaseController extends Controller
             $this->theme = Config::get('app.theme', 'Themes/Bootstrap');
         }
 
-        if ($this->theme === false) {
+        $theme = $this->getTheme();
+
+        if ($theme === false) {
             return;
         }
 
         // A Theme is configured for this Controller.
-        else if (! Str::contains($theme = $this->theme, '/')) {
+        else if (! Str::contains($theme, '/')) {
             $theme = 'Themes/' .$theme;
         }
 
@@ -151,7 +153,7 @@ class BaseController extends Controller
         }
 
         // The response is a RenderableInterface implementation.
-        else if ($this->autoLayout() && ! empty($view = $this->resolveLayoutView())) {
+        else if (! empty($view = $this->resolveLayoutView()) && $this->autoLayout()) {
             return View::make($view, $this->viewData)->with('content', $response);
         }
 
@@ -169,18 +171,17 @@ class BaseController extends Controller
             return false;
         }
 
-        // We have a valid layout.
-        else if (Language::direction() == 'rtl') {
-            $path = sprintf('Layouts/RTL/%s', $layout);
+        $direction = Language::direction();
 
-            if (View::exists($view = $this->resolveViewFromTheme($path))) {
+        if ($direction == 'rtl') {
+            $view = $this->resolveViewFromTheme('Layouts/RTL/' .$layout);
+
+            if (View::exists($view)) {
                 return $view;
             }
         }
 
-        $path = sprintf('Layouts/%s', $layout);
-
-        return $this->resolveViewFromTheme($path);
+        return $this->resolveViewFromTheme('Layouts/' .$layout);
     }
 
     /**
@@ -238,7 +239,7 @@ class BaseController extends Controller
         if (preg_match('#^(.+)/Controllers/(.*)$#', $path, $matches) === 1) {
             list (, $basePath, $viewPath) = $matches;
 
-            if ($basePath !== 'App') {
+            if ($basePath != 'App') {
                 $viewPath = sprintf('%s::%s', $basePath, $viewPath);
             }
 

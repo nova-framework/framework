@@ -36,15 +36,15 @@ class FieldItems extends BaseController
         );
 
         $messages = array(
-            'valid_title' => __d('contacts', 'The :attribute field is not a valid title.'),
-            'valid_type'  => __d('contacts', 'The :attribute field is not a valid type.'),
+            'valid_title' => __d('users', 'The :attribute field is not a valid title.'),
+            'valid_type'  => __d('users', 'The :attribute field is not a valid type.'),
         );
 
         $attributes = array(
-            'field_title' => __d('contacts', 'Label'),
-            'field_name'  => __d('contacts', 'Name'),
-            'field_type'  => __d('contacts', 'Type'),
-            'field_order' => __d('contacts', 'Order'),
+            'field_title' => __d('users', 'Label'),
+            'field_name'  => __d('users', 'Name'),
+            'field_type'  => __d('users', 'Type'),
+            'field_order' => __d('users', 'Order'),
         );
 
         $validator = Validator::make($data, $rules, $messages, $attributes);
@@ -87,7 +87,7 @@ class FieldItems extends BaseController
         }
 
         return $this->createView()
-            ->shares('title', __d('contacts', 'Create Field'));
+            ->shares('title', __d('users', 'Create Field'));
     }
 
     public function store(Request $request)
@@ -158,7 +158,7 @@ class FieldItems extends BaseController
         ));
 
         return Redirect::to('admin/users/fields')
-            ->with('success', __d('contacts', 'The Field <b>{0}</b> was successfully created.', $item->title));
+            ->with('success', __d('users', 'The Field <b>{0}</b> was successfully created.', $item->title));
     }
 
     public function show($id)
@@ -167,7 +167,7 @@ class FieldItems extends BaseController
             $item = FieldItem::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::to('admin/users/fields')->with('danger', __d('contacts', 'Field not found: #{0}', $id));
+            return Redirect::to('admin/users/fields')->with('danger', __d('users', 'Field not found: #{0}', $id));
         }
 
         // Authorize the current User.
@@ -183,7 +183,7 @@ class FieldItems extends BaseController
         $options = $item->options ?: array();
 
         return $this->createView()
-            ->shares('title', __d('contacts', 'Show Field'))
+            ->shares('title', __d('users', 'Show Field'))
             ->with(compact('item', 'options'));
     }
 
@@ -195,7 +195,7 @@ class FieldItems extends BaseController
         catch (ModelNotFoundException $e) {
             $url = site_url('admin/users/fields');
 
-            return Redirect::to($url)->with('danger', __d('contacts', 'Field not found: #{0}', $id));
+            return Redirect::to($url)->with('danger', __d('users', 'Field not found: #{0}', $id));
         }
 
         // Authorize the current User.
@@ -250,7 +250,7 @@ class FieldItems extends BaseController
         catch (ModelNotFoundException $e) {
             $url = site_url('admin/users/fields', $contact->id);
 
-            return Redirect::to($url)->with('danger', __d('contacts', 'Field not found: #{0}', $id));
+            return Redirect::to($url)->with('danger', __d('users', 'Field not found: #{0}', $id));
         }
 
         // Authorize the current User.
@@ -320,7 +320,7 @@ class FieldItems extends BaseController
         $item->save();
 
         return Redirect::to('admin/users/fields')
-            ->with('success', __d('contacts', 'The Field <b>{0}</b> was successfully updated.', $title));
+            ->with('success', __d('users', 'The Field <b>{0}</b> was successfully updated.', $title));
     }
 
     public function destroy(Request $request, $id)
@@ -329,7 +329,7 @@ class FieldItems extends BaseController
             $item = FieldItem::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            return Redirect::to('admin/users/fields')->with('danger', __d('contacts', 'Field not found: #{0}', $id));
+            return Redirect::to('admin/users/fields')->with('danger', __d('users', 'Field not found: #{0}', $id));
         }
 
         // Authorize the current User for deleting this Field instance.
@@ -341,6 +341,6 @@ class FieldItems extends BaseController
         $item->delete();
 
         return Redirect::to('admin/users/fields')
-            ->with('success', __d('contacts', 'The Field was successfully deleted.'));
+            ->with('success', __d('users', 'The Field was successfully deleted.'));
     }
 }

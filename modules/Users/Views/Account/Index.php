@@ -64,7 +64,7 @@
                     <input type="text" class="form-control" readonly>
                     <label class="input-group-btn">
                         <span class="btn btn-primary">
-                            <?= __d('contacts', 'Browse ...'); ?> <input type="file" name="image" style="display: none;">
+                            <?= __d('users', 'Browse ...'); ?> <input type="file" name="image" style="display: none;">
                         </span>
                     </label>
                 </div>
@@ -160,7 +160,7 @@ $(function() {
     $(document).ready( function() {
         $(':file').on('fileselect', function(event, numFiles, label) {
             var input = $(this).parents('.input-group').find(':text'),
-                log = (numFiles > 1) ? sprintf("<?= __d('contacts', '%d files selected'); ?>", numFiles) : label;
+                log = (numFiles > 1) ? sprintf("<?= __d('users', '%d files selected'); ?>", numFiles) : label;
 
             if (input.length) {
                 input.val(label);

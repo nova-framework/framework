@@ -15,7 +15,7 @@
     <label class="col-sm-4 control-label" for="<?= $name; ?>">
         <?= $item->title; ?>
         <?php if (str_contains($item->rules, 'required')) { ?>
-        <span class="text-danger" title="<?= __d('contacts', 'Required field'); ?>">*</span>
+        <span class="text-danger" title="<?= __d('users', 'Required field'); ?>">*</span>
         <?php } ?>
     </label>
     <div class="col-sm-8">

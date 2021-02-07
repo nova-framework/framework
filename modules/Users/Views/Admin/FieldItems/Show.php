@@ -58,7 +58,7 @@
             <?php } ?>
             <?php if (($type == 'text') || ($type == 'password') || ($type == 'select')) { ?>
             <tr>
-                <th style="text-align: left; vertical-align: middle;"><?= __d('contacts', 'Placeholder'); ?></th>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('users', 'Placeholder'); ?></th>
                 <td style="text-align: left; vertical-align: middle;" width="75%"><?= array_get($options, 'placeholder') ?: '-'; ?></td>
             </tr>
             <?php } ?>

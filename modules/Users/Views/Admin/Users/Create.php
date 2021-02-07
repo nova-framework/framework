@@ -77,7 +77,7 @@
                         <input type="text" class="form-control" readonly>
                         <label class="input-group-btn">
                             <span class="btn btn-primary">
-                                <?= __d('contacts', 'Browse ...'); ?> <input type="file" name="image" style="display: none;">
+                                <?= __d('users', 'Browse ...'); ?> <input type="file" name="image" style="display: none;">
                             </span>
                         </label>
                     </div>
